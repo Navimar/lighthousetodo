@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="jquery.js"></script>
+    <script src="util.js"></script>
+
+    <meta charset="UTF-8">
+    <title>JinWish</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+<div class="tasks">
+    <div class="task newtask">
+        <div class="text">...new wish</div>
+    </div>
+    <div class="task ready">
+        <input class="delete" type="button">
+        <span class="text">Казань</span>
+    </div>
+    <div class="task">
+        <div class="text">22.02.2018</div>
+    </div>
+    <div class="task">
+        <div class="text">адача 2</div>
+        <div class="tags">
+            <span class="tag nonblocked">Казань</span>
+        </div>
+    </div>
+    <div class="task selected">
+        <div class="text">задача 3</div>
+    </div>
+    <div class="task cantdo">
+        <div class="text">Сама задача</div>
+        <div class="tags">
+            <span class="tag nonblocked">Казань</span>
+            <span class="tag">22.02.2018</span>
+        </div>
+    </div>
+    <div class="task cantdo">
+        <div class="text">Другая задача</div>
+        <div class="tags">
+            <span class="tag nonblocked">Казань</span>
+            <span class="tag">22.02.2018</span>
+        </div>
+    </div>
+</div>
+<div class="editor">
+    <input class="checkbox" type="checkbox" ><br>
+    <input id="fear" type="checkbox" ><br>
+    <input class="input inputtext" type="text">
+    <br>
+    <br>
+    <textarea class="input inputtags" name="tags" cols="35" rows="5"></textarea>
+</div>
+<div class="clock"></div>
+<script src="index.js"></script>
+</body>
+</html>

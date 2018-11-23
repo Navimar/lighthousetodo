@@ -1,0 +1,86 @@
+body {
+    background: black;
+    color: whitesmoke;
+    font-size: 16pt;
+    font-family: Verdana;
+}
+
+.tasks {
+    margin: auto;
+    text-align: left;
+    width: 600px;
+}
+
+.cantdo {
+    color: grey;
+}
+
+.task {
+
+}
+
+.newtask {
+    font-style: italic;
+}
+
+.tags {
+    font-size: 10pt;
+    font-style: italic;
+}
+
+.tag {
+    background: #333;
+    padding: 2px;
+}
+
+.ready {
+    color: palegreen;
+}
+
+.nonblocked {
+    background: none;
+}
+
+input[type="checkbox"] {
+    width: 300px; /*Desired width*/
+    height: 50px; /*Desired height*/
+    cursor: pointer;
+}
+
+.selected {
+    background: darkcyan;
+}
+
+.editor {
+    top: 0;
+    position: fixed;
+    font-size: 20pt;
+}
+
+.input {
+    border: none;
+    font-size: 16pt;
+    background: #333;
+    color: whitesmoke;
+}
+
+.text:hover {
+    cursor: pointer;
+}
+
+.inputtags {
+
+}
+
+.inputtext {
+
+}
+.clock{
+    position: fixed;
+    top:0;
+    right:0;
+}
+
+.red{
+    color:red;
+}
