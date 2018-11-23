@@ -5,3 +5,4 @@ node_modules
 data/data.txt
 data/old.txt
 data/data.txt
+.DS_Store
