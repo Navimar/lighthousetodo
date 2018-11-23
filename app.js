@@ -1,8 +1,9 @@
-const express = require('express');
-const app = express();
-const http = require('http').Server(app);
-const os = require('os');
-const run = require('./server/run.js');
+let express = require('express');
+let app = express();
+let http = require('http').Server(app);
+let io = require('socket.io')(http);
+let run = require('./server/run.js');
+const os=require('os');
 
 
 app.use(express.static(__dirname + '/static'));
@@ -24,7 +25,7 @@ if (os.platform() == 'darwin'|| os.platform() == 'win32') {
     }
 }
 
-run();
+run(io);
 
 const port = config.port;
 const ip = config.ip;

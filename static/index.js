@@ -1,3 +1,26 @@
+const socket = io();
+let data;
+
+function inputSocket() {
+    socket.on('connect', function () {
+        console.log('connected');
+        // socket.emit('load','hi');
+    });
+    socket.on('update', function (msg) {
+        data = msg;
+        console.log ("loaded");
+        console.log (data);
+        render();
+    });
+    socket.on('err', (val) => {
+        alert(val);
+    });
+    socket.on('login', (val) => {
+        onLogin(val);
+    });
+}
+
+
 let render = () => {
     let tasks = $('.tasks');
     let tags = [];
@@ -63,68 +86,66 @@ let render = () => {
     });
     $('.inputtags').val(tagtext);
     $('.inputtext').val(text);
-    localStorage.setItem('data', JSON.stringify(data));
-    $.ajax({
-        url: "https://api.myjson.com/bins",
-        type: "POST",
-        data: {hello:"hi"},
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (data, textStatus, jqXHR) {
-            let json = JSON.stringify(data);
-            console.log(json);
-        }
-    });
+    // localStorage.setItem('data', JSON.stringify(data));
+    socket.emit('save', data);
     $('.clock').html(clock());
 };
-let data;
-data = JSON.parse(localStorage.getItem('data'));
 
-if (!data) {
-    data = {
-        tasks: [
-            {
-                name: 'Казань',
-                tags: [],
-                selected: false,
-                ready: true,
-            },
-            {
-                name: '22.02.2018',
-                tags: [],
-                selected: false,
-                ready: false,
-            },
-            {
-                name: 'адача 2',
-                tags: ['Казань'],
-                selected: false,
-                ready: false,
-            },
-            {
-                name: 'задача 3',
-                tags: [],
-                selected: true,
-                ready: false,
-            },
-            {
-                name: 'Сама задача',
-                tags: ['Казань', '22.02.2018'],
-                selected: false,
-                ready: false,
-                blocked: true,
-            },
-            {
-                name: 'Другая задача',
-                tags: ['Казань', '22.02.2018'],
-                selected: false,
-                ready: false,
-                blocked: true,
-            },
-        ]
-    };
-}
-render();
+
+window.onload = function () {
+
+    // data = JSON.parse(localStorage.getItem('data'));
+    inputSocket();
+    socket.emit('load', 'hi');
+    if (!data) {
+        console.log('NO DATA!!!');
+        data = {
+            tasks: [
+                {
+                    name: 'Казань',
+                    tags: [],
+                    selected: false,
+                    ready: true,
+                },
+                {
+                    name: '22.02.2018',
+                    tags: [],
+                    selected: false,
+                    ready: false,
+                },
+                {
+                    name: 'адача 2',
+                    tags: ['Казань'],
+                    selected: false,
+                    ready: false,
+                },
+                {
+                    name: 'задача 3',
+                    tags: [],
+                    selected: true,
+                    ready: false,
+                },
+                {
+                    name: 'Сама задача',
+                    tags: ['Казань', '22.02.2018'],
+                    selected: false,
+                    ready: false,
+                    blocked: true,
+                },
+                {
+                    name: 'Другая задача',
+                    tags: ['Казань', '22.02.2018'],
+                    selected: false,
+                    ready: false,
+                    blocked: true,
+                },
+            ]
+        };
+    }
+    render();
+};
+
+
 let newwish = (name, selected) => {
     data.tasks.unshift({
         name,
@@ -181,17 +202,17 @@ let save = () => {
     }
     sortdata();
 };
-let sortdata =()=>{
-    data.tasks.sort((a,b)=>{
-        if((a.blocked && b.blocked)||(!a.blocked && !b.blocked)){
-            if(a.name.length>b.name.length){
+let sortdata = () => {
+    data.tasks.sort((a, b) => {
+        if ((a.blocked && b.blocked) || (!a.blocked && !b.blocked)) {
+            if (a.name.length > b.name.length) {
                 return 1;
-            }else{
+            } else {
                 return -1;
             }
-        }else if (a.blocked && !b.blocked){
+        } else if (a.blocked && !b.blocked) {
             return 1
-        }else if (!a.blocked && b.blocked){
+        } else if (!a.blocked && b.blocked) {
             return -1
         }
     })
