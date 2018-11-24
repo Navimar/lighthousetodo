@@ -8,8 +8,8 @@ function inputSocket() {
     });
     socket.on('update', function (msg) {
         data = msg;
-        console.log ("loaded");
-        console.log (data);
+        console.log("loaded");
+        console.log(data);
         render();
     });
     socket.on('err', (val) => {
@@ -205,11 +205,11 @@ let save = () => {
 let sortdata = () => {
     data.tasks.sort((a, b) => {
         if ((a.blocked && b.blocked) || (!a.blocked && !b.blocked)) {
-            if (a.name.length > b.name.length) {
+            if (a.name.length >= b.name.length) {
                 return 1;
-            } else {
+            } else if (a.name.length < b.name.length) {
                 return -1;
-            }
+            } 
         } else if (a.blocked && !b.blocked) {
             return 1
         } else if (!a.blocked && b.blocked) {
