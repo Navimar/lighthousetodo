@@ -4,20 +4,25 @@ let data;
 function inputSocket() {
     socket.on('connect', function () {
         console.log('connected');
-        // socket.emit('load','hi');
+        $('#status').removeClass("red").html('online');
+    });
+    socket.on('disconnect', function () {
+        alert('DISCONNECT!!!');
+        $('#status').addClass("red").html('offline');
     });
     socket.on('update', function (msg) {
         data = msg;
         console.log("loaded");
         console.log(data);
         render();
+        $('#status').removeClass("red").html('online');
     });
-    socket.on('err', (val) => {
-        alert(val);
-    });
-    socket.on('login', (val) => {
-        onLogin(val);
-    });
+    // socket.on('err', (val) => {
+    //     alert(val);
+    // });
+    // socket.on('login', (val) => {
+    //     onLogin(val);
+    // });
 }
 
 
@@ -29,6 +34,8 @@ let render = () => {
     let checked = false;
     let fear = false;
     let button = true;
+    let time = "00:00";
+    let date = "1111-11-11";
     tasks.html("");
     for (let a of data.tasks) {
         let texthtml = "<div class='task";
@@ -38,9 +45,13 @@ let render = () => {
             text = a.name;
             checked = a.ready;
             fear = a.fear;
+            time = a.time;
+            date = a.date;
         }
         if (a.blocked) {
             texthtml += " cantdo";
+        } else if (!isReady(a.date, a.time)) {
+            texthtml += " cantdo"
         }
         texthtml += "'>";
         texthtml += "<button class='delete' value='" + a.name + "'>del</button>&nbsp;&nbsp;&nbsp;";
@@ -86,9 +97,11 @@ let render = () => {
     });
     $('.inputtags').val(tagtext);
     $('.inputtext').val(text);
+    $('#time').val(time);
+    $('#date').val(date);
     // localStorage.setItem('data', JSON.stringify(data));
     socket.emit('save', data);
-    $('.clock').html(clock());
+    $('.clock').html(clock().text);
 };
 
 
@@ -162,6 +175,18 @@ let save = () => {
     let ready = $(".checkbox").prop('checked');
     let fear = $("#fear").prop('checked');
     let tags = [];
+
+    let time = $("#time").val();
+    if (!time) {
+        time = clock().h + ":" + clock().m;
+
+    }
+    let date = $("#date").val();
+    // console.log("date val "+date);
+    if (!date) {
+        date = clock().year + "-" + clock().month + "-" + clock().d;
+        // console.log("set date "+date);
+    }
     $.each(inptags.split(/\n/), function (i, name) {
         // empty string check
         if (name != "") {
@@ -190,6 +215,8 @@ let save = () => {
             a.tags = tags;
             a.ready = ready;
             a.fear = fear;
+            a.time = time;
+            a.date = date;
         }
         a.blocked = false;
         for (let n of data.tasks) {
@@ -209,7 +236,7 @@ let sortdata = () => {
                 return 1;
             } else if (a.name.length < b.name.length) {
                 return -1;
-            } 
+            }
         } else if (a.blocked && !b.blocked) {
             return 1
         } else if (!a.blocked && b.blocked) {

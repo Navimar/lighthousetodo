@@ -10,39 +10,7 @@
 </head>
 <body>
 <div class="tasks">
-    <div class="task newtask">
-        <div class="text">...new wish</div>
-    </div>
-    <div class="task ready">
-        <input class="delete" type="button">
-        <span class="text">Казань</span>
-    </div>
-    <div class="task">
-        <div class="text">22.02.2018</div>
-    </div>
-    <div class="task">
-        <div class="text">адача 2</div>
-        <div class="tags">
-            <span class="tag nonblocked">Казань</span>
-        </div>
-    </div>
-    <div class="task selected">
-        <div class="text">задача 3</div>
-    </div>
-    <div class="task cantdo">
-        <div class="text">Сама задача</div>
-        <div class="tags">
-            <span class="tag nonblocked">Казань</span>
-            <span class="tag">22.02.2018</span>
-        </div>
-    </div>
-    <div class="task cantdo">
-        <div class="text">Другая задача</div>
-        <div class="tags">
-            <span class="tag nonblocked">Казань</span>
-            <span class="tag">22.02.2018</span>
-        </div>
-    </div>
+
 </div>
 <div class="editor">
     <input class="checkbox" type="checkbox" ><br>
@@ -51,8 +19,13 @@
     <br>
     <br>
     <textarea class="input inputtags" name="tags" cols="35" rows="5"></textarea>
+    <br>
+    <input type="date" id="date" name="trip-start">
+    <input type="time" id="time" name="appt"
+           min="9:00" max="18:00" required>
 </div>
 <div class="clock"></div>
+<div id="status">offline</div>
 <script src="/socket.io/socket.io.js"></script>
 <script src="index.js"></script>
 </body>

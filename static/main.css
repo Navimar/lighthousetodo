@@ -80,7 +80,11 @@ input[type="checkbox"] {
     top:0;
     right:0;
 }
-
+#status{
+    position: fixed;
+    right:0;
+    top:40px;
+}
 .red{
     color:red;
 }

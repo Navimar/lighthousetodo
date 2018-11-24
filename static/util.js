@@ -25,6 +25,18 @@ function clock() {
     if (month < 10) {
         month = "0" + month;
     }
-    let result = '' + days[day] + ' ' + d + '.' + month + '.' + year + ' ' + h + ':' + m;
-    return result;
+    let text = '' + days[day] + ' ' + d + '.' + month + '.' + year + ' ' + h + ':' + m;
+    return {
+        day: days[day],
+        d,
+        month,
+        year,
+        h,
+        m,
+        text
+    };
+}
+
+function isReady(date, time) {
+    return Date.parse(date + " " + time) < Date.now();
 }
