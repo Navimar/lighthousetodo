@@ -2,7 +2,7 @@ const fs = require('fs');
 module.exports = (io) => {
 
 
-    let obj = {text: 'hi'};
+    let obj = { text: 'hi' };
 
     io.on('connection', function (socket) {
         console.log('connection');
@@ -20,12 +20,11 @@ module.exports = (io) => {
                 console.log("The file was saved!");
             });
         });
-
         socket.on('load', function (msg) {
             console.log('load!');
             fs.readFile('data/data.txt', 'utf8', function (err, data) {
-                console.log(JSON.parse(data));
-                socket.emit('update',JSON.parse(data));
+                //console.log(JSON.parse(data));
+                socket.emit('update', JSON.parse(data));
             });
         });
     });

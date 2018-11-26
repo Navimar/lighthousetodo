@@ -6,3 +6,5 @@ data/data.txt
 data/old.txt
 data/data.txt
 .DS_Store
+.history/
+.vscode/settings.json
