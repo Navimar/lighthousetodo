@@ -1,7 +1,5 @@
 const fs = require('fs');
 module.exports = (io) => {
-
-
     let obj = { text: 'hi' };
 
     io.on('connection', function (socket) {
