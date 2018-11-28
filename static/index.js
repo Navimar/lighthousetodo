@@ -29,7 +29,9 @@ function inputSocket() {
 let render = () => {
     let tasks = $('.tasks');
     let tags = [];
+    let opns = [];
     let tagtext = "";
+    let opntext = "";
     let text = "";
     let checked = false;
     let fear = false;
@@ -42,6 +44,7 @@ let render = () => {
         if (a.selected) {
             texthtml += " selected";
             tags = a.tags;
+            opns = a.opns;
             text = a.name;
             checked = a.ready;
             fear = a.fear;
@@ -63,22 +66,43 @@ let render = () => {
             texthtml += " cantdo"
         }
         texthtml += "' ";
-        texthtml+= "value='" + a.name + "'>";
+        texthtml += "value='" + a.name + "'>";
         texthtml += a.name.split('\n')[0];
         if (a.name == 'new wish') {
             button = false;
         }
         texthtml += "</button>";
+        if (a.tags.length > 0 || a.opns.length > 0) {
+            texthtml += "<br>";
+        }
         if (a.tags.length > 0) {
-            texthtml += "<div class='tags'>";
+            // texthtml += "<div class='tags'>";
             for (let t of a.tags) {
                 texthtml += "<span class='tag";
                 texthtml += "'>";
                 texthtml += t;
                 texthtml += "</span>&nbsp;";
             }
-            texthtml += "</div>";
+            // texthtml += "</div>";
         }
+        if (a.tags.length > 0 || a.opns.length > 0) {
+            texthtml += "<span class='arr'>=&#62; </span>"
+        }
+        if (a.opns) {
+            if (a.opns.length > 0) {
+                // texthtml += "<div class='opns'>";
+                for (let t of a.opns) {
+                    texthtml += "<span class='opn";
+                    texthtml += "'>";
+                    texthtml += t;
+                    texthtml += "</span>&nbsp;";
+                }
+                // texthtml += "</div>";
+            }
+        } else {
+            a.opns = [];
+        }
+
         texthtml += "</div>";
         tasks.append(texthtml);
     }
@@ -90,6 +114,12 @@ let render = () => {
     for (let t of tags) {
         tagtext += t + "\n";
     }
+    if (opns) {
+        for (let t of opns) {
+            opntext += t + "\n";
+        }
+    }
+
     $("input[type='checkbox']").prop({
         checked: checked
     });
@@ -97,6 +127,7 @@ let render = () => {
         checked: fear
     });
     $('.inputtags').val(tagtext);
+    $('.inputopns').val(opntext);
     $('.inputtext').val(text);
     $('#time').val(time);
     $('#date').val(date);
@@ -122,12 +153,20 @@ window.onload = function () {
 };
 
 
-let newwish = (name, selected) => {
+let newwish = (name, selected, tags, opns) => {
+    if (!tags) {
+        tags = [];
+    }
+    if (!opns) {
+        opns = [];
+    }
     data.tasks.unshift({
         name,
-        tags: [],
+        tags,
+        opns,
         selected,
         ready: false,
+        time: clock().h + ":" + clock().m,
     })
 };
 let save = () => {
@@ -135,14 +174,15 @@ let save = () => {
     let inpt = $('.inputtext');
     let inptval = inpt.val();
     let inptags = $(".inputtags").val();
+    let inpopns = $(".inputopns").val();
     let ready = $(".checkbox").prop('checked');
     let fear = $("#fear").prop('checked');
     let tags = [];
+    let opns = [];
 
     let time = $("#time").val();
     if (!time) {
         time = clock().h + ":" + clock().m;
-
     }
     let date = $("#date").val();
     // console.log("date val "+date);
@@ -158,10 +198,33 @@ let save = () => {
             for (let a of data.tasks) {
                 if (a.name == name) {
                     ok = false;
+                    if (a.opns) {
+                        if (a.opns.indexOf(inptval) === -1) {
+                            a.opns.push(inptval);
+                        }
+                    }
                 }
             }
             if (ok) {
-                newwish(name);
+                newwish(name, false, [], [inptval]);
+            }
+        }
+    });
+    $.each(inpopns.split(/\n/), function (i, name) {
+        // empty string check
+        if (name != "") {
+            opns.push(name);
+            let ok = true;
+            for (let a of data.tasks) {
+                if (a.name == name) {
+                    ok = false;
+                    if (a.tags.indexOf(inptval) === -1) {
+                        a.tags.push(inptval);
+                    }
+                }
+            }
+            if (ok) {
+                newwish(name, false, [inptval], []);
             }
         }
     });
@@ -173,9 +236,15 @@ let save = () => {
                         n.tags[t] = inptval;
                     }
                 }
+                for (let t in n.opns) {
+                    if (n.opns[t] == a.name) {
+                        n.opns[t] = inptval;
+                    }
+                }
             }
             a.name = inpt.val();
             a.tags = tags;
+            a.opns = opns;
             a.ready = ready;
             a.fear = fear;
             a.time = time;
@@ -236,6 +305,11 @@ let del = (text) => {
         for (let t in data.tasks[a].tags) {
             if (data.tasks[a].tags[t] == text) {
                 data.tasks[a].tags.splice(t, 1);
+            }
+        }
+        for (let t in data.tasks[a].opns) {
+            if (data.tasks[a].opns[t] == text) {
+                data.tasks[a].opns.splice(t, 1);
             }
         }
     }

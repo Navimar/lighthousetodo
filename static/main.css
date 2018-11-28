@@ -29,13 +29,28 @@ body {
 }
 
 .tag {
+    font-size: 10pt;
+    font-style: italic;
     background: #333;
     padding: 2px;
     color: grey;
 }
 
+.opns{
+
+}
+.opn{
+    font-size: 10pt;
+    font-style: italic;
+    background: #333;
+    padding: 2px;
+    color: grey;
+}
+.arr{
+    font-size: 10pt;
+}
 .ready {
-    color: palegreen;
+    color: palegreen !important;
 }
 
 .nonblocked {
@@ -60,7 +75,7 @@ input[type="checkbox"] {
 
 .input {
     border: none;
-    font-size: 16pt;
+    font-size: 10pt;
     background: #333;
     color: whitesmoke;
 }
