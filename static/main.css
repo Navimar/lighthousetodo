@@ -12,7 +12,7 @@ body {
 }
 
 .cantdo {
-    color: grey;
+    color: grey !important;
 }
 
 .task {
@@ -31,6 +31,7 @@ body {
 .tag {
     background: #333;
     padding: 2px;
+    color: grey;
 }
 
 .ready {
@@ -63,9 +64,19 @@ input[type="checkbox"] {
     background: #333;
     color: whitesmoke;
 }
+.text{
+    width: 80%;
+    margin: 0px 15px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    text-align: left;
+    font-size: 16pt;
+}
 
 .text:hover {
     cursor: pointer;
+    
 }
 
 .inputtags {

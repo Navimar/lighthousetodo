@@ -48,26 +48,27 @@ let render = () => {
             time = a.time;
             date = a.date;
         }
-        if (a.blocked) {
-            texthtml += " cantdo";
-        } else if (!isReady(a.date, a.time)) {
-            texthtml += " cantdo"
-        }
         texthtml += "'>";
-        texthtml += "<button class='delete' value='" + a.name + "'>del</button>&nbsp;&nbsp;&nbsp;";
-        texthtml += "<span class='text";
+        texthtml += "<button class='delete' value='" + a.name + "'>del</button>";
+        texthtml += "<button class='text";
         if (a.ready) {
             texthtml += " ready";
         }
         if (a.fear) {
             texthtml += " red";
         }
-        texthtml += "'>";
-        texthtml += a.name;
+        if (a.blocked) {
+            texthtml += " cantdo";
+        } else if (!isReady(a.date, a.time)) {
+            texthtml += " cantdo"
+        }
+        texthtml += "' ";
+        texthtml+= "value='" + a.name + "'>";
+        texthtml += a.name.split('\n')[0];
         if (a.name == 'new wish') {
             button = false;
         }
-        texthtml += "</span>";
+        texthtml += "</button>";
         if (a.tags.length > 0) {
             texthtml += "<div class='tags'>";
             for (let t of a.tags) {
@@ -100,7 +101,9 @@ let render = () => {
     $('#time').val(time);
     $('#date').val(date);
     // localStorage.setItem('data', JSON.stringify(data));
-    socket.emit('save', data);
+    if (data) {
+        socket.emit('save', data);
+    }
     $('.clock').html(clock().text);
 };
 
@@ -112,50 +115,10 @@ window.onload = function () {
     socket.emit('load', 'hi');
     if (!data) {
         console.log('NO DATA!!!');
-        data = {
-            tasks: [
-                {
-                    name: 'Казань',
-                    tags: [],
-                    selected: false,
-                    ready: true,
-                },
-                {
-                    name: '22.02.2018',
-                    tags: [],
-                    selected: false,
-                    ready: false,
-                },
-                {
-                    name: 'адача 2',
-                    tags: ['Казань'],
-                    selected: false,
-                    ready: false,
-                },
-                {
-                    name: 'задача 3',
-                    tags: [],
-                    selected: true,
-                    ready: false,
-                },
-                {
-                    name: 'Сама задача',
-                    tags: ['Казань', '22.02.2018'],
-                    selected: false,
-                    ready: false,
-                    blocked: true,
-                },
-                {
-                    name: 'Другая задача',
-                    tags: ['Казань', '22.02.2018'],
-                    selected: false,
-                    ready: false,
-                    blocked: true,
-                },
-            ]
-        };
+        $('#status').addClass("red").html('NO DATA!!!');
+    } else {
+        render();
     }
-    render();
 };
 
 
@@ -252,7 +215,7 @@ let select = (text) => {
 
 $(document).on('click', '.text', function () {
     save();
-    select($(this).text());
+    select($(this).val());
     render();
 });
 

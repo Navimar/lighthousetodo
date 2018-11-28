@@ -1,6 +1,6 @@
 const fs = require('fs');
 module.exports = (io) => {
-    let obj = { text: 'hi' };
+    let n = 0;
 
     io.on('connection', function (socket) {
         console.log('connection');
@@ -10,13 +10,13 @@ module.exports = (io) => {
         });
 
         socket.on('save', function (msg) {
-            fs.createReadStream('data/data.txt').pipe(fs.createWriteStream('data/old.txt'));
+            fs.createReadStream('data/data.txt').pipe(fs.createWriteStream('data/old' + n + '.txt'));
             fs.writeFileSync("data/data.txt", JSON.stringify(msg), function (err) {
-                if (err) {
-                    return console.log(err);
-                }
-                console.log("The file was saved!");
+                return console.log(err);
             });
+            console.log("The file was saved!");
+            n++;
+            if (n > 100) { n = 0 }
         });
         socket.on('load', function (msg) {
             console.log('load!');
