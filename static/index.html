@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <script src="jquery.js"></script>
     <script src="util.js"></script>
@@ -7,34 +8,38 @@
     <meta charset="UTF-8">
     <title>JinWish</title>
     <link rel="stylesheet" href="main.css">
+    <link href="favicon.png" rel="shortcut icon" type="image/x-icon" />
 </head>
-<body>
-<div class="tasks">
 
-</div>
-<div class="editor">
-    <input class="checkbox" type="checkbox" ><br>
-    <input id="fear" type="checkbox" ><br>
-    <div>
-        Название
+<body>
+    <div id="tasks" class="list">
+
     </div>
-    <textarea class="input inputtext" type="text" cols="35" rows="5"></textarea>
-    <div>
-        Зависим
+    <div class="editor">
+        <span>Активно</span>
+        <input class="checkbox" type="checkbox"> <br>
+        <span>Ярко</span>
+        <input id="fear" type="checkbox"><br>
+        <div>
+            Название
+        </div>
+        <textarea class="input inputtext" type="text" cols="35" rows="5"></textarea>
+        <div>
+            Зависим
+        </div>
+        <textarea class="input inputtags" name="tags" cols="35" rows="5"></textarea>
+        <div>
+            Блокирует
+        </div>
+        <textarea class="input inputopns" name="tags" cols="35" rows="5"></textarea>
+        <br>
+        <input type="date" id="date" name="trip-start">
+        <input type="time" id="time" name="time">
     </div>
-    <textarea class="input inputtags" name="tags" cols="35" rows="5"></textarea>
-    <div>
-        Блокирует
-    </div>
-    <textarea class="input inputopns" name="tags" cols="35" rows="5"></textarea>
-    <br>
-    <input type="date" id="date" name="trip-start">
-    <input type="time" id="time" name="appt"
-           min="9:00" max="18:00" required>
-</div>
-<div class="clock"></div>
-<div id="status">offline</div>
-<script src="/socket.io/socket.io.js"></script>
-<script src="index.js"></script>
+    <div class="clock"></div>
+    <div id="status">offline</div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="index.js"></script>
 </body>
+
 </html>

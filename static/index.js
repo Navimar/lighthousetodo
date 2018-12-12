@@ -7,7 +7,7 @@ function inputSocket() {
         $('#status').removeClass("red").html('online');
     });
     socket.on('disconnect', function () {
-        alert('DISCONNECT!!!');
+        // alert('DISCONNECT!!!');
         $('#status').addClass("red").html('offline');
     });
     socket.on('update', function (msg) {
@@ -27,7 +27,7 @@ function inputSocket() {
 
 
 let render = () => {
-    let tasks = $('.tasks');
+    let tasks = $('#tasks');
     let tags = [];
     let opns = [];
     let tagtext = "";
@@ -38,9 +38,10 @@ let render = () => {
     let button = true;
     let time = "00:00";
     let date = "1111-11-11";
+    let texthtml = "";
     tasks.html("");
     for (let a of data.tasks) {
-        let texthtml = "<div class='task";
+        texthtml = "<div class='task";
         if (a.selected) {
             texthtml += " selected";
             tags = a.tags;
@@ -51,14 +52,14 @@ let render = () => {
             time = a.time;
             date = a.date;
         }
+        if (a.fear) {
+            texthtml += " red";
+        }
         texthtml += "'>";
         texthtml += "<button class='delete' value='" + a.name + "'>del</button>";
         texthtml += "<button class='text";
         if (a.ready) {
             texthtml += " ready";
-        }
-        if (a.fear) {
-            texthtml += " red";
         }
         if (a.blocked) {
             texthtml += " cantdo";
@@ -105,12 +106,18 @@ let render = () => {
 
         texthtml += "</div>";
         tasks.append(texthtml);
+        if (a.selected) {
+            texthtml = "<div id='taskheader' class='list'>" + texthtml + "<br></div>";
+            tasks.prepend(texthtml);
+        }
     }
     if (button) {
-        tasks.prepend("<div class='task newtask'>\n" +
+        $('#taskheader').prepend("<div class='task newtask'>\n" +
             "<div class='text'>...new wish</div>\n" +
             "</div>\n");
     }
+    tasks.css('padding-top', $('#taskheader').height() + 10);
+
     for (let t of tags) {
         tagtext += t + "\n";
     }
@@ -264,10 +271,16 @@ let save = () => {
 let sortdata = () => {
     data.tasks.sort((a, b) => {
         if ((a.blocked && b.blocked) || (!a.blocked && !b.blocked)) {
-            if (a.name.length >= b.name.length) {
-                return 1;
-            } else if (a.name.length < b.name.length) {
-                return -1;
+            if ((a.fear && b.fear) || (!a.fear && !b.fear)) {
+                if (a.name.length >= b.name.length) {
+                    return 1;
+                } else if (a.name.length < b.name.length) {
+                    return -1;
+                }
+            } else if (a.fear && !b.fear) {
+                return -1
+            } else if (!a.fear && b.fear) {
+                return 1
             }
         } else if (a.blocked && !b.blocked) {
             return 1
@@ -284,7 +297,20 @@ let select = (text) => {
 
 $(document).on('click', '.text', function () {
     save();
+    console.log($(this).val());
     select($(this).val());
+    render();
+});
+$(document).on('click', '.tag', function () {
+    save();
+    console.log($(this).text());
+    select($(this).text());
+    render();
+});
+$(document).on('click', '.opn', function () {
+    save();
+    console.log($(this).text());
+    select($(this).text());
     render();
 });
 

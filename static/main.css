@@ -3,20 +3,24 @@ body {
     color: whitesmoke;
     font-size: 16pt;
     font-family: Verdana;
+    margin: 0;
 }
 
-.tasks {
+#tasks {
+    
+}
+.list{
     margin: auto;
     text-align: left;
     width: 600px;
 }
 
-.cantdo {
-    color: grey !important;
-}
 
-.task {
 
+#taskheader {
+position: fixed;
+top:0;
+background: black;
 }
 
 .newtask {
@@ -58,14 +62,13 @@ body {
 }
 
 input[type="checkbox"] {
-    width: 300px; /*Desired width*/
+    vertical-align: middle;
+    width: 50px; /*Desired width*/
     height: 50px; /*Desired height*/
     cursor: pointer;
 }
 
-.selected {
-    background: darkcyan;
-}
+
 
 .editor {
     top: 0;
@@ -112,5 +115,16 @@ input[type="checkbox"] {
     top:40px;
 }
 .red{
-    color:red;
+    background-color: #150000;
+    border-right: 5px solid darkred;
+}
+.cantdo {
+    color: grey;
+}
+.selected {
+    background-color: #011619;
+    /* margin-left: -10px; */
+    /* border-left: 10px solid #38a1ca; */
+}
+.delete{
 }
