@@ -106,13 +106,19 @@ input[type="checkbox"] {
 }
 .clock{
     position: fixed;
-    top:0;
+    top:40px;
     right:0;
 }
 #status{
     position: fixed;
     right:0;
-    top:40px;
+    top:60px;
+}
+.date{
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 30px;
 }
 .red{
     background-color: #150000;
