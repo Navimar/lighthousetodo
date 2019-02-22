@@ -39,51 +39,19 @@ let render = () => {
   let button = true;
   let time = "00:00";
   let date = "1111-11-11";
+  let today = new Date().getDate();
+  let blocked = true;;
   let texthtml = "";
-  let today = false;
-  let tomorrow = false;
-  let next = false;
-  let month = false;
-  let nextyear = false;
-  let notred = false;
-
-
   tasks.html("");
   for (let a of data.tasks) {
     texthtml = "";
-    if (new Date(a.date).getDate() <= new Date().getDate() && new Date(a.date).getTime() <= new Date().getTime() + 86400000) {
-      if (!today) {
-        texthtml += "<div class='date'>Сегодня</div>";
-        today = 1;
-      }
+    if (today <= new Date(a.date).getDate() && new Date() < new Date(a.date)) {
+      tasks.append("<div class='date'>Сегодня " + new Date(a.date).getDate() + "</div>");
+      today = new Date(a.date).getDate() + 1;
     }
-    if (new Date(a.date).getDate() == new Date().getDate() + 1 && new Date(a.date).getTime() <= new Date().getTime() + 86400000 * 2 && new Date(a.date).getTime() >= new Date().getTime()) {
-      if (!tomorrow) {
-        texthtml += "<div class='date'>Завтра</div>";
-        tomorrow = 1;
-      }
-    }
-    if (new Date(a.date).getTime() > new Date().getTime() + 86400000 * 2) {
-      if (!month) {
-        texthtml += "<div class='date'>В этом месяце</div>";
-        month = 1;
-      }
-    }
-    if (new Date(a.date).getMonth() != new Date().getMonth() && new Date(a.date).getTime() > new Date().getTime() + 86400000 * 20) {
-      if (!next) {
-        texthtml += "<div class='date'>В этом году</div>";
-        next = 1;
-      }
-    }
-    if (new Date(a.date).getTime() > new Date().getTime() + 86400000 * 365) {
-      if (!nextyear) {
-        texthtml += "<div class='date'>Следующий год и далее</div>";
-        nextyear = 1;
-      }
-    }
-    if (!a.fear && !notred) {
-      texthtml += "<div class='date'>В удобное время</div>";
-      notred = 1;
+    if (a.blocked && blocked) {
+      tasks.append("<div class='date'>Блокированные</div>");
+      blocked = false;
     }
     texthtml += "<div class='task";
     if (a.selected) {
@@ -93,14 +61,37 @@ let render = () => {
       text = a.name;
       checked = a.ready;
       fear = a.fear;
+      $("#priority").val("white");
+      if (a.priority == "red") {
+        $("#priority").val("red");
+      }
+      if (a.priority == "yellow") {
+        $("#priority").val("yellow");
+      }
+      if (a.priority == "grey") {
+        $("#priority").val("grey");
+      }
+      if (a.priority == "blue") {
+        $("#priority").val("blue");
+      }
+      if (a.priority == "cyan") {
+        $("#priority").val("cyan");
+      }
+      if (a.priority == "green") {
+        $("#priority").val("green");
+      }
+      if (a.priority == "white") {
+        $("#priority").val("white");
+      }
       time = a.time;
       date = a.date;
     }
     if (a.fear) {
-      texthtml += " red";
+      texthtml += " old";
     }
+    texthtml += " " + a.priority;
     texthtml += "'>";
-    texthtml += "<button class='delete' value='" + a.name + "'>del</button>";
+    // texthtml += "<button class='delete' value='" + a.name + "'>del</button>";
     texthtml += "<button class='text";
     if (a.ready) {
       texthtml += " ready";
@@ -121,14 +112,12 @@ let render = () => {
       texthtml += "<br>";
     }
     if (a.tags.length > 0) {
-      // texthtml += "<div class='tags'>";
       for (let t of a.tags) {
         texthtml += "<span class='tag";
         texthtml += "'>";
         texthtml += t;
         texthtml += "</span>&nbsp;";
       }
-      // texthtml += "</div>";
     }
     if (a.tags.length > 0 || a.opns.length > 0) {
       texthtml += "<span class='arr'>=&#62; </span>"
@@ -183,6 +172,7 @@ let render = () => {
   $('.inputtext').val(text);
   $('#time').val(time);
   $('#date').val(date);
+  $('.delete').val(text);
   // localStorage.setItem('data', JSON.stringify(data));
   if (data) {
     socket.emit('save', data);
@@ -205,18 +195,22 @@ window.onload = function () {
 };
 
 
-let newwish = (name, selected, tags, opns) => {
+let newwish = (name, selected, tags, opns, priority) => {
   if (!tags) {
     tags = [];
   }
   if (!opns) {
     opns = [];
   }
+  if (!priority) {
+    priority = 'grey';
+  }
   data.tasks.unshift({
     name,
     tags,
     opns,
     selected,
+    priority,
     ready: false,
     time: clock().h + ":" + clock().m,
     date: clock().year + "-" + clock().month + "-" + clock().d,
@@ -229,7 +223,8 @@ let save = () => {
   let inptags = $(".inputtags").val();
   let inpopns = $(".inputopns").val();
   let ready = $(".checkbox").prop('checked');
-  let fear = $("#fear").prop('checked');
+  // let fear = $("#fear").prop('checked');
+  let priority = $("#priority option:selected").val();
   let tags = [];
   let opns = [];
 
@@ -283,7 +278,7 @@ let save = () => {
         }
       }
       if (ok) {
-        newwish(name, false, [], [inptval]);
+        newwish(name, false, [], [inptval], priority);
       }
     }
   });
@@ -301,12 +296,10 @@ let save = () => {
         }
       }
       if (ok) {
-        newwish(name, false, [inptval], []);
+        newwish(name, false, [inptval], [], priority);
       }
     }
   });
-
-
   for (let a of data.tasks) {
     if (a.selected && inpt.val()) {
       for (let n of data.tasks) {
@@ -325,7 +318,7 @@ let save = () => {
       a.tags = tags;
       a.opns = opns;
       a.ready = ready;
-      a.fear = fear;
+      a.priority = priority;
       a.time = time;
       a.date = date;
     }
@@ -343,11 +336,17 @@ let save = () => {
 let sortdata = () => {
   data.tasks.sort((a, b) => {
     if ((a.blocked && b.blocked) || (!a.blocked && !b.blocked)) {
-      if ((a.fear && b.fear) || (!a.fear && !b.fear)) {
-        if (new Date(a.date).getTime() > new Date(b.date).getTime()) {
+      if (isReady(a.date, "00:00") && !isReady(b.date, "00:00")) {
+        return -1
+      }
+      else if (!isReady(a.date, "00:00") && isReady(b.date, "00:00")) {
+        return 1
+      }
+      else if (a.priority == b.priority) {
+        if (Date.parse(a.date + " " + a.time) > Date.parse(b.date + " " + b.time)) {
           return 1;
         }
-        else if (new Date(a.date).getTime() < new Date(b.date).getTime()) {
+        else if (Date.parse(a.date + " " + a.time) < Date.parse(b.date + " " + b.time)) {
           return -1;
         }
         else if (a.name.length >= b.name.length) {
@@ -356,16 +355,51 @@ let sortdata = () => {
         else if (a.name.length < b.name.length) {
           return -1;
         }
-      } else if (a.fear && !b.fear) {
+      }
+      else if (a.priority == 'red') {
         return -1
-      } else if (!a.fear && b.fear) {
+      }
+      else if (b.priority == 'red') {
         return 1
       }
-    } else if (a.blocked && !b.blocked) {
+      else if (a.priority == 'grey') {
+        return -1
+      }
+      else if (b.priority == 'grey') {
+        return 1
+      }
+      else if (a.priority == 'yellow') {
+        return -1
+      }
+      else if (b.priority == 'yellow') {
+        return 1
+      }
+      else if (a.priority == 'green') {
+        return -1
+      }
+      else if (b.priority == 'green') {
+        return 1
+      }
+      else if (a.priority == 'blue') {
+        return -1
+      }
+      else if (b.priority == 'blue') {
+        return 1
+      }
+      else if (a.priority == 'cyan') {
+        return -1
+      }
+      else if (b.priority == 'cyan') {
+        return 1
+      }
+    }
+    else if (a.blocked && !b.blocked) {
       return 1
-    } else if (!a.blocked && b.blocked) {
+    }
+    else if (!a.blocked && b.blocked) {
       return -1
     }
+    return 1;
   })
 };
 let select = (text) => {

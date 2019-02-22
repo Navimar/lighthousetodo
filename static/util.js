@@ -1,5 +1,7 @@
-function clock() {
-    let date = new Date;
+function clock(date) {
+    if (!date) {
+        date = new Date;
+    }
     let year = date.getFullYear();
     let month = date.getMonth();
     let months = ['January', 'February', 'March', 'April', 'May', 'June', 'Jully', 'August', 'September', 'October', 'November', 'December'];
@@ -30,6 +32,7 @@ function clock() {
         day: days[day],
         d,
         month,
+        months,
         year,
         h,
         m,
