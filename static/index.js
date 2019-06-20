@@ -13,7 +13,7 @@ function inputSocket() {
   socket.on('update', function (msg) {
     data = msg;
     console.log("loaded");
-    console.log(data);
+    // console.log(data);
     render();
     $('#status').removeClass("red").html('online');
   });
@@ -34,8 +34,9 @@ let render = () => {
   let tagtext = "";
   let opntext = "";
   let text = "";
+  let note = "";
   let checked = false;
-  let fear = false;
+  // let fear = false;
   let button = true;
   let time = "00:00";
   let date = "1111-11-11";
@@ -59,11 +60,15 @@ let render = () => {
       tags = a.tags;
       opns = a.opns;
       text = a.name;
+      note = a.note;
       checked = a.ready;
       fear = a.fear;
       $("#priority").val("white");
       if (a.priority == "red") {
         $("#priority").val("red");
+      }
+      if (a.priority == "purple") {
+        $("#priority").val("purple");
       }
       if (a.priority == "yellow") {
         $("#priority").val("yellow");
@@ -86,6 +91,9 @@ let render = () => {
       time = a.time;
       date = a.date;
     }
+    if (a.ready) {
+      texthtml += " ready";
+    }
     if (a.fear) {
       texthtml += " old";
     }
@@ -93,9 +101,6 @@ let render = () => {
     texthtml += "'>";
     // texthtml += "<button class='delete' value='" + a.name + "'>del</button>";
     texthtml += "<button class='text";
-    if (a.ready) {
-      texthtml += " ready";
-    }
     if (a.blocked) {
       texthtml += " cantdo";
     } else if (!isReady(a.date, a.time)) {
@@ -104,7 +109,7 @@ let render = () => {
     texthtml += "' ";
     texthtml += "value='" + a.name + "'>";
     texthtml += a.name.split('\n')[0];
-    if (a.name == 'new wish') {
+    if (a.name == 'new item') {
       button = false;
     }
     texthtml += "</button>";
@@ -146,12 +151,15 @@ let render = () => {
   }
   if (button) {
     $('#taskheader').prepend("<div class='task newtask'>\n" +
-      "<div class='text'>...new wish</div>\n" +
+      "<div class='text'>...new item</div>\n" +
       "</div>\n");
   }
   tasks.css('padding-top', $('#taskheader').height() + 10);
   let ysc = $(window).scrollTop();  //your current y position on the page
-  $(window).scrollTop(ysc + $('#taskheader').height() - lastheight);
+  let th = $('#taskheader').height();
+  if (!th) th = 0;
+  $(window).scrollTop(ysc + th - lastheight);
+  // console.log('scroll',ysc,th,lastheight);
   for (let t of tags) {
     tagtext += t + "\n";
   }
@@ -164,13 +172,14 @@ let render = () => {
   $("input[type='checkbox']").prop({
     checked: checked
   });
-  $("#fear").prop({
-    checked: fear
-  });
+  // $("#fear").prop({
+  //   checked: fear
+  // });
   $('.inputtags').val(tagtext);
   $('.inputopns').val(opntext);
-  $('.inputtext').val(text);
+  $('.inputtext').val(text + '\n' + note);
   $('#time').val(time);
+  // console.log(date);
   $('#date').val(date);
   $('.delete').val(text);
   // localStorage.setItem('data', JSON.stringify(data));
@@ -195,7 +204,10 @@ window.onload = function () {
 };
 
 
-let newwish = (name, selected, tags, opns, priority) => {
+let newwish = (name, selected, tags, opns, priority, note) => {
+  if (!note) {
+    note = '';
+  }
   if (!tags) {
     tags = [];
   }
@@ -203,10 +215,11 @@ let newwish = (name, selected, tags, opns, priority) => {
     opns = [];
   }
   if (!priority) {
-    priority = 'grey';
+    priority = 'yellow';
   }
   data.tasks.unshift({
     name,
+    note,
     tags,
     opns,
     selected,
@@ -218,8 +231,22 @@ let newwish = (name, selected, tags, opns, priority) => {
 };
 let save = () => {
   //edit
-  let inpt = $('.inputtext');
-  let inptval = inpt.val();
+  let inptval = $('.inputtext').val();
+  let name;
+  let note = '';
+  $.each(inptval.split(/\n/), function (i, text) {
+    if (i == 0) {
+      name = text;
+      if (text == '') {
+        name = 'new item';
+      }
+    } else if (i == 1) {
+      note += text;
+    }
+    else {
+      note += '\n' + text;
+    }
+  });
   let inptags = $(".inputtags").val();
   let inpopns = $(".inputopns").val();
   let ready = $(".checkbox").prop('checked');
@@ -238,83 +265,96 @@ let save = () => {
     date = clock().year + "-" + clock().month + "-" + clock().d;
     // console.log("set date "+date);
   }
+  let d = 0
+  let ok = true;
+  while (ok) {
+    ok = false;
+    for (let a of data.tasks) {
+      if (!a.selected && a.name == name) {
+        name += '!';
+        ok = true;
+        break;
+      }
+    }
+  }
+
   for (let a of data.tasks) {
-    if (a.selected && inpt.val()) {
+    if (a.selected && name) {
       for (let n of data.tasks) {
         for (let t in n.tags) {
           if (n.tags[t] == a.name) {
             n.tags.splice(t, 1);
-            // n.tags[t] = inptval;
           }
         }
       }
     }
   }
   for (let a of data.tasks) {
-    if (a.selected && inpt.val()) {
+    if (a.selected && name) {
       for (let n of data.tasks) {
         for (let t in n.opns) {
           if (n.opns[t] == a.name) {
             n.opns.splice(t, 1);
-            // n.tags[t] = inptval;
           }
         }
       }
     }
   }
-  $.each(inptags.split(/\n/), function (i, name) {
+  $.each(inptags.split(/\n/), function (i, tgname) {
     // empty string check
-    if (name != "") {
-      tags.push(name);
+    if (tgname != "") {
+      tags.push(tgname);
       let ok = true;
       for (let a of data.tasks) {
-        if (a.name == name) {
+        if (a.name == tgname) {
           ok = false;
           if (a.opns) {
-            if (a.opns.indexOf(inptval) === -1) {
-              a.opns.push(inptval);
+            if (a.opns.indexOf(name) === -1) {
+              a.opns.push(name);
             }
           }
         }
       }
       if (ok) {
-        newwish(name, false, [], [inptval], priority);
+        newwish(tgname, false, [], [name], priority);
       }
     }
   });
-  $.each(inpopns.split(/\n/), function (i, name) {
+  $.each(inpopns.split(/\n/), function (i, opname) {
     // empty string check
-    if (name != "") {
-      opns.push(name);
+    if (opname != "") {
+      opns.push(opname);
       let ok = true;
       for (let a of data.tasks) {
-        if (a.name == name) {
+        if (a.name == opname) {
           ok = false;
-          if (a.tags.indexOf(inptval) === -1) {
-            a.tags.push(inptval);
+          if (a.tags.indexOf(name) === -1) {
+            a.tags.push(name);
           }
         }
       }
       if (ok) {
-        newwish(name, false, [inptval], [], priority);
+        newwish(opname, false, [name], [], priority);
       }
     }
   });
   for (let a of data.tasks) {
-    if (a.selected && inpt.val()) {
+    if (a.selected && inptval) {
       for (let n of data.tasks) {
         for (let t in n.tags) {
           if (n.tags[t] == a.name) {
-            n.tags[t] = inptval;
+            n.tags[t] = name;
           }
         }
         for (let t in n.opns) {
           if (n.opns[t] == a.name) {
-            n.opns[t] = inptval;
+            n.opns[t] = name;
           }
         }
       }
-      a.name = inpt.val();
+      // a.name = inpt.val();
+      a.name = name;
+      a.note = note;
       a.tags = tags;
       a.opns = opns;
       a.ready = ready;
@@ -362,12 +402,6 @@ let sortdata = () => {
       else if (b.priority == 'red') {
         return 1
       }
-      else if (a.priority == 'grey') {
-        return -1
-      }
-      else if (b.priority == 'grey') {
-        return 1
-      }
       else if (a.priority == 'yellow') {
         return -1
       }
@@ -386,10 +420,22 @@ let sortdata = () => {
       else if (b.priority == 'blue') {
         return 1
       }
+      else if (a.priority == 'purple') {
+        return -1
+      }
+      else if (b.priority == 'purple') {
+        return 1
+      }
       else if (a.priority == 'cyan') {
         return -1
       }
       else if (b.priority == 'cyan') {
+        return 1
+      }
+      else if (a.priority == 'grey') {
+        return -1
+      }
+      else if (b.priority == 'grey') {
         return 1
       }
     }
@@ -407,29 +453,40 @@ let select = (text) => {
     a.selected = (a.name == text)
   }
 };
+let selectnext = () => {
+  for (let a in data.tasks) {
+    data.tasks[a].selected = false;
+  }
+  for (let a in data.tasks) {
+    if (isReady(data.tasks[a].date, data.tasks[a].time)) {
+      data.tasks[a].selected = true;
+      break;
+    }
+  }
+};
 
 $(document).on('click', '.text', function () {
   save();
-  console.log($(this).val());
+  // console.log($(this).val());
   select($(this).val());
   render();
 });
 $(document).on('click', '.tag', function () {
   save();
-  console.log($(this).text());
+  // console.log($(this).text());
   select($(this).text());
   render();
 });
 $(document).on('click', '.opn', function () {
   save();
-  console.log($(this).text());
+  // console.log($(this).text());
   select($(this).text());
   render();
 });
 
 $(document).on('click', '.newtask', function () {
-  newwish('new wish');
-  select('new wish');
+  newwish('new item');
+  select('new item');
   render();
   $('.inputtext:first').focus().select();
 });
@@ -453,8 +510,33 @@ let del = (text) => {
     }
   }
   sortdata();
+  selectnext();
+
 };
 $(document).on('click', '.delete', function () {
   del($(this).attr('value'));
   render();
+});
+$(document).on('click', '#plustoday', function () {
+  $('#date').val(clock().year + "-" + clock().month + "-" + clock().d);
+});
+$(document).on('click', '#plusday', function () {
+  let d = new Date(Date.parse(new Date($('#date').val())) + 86400000);
+  $('#date').val(clock(d).year + "-" + clock(d).month + "-" + clock(d).d);
+});
+$(document).on('click', '#plushour', function () {
+  let d = new Date(Date.parse(new Date($('#date').val() + ' ' + $('#time').val())) + 3600000);
+  $('#time').val(clock(d).h + ":" + clock(d).m);
+});
+$(document).on('click', '#plusnow', function () {
+  $('#date').val(clock().year + "-" + clock().month + "-" + clock().d);
+  $('#time').val(clock().h + ":" + clock().m);
+});
+$(document).on('click', '#plus15', function () {
+  let d = new Date(Date.parse(new Date($('#date').val() + ' ' + $('#time').val())) + 3600000 / 4);
+  $('#time').val(clock(d).h + ":" + clock(d).m);
+});
+$(document).on('click', '#plusweek', function () {
+  let d = new Date(Date.parse(new Date($('#date').val())) + 86400000 * 7);
+  $('#date').val(clock(d).year + "-" + clock(d).month + "-" + clock(d).d);
 });

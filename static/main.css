@@ -62,7 +62,10 @@ background: black;
     font-size: 10pt;
 }
 .ready {
-    color: palegreen !important;
+    border-radius: 0px;
+    /* background: #121 !important; */
+    /* color: palegreen !important; */
+    border-RIGHT: solid 7px palegreen !important;
 }
 
 .nonblocked {
@@ -98,6 +101,7 @@ input[type="checkbox"] {
     color: white;
     text-align: left;
     font-size: 16pt;
+    padding-right: 20px;
 }
 
 .text:hover {
@@ -108,8 +112,10 @@ input[type="checkbox"] {
 
 }
 
-.inputtext {
-
+.inputtext:focus {
+    /* color:red; */
+    width: 200%;
+    height: 300px;
 }
 .clock{
     position: fixed;
@@ -127,13 +133,17 @@ input[type="checkbox"] {
     margin-bottom: 10px;
     font-size: 30px;
 }
-.blue{
+/* .blue{
     background-color: #000015;
     border-right: 5px solid darkblue;
 }
 .red{
     background-color: #150000;
     border-right: 5px solid darkred;
+}
+.purple{
+    background-color: #150015;
+    border-right: 5px solid darkmagenta;
 }
 .yellow{
     background-color: #151500;
@@ -145,11 +155,43 @@ input[type="checkbox"] {
 }
 .cyan{
     background-color: #001515;
-    border-right: 5px solid cyan;
+    border-right: 5px solid darkcyan;
 }
 .grey{
     background-color: #090909;
     border-right: 5px solid darkgrey;
+}
+.white{
+    background-color: #000000;
+     border-right: 5px solid darkgreen;
+} */
+
+.blue{
+    border-left: 7px solid darkblue;
+}
+.red{
+
+    border-left: 7px solid darkred;
+}
+.purple{
+
+    border-left: 7px solid darkmagenta;
+}
+.yellow{
+
+    border-left: 7px solid darkgoldenrod;
+}
+.green{
+
+    border-left: 7px solid darkgreen;
+}
+.cyan{
+
+    border-left: 7px solid darkcyan;
+}
+.grey{
+
+    border-left: 7px solid darkgrey;
 }
 .white{
     /* background-color: #000000; */
@@ -159,13 +201,20 @@ input[type="checkbox"] {
     color: grey;
 }
 .selected {
+    background-color: #232333;
     /* background-color: #011619; */
-    /* margin-left: -10px; */
-    /* border-left: 10px solid #38a1ca; */
+    /* border-right: 5px solid whitesmoke; */
+    /* border-radius: 0; */
+}
+
+.delete{
+}
+input{
+    font-size: 10pt;
+}
+button{
+    font-size: 12pt;
+    border-radius: 10px;
 }
 .selected .text{
-    border-right: 5px solid whitesmoke;
-    /* color:black; */
-}
-.delete{
 }
