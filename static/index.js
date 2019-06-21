@@ -64,6 +64,9 @@ let render = () => {
       checked = a.ready;
       fear = a.fear;
       $("#priority").val("white");
+      if (a.priority == "steel") {
+        $("#priority").val("steel");
+      }
       if (a.priority == "red") {
         $("#priority").val("red");
       }
@@ -396,6 +399,12 @@ let sortdata = () => {
           return -1;
         }
       }
+      else if (a.priority == 'steel') {
+        return -1
+      }
+      else if (b.priority == 'steel') {
+        return 1
+      }
       else if (a.priority == 'red') {
         return -1
       }
@@ -526,6 +535,7 @@ $(document).on('click', '#plusday', function () {
 });
 $(document).on('click', '#plushour', function () {
   let d = new Date(Date.parse(new Date($('#date').val() + ' ' + $('#time').val())) + 3600000);
+  $('#date').val(clock(d).year + "-" + clock(d).month + "-" + clock(d).d);
   $('#time').val(clock(d).h + ":" + clock(d).m);
 });
 $(document).on('click', '#plusnow', function () {

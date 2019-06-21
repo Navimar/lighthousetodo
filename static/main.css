@@ -165,7 +165,10 @@ input[type="checkbox"] {
     background-color: #000000;
      border-right: 5px solid darkgreen;
 } */
+.steel{
+    border-left: 7px solid steelblue;
 
+}
 .blue{
     border-left: 7px solid darkblue;
 }
