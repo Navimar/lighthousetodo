@@ -82,6 +82,7 @@ input[type="checkbox"] {
 
 
 .editor {
+    margin-top:50px;
     /* top: 0; */
     /* position: fixed; */
     font-size: 20pt;
@@ -100,7 +101,7 @@ input[type="checkbox"] {
     border: none;
     color: white;
     text-align: left;
-    font-size: 16pt;
+    font-size: 42pt;
     padding-right: 20px;
 }
 
@@ -119,7 +120,7 @@ input[type="checkbox"] {
 }
 .clock{
     position: fixed;
-    top:40px;
+    bottom:40px;
     right:0;
 }
 #status{
