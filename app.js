@@ -7,6 +7,9 @@ const os = require('os');
 
 
 app.use(express.static(__dirname + '/static'));
+app.use(express.static(__dirname + '/desktop'));
+app.use(express.static(__dirname + '/mobile'));
+
 
 app.get('*', function (req, res) {
     res.status(404).send("nothing there");
@@ -31,5 +34,5 @@ const port = config.port;
 const ip = config.ip;
 
 http.listen(port, ip, function () {
-    console.log('jinwish server listening on ' + ip + ":" + port);
+    console.log('lighthouse server listening on ' + ip + ":" + port);
 });
