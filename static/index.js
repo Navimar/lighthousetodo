@@ -29,7 +29,7 @@ window.onload = function () {
 
   // data = JSON.parse(localStorage.getItem('data'));
   inputSocket();
-  socket.emit('load', 'hi');
+  socket.emit('load', findGetParameter("id"));
   if (!data) {
     $('#status').addClass("red").html('NO DATA!!!');
   } else {

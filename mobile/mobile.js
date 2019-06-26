@@ -193,7 +193,7 @@ let render = () => {
   $('.delete').val(text);
   // localStorage.setItem('data', JSON.stringify(data));
   if (data) {
-    socket.emit('save', data);
+  send(data);
   }
   $('.clock').html(clock().text);
 };

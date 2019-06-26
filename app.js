@@ -13,6 +13,7 @@ app.use(express.static(__dirname + '/mobile'));
 
 app.get('*', function (req, res) {
     res.status(404).send("nothing there");
+    // res.sendFile('/index.html');
 });
 
 let config = {};

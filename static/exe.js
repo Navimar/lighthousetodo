@@ -52,7 +52,14 @@ let onPlus15 = () => {
     $('#time').val(clock(d).h + ":" + clock(d).m);
 }
 
-let onPlusWeek = () =>{
+let onPlusWeek = () => {
     let d = new Date(Date.parse(new Date($('#date').val())) + 86400000 * 7);
     $('#date').val(clock(d).year + "-" + clock(d).month + "-" + clock(d).d);
+}
+
+let send = (data) => {
+    // login.pass = findGetParameter("key");
+    let id = findGetParameter("id");
+    data.id = id;
+    socket.emit('save', data);
 }
