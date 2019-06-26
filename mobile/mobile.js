@@ -7,7 +7,8 @@ $(document).on('click', '.tag', function () {
 $(document).on('click', '.opn', function () {
     onOpn($(this).text());
 });
-$(document).on('click', '.newtask', function () {
+$(document).on('tap', '.newtask', function () {
+  alert('!!!');
     onNew();
 });
 $(document).on('click', '.delete', function () {
