@@ -7,8 +7,7 @@ $(document).on('click', '.tag', function () {
 $(document).on('click', '.opn', function () {
     onOpn($(this).text());
 });
-$(document).on('tap', '.newtask', function () {
-  alert('!!!');
+$(document).on('click', '.newtask', function () {
     onNew();
 });
 $(document).on('click', '.delete', function () {
@@ -160,9 +159,9 @@ let render = () => {
       }
     }
     if (button) {
-      $('#taskheader').prepend("<div class='task newtask'>\n" +
+      $('#taskheader').prepend("<button class='task newtask'>\n" +
         "<div class='text'>...new item</div>\n" +
-        "</div>\n");
+        "</button>\n");
     }
     tasks.css('padding-top', $('#taskheader').height() + 10);
     let ysc = $(window).scrollTop();  //your current y position on the page

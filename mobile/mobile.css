@@ -27,7 +27,7 @@ option:checked {
 }
 #taskheader {
 position: fixed;
-top:50;
+top:0;
 background: black;
 }
 
@@ -82,7 +82,7 @@ input[type="checkbox"] {
 
 
 .editor {
-    margin-top:250px;
+    margin-top:150px;
     /* top: 0; */
     /* position: fixed; */
     font-size: 20pt;
