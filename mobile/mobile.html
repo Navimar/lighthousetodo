@@ -13,43 +13,45 @@
 </head>
 
 <body>
-    <div class="editor">
-        <button class='delete' value='del'>Удалить</button>
-        <span>Активно</span>
-        <input class="checkbox" type="checkbox"> 
-        <select id="priority" size="8" name="hero">
-          <option value="steel">Условие</option>
-          <option value="red">Обязательство</option>
-          <option value="yellow">Бери и делай</option>
-          <option value="green">На днях</option>
-          <option value="blue">Цели</option>
-          <option value="purple">Вдохновляет</option>
-          <option value="cyan">Идеи</option>
-          <option value="grey">Заметки</option>
-        </select>
-        <span>
-          Название
-        </span>
-        <textarea class="input inputtext" type="text" cols="35" rows="5"></textarea>
-        <span>
-          Зависим
-        </span>
-        <textarea class="input inputtags" name="tags" cols="35" rows="5"></textarea>
-        <span>
-          Блокирует
-        </span>
-        <textarea class="input inputopns" name="tags" cols="35" rows="5"></textarea>
-        <input type="date" id="date" name="trip-start">
-        <input type="time" id="time" name="time">
-        <button id="plustoday">Сегодня</button>
-        <button id="plusnow">Сейчас</button>
-        <button id="plusday">+1 день</button>
-        <button id="plushour">+1 час</button><br>
-        <button id="plus15">+15 минут</button>
-        <button id="plusweek">+1 неделя</button>
-      </div>
+  <div class="editor">
+    <button class='delete' value='del'>Удалить</button>
+    <span>Активно</span>
+    <input class="checkbox" type="checkbox">
+    <select id="priority" size="8" name="hero">
+      <option value="first">Идеи</option>
+      <option value="second">Условие</option>
+      <option value="third">ТО</option>
+      <option value="forth">!!!</option>
+      <option value="fifth">Обязательство</option>
+      <option value="sixth">Хочу</option>
+      <option value="seventh">Убыток или Доход</option>
+      <option value="eighth">Новые горизонты</option>
+      <option value="ninth">Порядок</option>
+      <option value="tenth">Заметки</option>
+    </select>
+    <span>
+      Название
+    </span>
+    <textarea class="input inputtext" type="text" cols="35" rows="5"></textarea>
+    <span>
+      Зависим
+    </span>
+    <textarea class="input inputtags" name="tags" cols="35" rows="5"></textarea>
+    <span>
+      Блокирует
+    </span>
+    <textarea class="input inputopns" name="tags" cols="35" rows="5"></textarea>
+    <input type="date" id="date" name="trip-start">
+    <input type="time" id="time" name="time">
+    <button id="plustoday">Сегодня</button>
+    <button id="plusnow">Сейчас</button>
+    <button id="plusday">+1 день</button>
+    <button id="plushour">+1 час</button><br>
+    <button id="plus15">+15 минут</button>
+    <button id="plusweek">+1 неделя</button>
+  </div>
   <div id="tasks" class="list"></div>
-  
+
 
   <div class="clock"></div>
   <div id="status">offline</div>

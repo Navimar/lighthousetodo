@@ -19,6 +19,9 @@ $(document).on('click', '#plustoday', function () {
 $(document).on('click', '#plusday', function () {
     onPlusday();
 });
+$(document).on('click', '#tomorrow', function () {
+    onTomorrow();
+});
 $(document).on('click', '#plushour', function () {
     onPlusHour();
 });
@@ -69,34 +72,37 @@ let render = () => {
         note = a.note;
         checked = a.ready;
         fear = a.fear;
-        $("#priority").val("white");
-        if (a.priority == "steel") {
-          $("#priority").val("steel");
+        $("#priority").val("first");
+        if (a.priority == "first") {
+          $("#priority").val("first");
         }
-        if (a.priority == "red") {
-          $("#priority").val("red");
+        if (a.priority == "second") {
+          $("#priority").val("second");
         }
-        if (a.priority == "purple") {
-          $("#priority").val("purple");
+        if (a.priority == "third") {
+          $("#priority").val("third");
         }
-        if (a.priority == "yellow") {
-          $("#priority").val("yellow");
+        if (a.priority == "forth") {
+          $("#priority").val("forth");
         }
-        if (a.priority == "grey") {
-          $("#priority").val("grey");
+        if (a.priority == "fifth") {
+          $("#priority").val("fifth");
         }
-        if (a.priority == "blue") {
-          $("#priority").val("blue");
+        if (a.priority == "sixth") {
+          $("#priority").val("sixth");
         }
-        if (a.priority == "cyan") {
-          $("#priority").val("cyan");
+        if (a.priority == "seventh") {
+          $("#priority").val("seventh");
         }
-        if (a.priority == "green") {
-          $("#priority").val("green");
+        if (a.priority == "eighth") {
+          $("#priority").val("eighth");
         }
-        if (a.priority == "white") {
-          $("#priority").val("white");
+        if (a.priority == "ninth") {
+          $("#priority").val("ninth");
         }
+        if (a.priority == "tenth") {
+            $("#priority").val("tenth");
+          }
         time = a.time;
         date = a.date;
       }

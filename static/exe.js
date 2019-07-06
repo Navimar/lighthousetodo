@@ -36,6 +36,12 @@ let onPlusday = () => {
     $('#date').val(clock(d).year + "-" + clock(d).month + "-" + clock(d).d);
 }
 
+let onTomorrow = () => {
+    onToday();
+    onPlusday();
+}
+
+
 let onPlusHour = () => {
     let d = new Date(Date.parse(new Date($('#date').val() + ' ' + $('#time').val())) + 3600000);
     $('#date').val(clock(d).year + "-" + clock(d).month + "-" + clock(d).d);

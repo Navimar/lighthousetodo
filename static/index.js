@@ -48,7 +48,7 @@ let newwish = (name, selected, tags, opns, priority, note) => {
     opns = [];
   }
   if (!priority) {
-    priority = 'yellow';
+    priority = 'first';
   }
   data.tasks.unshift({
     name,
@@ -229,52 +229,64 @@ let sortdata = () => {
           return -1;
         }
       }
-      else if (a.priority == 'steel') {
+      else if (a.priority == 'first') {
         return -1
       }
-      else if (b.priority == 'steel') {
+      else if (b.priority == 'first') {
         return 1
       }
-      else if (a.priority == 'red') {
+      else if (a.priority == 'second') {
         return -1
       }
-      else if (b.priority == 'red') {
+      else if (b.priority == 'second') {
         return 1
       }
-      else if (a.priority == 'yellow') {
+      else if (a.priority == 'third') {
         return -1
       }
-      else if (b.priority == 'yellow') {
+      else if (b.priority == 'third') {
         return 1
       }
-      else if (a.priority == 'green') {
+      else if (a.priority == 'forth') {
         return -1
       }
-      else if (b.priority == 'green') {
+      else if (b.priority == 'forth') {
         return 1
       }
-      else if (a.priority == 'blue') {
+      else if (a.priority == 'fifth') {
         return -1
       }
-      else if (b.priority == 'blue') {
+      else if (b.priority == 'fifth') {
         return 1
       }
-      else if (a.priority == 'purple') {
+      else if (a.priority == 'sixth') {
         return -1
       }
-      else if (b.priority == 'purple') {
+      else if (b.priority == 'sixth') {
         return 1
       }
-      else if (a.priority == 'cyan') {
+      else if (a.priority == 'seventh') {
         return -1
       }
-      else if (b.priority == 'cyan') {
+      else if (b.priority == 'seventh') {
         return 1
       }
-      else if (a.priority == 'grey') {
+      else if (a.priority == 'eighth') {
         return -1
       }
-      else if (b.priority == 'grey') {
+      else if (b.priority == 'eighth') {
+        return 1
+      }
+      else if (a.priority == 'ninth') {
+        return -1
+      }
+      else if (b.priority == 'ninth') {
+        return 1
+      }
+      else if (a.priority == 'tenth') {
+        return -1
+      }
+      else if (b.priority == 'tenth') {
         return 1
       }
     }

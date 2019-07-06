@@ -23,9 +23,9 @@ module.exports = (io) => {
                 fs.mkdirSync('./data/' + dir);
             }
 
-            console.log('save' + msg);
-            console.log(msg);
-            console.log(dir);
+            // console.log('save' + msg);
+            // console.log(msg);
+            // console.log(dir);
 
 
             fs.createReadStream('data/' + dir + '/data.txt').pipe(fs.createWriteStream('data/' + dir + '/old' + n + '.txt'));
