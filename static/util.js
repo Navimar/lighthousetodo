@@ -41,7 +41,7 @@ function clock(date) {
 }
 
 function isReady(date, time) {
-    return Date.parse(date + " " + time) < Date.now();
+    return Date.parse(date + "T" + time) < Date.now();;
 }
 
 function findGetParameter(name, url) {

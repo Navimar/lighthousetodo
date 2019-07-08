@@ -49,15 +49,15 @@ let render = () => {
     let button = true;
     let time = "00:00";
     let date = "1111-11-11";
-    let today = new Date().getDate();
+    let today = moment().date();
     let blocked = true;;
     let texthtml = "";
     tasks.html("");
     for (let a of data.tasks) {
       texthtml = "";
-      if (today <= new Date(a.date).getDate() && new Date() < new Date(a.date)) {
-        tasks.append("<div class='date'>Сегодня " + new Date(a.date).getDate() + "</div>");
-        today = new Date(a.date).getDate() + 1;
+      if (today <= moment(a.date).date() && moment() < moment(a.date)) {
+        tasks.append("<div class='date'>Сегодня " + moment(a.date).date() + "</div>");
+        today = moment(a.date).date() + 1;
       }
       if (a.blocked && blocked) {
         tasks.append("<div class='date'>Блокированные</div>");
@@ -194,7 +194,6 @@ let render = () => {
     $('.inputopns').val(opntext);
     $('.inputtext').val(text + '\n' + note);
     $('#time').val(time);
-    // console.log(date);
     $('#date').val(date);
     $('.delete').val(text);
     // localStorage.setItem('data', JSON.stringify(data));

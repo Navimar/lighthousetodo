@@ -28,12 +28,13 @@ let onDel = (txt) => {
 }
 
 let onToday = () => {
-    $('#date').val(clock().year + "-" + clock().month + "-" + clock().d);
+    let d = moment();
+    $('#date').val(d.format('YYYY-MM-DD'));
 }
 
 let onPlusday = () => {
-    let d = new Date(Date.parse(new Date($('#date').val())) + 86400000);
-    $('#date').val(clock(d).year + "-" + clock(d).month + "-" + clock(d).d);
+    let d = moment($('#date').val()).add(1, 'day');
+    $('#date').val(d.format('YYYY-MM-DD'));
 }
 
 let onTomorrow = () => {
@@ -43,24 +44,25 @@ let onTomorrow = () => {
 
 
 let onPlusHour = () => {
-    let d = new Date(Date.parse(new Date($('#date').val() + ' ' + $('#time').val())) + 3600000);
-    $('#date').val(clock(d).year + "-" + clock(d).month + "-" + clock(d).d);
-    $('#time').val(clock(d).h + ":" + clock(d).m);
+    let d = moment($('#date').val() + 'T' + $('#time').val()).add(1, 'hour');
+    $('#date').val(d.format('YYYY-MM-DD'));
+    $('#time').val(d.format('HH:mm'));
 }
 
 let onNow = () => {
-    $('#date').val(clock().year + "-" + clock().month + "-" + clock().d);
-    $('#time').val(clock().h + ":" + clock().m);
+    let d = moment();
+    $('#date').val(d.format('YYYY-MM-DD'));
+    $('#time').val(d.format('HH:mm'));
 }
-
 let onPlus15 = () => {
-    let d = new Date(Date.parse(new Date($('#date').val() + ' ' + $('#time').val())) + 3600000 / 4);
-    $('#time').val(clock(d).h + ":" + clock(d).m);
+    let d = moment($('#date').val() + 'T' + $('#time').val()).add(15, 'minute');
+    $('#date').val(d.format('YYYY-MM-DD'));
+    $('#time').val(d.format('HH:mm'));
 }
 
 let onPlusWeek = () => {
-    let d = new Date(Date.parse(new Date($('#date').val())) + 86400000 * 7);
-    $('#date').val(clock(d).year + "-" + clock(d).month + "-" + clock(d).d);
+    let d = moment($('#date').val()).add(7, 'day');
+    $('#date').val(d.format('YYYY-MM-DD'));
 }
 
 let send = (data) => {

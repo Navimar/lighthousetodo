@@ -216,10 +216,10 @@ let sortdata = () => {
         return 1
       }
       else if (a.priority == b.priority) {
-        if (Date.parse(a.date + " " + a.time) > Date.parse(b.date + " " + b.time)) {
+        if (Date.parse(a.date + "T" + a.time) > Date.parse(b.date + "T" + b.time)) {
           return 1;
         }
-        else if (Date.parse(a.date + " " + a.time) < Date.parse(b.date + " " + b.time)) {
+        else if (Date.parse(a.date + "T" + a.time) < Date.parse(b.date + "T" + b.time)) {
           return -1;
         }
         else if (a.name.length >= b.name.length) {
