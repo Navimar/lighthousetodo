@@ -4,8 +4,8 @@
 body {
     background: black;
     color: whitesmoke;
-    font-size: 16pt;
-    font-family: Verdana;
+    /* /* font-size: 16pt; */
+    font-family: Verdana; 
     margin: 0;
 }
 .list{
@@ -14,18 +14,21 @@ body {
 }
 
 select{
-    font-size: 20px;
+    width: 100%;
+    /* font-size: 20px; */
     background: black;
     color: white;
 }
 
+option{
 
+}
 option:checked { 
-    color: red; 
+    /* color: red;  */
 }
 #taskheader {
-position: fixed;
-top:0;
+/* position: fixed; */
+top:25px;
 background: black;
 }
 
@@ -72,21 +75,20 @@ background: black;
 
 input[type="checkbox"] {
     vertical-align: middle;
-    width: 50px; /*Desired width*/
-    height: 50px; /*Desired height*/
     cursor: pointer;
 }
 
 
 
 .editor {
-    margin-top:100px;
+    /* margin-top:100px; */
     /* top: 0; */
     /* position: fixed; */
     /* font-size: 20pt; */
 }
 
 .input {
+    width:100%;
     border: none;
     font-size: 10pt;
     background: #333;
@@ -117,13 +119,13 @@ input[type="checkbox"] {
 } */
 .clock{
     position: fixed;
-    bottom:40px;
-    right:0;
+    top:0px;
+    left:0;
 }
 #status{
     position: fixed;
     right:0;
-    top:60px;
+    top:0px;
 }
 .date{
     text-align: center;

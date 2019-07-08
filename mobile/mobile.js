@@ -166,7 +166,7 @@ let render = () => {
       "...new item\n" +
       "</button>\n");
   }
-  tasks.css('padding-top', $('#taskheader').height() + 10);
+  // tasks.css('padding-top', $('#taskheader').height() + 10);
   let ysc = $(window).scrollTop();  //your current y position on the page
   let th = $('#taskheader').height();
   if (!th) th = 0;
@@ -198,7 +198,7 @@ let render = () => {
   if (data) {
     send(data);
   }
-  $('.clock').html(clock().text);
+  // $('#status').prepend(clock().text);
 };
 
 
