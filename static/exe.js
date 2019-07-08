@@ -20,7 +20,6 @@ let onNew = () => {
     newwish('new item');
     select('new item');
     render();
-    $('.inputtext:first').focus().select();
 }
 let onDel = (txt) => {
     del(txt);
