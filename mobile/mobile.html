@@ -2,6 +2,10 @@
 <html lang="en">
 
 <head>
+  <script src="moment.js"></script>
+  <script>
+    moment().format();
+  </script>
   <script src="jquery.js"></script>
   <script src="util.js"></script>
 
@@ -29,24 +33,15 @@
       <option value="ninth">Хочу!</option>
       <option value="tenth">Заметки</option>
     </select>
-    <span>
-      Название
-    </span>
-    <textarea class="input inputtext" type="text" cols="35" rows="5"></textarea>
-    <span>
-      Зависим
-    </span>
-    <textarea class="input inputtags" name="tags" cols="35" rows="5"></textarea>
-    <span>
-      Блокирует
-    </span>
-    <textarea class="input inputopns" name="tags" cols="35" rows="5"></textarea>
+    <textarea placeholder="Название..." class="input inputtext" type="text" cols="35" rows="5"></textarea>
+    <textarea placeholder="Зависим..." class="input inputtags" name="tags" cols="35" rows="5"></textarea>
+    <textarea placeholder="Блокирует..." class="input inputopns" name="tags" cols="35" rows="5"></textarea>
     <input type="date" id="date" name="trip-start">
     <input type="time" id="time" name="time">
     <button id="plustoday">Сегодня</button>
     <button id="plusnow">Сейчас</button>
     <button id="plusday">+1 день</button>
-    <button id="plushour">+1 час</button><br>
+    <button id="plushour">+1 час</button>
     <button id="plus15">+15 минут</button>
     <button id="plusweek">+1 неделя</button>
   </div>

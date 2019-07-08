@@ -162,8 +162,8 @@ let render = () => {
     }
   }
   if (button) {
-    $('#taskheader').prepend("<button class='task newtask'>\n" +
-      "<div class='text'>...new item</div>\n" +
+    $('#taskheader').prepend("<button class='text task newtask'>\n" +
+      "...new item\n" +
       "</button>\n");
   }
   tasks.css('padding-top', $('#taskheader').height() + 10);
@@ -202,15 +202,9 @@ let render = () => {
 };
 
 
-$(this).bind('touchstart', function preventZoom(e) {
-  var t2 = e.timeStamp
-    , t1 = $(this).data('lastTouch') || t2
-    , dt = t2 - t1
-    , fingers = e.originalEvent.touches.length;
-  $(this).data('lastTouch', t2);
-  if (!dt || dt > 500 || fingers > 1) return; // not double-tap
-
-  e.preventDefault(); // double tap - prevent the zoom
-  // also synthesize click events we just swallowed up
-  $(this).trigger('click').trigger('click');
-});
+// $(this).bind('touchend', function(e) {
+//   e.preventDefault();
+//   // Add your code here. 
+//   $(this).click();
+//   // This line still calls the standard click event, in case the user needs to interact with the element that is being clicked on, but still avoids zooming in cases of double clicking.
+// })

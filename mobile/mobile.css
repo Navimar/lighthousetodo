@@ -1,3 +1,6 @@
+*{
+    touch-action: manipulation;
+}
 body {
     background: black;
     color: whitesmoke;
@@ -5,14 +8,9 @@ body {
     font-family: Verdana;
     margin: 0;
 }
-
-#tasks {
-    
-}
 .list{
     margin: auto;
     text-align: left;
-    width: 600px;
 }
 
 select{
@@ -82,10 +80,10 @@ input[type="checkbox"] {
 
 
 .editor {
-    margin-top:150px;
+    margin-top:100px;
     /* top: 0; */
     /* position: fixed; */
-    font-size: 20pt;
+    /* font-size: 20pt; */
 }
 
 .input {
@@ -113,11 +111,10 @@ input[type="checkbox"] {
 
 }
 
-.inputtext:focus {
-    /* color:red; */
+/* .inputtext:focus {
     width: 200%;
     height: 300px;
-}
+} */
 .clock{
     position: fixed;
     bottom:40px;
@@ -217,6 +214,8 @@ input{
     font-size: 10pt;
 }
 button{
+    background-color: darkgray;
+    color:black;
     font-size: 12pt;
     border-radius: 10px;
 }
