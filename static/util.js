@@ -41,7 +41,8 @@ function clock(date) {
 }
 
 function isReady(date, time) {
-    return Date.parse(date + "T" + time) < Date.now();;
+    return moment(date + "T" + time).format('x') < moment().format('x');;
+    // return Date.parse(date + "T" + time) < Date.now();;
 }
 
 function findGetParameter(name, url) {
