@@ -9,7 +9,7 @@ $(document).on('click', '.opn', function () {
 });
 $(document).on('click', '.newtask', function () {
     onNew();
-    $('.inputtext:first').val('').focus();
+    $('.inputtext:first').focus().select();
 });
 $(document).on('click', '.delete', function () {
     onDel($(this).attr('value'));

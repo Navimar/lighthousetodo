@@ -23,7 +23,7 @@ $(document).on('click', '.opn', function () {
 });
 $(document).on('click', '.newtask', function () {
   onNew();
-  $('.inputtext:first').focus().select();
+  $('.inputtext:first').val('').select();
 });
 $(document).on('click', '.delete', function () {
   onDel($(this).attr('value'));
