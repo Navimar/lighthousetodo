@@ -1,35 +1,37 @@
-*{
+* {
     touch-action: manipulation;
 }
+
 body {
     background: black;
     color: whitesmoke;
     /* /* font-size: 16pt; */
-    font-family: Verdana; 
+    font-family: Verdana;
     margin: 0;
 }
-.list{
+
+.list {
     margin: auto;
     text-align: left;
 }
 
-select{
+select {
     width: 100%;
     /* font-size: 20px; */
     background: black;
     color: white;
 }
 
-option{
+option {}
 
-}
-option:checked { 
+option:checked {
     /* color: red;  */
 }
+
 #taskheader {
-/* position: fixed; */
-top:25px;
-background: black;
+    /* position: fixed; */
+    top: 25px;
+    background: black;
 }
 
 .newtask {
@@ -49,19 +51,20 @@ background: black;
     color: grey;
 }
 
-.opns{
+.opns {}
 
-}
-.opn{
+.opn {
     font-size: 10pt;
     font-style: italic;
     background: #333;
     padding: 2px;
     color: grey;
 }
-.arr{
+
+.arr {
     font-size: 10pt;
 }
+
 .ready {
     border-radius: 0px;
     /* background: #121 !important; */
@@ -78,8 +81,6 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-
-
 .editor {
     /* margin-top:100px; */
     /* top: 0; */
@@ -88,13 +89,14 @@ input[type="checkbox"] {
 }
 
 .input {
-    width:100%;
+    width: 100%;
     border: none;
     font-size: 10pt;
     background: #333;
     color: whitesmoke;
 }
-.text{
+
+.text {
     width: 100%;
     /* margin: 0px 15px; */
     background-color: transparent;
@@ -106,103 +108,83 @@ input[type="checkbox"] {
 }
 
 .text:hover {
-    cursor: pointer;   
+    cursor: pointer;
 }
 
-.inputtags {
-
-}
+.inputtags {}
 
 /* .inputtext:focus {
     width: 200%;
     height: 300px;
 } */
-.clock{
+
+.clock {
     position: fixed;
-    top:0px;
-    left:0;
+    top: 0px;
+    left: 0;
 }
-#status{
+
+#status {
     position: fixed;
-    right:0;
-    top:0px;
+    right: 0;
+    top: 0px;
 }
-.date{
+
+.date {
     text-align: center;
     margin-top: 30px;
     margin-bottom: 10px;
     font-size: 30px;
 }
-/* .blue{
-    background-color: #000015;
-    border-right: 5px solid darkblue;
-}
-.red{
-    background-color: #150000;
-    border-right: 5px solid darkred;
-}
-.purple{
-    background-color: #150015;
-    border-right: 5px solid darkmagenta;
-}
-.yellow{
-    background-color: #151500;
-    border-right: 5px solid darkgoldenrod;
-}
-.green{
-    background-color: #001500;
-    border-right: 5px solid darkgreen;
-}
-.cyan{
-    background-color: #001515;
-    border-right: 5px solid darkcyan;
-}
-.grey{
-    background-color: #090909;
-    border-right: 5px solid darkgrey;
-}
-.white{
-    background-color: #000000;
-     border-right: 5px solid darkgreen;
-} */
-.steel{
-    border-left: 7px solid steelblue;
 
+.first {
+    border-left: 7px solid steelblue;
 }
-.blue{
+
+.second {
     border-left: 7px solid darkblue;
 }
-.red{
 
-    border-left: 7px solid darkred;
-}
-.purple{
-
+.third {
     border-left: 7px solid darkmagenta;
 }
-.yellow{
 
+.forth {
+    border-left: 7px solid darkred;
+}
+
+.fifth {
     border-left: 7px solid darkgoldenrod;
 }
-.green{
 
+.sixth {
     border-left: 7px solid darkgreen;
 }
-.cyan{
 
+.seventh {
     border-left: 7px solid darkcyan;
 }
-.grey{
 
-    border-left: 7px solid darkgrey;
+.eighth {
+    border-left: 7px solid rgb(110, 116, 81);
 }
-.white{
+
+.ninth {
+    border-left: 7px solid rgb(187, 130, 133);
     /* background-color: #000000; */
     /* border-right: 5px solid darkgreen; */
 }
+
+.tenth {
+    border-left: 7px solid darkgrey;
+    /* background-color: #000000; */
+    /* border-right: 5px solid darkgreen; */
+}
+
 .cantdo {
     color: grey;
 }
+
 .selected {
     background-color: #232333;
     /* background-color: #011619; */
@@ -210,16 +192,17 @@ input[type="checkbox"] {
     /* border-radius: 0; */
 }
 
-.delete{
-}
-input{
+.delete {}
+
+input {
     font-size: 10pt;
 }
-button{
+
+button {
     background-color: darkgray;
-    color:black;
+    color: black;
     font-size: 12pt;
     border-radius: 10px;
 }
-.selected .text{
-}
+
+.selected .text {}
