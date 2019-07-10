@@ -13,15 +13,15 @@ $(document).ready(function () {
   }
 });
 
-$(function () {
-  var $body = $(document);
-  $body.bind('scroll', function () {
-    // "Disable" the horizontal scroll.
-    if ($body.scrollLeft() !== 0) {
-      $body.scrollLeft(0);
-    }
-  });
-});
+// $(function () {
+//   var $body = $(document);
+//   $body.bind('scroll', function () {
+//     // "Disable" the horizontal scroll.
+//     if ($body.scrollLeft() !== 0) {
+//       $body.scrollLeft(0);
+//     }
+//   });
+// });
 $(document).on('click', '.text', function () {
   onSelect($(this).val());
 });

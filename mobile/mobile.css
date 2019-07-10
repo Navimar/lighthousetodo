@@ -1,5 +1,7 @@
 * {
     touch-action: manipulation;
+    margin:0;
+    padding:0;
 }
 
 body {
@@ -99,7 +101,6 @@ input[type="checkbox"] {
 
 .text {
     width: 100%;
-    /* margin: 0px 15px; */
     background-color: transparent;
     border: none;
     color: white;
@@ -204,6 +205,10 @@ button {
     color: black;
     font-size: 12pt;
     border-radius: 10px;
+    padding: 0;
+}
+.timebutton{
+    padding: 1px 7px 2px;
 }
 
 .selected .text {}
