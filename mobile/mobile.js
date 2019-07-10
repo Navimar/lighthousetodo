@@ -1,16 +1,26 @@
-$( document ).ready(function() {
+$(document).ready(function () {
   var doc = window.document;
   var docEl = doc.documentElement;
 
   var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
   var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
 
-  if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+  if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
     requestFullScreen.call(docEl);
   }
   else {
     cancelFullScreen.call(doc);
   }
+});
+
+$(function () {
+  var $body = $(document);
+  $body.bind('scroll', function () {
+    // "Disable" the horizontal scroll.
+    if ($body.scrollLeft() !== 0) {
+      $body.scrollLeft(0);
+    }
+  });
 });
 $(document).on('click', '.text', function () {
   onSelect($(this).val());

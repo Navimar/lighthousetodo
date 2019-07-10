@@ -9,11 +9,12 @@
   <script src="jquery.js"></script>
   <script src="util.js"></script>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> -->
+  <meta name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale=1.0, user-scalable=no">
   <meta charset="UTF-8">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name = "viewport" content = "user-scalable=no, width=device-width">
+  <meta name="viewport" content="user-scalable=no, width=device-width">
   <title>Lighthouse ToDo</title>
   <link rel="apple-touch-icon" href="./favicon.png" />
   <link rel="apple-touch-startup-image" href="./favicon.png" />
@@ -26,6 +27,9 @@
     <button class='delete' value='del'>Удалить</button>
     <span>Активно</span>
     <input class="checkbox" type="checkbox">
+    <textarea placeholder="Название..." class="input inputtext" type="text" cols="35" rows="5"></textarea>
+    <textarea placeholder="Зависим..." class="input inputtags" name="tags" cols="35" rows="5"></textarea>
+    <textarea placeholder="Блокирует..." class="input inputopns" name="tags" cols="35" rows="5"></textarea>
     <select id="priority" size="10" name="hero">
       <option value="first">Идеи</option>
       <option value="second">Условия</option>
@@ -38,9 +42,6 @@
       <option value="ninth">Хочу!</option>
       <option value="tenth">Заметки</option>
     </select>
-    <textarea placeholder="Название..." class="input inputtext" type="text" cols="35" rows="5"></textarea>
-    <textarea placeholder="Зависим..." class="input inputtags" name="tags" cols="35" rows="5"></textarea>
-    <textarea placeholder="Блокирует..." class="input inputopns" name="tags" cols="35" rows="5"></textarea>
     <input type="date" id="date" name="trip-start">
     <input type="time" id="time" name="time"><br>
     <button id="plustoday">Сегодня</button>
