@@ -61,6 +61,7 @@ option:checked {
     font-style: italic;
     background: #333;
     margin: 2px;
+    padding:0;
     color: grey;
 }
 

@@ -191,14 +191,14 @@ let render = () => {
   }
   if (button) {
     $('.editor').prepend("<button class='timebutton task newtask'>\n" +
-      "...новая запись\n" +
+      "Новая запись\n" +
       "</button>\n");
   }
   // tasks.css('padding-top', $('#taskheader').height() + 10);
-  let ysc = $(window).scrollTop();  //your current y position on the page
-  let th = $('#taskheader').height();
-  if (!th) th = 0;
-  $(window).scrollTop(ysc + th - lastheight);
+  // let ysc = $(window).scrollTop();  //your current y position on the page
+  // let th = $('#taskheader').height();
+  // if (!th) th = 0;
+  // $(window).scrollTop(ysc + th - lastheight);
   // console.log('scroll',ysc,th,lastheight);
   for (let t of tags) {
     tagtext += t + "\n";
