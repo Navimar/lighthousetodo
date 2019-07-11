@@ -17,8 +17,9 @@ let onOpn = (txt) => {
 }
 
 let onNew = () => {
-    newwish('new item');
-    select('new item');
+    save();
+    newwish('новая запись');
+    select('новая запись');
     render();
 }
 let onDel = (txt) => {

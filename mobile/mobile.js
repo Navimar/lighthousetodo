@@ -58,6 +58,7 @@ $(document).on('click', '#plusweek', function () {
 });
 
 let render = () => {
+
   let lastheight = $('#taskheader').height();
   let tasks = $('#tasks');
   let tags = [];
@@ -85,6 +86,38 @@ let render = () => {
       tasks.append("<div class='date'>Блокированные</div>");
       blocked = false;
     }
+    if (a.selected) {
+      texthtml += "<div class=\"editor\">";
+      texthtml += "    <button class='timebutton delete' value='del'>Удалить<\/button>";
+      texthtml += "    <span>Активно<\/span>";
+      texthtml += "    <input class=\"checkbox\" type=\"checkbox\">";
+      texthtml += "    <textarea placeholder=\"Название...\" class=\"input inputtext\" type=\"text\" cols=\"35\" rows=\"5\"><\/textarea>";
+      texthtml += "    <textarea placeholder=\"Зависим...\" class=\"input inputtags\" name=\"tags\" cols=\"35\" rows=\"5\"><\/textarea>";
+      texthtml += "    <textarea placeholder=\"Блокирует...\" class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"5\"><\/textarea>";
+      texthtml += "    <select id=\"priority\" size=\"10\" name=\"hero\">";
+      texthtml += "      <option"+" value=\"first\">Идеи<\/option>";
+      texthtml += "      <option value=\"second\">Условия<\/option>";
+      texthtml += "      <option value=\"third\">ТО<\/option>";
+      texthtml += "      <option value=\"forth\">Бери и делай<\/option>";
+      texthtml += "      <option value=\"fifth\">Обязательство<\/option>";
+      texthtml += "      <option value=\"sixth\">Доход\/Расход<\/option>";
+      texthtml += "      <option value=\"seventh\">Новые горизонты<\/option>";
+      texthtml += "      <option value=\"eighth\">Порядок<\/option>";
+      texthtml += "      <option value=\"ninth\">Хочу!<\/option>";
+      texthtml += "      <option value=\"tenth\">Заметки<\/option>";
+      texthtml += "    <\/select>";
+      texthtml += "    <input type=\"date\" id=\"date\" name=\"trip-start\">";
+      texthtml += "    <input type=\"time\" id=\"time\" name=\"time\"><br>";
+      texthtml += "    <button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
+      texthtml += "    <button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
+      texthtml += "    <button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
+      texthtml += "    <button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
+      texthtml += "    <button class=\"timebutton\" id=\"plus15\">+15 минут<\/button>";
+      texthtml += "    <button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
+      texthtml += "  <\/div>";
+      tasks.append(texthtml);
+      texthtml="";
+    }
     texthtml += "<div class='task";
     if (a.selected) {
       texthtml += " selected";
@@ -93,38 +126,8 @@ let render = () => {
       text = a.name;
       note = a.note;
       checked = a.ready;
-      fear = a.fear;
-      $("#priority").val("first");
-      if (a.priority == "first") {
-        $("#priority").val("first");
-      }
-      if (a.priority == "second") {
-        $("#priority").val("second");
-      }
-      if (a.priority == "third") {
-        $("#priority").val("third");
-      }
-      if (a.priority == "forth") {
-        $("#priority").val("forth");
-      }
-      if (a.priority == "fifth") {
-        $("#priority").val("fifth");
-      }
-      if (a.priority == "sixth") {
-        $("#priority").val("sixth");
-      }
-      if (a.priority == "seventh") {
-        $("#priority").val("seventh");
-      }
-      if (a.priority == "eighth") {
-        $("#priority").val("eighth");
-      }
-      if (a.priority == "ninth") {
-        $("#priority").val("ninth");
-      }
-      if (a.priority == "tenth") {
-        $("#priority").val("tenth");
-      }
+      // fear = a.fear;
+        $("#priority").val(a.priority);
       time = a.time;
       date = a.date;
     }
@@ -146,9 +149,9 @@ let render = () => {
     texthtml += "' ";
     texthtml += "value='" + a.name + "'>";
     texthtml += a.name.split('\n')[0];
-    if (a.name == 'new item') {
-      button = false;
-    }
+    // if (a.name == 'new item') {
+    //   button = false;
+    // }
     texthtml += "</button>";
     if (a.tags.length > 0 || a.opns.length > 0) {
       texthtml += "<br>";
@@ -181,14 +184,14 @@ let render = () => {
 
     texthtml += "</div>";
     tasks.append(texthtml);
-    if (a.selected) {
-      texthtml = "<div id='taskheader' class='list'>" + texthtml + "<br></div>";
-      tasks.prepend(texthtml);
-    }
+    // if (a.selected) {
+    //   texthtml = "<div id='taskheader' class='list'>" + texthtml + "<br></div>";
+    //   tasks.prepend(texthtml);
+    // }
   }
   if (button) {
-    $('#taskheader').prepend("<button class='text task newtask'>\n" +
-      "...new item\n" +
+    $('.editor').prepend("<button class='timebutton task newtask'>\n" +
+      "...новая запись\n" +
       "</button>\n");
   }
   // tasks.css('padding-top', $('#taskheader').height() + 10);
@@ -233,3 +236,4 @@ let render = () => {
 //   $(this).click();
 //   // This line still calls the standard click event, in case the user needs to interact with the element that is being clicked on, but still avoids zooming in cases of double clicking.
 // })
+

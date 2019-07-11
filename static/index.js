@@ -38,29 +38,31 @@ window.onload = function () {
 };
 
 let newwish = (name, selected, tags, opns, priority, note) => {
-  if (!note) {
-    note = '';
+  if (!select(name)) {
+    if (!note) {
+      note = '';
+    }
+    if (!tags) {
+      tags = [];
+    }
+    if (!opns) {
+      opns = [];
+    }
+    if (!priority) {
+      priority = 'first';
+    }
+    data.tasks.unshift({
+      name,
+      note,
+      tags,
+      opns,
+      selected,
+      priority,
+      ready: false,
+      time: clock().h + ":" + clock().m,
+      date: clock().year + "-" + clock().month + "-" + clock().d,
+    })
   }
-  if (!tags) {
-    tags = [];
-  }
-  if (!opns) {
-    opns = [];
-  }
-  if (!priority) {
-    priority = 'first';
-  }
-  data.tasks.unshift({
-    name,
-    note,
-    tags,
-    opns,
-    selected,
-    priority,
-    ready: false,
-    time: clock().h + ":" + clock().m,
-    date: clock().year + "-" + clock().month + "-" + clock().d,
-  })
 };
 let save = () => {
   //edit
@@ -71,7 +73,7 @@ let save = () => {
     if (i == 0) {
       name = text;
       if (text == '') {
-        name = 'new item';
+        name = 'новая запись';
       }
     } else if (i == 1) {
       note += text;
@@ -300,9 +302,14 @@ let sortdata = () => {
   })
 };
 let select = (text) => {
+  let f = false;
   for (let a of data.tasks) {
     a.selected = (a.name == text)
+    if (a.selected) {
+      f = text;
+    }
   }
+  return f;
 };
 let selectnext = () => {
   for (let a in data.tasks) {

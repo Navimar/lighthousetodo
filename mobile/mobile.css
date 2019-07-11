@@ -60,7 +60,7 @@ option:checked {
     font-size: 10pt;
     font-style: italic;
     background: #333;
-    padding: 2px;
+    margin: 2px;
     color: grey;
 }
 
@@ -85,6 +85,7 @@ input[type="checkbox"] {
 }
 
 .editor {
+    background: #232333;
     /* margin-top:100px; */
     /* top: 0; */
     /* position: fixed; */
@@ -206,6 +207,7 @@ button {
     font-size: 12pt;
     border-radius: 10px;
     padding: 0;
+    padding-left:2px;
 }
 .timebutton{
     padding: 1px 7px 2px;
