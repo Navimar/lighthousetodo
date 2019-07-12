@@ -38,175 +38,187 @@ window.onload = function () {
 };
 
 let newwish = (name, selected, tags, opns, priority, note) => {
-  if (!select(name)) {
-    if (!note) {
-      note = '';
-    }
-    if (!tags) {
-      tags = [];
-    }
-    if (!opns) {
-      opns = [];
-    }
-    if (!priority) {
-      priority = 'first';
-    }
-    data.tasks.unshift({
-      name,
-      note,
-      tags,
-      opns,
-      selected,
-      priority,
-      ready: false,
-      time: clock().h + ":" + clock().m,
-      date: clock().year + "-" + clock().month + "-" + clock().d,
-    })
-  }
-};
-let save = () => {
-  //edit
-  let inptval = $('.inputtext').val();
-  let name;
-  let note = '';
-  $.each(inptval.split(/\n/), function (i, text) {
-    if (i == 0) {
-      name = text;
-      if (text == '') {
-        name = 'новая запись';
-      }
-    } else if (i == 1) {
-      note += text;
-    }
-    else {
-      note += '\n' + text;
-    }
-  });
-  let inptags = $(".inputtags").val();
-  let inpopns = $(".inputopns").val();
-  let ready = $(".checkbox").prop('checked');
-  // let fear = $("#fear").prop('checked');
-  let priority = $("#priority option:selected").val();
-  let tags = [];
-  let opns = [];
-
-  let time = $("#time").val();
-  if (!time) {
-    time = clock().h + ":" + clock().m;
-  }
-  let date = $("#date").val();
-  // console.log("date val "+date);
-  if (!date) {
-    date = clock().year + "-" + clock().month + "-" + clock().d;
-    // console.log("set date "+date);
-  }
-  let d = 0
   let ok = true;
   while (ok) {
     ok = false;
     for (let a of data.tasks) {
-      if (!a.selected && a.name == name) {
+      if (a.name == name) {
         name += '!';
         ok = true;
         break;
       }
     }
   }
+  if (!note) {
+    note = '';
+  }
+  if (!tags) {
+    tags = [];
+  }
+  if (!opns) {
+    opns = [];
+  }
+  if (!priority) {
+    priority = 'first';
+  }
+  data.tasks.unshift({
+    name,
+    note,
+    tags,
+    opns,
+    selected,
+    priority,
+    ready: false,
+    time: clock().h + ":" + clock().m,
+    date: clock().year + "-" + clock().month + "-" + clock().d,
+  })
+  // }
+};
+let save = () => {
+  //edit
+  let inptval = $('.inputtext').val();
+  let name;
+  let note = '';
+  if (inptval) {
+    $.each(inptval.split(/\n/), function (i, text) {
+      if (i == 0) {
+        name = text;
+        if (text == '') {
+          name = 'новая запись';
+        }
+      } else if (i == 1) {
+        note += text;
+      }
+      else {
+        note += '\n' + text;
+      }
+    });
+    let inptags = $(".inputtags").val();
+    let inpopns = $(".inputopns").val();
+    let ready = $(".checkbox").prop('checked');
+    // let fear = $("#fear").prop('checked');
+    let priority = $("#priority option:selected").val();
+    let tags = [];
+    let opns = [];
 
-  for (let a of data.tasks) {
-    if (a.selected && name) {
-      for (let n of data.tasks) {
-        for (let t in n.tags) {
-          if (n.tags[t] == a.name) {
-            n.tags.splice(t, 1);
-          }
-        }
-      }
+    let time = $("#time").val();
+    if (!time) {
+      time = clock().h + ":" + clock().m;
     }
-  }
-  for (let a of data.tasks) {
-    if (a.selected && name) {
-      for (let n of data.tasks) {
-        for (let t in n.opns) {
-          if (n.opns[t] == a.name) {
-            n.opns.splice(t, 1);
-          }
-        }
-      }
+    let date = $("#date").val();
+    // console.log("date val "+date);
+    if (!date) {
+      date = clock().year + "-" + clock().month + "-" + clock().d;
+      // console.log("set date "+date);
     }
-  }
-  $.each(inptags.split(/\n/), function (i, tgname) {
-    // empty string check
-    if (tgname != "") {
-      tags.push(tgname);
-      let ok = true;
+    let d = 0
+    let ok = true;
+    while (ok) {
+      ok = false;
       for (let a of data.tasks) {
-        if (a.name == tgname) {
-          ok = false;
-          if (a.opns) {
-            if (a.opns.indexOf(name) === -1) {
-              a.opns.push(name);
+        if (!a.selected && a.name == name) {
+          name += '!';
+          ok = true;
+          break;
+        }
+      }
+    }
+
+    for (let a of data.tasks) {
+      if (a.selected && name) {
+        for (let n of data.tasks) {
+          for (let t in n.tags) {
+            if (n.tags[t] == a.name) {
+              n.tags.splice(t, 1);
             }
           }
         }
       }
-      if (ok) {
-        newwish(tgname, false, [], [name], priority);
-      }
     }
-  });
-  $.each(inpopns.split(/\n/), function (i, opname) {
-    // empty string check
-    if (opname != "") {
-      opns.push(opname);
-      let ok = true;
-      for (let a of data.tasks) {
-        if (a.name == opname) {
-          ok = false;
-          if (a.tags.indexOf(name) === -1) {
-            a.tags.push(name);
+    for (let a of data.tasks) {
+      if (a.selected && name) {
+        for (let n of data.tasks) {
+          for (let t in n.opns) {
+            if (n.opns[t] == a.name) {
+              n.opns.splice(t, 1);
+            }
           }
         }
       }
-      if (ok) {
-        newwish(opname, false, [name], [], priority);
-      }
     }
-  });
-  for (let a of data.tasks) {
-    if (a.selected && inptval) {
+    $.each(inptags.split(/\n/), function (i, tgname) {
+      // empty string check
+      if (tgname != "") {
+        tags.push(tgname);
+        let ok = true;
+        for (let a of data.tasks) {
+          if (a.name == tgname) {
+            ok = false;
+            if (a.opns) {
+              if (a.opns.indexOf(name) === -1) {
+                a.opns.push(name);
+              }
+            }
+          }
+        }
+        if (ok) {
+          newwish(tgname, false, [], [name], priority);
+        }
+      }
+    });
+    $.each(inpopns.split(/\n/), function (i, opname) {
+      // empty string check
+      if (opname != "") {
+        opns.push(opname);
+        let ok = true;
+        for (let a of data.tasks) {
+          if (a.name == opname) {
+            ok = false;
+            if (a.tags.indexOf(name) === -1) {
+              a.tags.push(name);
+            }
+          }
+        }
+        if (ok) {
+          newwish(opname, false, [name], [], priority);
+        }
+      }
+    });
+    for (let a of data.tasks) {
+      if (a.selected && inptval) {
+        for (let n of data.tasks) {
+          for (let t in n.tags) {
+            if (n.tags[t] == a.name) {
+              n.tags[t] = name;
+            }
+          }
+          for (let t in n.opns) {
+            if (n.opns[t] == a.name) {
+              n.opns[t] = name;
+            }
+          }
+        }
+        // a.name = inpt.val();
+        a.name = name;
+        a.note = note;
+        a.tags = tags;
+        a.opns = opns;
+        a.ready = ready;
+        a.priority = priority;
+        a.time = time;
+        a.date = date;
+      }
+      a.blocked = false;
       for (let n of data.tasks) {
-        for (let t in n.tags) {
-          if (n.tags[t] == a.name) {
-            n.tags[t] = name;
-          }
-        }
-        for (let t in n.opns) {
-          if (n.opns[t] == a.name) {
-            n.opns[t] = name;
+        for (let t of a.tags) {
+          if (t == n.name && !n.ready) {
+            a.blocked = true;
           }
         }
       }
-      // a.name = inpt.val();
-      a.name = name;
-      a.note = note;
-      a.tags = tags;
-      a.opns = opns;
-      a.ready = ready;
-      a.priority = priority;
-      a.time = time;
-      a.date = date;
     }
-    a.blocked = false;
-    for (let n of data.tasks) {
-      for (let t of a.tags) {
-        if (t == n.name && !n.ready) {
-          a.blocked = true;
-        }
-      }
-    }
+    sortdata();
   }
-  sortdata();
 };
 let sortdata = () => {
   data.tasks.sort((a, b) => {
@@ -289,6 +301,12 @@ let sortdata = () => {
         return -1
       }
       else if (b.priority == 'tenth') {
+        return 1
+      }
+      else if (a.priority == 'eleventh') {
+        return -1
+      }
+      else if (b.priority == 'eleventh') {
         return 1
       }
     }

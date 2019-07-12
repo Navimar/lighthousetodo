@@ -43,9 +43,9 @@ module.exports = (io) => {
             let dir = sha256(sha256.x2(msg + salt));
             if (fs.existsSync('data/' + dir + '/data.txt')) {
                 console.log('load ' + dir);
-                console.log(msg);
+                // console.log(msg);
                 fs.readFile('data/' + dir + '/data.txt', 'utf8', function (err, data) {
-                    console.log(JSON.parse(data));
+                    // console.log(JSON.parse(data));
                     socket.emit('update', JSON.parse(data));
                 });
             } else {

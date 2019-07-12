@@ -1,16 +1,17 @@
 $(document).ready(function () {
-  var doc = window.document;
-  var docEl = doc.documentElement;
+  // selectnext();
+//   var doc = window.document;
+//   var docEl = doc.documentElement;
 
-  var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
-  var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+//   var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+//   var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
 
-  if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-    requestFullScreen.call(docEl);
-  }
-  else {
-    cancelFullScreen.call(doc);
-  }
+//   if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+//     requestFullScreen.call(docEl);
+//   }
+//   else {
+//     cancelFullScreen.call(doc);
+//   }
 });
 
 // $(function () {
@@ -90,33 +91,75 @@ let render = () => {
       texthtml += "<div class=\"editor\">";
       texthtml += "    <button class='timebutton delete' value='del'>Удалить<\/button>";
       texthtml += "    <span>Активно<\/span>";
-      texthtml += "    <input class=\"checkbox\" type=\"checkbox\">";
-      texthtml += "    <textarea placeholder=\"Название...\" class=\"input inputtext\" type=\"text\" cols=\"35\" rows=\"5\"><\/textarea>";
-      texthtml += "    <textarea placeholder=\"Зависим...\" class=\"input inputtags\" name=\"tags\" cols=\"35\" rows=\"5\"><\/textarea>";
-      texthtml += "    <textarea placeholder=\"Блокирует...\" class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"5\"><\/textarea>";
-      texthtml += "    <select id=\"priority\" size=\"10\" name=\"hero\">";
-      texthtml += "      <option"+" value=\"first\">Идеи<\/option>";
-      texthtml += "      <option value=\"second\">Условия<\/option>";
-      texthtml += "      <option value=\"third\">ТО<\/option>";
-      texthtml += "      <option value=\"forth\">Бери и делай<\/option>";
-      texthtml += "      <option value=\"fifth\">Обязательство<\/option>";
-      texthtml += "      <option value=\"sixth\">Доход\/Расход<\/option>";
-      texthtml += "      <option value=\"seventh\">Новые горизонты<\/option>";
-      texthtml += "      <option value=\"eighth\">Порядок<\/option>";
-      texthtml += "      <option value=\"ninth\">Хочу!<\/option>";
-      texthtml += "      <option value=\"tenth\">Заметки<\/option>";
-      texthtml += "    <\/select>";
+      texthtml += "    <input class=\"checkbox\" type=\"checkbox\"> <br>";
+      texthtml += "    <select id=\"priority\" size=\"11\" name=\"hero\">";
+      texthtml += "      <option class=\"first\" value=\"first\">Идеи<\/option>";
+      texthtml += "      <option class=\"second\" value=\"second\">Условия<\/option>";
+      texthtml += "      <option class=\"third\" value=\"third\">ТО<\/option>";
+      texthtml += "      <option class=\"forth\" value=\"forth\">Бери и делай<\/option>";
+      texthtml += "      <option class=\"fifth\" value=\"fifth\">Обязательство<\/option>";
+      texthtml += "      <option class=\"sixth\" value=\"sixth\">Доход\/Расход<\/option>";
+      texthtml += "      <option class=\"seventh\" value=\"seventh\">Заточка<\/option>";
+      texthtml += "      <option class=\"eighth\" value=\"eighth\">Новые горизонты<\/option>";
+      texthtml += "      <option class=\"ninth\" value=\"ninth\">Порядок<\/option>";
+      texthtml += "      <option class=\"tenth\" value=\"tenth\">Хочу!<\/option>";
+      texthtml += "      <option class=\"eleventh\" value=\"eleventh\">Заметки<\/option>";
+      texthtml += "    <\/select><br>";
+      texthtml += "    <div>";
+      texthtml += "      Название";
+      texthtml += "    <\/div>";
+      texthtml += "    <textarea class=\"input inputtext\" type=\"text\" cols=\"35\" rows=\"5\"><\/textarea>";
+      texthtml += "    <div>";
+      texthtml += "      Зависим";
+      texthtml += "    <\/div>";
+      texthtml += "    <textarea class=\"input inputtags\" name=\"tags\" cols=\"35\" rows=\"5\"><\/textarea>";
+      texthtml += "    <div>";
+      texthtml += "      Блокирует";
+      texthtml += "    <\/div>";
+      texthtml += "    <textarea class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"5\"><\/textarea>";
+      texthtml += "    <br>";
       texthtml += "    <input type=\"date\" id=\"date\" name=\"trip-start\">";
-      texthtml += "    <input type=\"time\" id=\"time\" name=\"time\"><br>";
+      texthtml += "    <input type=\"time\" id=\"time\" name=\"time\">";
+      texthtml += "    <br>";
       texthtml += "    <button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
-      texthtml += "    <button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
+      texthtml += "    <button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
+      texthtml += "    <button class=\"timebutton\" id=\"plushour\">+1 час<\/button><br>";
       texthtml += "    <button class=\"timebutton\" id=\"plus15\">+15 минут<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
       texthtml += "  <\/div>";
+
+      // texthtml += "<div class=\"editor\">";
+      // texthtml += "    <button class='timebutton delete' value='del'>Удалить<\/button>";
+      // texthtml += "    <span>Активно<\/span>";
+      // texthtml += "    <input class=\"checkbox\" type=\"checkbox\">";
+      // texthtml += "    <textarea placeholder=\"Название...\" class=\"input inputtext\" type=\"text\" cols=\"35\" rows=\"5\"><\/textarea>";
+      // texthtml += "    <textarea placeholder=\"Зависим...\" class=\"input inputtags\" name=\"tags\" cols=\"35\" rows=\"5\"><\/textarea>";
+      // texthtml += "    <textarea placeholder=\"Блокирует...\" class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"5\"><\/textarea>";
+      // texthtml += "    <select id=\"priority\" size=\"10\" name=\"hero\">";
+      // texthtml += "      <option" + " value=\"first\">Идеи<\/option>";
+      // texthtml += "      <option value=\"second\">Условия<\/option>";
+      // texthtml += "      <option value=\"third\">ТО<\/option>";
+      // texthtml += "      <option value=\"forth\">Бери и делай<\/option>";
+      // texthtml += "      <option value=\"fifth\">Обязательство<\/option>";
+      // texthtml += "      <option value=\"sixth\">Доход\/Расход<\/option>";
+      // texthtml += "      <option value=\"seventh\">Новые горизонты<\/option>";
+      // texthtml += "      <option value=\"eighth\">Порядок<\/option>";
+      // texthtml += "      <option value=\"ninth\">Хочу!<\/option>";
+      // texthtml += "      <option value=\"tenth\">Заметки<\/option>";
+      // texthtml += "    <\/select>";
+      // texthtml += "    <input type=\"date\" id=\"date\" name=\"trip-start\">";
+      // texthtml += "    <input type=\"time\" id=\"time\" name=\"time\"><br>";
+      // texthtml += "    <button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
+      // texthtml += "    <button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
+      // texthtml += "    <button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
+      // texthtml += "    <button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
+      // texthtml += "    <button class=\"timebutton\" id=\"plus15\">+15 минут<\/button>";
+      // texthtml += "    <button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
+      // texthtml += "  <\/div>";
       tasks.append(texthtml);
-      texthtml="";
+      texthtml = "";
     }
     texthtml += "<div class='task";
     if (a.selected) {
@@ -127,7 +170,7 @@ let render = () => {
       note = a.note;
       checked = a.ready;
       // fear = a.fear;
-        $("#priority").val(a.priority);
+      $("#priority").val(a.priority);
       time = a.time;
       date = a.date;
     }

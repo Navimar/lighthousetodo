@@ -167,7 +167,7 @@ let render = () => {
     }
     if (button) {
       $('#taskheader').prepend("<div class='task newtask'>\n" +
-        "<div class='text'>...new item</div>\n" +
+        "<div class='text'>...новая запись</div>\n" +
         "</div>\n");
     }
     tasks.css('padding-top', $('#taskheader').height() + 10);

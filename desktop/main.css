@@ -208,6 +208,12 @@ input[type="checkbox"] {
 }
 
 .tenth {
+  border-left: 7px solid rgb(245, 123, 184);
+  /* background-color: #000000; */
+  /* border-right: 5px solid darkgreen; */
+}
+
+.eleventh {
   border-left: 7px solid darkgrey;
   /* background-color: #000000; */
   /* border-right: 5px solid darkgreen; */
