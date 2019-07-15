@@ -108,7 +108,10 @@ let render = () => {
   tasks.html("");
   for (let a of data.tasks) {
     texthtml = "";
-    if (today.dayOfYear() <= moment(a.date).dayOfYear()) {
+    if (moment().dayOfYear() > moment(a.date).dayOfYear()){
+      tasks.append("<div class='date'> " + moment().format("D MMMM") + "</div>");
+    }
+    if (today.dayOfYear() < moment(a.date).dayOfYear()) {
       tasks.append("<div class='date'> " + moment(a.date).format("D MMMM") + "</div>");
       today = moment(a.date).add(1, 'd');
     }
