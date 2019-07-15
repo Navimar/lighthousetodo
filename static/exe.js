@@ -2,29 +2,38 @@ let onSelect = (txt) => {
     save();
     select(txt);
     render();
+    send();
 };
 
 let onTag = (txt) => {
     save();
     select(txt);
     render();
+    send();
+
 }
 
 let onOpn = (txt) => {
     save();
     select(txt);
     render();
+    send();
+
 }
 
 let onNew = () => {
     save();
-    newwish('новая запись');
+    newwish('новая запись',false,false,false,'first');
     select('новая запись');
     render();
+    send();
 }
 let onDel = (txt) => {
     del(txt);
     render();
+    send();
+    console.log('ondel');
+
 }
 
 let onToday = () => {
@@ -65,9 +74,3 @@ let onPlusWeek = () => {
     $('#date').val(d.format('YYYY-MM-DD'));
 }
 
-let send = (data) => {
-    // login.pass = findGetParameter("key");
-    let id = findGetParameter("id");
-    data.id = id;
-    socket.emit('save', data);
-}

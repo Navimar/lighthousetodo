@@ -1,7 +1,7 @@
 * {
     touch-action: manipulation;
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -10,7 +10,7 @@ body {
     /* /* font-size: 16pt; */
     font-family: Verdana;
     margin: 0;
-    overflow-x:hidden;
+    overflow-x: hidden;
 }
 
 .list {
@@ -25,7 +25,9 @@ select {
     color: white;
 }
 
-option {}
+option {
+    color:white;
+}
 
 option:checked {
     /* color: red;  */
@@ -52,6 +54,8 @@ option:checked {
     background: #333;
     padding: 2px;
     color: grey;
+    border: none;
+    border-radius: 0;
 }
 
 .opns {}
@@ -61,8 +65,10 @@ option:checked {
     font-style: italic;
     background: #333;
     margin: 2px;
-    padding:0;
+    padding: 0;
     color: grey;
+    border: none;
+    border-radius: 0;
 }
 
 .arr {
@@ -101,6 +107,10 @@ input[type="checkbox"] {
     color: whitesmoke;
 }
 
+textarea {
+    /* overflow:hidden; */
+}
+
 .text {
     width: 100%;
     background-color: transparent;
@@ -124,37 +134,42 @@ input[type="checkbox"] {
 
 .clock {
     position: fixed;
-    top: 0px;
-    left: 0;
+    bottom: 0;
+    right: 0;
 }
 
 #status {
     position: fixed;
-    right: 0;
+    right: 0px;
     top: 0px;
 }
 
 .date {
+    padding: 1px;
+    background: #222;
     text-align: center;
-    margin-top: 30px;
-    margin-bottom: 10px;
-    font-size: 30px;
+    font-size: 12pt;
+    color: gray;
+    display: block;
 }
 
 .first {
-    border-left: 7px solid steelblue;
+    border-left: 7px solid rgb(250, 126, 194);
 }
 
 .second {
-    border-left: 7px solid darkblue;
+    border-left: 7px solid #333;
+
 }
 
 .third {
-    border-left: 7px solid darkmagenta;
+    border-left: 7px solid darkred ;
+
 }
 
 .forth {
-    border-left: 7px solid darkred;
+    border-left: 7px solid darkcyan ;
+
 }
 
 .fifth {
@@ -166,23 +181,36 @@ input[type="checkbox"] {
 }
 
 .seventh {
-    border-left: 7px solid darkcyan;
+    border-left: 7px solid darkmagenta;
+
 }
 
 .eighth {
-    border-left: 7px solid rgb(110, 116, 81);
+    border-left: 7px solid darkblue;
+
 }
 
 .ninth {
-    border-left: 7px solid rgb(187, 130, 133);
+    border-left: 7px solid gray;
     /* background-color: #000000; */
     /* border-right: 5px solid darkgreen; */
 }
 
 .tenth {
-    border-left: 7px solid darkgrey;
+    border-left: 7px solid rgb(255, 197, 142);
+
     /* background-color: #000000; */
     /* border-right: 5px solid darkgreen; */
+}
+
+.eleventh {
+    border-left: 7px solid white;
+
+    /* border-right: 5px solid darkgreen; */
+}
+
+.twelfth {
+    border-left: 7px solid rgb(116, 175, 67);
 }
 
 .cantdo {
@@ -208,10 +236,23 @@ button {
     font-size: 12pt;
     border-radius: 10px;
     padding: 0;
-    padding-left:2px;
+    padding-left: 2px;
 }
-.timebutton{
+
+.timebutton {
+    color:black;
+    background-color:lightgray;
     padding: 1px 7px 2px;
 }
+
+.red {
+    /* background-color: #150000; */
+    border-bottom: 5px solid darkred;
+}
+
+/* #f1 {
+    position: fixed;
+    right: 0
+} */
 
 .selected .text {}

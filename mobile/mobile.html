@@ -5,6 +5,10 @@
   <script src="moment.js"></script>
   <script>
     moment().format();
+
+    moment.locale('ru', {
+      months: 'января_февраля_марта_апреля_мая_июня_июля_августа_сенятбря_октября_ноября_декабря'.split('_'),
+    });
   </script>
   <script src="jquery.js"></script>
   <script src="util.js"></script>
@@ -23,6 +27,7 @@
 </head>
 
 <body>
+
   <!-- <div class="editor">
     <button class='delete' value='del'>Удалить</button>
     <span>Активно</span>
@@ -54,7 +59,13 @@
   <div id="tasks" class="list"></div>
 
 
-  <div class="clock"></div>
+  <div class="clock">
+    <form name="f1" id="f1" action="">
+      <input type="text" class="t1" name="t1" value="" />
+      <input class="timebutton" type="submit" name="b1" value="Найти" />
+    </form>
+  </div>
+
   <div id="status">offline</div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="mobile.js"></script>

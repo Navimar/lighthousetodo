@@ -1,28 +1,54 @@
+
 $(document).ready(function () {
-  // selectnext();
-//   var doc = window.document;
-//   var docEl = doc.documentElement;
+  //search
+  var TRange = null;
 
-//   var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
-//   var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+  function findString(str) {
+    if (parseInt(navigator.appVersion) < 4) return;
+    var strFound;
+    if (window.find) {
+      // CODE FOR BROWSERS THAT SUPPORT window.find
+      strFound = self.find(str);
+      if (strFound && self.getSelection && !self.getSelection().anchorNode) {
+        strFound = self.find(str)
+      }
+      if (!strFound) {
+        strFound = self.find(str, 0, 1)
+        while (self.find(str, 0, 1)) continue
+      }
+    } else if (navigator.appName.indexOf("Microsoft") != -1) {
+      // EXPLORER-SPECIFIC CODE        
+      if (TRange != null) {
+        TRange.collapse(false)
+        strFound = TRange.findText(str)
+        if (strFound) TRange.select()
+      }
+      if (TRange == null || strFound == 0) {
+        TRange = self.document.body.createTextRange()
+        strFound = TRange.findText(str)
+        if (strFound) TRange.select()
+      }
+    } else if (navigator.appName == "Opera") {
+      alert("Opera browsers not supported, sorry...")
+      return;
+    }
+    if (!strFound) {
+      $('.t1').addClass('red')
+      return;
+    } else {
+      $('.t1').removeClass('red')
+    }
+  };
 
-//   if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-//     requestFullScreen.call(docEl);
-//   }
-//   else {
-//     cancelFullScreen.call(doc);
-//   }
+  document.getElementById('f1').onsubmit = function () {
+    findString(this.t1.value);
+    return false;
+  };
+
+
 });
 
-// $(function () {
-//   var $body = $(document);
-//   $body.bind('scroll', function () {
-//     // "Disable" the horizontal scroll.
-//     if ($body.scrollLeft() !== 0) {
-//       $body.scrollLeft(0);
-//     }
-//   });
-// });
+
 $(document).on('click', '.text', function () {
   onSelect($(this).val());
 });
@@ -41,6 +67,9 @@ $(document).on('click', '.delete', function () {
 });
 $(document).on('click', '#plustoday', function () {
   onToday();
+});
+$(document).on('click', '#tomorrow', function () {
+  onTomorrow();
 });
 $(document).on('click', '#plusday', function () {
   onPlusday();
@@ -73,30 +102,101 @@ let render = () => {
   let button = true;
   let time = "00:00";
   let date = "1111-11-11";
-  let today = new Date().getDate();
+  let today = moment();
   let blocked = true;;
   let texthtml = "";
   tasks.html("");
   for (let a of data.tasks) {
     texthtml = "";
-    if (today <= new Date(a.date).getDate() && new Date() < new Date(a.date)) {
-      tasks.append("<div class='date'>Сегодня " + new Date(a.date).getDate() + "</div>");
-      today = new Date(a.date).getDate() + 1;
+    if (today.dayOfYear() <= moment(a.date).dayOfYear()) {
+      tasks.append("<div class='date'> " + moment(a.date).format("D MMMM") + "</div>");
+      today = moment(a.date).add(1, 'd');
     }
     if (a.blocked && blocked) {
       tasks.append("<div class='date'>Блокированные</div>");
       blocked = false;
     }
+    texthtml += "<div class='task";
     if (a.selected) {
-      texthtml += "<div class=\"editor\">";
+      texthtml += " selected";
+      tags = a.tags;
+      opns = a.opns;
+      text = a.name;
+      note = a.note;
+      checked = a.ready;
+      // fear = a.fear;
+
+      time = a.time;
+      date = a.date;
+    }
+    if (a.ready) {
+      texthtml += " ready";
+    }
+    if (a.fear) {
+      texthtml += " old";
+    }
+    texthtml += " " + a.priority;
+    texthtml += "'>";
+    // texthtml += "<button class='delete' value='" + a.name + "'>del</button>";
+    texthtml += "<button class='text";
+    if (a.blocked) {
+      texthtml += " cantdo";
+    } else if (!isReady(a.date, a.time)) {
+      texthtml += " cantdo"
+    }
+    texthtml += "' ";
+    texthtml += "value='" + a.name + "'>";
+    texthtml += a.name.split('\n')[0];
+    // if (a.name == 'new item') {
+    //   button = false;
+    // }
+    texthtml += "</button>";
+    if (a.tags.length > 0 || a.opns.length > 0) {
+      texthtml += "<br>";
+    }
+    if (a.tags.length > 0) {
+      for (let t of a.tags) {
+        texthtml += "<button class='tag";
+        texthtml += "'>";
+        texthtml += t;
+        texthtml += "</button>&nbsp;";
+      }
+    }
+    if (a.tags.length > 0 || a.opns.length > 0) {
+      texthtml += "<span class='arr'>=&#62; </span>"
+    }
+    if (a.opns) {
+      if (a.opns.length > 0) {
+        // texthtml += "<div class='opns'>";
+        for (let t of a.opns) {
+          texthtml += "<button class='opn";
+          texthtml += "'>";
+          texthtml += t;
+          texthtml += "</button>&nbsp;";
+        }
+        // texthtml += "</div>";
+      }
+    } else {
+      a.opns = [];
+    }
+
+    texthtml += "</div>";
+    tasks.append(texthtml);
+    if (a.selected) {
+      texthtml = "<div class=\"editor\">";
+      texthtml += ("<button class='timebutton task newtask'>\n" +
+        "Новая запись\n" +
+        "</button>\n");
       texthtml += "    <button class='timebutton delete' value='del'>Удалить<\/button>";
-      texthtml += "    <span>Активно<\/span>";
       texthtml += "    <input class=\"checkbox\" type=\"checkbox\"> <br>";
+      texthtml += "    <textarea placeholder=\"Название...\" class=\"input inputtext\" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
+      texthtml += "    <textarea placeholder=\"Зависим...\" class=\"input inputtags\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
+      texthtml += "    <textarea placeholder=\"Блокирует...\" class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
       texthtml += "    <select id=\"priority\" size=\"11\" name=\"hero\">";
       texthtml += "      <option class=\"first\" value=\"first\">Идеи<\/option>";
       texthtml += "      <option class=\"second\" value=\"second\">Условия<\/option>";
-      texthtml += "      <option class=\"third\" value=\"third\">ТО<\/option>";
-      texthtml += "      <option class=\"forth\" value=\"forth\">Бери и делай<\/option>";
+      texthtml += "      <option class=\"third\" value=\"third\">Бери и делай<\/option>";
+      texthtml += "      <option class=\"forth\" value=\"forth\">ТО<\/option>";
       texthtml += "      <option class=\"fifth\" value=\"fifth\">Обязательство<\/option>";
       texthtml += "      <option class=\"sixth\" value=\"sixth\">Доход\/Расход<\/option>";
       texthtml += "      <option class=\"seventh\" value=\"seventh\">Заточка<\/option>";
@@ -104,20 +204,8 @@ let render = () => {
       texthtml += "      <option class=\"ninth\" value=\"ninth\">Порядок<\/option>";
       texthtml += "      <option class=\"tenth\" value=\"tenth\">Хочу!<\/option>";
       texthtml += "      <option class=\"eleventh\" value=\"eleventh\">Заметки<\/option>";
+      // texthtml += "      <option class=\"twelfth\" value=\"twelfth\">Корзина<\/option>";
       texthtml += "    <\/select><br>";
-      texthtml += "    <div>";
-      texthtml += "      Название";
-      texthtml += "    <\/div>";
-      texthtml += "    <textarea class=\"input inputtext\" type=\"text\" cols=\"35\" rows=\"5\"><\/textarea>";
-      texthtml += "    <div>";
-      texthtml += "      Зависим";
-      texthtml += "    <\/div>";
-      texthtml += "    <textarea class=\"input inputtags\" name=\"tags\" cols=\"35\" rows=\"5\"><\/textarea>";
-      texthtml += "    <div>";
-      texthtml += "      Блокирует";
-      texthtml += "    <\/div>";
-      texthtml += "    <textarea class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"5\"><\/textarea>";
-      texthtml += "    <br>";
       texthtml += "    <input type=\"date\" id=\"date\" name=\"trip-start\">";
       texthtml += "    <input type=\"time\" id=\"time\" name=\"time\">";
       texthtml += "    <br>";
@@ -160,83 +248,26 @@ let render = () => {
       // texthtml += "  <\/div>";
       tasks.append(texthtml);
       texthtml = "";
-    }
-    texthtml += "<div class='task";
-    if (a.selected) {
-      texthtml += " selected";
-      tags = a.tags;
-      opns = a.opns;
-      text = a.name;
-      note = a.note;
-      checked = a.ready;
-      // fear = a.fear;
+      $('textarea').keyup(function () {
+        $(this).height(0); // min-height
+        $(this).height(this.scrollHeight);
+      });
+      $('textarea').focus(function () {
+        $(this).height(0); // min-height
+        $(this).height(this.scrollHeight);
+      });
       $("#priority").val(a.priority);
-      time = a.time;
-      date = a.date;
-    }
-    if (a.ready) {
-      texthtml += " ready";
-    }
-    if (a.fear) {
-      texthtml += " old";
-    }
-    texthtml += " " + a.priority;
-    texthtml += "'>";
-    // texthtml += "<button class='delete' value='" + a.name + "'>del</button>";
-    texthtml += "<button class='text";
-    if (a.blocked) {
-      texthtml += " cantdo";
-    } else if (!isReady(a.date, a.time)) {
-      texthtml += " cantdo"
-    }
-    texthtml += "' ";
-    texthtml += "value='" + a.name + "'>";
-    texthtml += a.name.split('\n')[0];
-    // if (a.name == 'new item') {
-    //   button = false;
-    // }
-    texthtml += "</button>";
-    if (a.tags.length > 0 || a.opns.length > 0) {
-      texthtml += "<br>";
-    }
-    if (a.tags.length > 0) {
-      for (let t of a.tags) {
-        texthtml += "<span class='tag";
-        texthtml += "'>";
-        texthtml += t;
-        texthtml += "</span>&nbsp;";
-      }
-    }
-    if (a.tags.length > 0 || a.opns.length > 0) {
-      texthtml += "<span class='arr'>=&#62; </span>"
-    }
-    if (a.opns) {
-      if (a.opns.length > 0) {
-        // texthtml += "<div class='opns'>";
-        for (let t of a.opns) {
-          texthtml += "<span class='opn";
-          texthtml += "'>";
-          texthtml += t;
-          texthtml += "</span>&nbsp;";
-        }
-        // texthtml += "</div>";
-      }
-    } else {
-      a.opns = [];
-    }
+      $('.inputtext').focus();
 
-    texthtml += "</div>";
-    tasks.append(texthtml);
-    // if (a.selected) {
-    //   texthtml = "<div id='taskheader' class='list'>" + texthtml + "<br></div>";
-    //   tasks.prepend(texthtml);
-    // }
+      // function(){
+      //   $(this).height(0); // min-height
+      //   $(this).height(this.scrollHeight);
+      // });
+    }
   }
-  if (button) {
-    $('.editor').prepend("<button class='timebutton task newtask'>\n" +
-      "Новая запись\n" +
-      "</button>\n");
-  }
+
+
+
   // tasks.css('padding-top', $('#taskheader').height() + 10);
   // let ysc = $(window).scrollTop();  //your current y position on the page
   // let th = $('#taskheader').height();
@@ -266,10 +297,11 @@ let render = () => {
   $('#date').val(date);
   $('.delete').val(text);
   // localStorage.setItem('data', JSON.stringify(data));
-  if (data) {
-    send(data);
-  }
+  // if (data) {
+  //   send(data);
+  // }
   // $('#status').prepend(clock().text);
+
 };
 
 

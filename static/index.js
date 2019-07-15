@@ -71,12 +71,12 @@ let newwish = (name, selected, tags, opns, priority, note) => {
     ready: false,
     time: clock().h + ":" + clock().m,
     date: clock().year + "-" + clock().month + "-" + clock().d,
-  })
-  // }
+  });
+  console.log(data);
 };
 let save = () => {
   //edit
-  let inptval = $('.inputtext').val();
+  let inptval = $('.inputtext').val().trim();
   let name;
   let note = '';
   if (inptval) {
@@ -96,7 +96,6 @@ let save = () => {
     let inptags = $(".inputtags").val();
     let inpopns = $(".inputopns").val();
     let ready = $(".checkbox").prop('checked');
-    // let fear = $("#fear").prop('checked');
     let priority = $("#priority option:selected").val();
     let tags = [];
     let opns = [];
@@ -111,7 +110,7 @@ let save = () => {
       date = clock().year + "-" + clock().month + "-" + clock().d;
       // console.log("set date "+date);
     }
-    let d = 0
+    // let d = 0
     let ok = true;
     while (ok) {
       ok = false;
@@ -222,93 +221,109 @@ let save = () => {
 };
 let sortdata = () => {
   data.tasks.sort((a, b) => {
-    if ((a.blocked && b.blocked) || (!a.blocked && !b.blocked)) {
-      if (isReady(a.date, "00:00") && !isReady(b.date, "00:00")) {
-        return -1
+    if ((!a.blocked && b.blocked)) {
+      return -1
+    }
+    else if (a.blocked && !b.blocked) {
+      return 1
+    }
+    else if (moment(a.date).year() > moment(b.date).year()) {
+      return 1
+    }
+    else if (moment(a.date).year() < moment(b.date).year()) {
+      return -1
+    }
+    else if (moment(a.date).dayOfYear() > moment(b.date).dayOfYear()) {
+      return 1
+    }
+    else if (moment(a.date).dayOfYear() < moment(b.date).dayOfYear()) {
+      return -1
+    }
+    // else if (isReady(a.date, "00:00") && !isReady(b.date, "00:00")) {
+    //   return -1
+    // }
+    // else if (!isReady(a.date, "00:00") && isReady(b.date, "00:00")) {
+    //   return 1
+    // }
+    else if (a.priority == b.priority) {
+      if (moment(a.date + "T" + a.time).format('x') > moment(b.date + "T" + b.time).format('x')) {
+        return 1;
       }
-      else if (!isReady(a.date, "00:00") && isReady(b.date, "00:00")) {
-        return 1
+      else if (moment(a.date + "T" + a.time).format('x') < moment(b.date + "T" + b.time).format('x')) {
+        return -1;
       }
-      else if (a.priority == b.priority) {
-        if (Date.parse(a.date + "T" + a.time) > Date.parse(b.date + "T" + b.time)) {
-          return 1;
-        }
-        else if (Date.parse(a.date + "T" + a.time) < Date.parse(b.date + "T" + b.time)) {
-          return -1;
-        }
-        else if (a.name.length >= b.name.length) {
-          return 1;
-        }
-        else if (a.name.length < b.name.length) {
-          return -1;
-        }
+      else if (a.name.length >= b.name.length) {
+        return 1;
       }
-      else if (a.priority == 'first') {
-        return -1
+      else if (a.name.length < b.name.length) {
+        return -1;
       }
-      else if (b.priority == 'first') {
-        return 1
-      }
-      else if (a.priority == 'second') {
-        return -1
-      }
-      else if (b.priority == 'second') {
-        return 1
-      }
-      else if (a.priority == 'third') {
-        return -1
-      }
-      else if (b.priority == 'third') {
-        return 1
-      }
-      else if (a.priority == 'forth') {
-        return -1
-      }
-      else if (b.priority == 'forth') {
-        return 1
-      }
-      else if (a.priority == 'fifth') {
-        return -1
-      }
-      else if (b.priority == 'fifth') {
-        return 1
-      }
-      else if (a.priority == 'sixth') {
-        return -1
-      }
-      else if (b.priority == 'sixth') {
-        return 1
-      }
-      else if (a.priority == 'seventh') {
-        return -1
-      }
-      else if (b.priority == 'seventh') {
-        return 1
-      }
-      else if (a.priority == 'eighth') {
-        return -1
-      }
-      else if (b.priority == 'eighth') {
-        return 1
-      }
-      else if (a.priority == 'ninth') {
-        return -1
-      }
-      else if (b.priority == 'ninth') {
-        return 1
-      }
-      else if (a.priority == 'tenth') {
-        return -1
-      }
-      else if (b.priority == 'tenth') {
-        return 1
-      }
-      else if (a.priority == 'eleventh') {
-        return -1
-      }
-      else if (b.priority == 'eleventh') {
-        return 1
-      }
+    }
+    else if (a.priority == 'first') {
+      return -1
+    }
+    else if (b.priority == 'first') {
+      return 1
+    }
+    else if (a.priority == 'second') {
+      return -1
+    }
+    else if (b.priority == 'second') {
+      return 1
+    }
+    else if (a.priority == 'third') {
+      return -1
+    }
+    else if (b.priority == 'third') {
+      return 1
+    }
+    else if (a.priority == 'forth') {
+      return -1
+    }
+    else if (b.priority == 'forth') {
+      return 1
+    }
+    else if (a.priority == 'fifth') {
+      return -1
+    }
+    else if (b.priority == 'fifth') {
+      return 1
+    }
+    else if (a.priority == 'sixth') {
+      return -1
+    }
+    else if (b.priority == 'sixth') {
+      return 1
+    }
+    else if (a.priority == 'seventh') {
+      return -1
+    }
+    else if (b.priority == 'seventh') {
+      return 1
+    }
+    else if (a.priority == 'eighth') {
+      return -1
+    }
+    else if (b.priority == 'eighth') {
+      return 1
+    }
+    else if (a.priority == 'ninth') {
+      return -1
+    }
+    else if (b.priority == 'ninth') {
+      return 1
+    }
+    else if (a.priority == 'tenth') {
+      return -1
+    }
+    else if (b.priority == 'tenth') {
+      return 1
+    }
+    else if (a.priority == 'eleventh') {
+      return -1
+    }
+    else if (b.priority == 'eleventh') {
+      return 1
     }
     else if (a.blocked && !b.blocked) {
       return 1
@@ -362,3 +377,10 @@ let del = (text) => {
   selectnext();
 
 };
+
+let send = () => {
+  // login.pass = findGetParameter("key");
+  let id = findGetParameter("id");
+  data.id = id;
+  socket.emit('save', data);
+}

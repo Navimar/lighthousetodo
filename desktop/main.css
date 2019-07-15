@@ -104,6 +104,16 @@ input[type="checkbox"] {
   font-size: 16pt;
   padding-right: 20px;
 }
+.newtask {
+  width: 100%;
+  /* margin: 0px 15px; */
+  background-color: transparent;
+  border: none;
+  color: white;
+  text-align: left;
+  font-size: 16pt;
+  padding-right: 20px;
+}
 
 .text:hover {
   cursor: pointer;
@@ -130,59 +140,34 @@ input[type="checkbox"] {
 }
 
 .date {
+  padding: 1px;
+  background: #222;
   text-align: center;
-  margin-top: 30px;
-  margin-bottom: 10px;
-  font-size: 30px;
-}
-
-/* .blue{
-    background-color: #000015;
-    border-right: 5px solid darkblue;
+  font-size: 12pt;
+  color: gray;
+  display: block;
 }
 .red{
-    background-color: #150000;
-    border-right: 5px solid darkred;
+  background-color: #150000;
+  border-right: 5px solid darkred;
 }
-.purple{
-    background-color: #150015;
-    border-right: 5px solid darkmagenta;
-}
-.yellow{
-    background-color: #151500;
-    border-right: 5px solid darkgoldenrod;
-}
-.green{
-    background-color: #001500;
-    border-right: 5px solid darkgreen;
-}
-.cyan{
-    background-color: #001515;
-    border-right: 5px solid darkcyan;
-}
-.grey{
-    background-color: #090909;
-    border-right: 5px solid darkgrey;
-}
-.white{
-    background-color: #000000;
-     border-right: 5px solid darkgreen;
-} */
-
 .first {
-  border-left: 7px solid steelblue;
+  border-left: 7px solid rgb(250, 126, 194);
 }
 
 .second {
-  border-left: 7px solid darkblue;
+  border-left: 7px solid #333;
+
 }
 
 .third {
-  border-left: 7px solid darkmagenta;
+  border-left: 7px solid darkred ;
+
 }
 
 .forth {
-  border-left: 7px solid darkred;
+  border-left: 7px solid darkcyan ;
+
 }
 
 .fifth {
@@ -194,29 +179,36 @@ input[type="checkbox"] {
 }
 
 .seventh {
-  border-left: 7px solid darkcyan;
+  border-left: 7px solid darkmagenta;
+
 }
 
 .eighth {
-  border-left: 7px solid rgb(110, 116, 81);
+  border-left: 7px solid darkblue;
+
 }
 
 .ninth {
-  border-left: 7px solid rgb(187, 130, 133);
+  border-left: 7px solid gray;
   /* background-color: #000000; */
   /* border-right: 5px solid darkgreen; */
 }
 
 .tenth {
-  border-left: 7px solid rgb(245, 123, 184);
+  border-left: 7px solid rgb(255, 197, 142);
+
   /* background-color: #000000; */
   /* border-right: 5px solid darkgreen; */
 }
 
 .eleventh {
-  border-left: 7px solid darkgrey;
-  /* background-color: #000000; */
+  border-left: 7px solid white;
+
   /* border-right: 5px solid darkgreen; */
+}
+
+.twelfth {
+  border-left: 7px solid rgb(116, 175, 67);
 }
 
 .cantdo {
