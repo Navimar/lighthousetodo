@@ -34,7 +34,7 @@ module.exports = (io) => {
             if (n > 100) { n = 0 }
 
             let sockets = user.get(msg.id)
-            console.log(sockets);
+            // console.log(sockets);
             sockets.forEach(e => {
                 load(msg.id, e);
             });

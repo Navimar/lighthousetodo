@@ -108,12 +108,10 @@ let render = () => {
   tasks.html("");
   for (let a of data.tasks) {
     texthtml = "";
-    if (moment().dayOfYear() > moment(a.date).dayOfYear()){
-      tasks.append("<div class='date'> " + moment().format("D MMMM") + "</div>");
-    }
-    if (today.dayOfYear() < moment(a.date).dayOfYear()) {
-      tasks.append("<div class='date'> " + moment(a.date).format("D MMMM") + "</div>");
-      today = moment(a.date).add(1, 'd');
+    if (moment(a.date).format() == today.format() || moment().diff(moment(a.date)) >= 0) {
+    } else {
+        tasks.append("<div class='date'> " + moment(a.date).format('DD MMMM') + "</div>");
+        today = moment(a.date);
     }
     if (a.blocked && blocked) {
       tasks.append("<div class='date'>Блокированные</div>");
@@ -185,6 +183,8 @@ let render = () => {
 
     texthtml += "</div>";
     tasks.append(texthtml);
+    
+
     if (a.selected) {
       texthtml = "<div class=\"editor\">";
       texthtml += ("<button class='timebutton task newtask'>\n" +
@@ -267,9 +267,11 @@ let render = () => {
       //   $(this).height(this.scrollHeight);
       // });
     }
+    
   }
-
-
+  tasks.prepend(
+    "<div class='date'> " + moment().format('DD MMMM') + "</div>"
+  );
 
   // tasks.css('padding-top', $('#taskheader').height() + 10);
   // let ysc = $(window).scrollTop();  //your current y position on the page

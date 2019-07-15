@@ -227,29 +227,31 @@ let sortdata = () => {
     else if (a.blocked && !b.blocked) {
       return 1
     }
-    else if (moment(a.date).year() > moment(b.date).year()) {
+    let ad = moment(a.date + "T" + a.time);
+    let bd = moment(b.date + "T" + b.time);
+    if (ad.diff(moment(), 'days') < 0) {
+      ad = moment().hours(0).minutes(0);
+    }
+    if (bd.diff(moment(), 'days') < 0) {
+      bd = moment().hours(0).minutes(0);
+    }
+    if (ad.year() > bd.year()) {
       return 1
     }
-    else if (moment(a.date).year() < moment(b.date).year()) {
+    else if (ad.year() < bd.year()) {
       return -1
     }
-    else if (moment(a.date).dayOfYear() > moment(b.date).dayOfYear()) {
+    else if (ad.dayOfYear() > bd.dayOfYear()) {
       return 1
     }
-    else if (moment(a.date).dayOfYear() < moment(b.date).dayOfYear()) {
+    else if (ad.dayOfYear() < bd.dayOfYear()) {
       return -1
     }
-    // else if (isReady(a.date, "00:00") && !isReady(b.date, "00:00")) {
-    //   return -1
-    // }
-    // else if (!isReady(a.date, "00:00") && isReady(b.date, "00:00")) {
-    //   return 1
-    // }
     else if (a.priority == b.priority) {
-      if (moment(a.date + "T" + a.time).format('x') > moment(b.date + "T" + b.time).format('x')) {
+      if (ad.format('x') > bd.format('x')) {
         return 1;
       }
-      else if (moment(a.date + "T" + a.time).format('x') < moment(b.date + "T" + b.time).format('x')) {
+      else if (ad.format('x') < bd.format('x')) {
         return -1;
       }
       else if (a.name.length >= b.name.length) {
@@ -325,13 +327,7 @@ let sortdata = () => {
     else if (b.priority == 'eleventh') {
       return 1
     }
-    else if (a.blocked && !b.blocked) {
-      return 1
-    }
-    else if (!a.blocked && b.blocked) {
-      return -1
-    }
-    return 1;
+
   })
 };
 let select = (text) => {
