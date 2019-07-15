@@ -2,21 +2,21 @@ let onSelect = (txt) => {
     save();
     select(txt);
     send();
-    render();
+    // render();
 };
 
 let onTag = (txt) => {
     save();
     select(txt);
     send();
-    render();
+    // render();
 }
 
 let onOpn = (txt) => {
     save();
     select(txt);
     send();
-    render();
+    // render();
 }
 
 let onNew = () => {
@@ -24,13 +24,13 @@ let onNew = () => {
     newwish('новая запись',false,false,false,'first');
     select('новая запись');
     send();
-    render();
+    // render();
 
 }
 let onDel = (txt) => {
     del(txt);
     send();
-    render();
+    // render();
 }
 
 let onToday = () => {
