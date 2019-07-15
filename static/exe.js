@@ -1,39 +1,36 @@
 let onSelect = (txt) => {
     save();
     select(txt);
-    render();
     send();
+    render();
 };
 
 let onTag = (txt) => {
     save();
     select(txt);
-    render();
     send();
-
+    render();
 }
 
 let onOpn = (txt) => {
     save();
     select(txt);
-    render();
     send();
-
+    render();
 }
 
 let onNew = () => {
     save();
     newwish('новая запись',false,false,false,'first');
     select('новая запись');
-    render();
     send();
+    render();
+
 }
 let onDel = (txt) => {
     del(txt);
-    render();
     send();
-    console.log('ondel');
-
+    render();
 }
 
 let onToday = () => {
