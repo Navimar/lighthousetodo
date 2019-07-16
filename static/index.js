@@ -229,10 +229,10 @@ let sortdata = () => {
     }
     let ad = moment(a.date + "T" + a.time);
     let bd = moment(b.date + "T" + b.time);
-    if (ad.diff(moment(), 'days') < 0) {
+    if (ad.diff(moment()) < 0) {
       ad = moment().hours(0).minutes(0);
     }
-    if (bd.diff(moment(), 'days') < 0) {
+    if (bd.diff(moment()) < 0) {
       bd = moment().hours(0).minutes(0);
     }
     if (ad.year() > bd.year()) {
