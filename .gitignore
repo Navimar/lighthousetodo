@@ -6,4 +6,4 @@ data/
 .DS_Store
 .history/
 .vscode/settings.json
-data/old0.txt
+config.js

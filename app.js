@@ -4,7 +4,7 @@ let http = require('http').Server(app);
 let io = require('socket.io')(http);
 let run = require('./server/run.js');
 const os = require('os');
-
+const config = require('./config.js');
 
 app.use(express.static(__dirname + '/static'));
 app.use(express.static(__dirname + '/desktop'));
@@ -16,18 +16,18 @@ app.get('*', function (req, res) {
     // res.sendFile('/index.html');
 });
 
-let config = {};
-if (os.platform() == 'darwin' || os.platform() == 'win32') {
-    config = {
-        ip: "127.0.0.1",
-        port: "8888",
-    }
-} else {
-    config = {
-        ip: "165.22.49.60",
-        port: "8080",
-    }
-}
+// let config = {};
+// if (os.platform() == 'darwin' || os.platform() == 'win32') {
+//     config = {
+//         ip: "127.0.0.1",
+//         port: "8888",
+//     }
+// } else {
+//     config = {
+//         ip: "165.22.49.60",
+//         port: "8080",
+//     }
+// }
 
 run(io);
 
