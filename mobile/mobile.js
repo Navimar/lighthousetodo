@@ -1,10 +1,9 @@
-
 $(document).ready(function () {
   //search
   var TRange = null;
 
   function findString(str) {
-    if (parseInt(navigator.appVersion) < 4) return;
+    // if (parseInt(navigator.appVersion) < 4) return;
     var strFound;
     if (window.find) {
       // CODE FOR BROWSERS THAT SUPPORT window.find
@@ -16,20 +15,8 @@ $(document).ready(function () {
         strFound = self.find(str, 0, 1)
         while (self.find(str, 0, 1)) continue
       }
-    } else if (navigator.appName.indexOf("Microsoft") != -1) {
-      // EXPLORER-SPECIFIC CODE        
-      if (TRange != null) {
-        TRange.collapse(false)
-        strFound = TRange.findText(str)
-        if (strFound) TRange.select()
-      }
-      if (TRange == null || strFound == 0) {
-        TRange = self.document.body.createTextRange()
-        strFound = TRange.findText(str)
-        if (strFound) TRange.select()
-      }
-    } else if (navigator.appName == "Opera") {
-      alert("Opera browsers not supported, sorry...")
+    } else {
+      alert("browser not supported")
       return;
     }
     if (!strFound) {
@@ -45,11 +32,18 @@ $(document).ready(function () {
     return false;
   };
 
-
 });
-
-$(".text").on("swiperight", function () {
-  alert('!!!');
+$(".text").touchwipe({
+  wipeLeft: function() { alert("left"); },
+  wipeRight: function() { alert("right"); },
+  wipeUp: function() { alert("up"); },
+  wipeDown: function() { alert("down"); },
+  min_move_x: 20,
+  min_move_y: 20,
+  preventDefaultEvents: true
+});
+$(document).on('swiperight', '.text', function (event) {
+  $(event.target).addClass("red");
 });
 $(document).on('click', '.text', function () {
   onSelect($(this).val());
@@ -263,7 +257,6 @@ let render = () => {
       });
       $("#priority").val(a.priority);
       $('.inputtext').focus();
-
       // function(){
       //   $(this).height(0); // min-height
       //   $(this).height(this.scrollHeight);

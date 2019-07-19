@@ -28,8 +28,8 @@ let onNew = () => {
 
 }
 let onDel = (txt) => {
+    selectnext();
     del(txt);
-    // selectnext();
     send();
     render();
 }

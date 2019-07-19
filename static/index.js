@@ -342,14 +342,29 @@ let select = (text) => {
 };
 let selectnext = () => {
   for (let a in data.tasks) {
-    data.tasks[a].selected = false;
-  }
-  for (let a in data.tasks) {
-    if (isReady(data.tasks[a].date, data.tasks[a].time)) {
-      data.tasks[a].selected = true;
+    if (data.tasks[a].selected) {
+      data.tasks[a].selected = false;
+      a=parseInt(a);
+      let b=a+1;
+      console.log(b, data.tasks[b],data.tasks[1]);
+
+      if (data.tasks[b]) {
+        data.tasks[b].selected = true;
+      } else {
+        data.tasks[0].selected = true;
+      }
       break;
     }
   }
+  // for (let a in data.tasks) {
+  //   data.tasks[a].selected = false;
+  // }
+  // for (let a in data.tasks) {
+  //   if (isReady(data.tasks[a].date, data.tasks[a].time)) {
+  //     data.tasks[a].selected = true;
+  //     break;
+  //   }
+  // }
 };
 let del = (text) => {
   for (let a in data.tasks) {
