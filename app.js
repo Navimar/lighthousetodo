@@ -25,7 +25,7 @@ if (os.platform() == 'darwin' || os.platform() == 'win32') {
 } else {
     config = {
         ip: "165.22.49.60",
-        port: "80",
+        port: "8080",
     }
 }
 
