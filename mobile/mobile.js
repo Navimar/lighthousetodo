@@ -49,7 +49,7 @@ $(document).ready(function () {
 });
 
 $(".text").on("swiperight", function () {
-  $(this).addClass('red');
+  alert('!!!');
 });
 $(document).on('click', '.text', function () {
   onSelect($(this).val());

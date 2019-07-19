@@ -370,8 +370,6 @@ let del = (text) => {
     }
   }
   sortdata();
-  selectnext();
-
 };
 
 let send = () => {
