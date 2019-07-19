@@ -48,7 +48,9 @@ $(document).ready(function () {
 
 });
 
-
+$(".text").on("swiperight", function () {
+  $(this).addClass('red');
+});
 $(document).on('click', '.text', function () {
   onSelect($(this).val());
 });
@@ -110,8 +112,8 @@ let render = () => {
     texthtml = "";
     if (moment(a.date).format() == today.format() || moment().diff(moment(a.date)) >= 0) {
     } else {
-        tasks.append("<div class='date'> " + moment(a.date).format('DD MMMM') + "</div>");
-        today = moment(a.date);
+      tasks.append("<div class='date'> " + moment(a.date).format('DD MMMM') + "</div>");
+      today = moment(a.date);
     }
     if (a.blocked && blocked) {
       tasks.append("<div class='date'>Блокированные</div>");
@@ -183,7 +185,7 @@ let render = () => {
 
     texthtml += "</div>";
     tasks.append(texthtml);
-    
+
 
     if (a.selected) {
       texthtml = "<div class=\"editor\">";
@@ -267,7 +269,7 @@ let render = () => {
       //   $(this).height(this.scrollHeight);
       // });
     }
-    
+
   }
   tasks.prepend(
     "<div class='date'> " + moment().format('DD MMMM') + "</div>"
