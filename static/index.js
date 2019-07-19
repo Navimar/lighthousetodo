@@ -248,10 +248,10 @@ let sortdata = () => {
       return -1
     }
     else if (a.priority == b.priority) {
-      if (ad.format('x') > bd.format('x')) {
+      if (moment(a.date + "T" + a.time) > moment(b.date + "T" + b.time)) {
         return 1;
       }
-      else if (ad.format('x') < bd.format('x')) {
+      else if (moment(a.date + "T" + a.time) < moment(b.date + "T" + b.time)) {
         return -1;
       }
       else if (a.name.length >= b.name.length) {
