@@ -36,7 +36,7 @@ module.exports = (io) => {
             let sockets = user.get(msg.id)
             // console.log(sockets);
             sockets.forEach(e => {
-                // load(msg.id, e);
+                load(msg.id, e);
             });
         });
         socket.on('load', function (msg) {
