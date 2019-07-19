@@ -1,7 +1,7 @@
 let onSelect = (txt) => {
     save();
     select(txt);
-    // send();
+    send();
     render();
 };
 
@@ -25,8 +25,8 @@ let onNew = () => {
     select('новая запись');
     send();
     render();
-
 }
+
 let onDel = (txt) => {
     selectnext();
     del(txt);
