@@ -1,4 +1,7 @@
+import { loadavg } from "os";
+
 let onSelect = (txt) => {
+    update();
     save();
     select(txt);
     send();
@@ -6,6 +9,7 @@ let onSelect = (txt) => {
 };
 
 let onTag = (txt) => {
+    update();
     save();
     select(txt);
     send();
@@ -13,6 +17,7 @@ let onTag = (txt) => {
 }
 
 let onOpn = (txt) => {
+    update();
     save();
     select(txt);
     send();
@@ -20,6 +25,7 @@ let onOpn = (txt) => {
 }
 
 let onNew = () => {
+    update();
     save();
     newwish('новая запись',false,false,false,'first');
     select('новая запись');
@@ -28,6 +34,7 @@ let onNew = () => {
 }
 
 let onDel = (txt) => {
+    update();
     selectnext();
     del(txt);
     send();

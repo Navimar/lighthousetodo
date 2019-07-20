@@ -26,10 +26,10 @@ function inputSocket() {
 }
 
 window.onload = function () {
-
+  update();
   // data = JSON.parse(localStorage.getItem('data'));
   inputSocket();
-  socket.emit('load', findGetParameter("id"));
+
   if (!data) {
     $('#status').addClass("red").html('NO DATA!!!');
   } else {
@@ -37,6 +37,9 @@ window.onload = function () {
   }
 };
 
+let update = () => {
+  socket.emit('load', findGetParameter("id"));
+}
 let newwish = (name, selected, tags, opns, priority, note) => {
   let ok = true;
   while (ok) {
@@ -344,9 +347,9 @@ let selectnext = () => {
   for (let a in data.tasks) {
     if (data.tasks[a].selected) {
       data.tasks[a].selected = false;
-      a=parseInt(a);
-      let b=a+1;
-      console.log(b, data.tasks[b],data.tasks[1]);
+      a = parseInt(a);
+      let b = a + 1;
+      console.log(b, data.tasks[b], data.tasks[1]);
 
       if (data.tasks[b]) {
         data.tasks[b].selected = true;
