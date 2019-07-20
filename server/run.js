@@ -25,7 +25,8 @@ module.exports = (io) => {
             // console.log(sockets);
             sockets.forEach(s => {
                 if (s != socket) {
-                    load(msg.id, s);
+                    // load(msg.id, s);
+                    s.disconnect(true)
                 }
             });
             
