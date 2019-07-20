@@ -1,7 +1,7 @@
 import { loadavg } from "os";
 
 let onSelect = (txt) => {
-    update();
+    // update();
     save();
     select(txt);
     send();
@@ -9,7 +9,7 @@ let onSelect = (txt) => {
 };
 
 let onTag = (txt) => {
-    update();
+    // update();
     save();
     select(txt);
     send();
@@ -17,7 +17,7 @@ let onTag = (txt) => {
 }
 
 let onOpn = (txt) => {
-    update();
+    // update();
     save();
     select(txt);
     send();
@@ -25,7 +25,7 @@ let onOpn = (txt) => {
 }
 
 let onNew = () => {
-    update();
+    // update();
     save();
     newwish('новая запись',false,false,false,'first');
     select('новая запись');
@@ -34,13 +34,16 @@ let onNew = () => {
 }
 
 let onDel = (txt) => {
-    update();
+    // update();
     selectnext();
     del(txt);
     send();
     render();
 }
 
+let onFocus =()=>{
+    update()
+}
 let onToday = () => {
     let d = moment();
     $('#date').val(d.format('YYYY-MM-DD'));

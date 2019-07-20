@@ -1,3 +1,6 @@
+window.onfocus = function () {
+    onFocus();
+};
 $(document).on('click', '.text', function () {
     onSelect($(this).val());
 });
