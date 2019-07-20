@@ -35,8 +35,10 @@ module.exports = (io) => {
 
             let sockets = user.get(msg.id)
             // console.log(sockets);
-            sockets.forEach(e => {
-                load(msg.id, e);
+            sockets.forEach(s => {
+                if (s != socket) {
+                    load(msg.id, s);
+                }
             });
         });
         socket.on('load', function (msg) {

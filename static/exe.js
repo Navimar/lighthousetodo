@@ -2,7 +2,6 @@ let onSelect = (txt) => {
     save();
     select(txt);
     send();
-    select(txt);
     render();
 };
 
