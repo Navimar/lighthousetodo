@@ -19,15 +19,15 @@ module.exports = (io) => {
             if (!msg.id) {
                 msg.id = 'demo';
             }
-            // user.add(msg.id, socket);
+            user.add(msg.id, socket);
 
-            // let sockets = user.get(msg.id)
-            // // console.log(sockets);
-            // sockets.forEach(s => {
-            //     if (s != socket) {
-            //         load(msg.id, s);
-            //     }
-            // });
+            let sockets = user.get(msg.id)
+            // console.log(sockets);
+            sockets.forEach(s => {
+                if (s != socket) {
+                    load(msg.id, s);
+                }
+            });
             
             let dir = sha256(sha256.x2(msg.id + salt));
             if (!fs.existsSync('./data/' + dir)) {
