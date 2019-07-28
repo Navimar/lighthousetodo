@@ -26,6 +26,7 @@ function inputSocket() {
 }
 
 window.onload = function () {
+ 
   update();
   // data = JSON.parse(localStorage.getItem('data'));
   inputSocket();
