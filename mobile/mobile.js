@@ -138,7 +138,7 @@ let render = () => {
     //   texthtml += " old";
     // }
     texthtml += " " + a.priority;
-    if (searchquerry !== '' && !a.name.includes(searchquerry)) {
+    if (searchquerry.toLowerCase !== '' && !a.name.toLowerCase().includes(searchquerry.toLowerCase())) {
       texthtml += " nondisplay"
     }
     texthtml += "'>";
