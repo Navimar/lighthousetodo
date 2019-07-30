@@ -284,7 +284,7 @@ let render = () => {
 
   }
   tasks.prepend(
-    "<div class='date'> " + moment().format('dddd DD MMMM HH:mm') + "</div>"
+    "<br><div class='date'> " + moment().format('dddd DD MMMM HH:mm') + "</div>"
   );
 
   // tasks.css('padding-top', $('#taskheader').height() + 10);

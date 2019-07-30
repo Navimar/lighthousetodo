@@ -139,14 +139,25 @@ textarea {
 
 .clock {
     position: fixed;
-    bottom: 20px;
-    right: 0;
+    right: 0px;
+    top: 0px;
+    width: 100%;
+}
+.clock input{
+    margin:0;
+    width:100%;
+}
+.clock .timebutton{
+top:0px;
+right:0px;
+    position: absolute;
 }
 
 #status {
+    
     position: fixed;
-    right: 0px;
-    top: 0px;
+    bottom: 0px;
+    right: 0;
 }
 
 .date {
