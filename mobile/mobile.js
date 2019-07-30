@@ -42,7 +42,7 @@ $(document).on('click', '#searchbutton', function () {
 $('.t1').bind('input propertychange', function () {
   select('');
   render();
-  $(window).scrollTop();
+  $(window).scrollTop(0);
 });
 $(document).on('click', '.text', function () {
   onSelect($(this).val());
