@@ -1,45 +1,47 @@
-$(document).ready(function () {
-  //search
-  var TRange = null;
+// $(document).ready(function () {
+//search
+//   var TRange = null;
 
-  function findString(str) {
-    // if (parseInt(navigator.appVersion) < 4) return;
-    var strFound;
-    if (window.find) {
-      // CODE FOR BROWSERS THAT SUPPORT window.find
-      strFound = self.find(str);
-      if (strFound && self.getSelection && !self.getSelection().anchorNode) {
-        strFound = self.find(str)
-      }
-      if (!strFound) {
-        strFound = self.find(str, 0, 1)
-        while (self.find(str, 0, 1)) continue
-      }
-    } else {
-      alert("browser not supported")
-      return;
-    }
-    if (!strFound) {
-      $('.t1').addClass('red')
-      return;
-    } else {
-      $('.t1').removeClass('red')
-    }
-  };
-
-  document.getElementById('f1').onsubmit = function () {
-    findString(this.t1.value);
-    return false;
-  };
-
-});
+//   function findString(str) {
+//     // if (parseInt(navigator.appVersion) < 4) return;
+//     var strFound;
+//     if (window.find) {
+//       // CODE FOR BROWSERS THAT SUPPORT window.find
+//       strFound = self.find(str);
+//       if (strFound && self.getSelection && !self.getSelection().anchorNode) {
+//         strFound = self.find(str)
+//       }
+//       if (!strFound) {
+//         strFound = self.find(str, 0, 1)
+//         while (self.find(str, 0, 1)) continue
+//       }
+//     } else {
+//       alert("browser not supported")
+//       return;
+//     }
+//     if (!strFound) {
+//       $('.t1').addClass('red')
+//       return;
+//     } else {
+//       $('.t1').removeClass('red')
+//     }
+//   };
+// });
+let isSelection = false;
 
 window.onfocus = function () {
-    onFocus();
+  onFocus();
 };
 
 $(document).on('swiperight', '.text', function (event) {
   $(event.target).addClass("red");
+});
+$(document).on('click', '#searchbutton', function () {
+  render();
+});
+$('.t1').bind('input propertychange', function () {
+  select('');
+  render();
 });
 $(document).on('click', '.text', function () {
   onSelect($(this).val());
@@ -53,6 +55,10 @@ $(document).on('click', '.opn', function () {
 $(document).on('click', '.newtask', function () {
   onNew();
   $('.inputtext:first').val('').select();
+});
+$(document).on('click', '#clearsearch', function () {
+  $('.t1').val('');
+  render();
 });
 $(document).on('click', '.delete', function () {
   onDel($(this).attr('value'));
@@ -80,8 +86,10 @@ $(document).on('click', '#plusweek', function () {
 });
 
 let render = () => {
-
-  let lastheight = $('#taskheader').height();
+  isSelection = false;
+  // let lastheight = $('#taskheader').height();
+  // $('.t1').val('1');
+  let searchquerry = $('.t1').val();
   let tasks = $('#tasks');
   let tags = [];
   let opns = [];
@@ -102,7 +110,7 @@ let render = () => {
     texthtml = "";
     if (moment(a.date).format() == today.format() || moment().diff(moment(a.date)) >= 0) {
     } else {
-      tasks.append("<div class='date'> " + moment(a.date).format('DD MMMM') + "</div>");
+      tasks.append("<div class='date'> " + moment(a.date).format('dddd DD MMMM') + "</div>");
       today = moment(a.date);
     }
     if (a.blocked && blocked) {
@@ -111,6 +119,7 @@ let render = () => {
     }
     texthtml += "<div class='task";
     if (a.selected) {
+      isSelection = true;
       texthtml += " selected";
       tags = a.tags;
       opns = a.opns;
@@ -125,10 +134,13 @@ let render = () => {
     if (a.ready) {
       texthtml += " ready";
     }
-    if (a.fear) {
-      texthtml += " old";
-    }
+    // if (a.fear) {
+    //   texthtml += " old";
+    // }
     texthtml += " " + a.priority;
+    if (searchquerry !== '' && !a.name.includes(searchquerry)) {
+      texthtml += " nondisplay"
+    }
     texthtml += "'>";
     // texthtml += "<button class='delete' value='" + a.name + "'>del</button>";
     texthtml += "<button class='text";
@@ -148,6 +160,11 @@ let render = () => {
       texthtml += "<br>";
     }
     if (a.tags.length > 0) {
+      a.tags.sort((a, b) => {
+        if (a < b) { return -1; }
+        if (a > b) { return 1; }
+        return 0;
+      });
       for (let t of a.tags) {
         texthtml += "<button class='tag";
         texthtml += "'>";
@@ -160,7 +177,11 @@ let render = () => {
     }
     if (a.opns) {
       if (a.opns.length > 0) {
-        // texthtml += "<div class='opns'>";
+        a.opns.sort((a, b) => {
+          if (a < b) { return -1; }
+          if (a > b) { return 1; }
+          return 0;
+        });
         for (let t of a.opns) {
           texthtml += "<button class='opn";
           texthtml += "'>";
@@ -179,11 +200,12 @@ let render = () => {
 
     if (a.selected) {
       texthtml = "<div class=\"editor\">";
-      texthtml += ("<button class='timebutton task newtask'>\n" +
-        "Новая запись\n" +
-        "</button>\n");
+      texthtml += "    <label class='timebutton'>вкл/выкл <input  class=\"checkbox \" type=\"checkbox\"></label>&nbsp;&nbsp;&nbsp;";
+      texthtml += ("<button class='timebutton task newtask'>" +
+        "Новая запись" +
+        "</button>&nbsp;&nbsp;&nbsp;");
       texthtml += "    <button class='timebutton delete' value='del'>Удалить<\/button>";
-      texthtml += "    <input class=\"checkbox\" type=\"checkbox\"> <br>";
+      texthtml += "<br>";
       texthtml += "    <textarea placeholder=\"Название...\" class=\"input inputtext\" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
       texthtml += "    <textarea placeholder=\"Зависим...\" class=\"input inputtags\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
       texthtml += "    <textarea placeholder=\"Блокирует...\" class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
@@ -208,7 +230,7 @@ let render = () => {
       texthtml += "    <button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
-      texthtml += "    <button class=\"timebutton\" id=\"plushour\">+1 час<\/button><br>";
+      texthtml += "    <button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plus15\">+15 минут<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
       texthtml += "  <\/div>";
@@ -261,7 +283,7 @@ let render = () => {
 
   }
   tasks.prepend(
-    "<div class='date'> " + moment().format('DD MMMM') + "</div>"
+    "<div class='date'> " + moment().format('dddd DD MMMM HH:mm') + "</div>"
   );
 
   // tasks.css('padding-top', $('#taskheader').height() + 10);
@@ -297,7 +319,6 @@ let render = () => {
   //   send(data);
   // }
   // $('#status').prepend(clock().text);
-
 };
 
 

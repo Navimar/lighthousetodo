@@ -12,6 +12,10 @@ body {
     margin: 0;
     overflow-x: hidden;
 }
+.nondisplay{
+background: red;
+display: none;
+}
 
 .list {
     margin: auto;
@@ -92,6 +96,7 @@ input[type="checkbox"] {
 }
 
 .editor {
+    text-align: right;
     background: #232333;
     /* margin-top:100px; */
     /* top: 0; */
@@ -102,7 +107,7 @@ input[type="checkbox"] {
 .input {
     width: 100%;
     border: none;
-    font-size: 10pt;
+    font-size: 11pt;
     background: #333;
     color: whitesmoke;
 }
@@ -228,6 +233,7 @@ textarea {
 
 input {
     font-size: 10pt;
+    background: white;
 }
 
 button {
@@ -240,9 +246,12 @@ button {
 }
 
 .timebutton {
+    font-family: arial;
+    border: none;
     color:black;
     background-color:lightgray;
     padding: 1px 7px 2px;
+    border-radius: 0;
 }
 
 .red {
