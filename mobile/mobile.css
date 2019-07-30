@@ -138,9 +138,9 @@ textarea {
 } */
 
 .clock {
-    position: fixed;
+    /* position: fixed;
     right: 0px;
-    top: 0px;
+    top: 0px; */
     width: 100%;
 }
 .clock input{

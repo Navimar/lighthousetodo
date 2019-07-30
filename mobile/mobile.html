@@ -29,7 +29,11 @@
 </head>
 
 <body>
-
+  <div class="clock">
+    <input type="text" class="t1" name="t1" value="" />
+    <!-- <input class="timebutton" id="searchbutton" type="button" name="b1" value="Найти" /> -->
+    <button class="timebutton" id="clearsearch">Х</button>
+  </div>
   <!-- <div class="editor">
     <button class='delete' value='del'>Удалить</button>
     <span>Активно</span>
@@ -61,12 +65,7 @@
   <div id="tasks" class="list"></div>
 
 
-  <div class="clock">
 
-    <input type="text" class="t1" name="t1" value="" />
-    <!-- <input class="timebutton" id="searchbutton" type="button" name="b1" value="Найти" /> -->
-    <button class="timebutton" id="clearsearch">Х</button>
-  </div>
 
   <div id="status">offline</div>
   <script src="/socket.io/socket.io.js"></script>
