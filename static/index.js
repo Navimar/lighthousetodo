@@ -46,7 +46,7 @@ let newwish = (name, selected, tags, opns, priority, note) => {
   while (ok) {
     ok = false;
     for (let a of data.tasks) {
-      if (a.name == name) {
+      if (a.name.toLowerCase() == name.toLowerCase()) {
         name += '!';
         ok = true;
         break;
@@ -96,6 +96,9 @@ let save = () => {
           note += '\n' + text;
         }
       });
+      if ($(".checkdelete").prop('checked')) {
+        return del(name);
+      }
       let inptags = $(".inputtags").val().trim();
       // console.log(inptags);
       let inpopns = $(".inputopns").val().trim();
@@ -104,6 +107,7 @@ let save = () => {
       // let inpopns = $(".inputopns").val();
 
       let ready = $(".checkbox").prop('checked');
+
       let priority = $("#priority option:selected").val();
       let tags = [];
       let opns = [];
@@ -123,7 +127,7 @@ let save = () => {
       while (ok) {
         ok = false;
         for (let a of data.tasks) {
-          if (!a.selected && a.name == name) {
+          if (!a.selected && a.name.toLowerCase() == name.toLowerCase()) {
             name += '!';
             ok = true;
             break;
@@ -135,7 +139,7 @@ let save = () => {
         if (a.selected && name) {
           for (let n of data.tasks) {
             for (let t in n.tags) {
-              if (n.tags[t] == a.name) {
+              if (n.tags[t].toLowerCase() == a.name.toLowerCase()) {
                 n.tags.splice(t, 1);
               }
             }
@@ -146,7 +150,7 @@ let save = () => {
         if (a.selected && name) {
           for (let n of data.tasks) {
             for (let t in n.opns) {
-              if (n.opns[t] == a.name) {
+              if (n.opns[t].toLowerCase() == a.name.toLowerCase()) {
                 n.opns.splice(t, 1);
               }
             }
@@ -159,7 +163,7 @@ let save = () => {
           tags.push(tgname);
           let ok = true;
           for (let a of data.tasks) {
-            if (a.name == tgname) {
+            if (a.name.toLowerCase() == tgname.toLowerCase()) {
               ok = false;
               if (a.opns) {
                 if (a.opns.indexOf(name) === -1) {
@@ -179,7 +183,7 @@ let save = () => {
           opns.push(opname);
           let ok = true;
           for (let a of data.tasks) {
-            if (a.name == opname) {
+            if (a.name.toLowerCase() == opname.toLowerCase()) {
               ok = false;
               if (a.tags.indexOf(name) === -1) {
                 a.tags.push(name);
@@ -195,17 +199,16 @@ let save = () => {
         if (a.selected && inptval) {
           for (let n of data.tasks) {
             for (let t in n.tags) {
-              if (n.tags[t] == a.name) {
+              if (n.tags[t].toLowerCase() == a.name.toLowerCase()) {
                 n.tags[t] = name;
               }
             }
             for (let t in n.opns) {
-              if (n.opns[t] == a.name) {
+              if (n.opns[t].toLowerCase() == a.name.toLowerCase()) {
                 n.opns[t] = name;
               }
             }
           }
-          // a.name = inpt.val();
           a.name = name;
           a.note = note;
           a.tags = tags;
@@ -218,7 +221,7 @@ let save = () => {
         a.blocked = false;
         for (let n of data.tasks) {
           for (let t of a.tags) {
-            if (t == n.name && !n.ready) {
+            if (t.toLowerCase() == n.name.toLowerCase() && !n.ready) {
               a.blocked = true;
             }
           }
@@ -342,7 +345,7 @@ let sortdata = () => {
 let select = (text) => {
   let f = false;
   for (let a of data.tasks) {
-    a.selected = (a.name == text)
+    a.selected = (a.name.toLowerCase() == text.toLowerCase())
     if (a.selected) {
       f = text;
     }

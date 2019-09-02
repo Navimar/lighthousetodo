@@ -33,12 +33,12 @@ window.onfocus = function () {
   onFocus();
 };
 
-$(document).on('swiperight', '.text', function (event) {
-  $(event.target).addClass("red");
-});
-$(document).on('click', '#searchbutton', function () {
-  render();
-});
+// $(document).on('swiperight', '.text', function (event) {
+//   $(event.target).addClass("red");
+// });
+// $(document).on('click', '#searchbutton', function () {
+//   render();
+// });
 $('.t1').bind('input propertychange', function () {
   select('');
   render();
@@ -59,7 +59,25 @@ $(document).on('click', '.newtask', function () {
 });
 $(document).on('click', '#clearsearch', function () {
   $('.t1').val('');
+  save();
   render();
+  // select('');
+  // render();
+  // $(window).scrollTop(0);
+});
+$(document).on('click', '.timebutton', function () {
+  let clear = () => {
+    $('.timebutton').removeClass('justClicked')
+    $('.timebutton').removeClass('justClicked2')
+  }
+  if ($(this).hasClass('justClicked')) {
+    clear();
+    $(this).addClass('justClicked2');
+  } else {
+    clear();
+    $(this).addClass('justClicked');
+  }
+  // alert('!!!');
 });
 $(document).on('click', '.delete', function () {
   onDel($(this).attr('value'));
@@ -79,11 +97,23 @@ $(document).on('click', '#plushour', function () {
 $(document).on('click', '#plusnow', function () {
   onNow();
 });
+$(document).on('click', '#morning', function () {
+  onMorning();
+});
+$(document).on('click', '#evening', function () {
+  onEvening();
+});
+$(document).on('click', '#midnight', function () {
+  onMidnight();
+});
 $(document).on('click', '#plus15', function () {
   onPlus15();
 });
 $(document).on('click', '#plusweek', function () {
   onPlusWeek();
+});
+$(document).on('click', '#scrollTopButton', function () {
+  $(window).scrollTop(0);
 });
 
 let render = () => {
@@ -201,11 +231,12 @@ let render = () => {
 
     if (a.selected) {
       texthtml = "<div class=\"editor\">";
-      texthtml += "    <label class='timebutton'>вкл/выкл <input  class=\"checkbox \" type=\"checkbox\"></label>&nbsp;&nbsp;&nbsp;";
-      texthtml += ("<button class='timebutton task newtask'>" +
+      texthtml += "    <label class='mainbutton timebutton'>вкл/выкл <input  class=\"checkbox \" type=\"checkbox\"></label>";
+      texthtml += ("<button class='mainbutton timebutton task newtask'>" +
         "Новая запись" +
-        "</button>&nbsp;&nbsp;&nbsp;");
-      texthtml += "    <button class='timebutton delete' value='del'>Удалить<\/button>";
+        "</button>");
+      // texthtml += "    <button class='timebutton delete' value='del'>Удалить<\/button>";
+      texthtml += "    <label class='mainbutton timebutton delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
       texthtml += "<br>";
       texthtml += "    <textarea placeholder=\"Название...\" class=\"input inputtext\" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
       texthtml += "    <textarea placeholder=\"Зависим...\" class=\"input inputtags\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
@@ -216,19 +247,22 @@ let render = () => {
       texthtml += "      <option class=\"third\" value=\"third\">Бери и делай<\/option>";
       texthtml += "      <option class=\"forth\" value=\"forth\">ТО<\/option>";
       texthtml += "      <option class=\"fifth\" value=\"fifth\">Обязательство<\/option>";
-      texthtml += "      <option class=\"sixth\" value=\"sixth\">Доход\/Расход<\/option>";
-      texthtml += "      <option class=\"seventh\" value=\"seventh\">Заточка<\/option>";
-      texthtml += "      <option class=\"eighth\" value=\"eighth\">Новые горизонты<\/option>";
-      texthtml += "      <option class=\"ninth\" value=\"ninth\">Порядок<\/option>";
+      texthtml += "      <option class=\"sixth\" value=\"sixth\">Социальные<\/option>";
+      texthtml += "      <option class=\"seventh\" value=\"seventh\">Результат<\/option>";
+      texthtml += "      <option class=\"eighth\" value=\"eighth\">Заточка<\/option>";
+      texthtml += "      <option class=\"ninth\" value=\"ninth\">Новые горизонты<\/option>";
       texthtml += "      <option class=\"tenth\" value=\"tenth\">Хочу!<\/option>";
       texthtml += "      <option class=\"eleventh\" value=\"eleventh\">Заметки<\/option>";
-      // texthtml += "      <option class=\"twelfth\" value=\"twelfth\">Корзина<\/option>";
+      texthtml += "      <option class=\"twelfth\" value=\"twelfth\">???<\/option>";
       texthtml += "    <\/select><br>";
       texthtml += "    <input type=\"date\" id=\"date\" name=\"trip-start\">";
       texthtml += "    <input type=\"time\" id=\"time\" name=\"time\">";
       texthtml += "    <br>";
       texthtml += "    <button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
+      texthtml += "    <button class=\"timebutton\" id=\"morning\">9:00<\/button>";
+      texthtml += "    <button class=\"timebutton\" id=\"evening\">18:00<\/button>";
+      texthtml += "    <button class=\"timebutton\" id=\"midnight\">00:00<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
@@ -267,12 +301,13 @@ let render = () => {
       tasks.append(texthtml);
       texthtml = "";
       $('textarea').keyup(function () {
-        $(this).height(0); // min-height
+        $(this).height(25); // min-height
         $(this).height(this.scrollHeight);
       });
       $('textarea').focus(function () {
-        $(this).height(0); // min-height
+        $(this).height(25); // min-height
         $(this).height(this.scrollHeight);
+        $('.checkdelete ').prop('checked', false);
       });
       $("#priority").val(a.priority);
       $('.inputtext').focus();

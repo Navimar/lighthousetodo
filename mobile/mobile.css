@@ -12,9 +12,16 @@ body {
     margin: 0;
     overflow-x: hidden;
 }
-.nondisplay{
-background: red;
-display: none;
+.justClicked{
+    background-color:lightblue !important;
+    /* border: 1px solid blue !important; */
+}
+.justClicked2{
+    background-color:lightgreen !important;
+}
+.nondisplay {
+    background: red;
+    display: none;
 }
 
 .list {
@@ -30,7 +37,7 @@ select {
 }
 
 option {
-    color:white;
+    color: white;
 }
 
 option:checked {
@@ -44,7 +51,15 @@ option:checked {
 }
 
 .newtask {
-    font-style: italic;
+    /* font-style: italic; */
+}
+
+#scrollTopButton {
+    position: fixed;
+    bottom: 10px;
+    right: 0;
+    background:black;
+    color:white;
 }
 
 .tags {
@@ -143,21 +158,26 @@ textarea {
     top: 0px; */
     width: 100%;
 }
-.clock input{
-    margin:0;
-    width:100%;
+
+.clock input {
+    margin: 0;
+    width: 100%;
 }
-.clock .timebutton{
-top:0px;
-right:0px;
+
+.mainbutton {
+    margin-right: 10px;
+}
+
+.clock .timebutton {
+    top: 0px;
+    right: 0px;
     position: absolute;
 }
 
 #status {
-    
     position: fixed;
-    bottom: 0px;
-    right: 0;
+    bottom: 10px;
+    left: 10px;
 }
 
 .date {
@@ -175,17 +195,14 @@ right:0px;
 
 .second {
     border-left: 7px solid #333;
-
 }
 
 .third {
-    border-left: 7px solid darkred ;
-
+    border-left: 7px solid darkred;
 }
 
 .forth {
-    border-left: 7px solid darkcyan ;
-
+    border-left: 7px solid darkcyan;
 }
 
 .fifth {
@@ -198,12 +215,10 @@ right:0px;
 
 .seventh {
     border-left: 7px solid darkmagenta;
-
 }
 
 .eighth {
     border-left: 7px solid darkblue;
-
 }
 
 .ninth {
@@ -214,14 +229,12 @@ right:0px;
 
 .tenth {
     border-left: 7px solid rgb(255, 197, 142);
-
     /* background-color: #000000; */
     /* border-right: 5px solid darkgreen; */
 }
 
 .eleventh {
     border-left: 7px solid white;
-
     /* border-right: 5px solid darkgreen; */
 }
 
@@ -259,10 +272,11 @@ button {
 .timebutton {
     font-family: arial;
     border: none;
-    color:black;
-    background-color:lightgray;
+    color: black;
+    background-color: lightgray;
     padding: 1px 7px 2px;
     border-radius: 0;
+    margin-right: 10px;
 }
 
 .red {

@@ -4,13 +4,14 @@
 <body>
     <script>
         let myVariable = { name: '123' }
-        const markup = `<p>something ${myVariable.name} </p>`;
-        console.log(markup);
+        const markup = () => { return `<p>something ${myVariable.name} </p>` };
         $(document).on('click', 'body', function () {
-            myVariable.name='yrs!!!';
-            document.body.innerHTML = 'gggg';
+            myVariable.name = 'yrs!!!';
+            console.log(markup());
+            // document.body.innerHTML = 'gggg';
+            $("body").html(markup());
         });
-        document.body.innerHTML = markup;
+        $("body").html(markup);
 
     </script>
 </body>

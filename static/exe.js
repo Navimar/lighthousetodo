@@ -51,7 +51,6 @@ let onTomorrow = () => {
     onPlusday();
 }
 
-
 let onPlusHour = () => {
     let d = moment($('#date').val() + 'T' + $('#time').val()).add(1, 'hour');
     $('#date').val(d.format('YYYY-MM-DD'));
@@ -65,6 +64,21 @@ let onNow = () => {
 }
 let onPlus15 = () => {
     let d = moment($('#date').val() + 'T' + $('#time').val()).add(15, 'minute');
+    $('#date').val(d.format('YYYY-MM-DD'));
+    $('#time').val(d.format('HH:mm'));
+}
+let onMorning = () => {
+    let d = moment($('#date').val() + 'T09:00');
+    $('#date').val(d.format('YYYY-MM-DD'));
+    $('#time').val(d.format('HH:mm'));
+}
+let onEvening = () => {
+    let d = moment($('#date').val() + 'T18:00');
+    $('#date').val(d.format('YYYY-MM-DD'));
+    $('#time').val(d.format('HH:mm'));
+}
+let onMidnight = () => {
+    let d = moment($('#date').val() + 'T00:00');
     $('#date').val(d.format('YYYY-MM-DD'));
     $('#time').val(d.format('HH:mm'));
 }
