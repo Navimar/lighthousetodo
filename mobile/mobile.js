@@ -109,6 +109,11 @@ $(document).on('click', '#midnight', function () {
 $(document).on('click', '#plus15', function () {
   onPlus15();
 });
+$(document).on('click', '#pluslast', function () {
+  // console.log($(this).attr('value'));
+  onPluslast($(this).attr('value'));
+});
+
 $(document).on('click', '#plusweek', function () {
   onPlusWeek();
 });
@@ -257,7 +262,6 @@ let render = () => {
       texthtml += "    <\/select><br>";
       texthtml += "    <input type=\"date\" id=\"date\" name=\"trip-start\">";
       texthtml += "    <input type=\"time\" id=\"time\" name=\"time\">";
-      texthtml += "    <br>";
       texthtml += "    <button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"morning\">9:00<\/button>";
@@ -268,6 +272,7 @@ let render = () => {
       texthtml += "    <button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plus15\">+15 минут<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
+      texthtml += "    <button class=\"timebutton\" id=\"pluslast\" value='" + a.timediff + "'>" + msToTime(a.timediff) + "<\/button>";
       texthtml += "  <\/div>";
 
       // texthtml += "<div class=\"editor\">";
@@ -299,22 +304,18 @@ let render = () => {
       // texthtml += "    <button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
       // texthtml += "  <\/div>";
       tasks.append(texthtml);
-      texthtml = "";
+      // texthtml = "";
       $('textarea').keyup(function () {
-        $(this).height(25); // min-height
+        $(this).height(0); // min-height
         $(this).height(this.scrollHeight);
       });
       $('textarea').focus(function () {
-        $(this).height(25); // min-height
+        $(this).height(0); // min-height
         $(this).height(this.scrollHeight);
         $('.checkdelete ').prop('checked', false);
       });
       $("#priority").val(a.priority);
       $('.inputtext').focus();
-      // function(){
-      //   $(this).height(0); // min-height
-      //   $(this).height(this.scrollHeight);
-      // });
     }
 
   }

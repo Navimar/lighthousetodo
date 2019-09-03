@@ -63,3 +63,19 @@ function sleep(miliseconds) {
     while (currentTime + miliseconds >= new Date().getTime()) {
     }
 }
+
+function msToTime(ms) {
+    if (ms < 0 || !ms) {
+        ms = 0;
+    }
+    var d, h, m, s;
+    s = Math.floor(ms / 1000);
+    m = Math.floor(s / 60);
+    s = s % 60;
+    h = Math.floor(m / 60);
+    m = m % 60;
+    d = Math.floor(h / 24);
+    h = h % 24;
+    // h += d * 24;
+    return d + 'д ' + h + 'ч ' + m + "м"
+}

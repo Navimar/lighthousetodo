@@ -215,6 +215,8 @@ let save = () => {
           a.opns = opns;
           a.ready = ready;
           a.priority = priority;
+          a.timediff = moment(date + "T" + time).format('x') - moment(a.date + "T" + a.time).format('x') || a.timediff;
+          console.log(a.timediff);
           a.time = time;
           a.date = date;
         }

@@ -36,6 +36,7 @@ let onDel = (txt) => {
 
 let onFocus =()=>{
 }
+
 let onToday = () => {
     let d = moment();
     $('#date').val(d.format('YYYY-MM-DD'));
@@ -88,3 +89,8 @@ let onPlusWeek = () => {
     $('#date').val(d.format('YYYY-MM-DD'));
 }
 
+let onPluslast = (timediff) => {
+    let d = moment($('#date').val() + 'T' + $('#time').val()).add(timediff, 'ms');
+    $('#date').val(d.format('YYYY-MM-DD'));
+    $('#time').val(d.format('HH:mm'));
+}

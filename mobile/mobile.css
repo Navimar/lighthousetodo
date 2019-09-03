@@ -12,13 +12,16 @@ body {
     margin: 0;
     overflow-x: hidden;
 }
-.justClicked{
-    background-color:lightblue !important;
+
+.justClicked {
+    background-color: lightblue !important;
     /* border: 1px solid blue !important; */
 }
-.justClicked2{
-    background-color:lightgreen !important;
+
+.justClicked2 {
+    background-color: lightgreen !important;
 }
+
 .nondisplay {
     background: red;
     display: none;
@@ -58,8 +61,8 @@ option:checked {
     position: fixed;
     bottom: 10px;
     right: 0;
-    background:black;
-    color:white;
+    background: black;
+    color: white;
 }
 
 .tags {
@@ -71,7 +74,7 @@ option:checked {
     font-size: 10pt;
     font-style: italic;
     background: #333;
-    padding: 2px;
+    padding: 0px;
     color: grey;
     border: none;
     border-radius: 0;
@@ -198,48 +201,58 @@ textarea {
 }
 
 .third {
-    border-left: 7px solid darkred;
+    border-left: 7px solid rgb(250, 86, 59);
 }
 
 .forth {
+    border-left: 7px solid rgb(199, 197, 148);
     border-left: 7px solid darkcyan;
+    border-left: 7px solid darkred;
+
 }
 
 .fifth {
-    border-left: 7px solid darkgoldenrod;
+    border-left: 7px solid grey;
+    border-left: 7px solid rgb(106, 70, 43);
+
 }
 
 .sixth {
     border-left: 7px solid darkgreen;
+    border-left: 7px solid rgb(59, 89, 152);
 }
 
 .seventh {
     border-left: 7px solid darkmagenta;
+    border-left: 7px solid darkgoldenrod;
+
 }
 
 .eighth {
     border-left: 7px solid darkblue;
+    border-left: 7px solid rgb(116, 175, 67);
 }
 
 .ninth {
-    border-left: 7px solid gray;
-    /* background-color: #000000; */
-    /* border-right: 5px solid darkgreen; */
+    border-left: 7px solid white;
+    border-left: 7px solid rgb(167, 228, 212);
+
+
 }
 
 .tenth {
+    border-left: 7px solid rgb(234, 60, 83);
     border-left: 7px solid rgb(255, 197, 142);
-    /* background-color: #000000; */
-    /* border-right: 5px solid darkgreen; */
+
 }
 
 .eleventh {
-    border-left: 7px solid white;
-    /* border-right: 5px solid darkgreen; */
+    border-left: 7px solid gray;
+
 }
 
 .twelfth {
-    border-left: 7px solid rgb(116, 175, 67);
+    border-left: 7px solid rgb(84, 100, 92);
 }
 
 .cantdo {
