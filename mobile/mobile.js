@@ -253,12 +253,12 @@ let render = () => {
       texthtml += "      <option class=\"forth\" value=\"forth\">ТО<\/option>";
       texthtml += "      <option class=\"fifth\" value=\"fifth\">Обязательство<\/option>";
       texthtml += "      <option class=\"sixth\" value=\"sixth\">Социальные<\/option>";
-      texthtml += "      <option class=\"seventh\" value=\"seventh\">Результат<\/option>";
-      texthtml += "      <option class=\"eighth\" value=\"eighth\">Заточка<\/option>";
-      texthtml += "      <option class=\"ninth\" value=\"ninth\">Новые горизонты<\/option>";
-      texthtml += "      <option class=\"tenth\" value=\"tenth\">Хочу!<\/option>";
+      texthtml += "      <option class=\"seventh\" value=\"seventh\">Хочу!<\/option>";
+      texthtml += "      <option class=\"eighth\" value=\"eighth\">Результат<\/option>";
+      texthtml += "      <option class=\"ninth\" value=\"ninth\">Заточка<\/option>";
+      texthtml += "      <option class=\"tenth\" value=\"tenth\">Новые горизонты<\/option>";
       texthtml += "      <option class=\"eleventh\" value=\"eleventh\">Заметки<\/option>";
-      texthtml += "      <option class=\"twelfth\" value=\"twelfth\">???<\/option>";
+      // texthtml += "      <option class=\"twelfth\" value=\"twelfth\">???<\/option>";
       texthtml += "    <\/select><br>";
       texthtml += "    <input type=\"date\" id=\"date\" name=\"trip-start\">";
       texthtml += "    <input type=\"time\" id=\"time\" name=\"time\">";

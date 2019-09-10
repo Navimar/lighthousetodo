@@ -224,25 +224,26 @@ textarea {
 
 .seventh {
     border-left: 7px solid darkmagenta;
-    border-left: 7px solid darkgoldenrod;
+    border-left: 7px solid rgb(255, 197, 142);
 
 }
 
 .eighth {
     border-left: 7px solid darkblue;
-    border-left: 7px solid rgb(116, 175, 67);
+    border-left: 7px solid darkgoldenrod;
+
 }
 
 .ninth {
     border-left: 7px solid white;
-    border-left: 7px solid rgb(167, 228, 212);
+    border-left: 7px solid rgb(116, 175, 67);
 
 
 }
 
 .tenth {
     border-left: 7px solid rgb(234, 60, 83);
-    border-left: 7px solid rgb(255, 197, 142);
+    border-left: 7px solid rgb(167, 228, 212);
 
 }
 
