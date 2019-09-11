@@ -37,7 +37,7 @@ window.onfocus = function () {
 //   $(event.target).addClass("red");
 // });
 // $(document).on('click', '#searchbutton', function () {
-//   render();
+  // render();
 // });
 $('.t1').bind('input propertychange', function () {
   select('');
@@ -236,7 +236,7 @@ let render = () => {
 
     if (a.selected) {
       texthtml = "<div class=\"editor\">";
-      texthtml += "    <label class='mainbutton timebutton'>вкл/выкл <input  class=\"checkbox \" type=\"checkbox\"></label>";
+      texthtml += "    <label class='mainbutton timebutton '>вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
       texthtml += ("<button class='mainbutton timebutton task newtask'>" +
         "Новая запись" +
         "</button>");
@@ -338,9 +338,13 @@ let render = () => {
     }
   }
 
-  $("input[type='checkbox']").prop({
+  // $("input[type='checkbox']").prop({
+  //   checked: checked
+  // });
+  $(".onoff").prop({
     checked: checked
   });
+  
   // $("#fear").prop({
   //   checked: fear
   // });
