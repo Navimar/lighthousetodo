@@ -230,13 +230,13 @@ textarea {
 
 .eighth {
     border-left: 7px solid darkblue;
-    border-left: 7px solid darkgoldenrod;
+    border-left: 7px solid rgb(116, 175, 67);
 
 }
 
 .ninth {
     border-left: 7px solid white;
-    border-left: 7px solid rgb(116, 175, 67);
+    border-left: 7px solid darkgoldenrod;
 
 
 }
