@@ -78,7 +78,8 @@ let newwish = (name, selected, tags, opns, priority, note) => {
   });
 };
 let save = () => {
-  if (isSelection) {
+  if(true){
+  // if (isSelection) {
     let inptval = $('.inputtext').val().trim();
     let name;
     let note = '';

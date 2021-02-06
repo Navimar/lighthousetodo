@@ -21,7 +21,7 @@ let onOpn = (txt) => {
 
 let onNew = () => {
     save();
-    newwish('новая запись',false,false,false,'first');
+    newwish('новая запись', false, false, false, 'third');
     select('новая запись');
     send();
     render();
@@ -34,7 +34,7 @@ let onDel = (txt) => {
     render();
 }
 
-let onFocus =()=>{
+let onFocus = () => {
 }
 
 let onToday = () => {
@@ -53,7 +53,9 @@ let onTomorrow = () => {
 }
 
 let onPlusHour = () => {
-    let d = moment($('#date').val() + 'T' + $('#time').val()).add(1, 'hour');
+    let a = moment($('#date').val() + 'T' + $('#time').val()).add(1, 'hour');
+    let b = moment().add(1, 'hour');
+    let d = a > b ? a : b
     $('#date').val(d.format('YYYY-MM-DD'));
     $('#time').val(d.format('HH:mm'));
 }
@@ -64,7 +66,9 @@ let onNow = () => {
     $('#time').val(d.format('HH:mm'));
 }
 let onPlus15 = () => {
-    let d = moment($('#date').val() + 'T' + $('#time').val()).add(15, 'minute');
+    let a = moment($('#date').val() + 'T' + $('#time').val()).add(15, 'minute');
+    let b = moment().add(15, 'minute');
+    let d = a > b ? a : b
     $('#date').val(d.format('YYYY-MM-DD'));
     $('#time').val(d.format('HH:mm'));
 }

@@ -88,6 +88,7 @@ input[type="checkbox"] {
 }
 
 .input {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
   border: none;
   font-size: 10pt;
   background: #333;
@@ -104,6 +105,7 @@ input[type="checkbox"] {
   font-size: 16pt;
   padding-right: 20px;
 }
+
 .newtask {
   width: 100%;
   /* margin: 0px 15px; */
@@ -147,27 +149,26 @@ input[type="checkbox"] {
   color: gray;
   display: block;
 }
-.red{
+
+.red {
   background-color: #150000;
-  border-right: 5px solid darkred;
+  border-right: 5px solid red;
 }
+
 .first {
-  border-left: 7px solid rgb(250, 126, 194);
+  border-left: 7px solid #e7ef00;
 }
 
 .second {
-  border-left: 7px solid #333;
-
+  border-left: 7px solid #f75200;
 }
 
 .third {
-  border-left: 7px solid darkred ;
-
+  border-left: 7px solid #10a5d2;
 }
 
 .forth {
-  border-left: 7px solid darkcyan ;
-
+  border-left: 7px solid darkcyan;
 }
 
 .fifth {
@@ -180,12 +181,10 @@ input[type="checkbox"] {
 
 .seventh {
   border-left: 7px solid darkmagenta;
-
 }
 
 .eighth {
   border-left: 7px solid darkblue;
-
 }
 
 .ninth {
@@ -196,14 +195,12 @@ input[type="checkbox"] {
 
 .tenth {
   border-left: 7px solid rgb(255, 197, 142);
-
   /* background-color: #000000; */
   /* border-right: 5px solid darkgreen; */
 }
 
 .eleventh {
   border-left: 7px solid white;
-
   /* border-right: 5px solid darkgreen; */
 }
 
@@ -234,3 +231,7 @@ button {
 }
 
 .selected .text {}
+
+.headdate {
+  background-color: #142c38;
+}

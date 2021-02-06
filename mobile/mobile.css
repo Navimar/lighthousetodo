@@ -1,301 +1,278 @@
 * {
-    touch-action: manipulation;
-    margin: 0;
-    padding: 0;
+  touch-action: manipulation;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    background: black;
-    color: whitesmoke;
-    /* /* font-size: 16pt; */
-    font-family: Verdana;
-    margin: 0;
-    overflow-x: hidden;
+  background: black;
+  color: whitesmoke;
+  /* /* font-size: 16pt; */
+  font-family: Verdana;
+  margin: 0;
+  overflow-x: hidden;
 }
 
 .justClicked {
-    background-color: lightblue !important;
-    /* border: 1px solid blue !important; */
+  background-color: lightblue !important;
+  /* border: 1px solid blue !important; */
 }
 
 .justClicked2 {
-    background-color: lightgreen !important;
+  background-color: lightgreen !important;
 }
 
 .nondisplay {
-    background: red;
-    display: none;
+  background: red;
+  display: none;
 }
 
 .list {
-    margin: auto;
-    text-align: left;
+  max-width: 80ex;
+  margin: auto;
+  text-align: left;
 }
 
 select {
-    width: 100%;
-    /* font-size: 20px; */
-    /* background: black; */
-    color: black;
+  width: 100%;
+  /* font-size: 20px; */
+  /* background: black; */
+  color: black;
 }
 
 option {
-    color: white;
+  background: black;
+  color: white;
 }
 
 option:checked {
-    /* color: red;  */
+  /* color: red;  */
 }
 
 #taskheader {
-    /* position: fixed; */
-    top: 25px;
-    background: black;
+  /* position: fixed; */
+  top: 25px;
+  background: black;
 }
 
 .newtask {
-    /* font-style: italic; */
+  /* font-style: italic; */
 }
 
 #scrollTopButton {
-    position: fixed;
-    bottom: 10px;
-    right: 0;
-    background: black;
-    color: white;
+  position: fixed;
+  bottom: 10px;
+  right: 0;
+  background: black;
+  color: white;
 }
 
 .tags {
-    font-size: 10pt;
-    font-style: italic;
+  font-size: 10pt;
+  font-style: italic;
 }
 
 .tag {
-    font-size: 10pt;
-    font-style: italic;
-    background: #333;
-    padding: 0px;
-    color: grey;
-    border: none;
-    border-radius: 0;
+  font-size: 10pt;
+  font-style: italic;
+  background: #333;
+  padding: 0px;
+  color: grey;
+  border: none;
+  border-radius: 0;
 }
 
 .opns {}
 
 .opn {
-    font-size: 10pt;
-    font-style: italic;
-    background: #333;
-    margin: 2px;
-    padding: 0;
-    color: grey;
-    border: none;
-    border-radius: 0;
+  font-size: 10pt;
+  font-style: italic;
+  background: #333;
+  margin: 2px;
+  padding: 0;
+  color: grey;
+  border: none;
+  border-radius: 0;
 }
 
 .arr {
-    font-size: 10pt;
+  font-size: 10pt;
 }
 
 .ready {
-    border-radius: 0px;
-    /* background: #121 !important; */
-    /* color: palegreen !important; */
-    border-RIGHT: solid 7px palegreen !important;
+  border-radius: 0px;
+  /* background: #121 !important; */
+  /* color: palegreen !important; */
+  border-RIGHT: solid 7px palegreen !important;
 }
 
 .nonblocked {
-    background: none;
+  background: none;
 }
 
 input[type="checkbox"] {
-    vertical-align: middle;
-    cursor: pointer;
+  vertical-align: middle;
+  cursor: pointer;
 }
 
 .editor {
-    text-align: right;
-    background: #232333;
-    /* margin-top:100px; */
-    /* top: 0; */
-    /* position: fixed; */
-    /* font-size: 20pt; */
+  text-align: right;
+  background: #232333;
+  /* margin-top:100px; */
+  /* top: 0; */
+  /* position: fixed; */
+  /* font-size: 20pt; */
 }
 
 .input {
-    width: 100%;
-    border: none;
-    font-size: 11pt;
-    background: #333;
-    color: whitesmoke;
-}
-
-textarea {
-    /* overflow:hidden; */
+  font-family: Arial, Helvetica, sans-serif;
+  width: 100%;
+  border: none;
+  font-size: 11pt;
+  background: #333;
+  color: whitesmoke;
 }
 
 .text {
-    width: 100%;
-    background-color: transparent;
-    border: none;
-    color: white;
-    text-align: left;
-    font-size: 14pt;
-    padding-right: 20px;
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  color: white;
+  text-align: left;
+  font-size: 14pt;
+  padding-right: 20px;
 }
 
 .text:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
-.inputtags {}
-
-/* .inputtext:focus {
-    width: 200%;
-    height: 300px;
-} */
-
 .clock {
-    /* position: fixed;
-    right: 0px;
-    top: 0px; */
-    width: 100%;
+  position: fixed;
+  width: 80ex;
+  width: 100%;
 }
 
 .clock input {
-    margin: 0;
-    width: 100%;
+  margin: 0;
+  max-width: 80ex;
 }
 
 .mainbutton {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .clock .timebutton {
-    top: 0px;
-    right: 0px;
-    position: absolute;
+  top: 0px;
+  right: 0px;
+  position: absolute;
 }
 
 #status {
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
 }
 
 .date {
-    padding: 1px;
-    background: #222;
-    text-align: center;
-    font-size: 12pt;
-    color: gray;
-    display: block;
+  padding: 1px;
+  background: #222;
+  text-align: center;
+  font-size: 12pt;
+  color: gray;
+  display: block;
 }
 
 .first {
-    border-left: 7px solid rgb(250, 126, 194);
+  border-left: 7px solid #e7ef00;
 }
 
 .second {
-    border-left: 7px solid #333;
+  border-left: 7px solid #f75200;
 }
 
 .third {
-    border-left: 7px solid rgb(250, 86, 59);
+  border-left: 7px solid #10a5d2;
 }
 
 .forth {
-    border-left: 7px solid rgb(199, 197, 148);
-    border-left: 7px solid darkcyan;
-    border-left: 7px solid darkred;
-
+  border-left: 7px solid darkcyan;
 }
 
 .fifth {
-    border-left: 7px solid grey;
-    border-left: 7px solid rgb(106, 70, 43);
-
+  border-left: 7px solid darkgoldenrod;
 }
 
 .sixth {
-    border-left: 7px solid darkgreen;
-    border-left: 7px solid rgb(59, 89, 152);
+  border-left: 7px solid darkgreen;
 }
 
 .seventh {
-    border-left: 7px solid darkmagenta;
-    border-left: 7px solid rgb(255, 197, 142);
-
+  border-left: 7px solid darkmagenta;
 }
 
 .eighth {
-    border-left: 7px solid darkblue;
-    border-left: 7px solid rgb(116, 175, 67);
-
+  border-left: 7px solid darkblue;
 }
 
 .ninth {
-    border-left: 7px solid white;
-    border-left: 7px solid darkgoldenrod;
-
-
+  border-left: 7px solid white;
+  border-left: 7px solid darkgoldenrod;
 }
 
 .tenth {
-    border-left: 7px solid rgb(234, 60, 83);
-    border-left: 7px solid rgb(167, 228, 212);
-
+  border-left: 7px solid rgb(234, 60, 83);
+  border-left: 7px solid rgb(167, 228, 212);
 }
 
 .eleventh {
-    border-left: 7px solid gray;
-
+  border-left: 7px solid gray;
 }
 
 .twelfth {
-    border-left: 7px solid rgb(84, 100, 92);
+  border-left: 7px solid rgb(84, 100, 92);
 }
 
 .cantdo {
-    color: grey;
+  color: grey;
 }
 
 .selected {
-    background-color: #232333;
-    /* background-color: #011619; */
-    /* border-right: 5px solid whitesmoke; */
-    /* border-radius: 0; */
+  background-color: #232333;
+  /* background-color: #011619; */
+  /* border-right: 5px solid whitesmoke; */
+  /* border-radius: 0; */
 }
 
 .delete {}
 
 input {
-    font-size: 10pt;
-    background: white;
+  font-size: 10pt;
+  background: white;
 }
 
 button {
-    background-color: darkgray;
-    color: black;
-    font-size: 12pt;
-    border-radius: 10px;
-    padding: 0;
-    padding-left: 2px;
+  background-color: darkgray;
+  color: black;
+  font-size: 12pt;
+  border-radius: 10px;
+  padding: 0;
+  padding-left: 2px;
 }
 
 .timebutton {
-    font-family: arial;
-    border: none;
-    color: black;
-    background-color: lightgray;
-    padding: 1px 7px 2px;
-    border-radius: 0;
-    margin-right: 10px;
+  font-family: arial;
+  border: none;
+  color: black;
+  background-color: lightgray;
+  padding: 2px 2px 2px 2px;
+  border-radius: 0;
+  margin: 8px 0px 0px 10px;
 }
 
 .red {
-    /* background-color: #150000; */
-    border-bottom: 5px solid darkred;
+  /* background-color: #150000; */
+  border-bottom: 5px solid darkred;
 }
 
 /* #f1 {
