@@ -134,6 +134,7 @@ input[type="checkbox"] {
 }
 
 .text {
+  padding-left: 5px;
   width: 100%;
   background-color: transparent;
   border: none;
@@ -196,7 +197,7 @@ input[type="checkbox"] {
 }
 
 .forth {
-  border-left: 7px solid darkcyan;
+  border-left: 7px solid #7c5690;
 }
 
 .fifth {
@@ -234,7 +235,7 @@ input[type="checkbox"] {
 }
 
 .cantdo {
-  color: grey;
+  /* color: grey; */
 }
 
 .selected {
@@ -281,3 +282,21 @@ button {
 } */
 
 .selected .text {}
+
+.headdate {
+  color: black;
+  background-color: #10a6d2;
+  border-left: 7px solid #10a6d2;
+}
+
+.time {
+  text-align: left;
+  width: 10%;
+  padding-left: 25px;
+}
+
+.bottom {
+  font-size: 16px;
+  font-style: italic;
+  font-family: monospace;
+}

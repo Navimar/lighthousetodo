@@ -38,6 +38,7 @@ window.onfocus = function () {
 // });
 // $(document).on('click', '#searchbutton', function () {
 // render();
+
 // });
 $('.t1').bind('input propertychange', function () {
   select('');
@@ -141,6 +142,7 @@ let render = () => {
   // let fear = false;
   let button = true;
   let time = "00:00";
+  let lasttime = false;
   let date = "1111-11-11";
   let today = moment();
   let blocked = true;;
@@ -148,13 +150,29 @@ let render = () => {
   tasks.html("");
   for (let a of data.tasks) {
     texthtml = "";
-    if (moment(a.date).format() == today.format() || moment().diff(moment(a.date)) >= 0) {
+    if (moment(a.date).format() == today.format()
+      || moment().diff(moment(a.date)) >= 0
+    ) {
     } else {
       tasks.append("<div class='date'> " + moment(a.date).format('dddd DD MMMM') + "</div>");
       today = moment(a.date);
     }
+    if (
+      // moment().diff(moment(a.date), 'days') == 0
+      // &&
+      a.time != lasttime &&
+      a.priority == 'first') {
+      if (
+        moment().diff(moment(a.date + "T" + a.time)) <= 0
+        &&
+        (moment().diff(moment(a.date + "T" + lasttime)) >= 0 || !lasttime)
+      )
+        tasks.append("<div class='date headdate first time'> " + moment().format('HH:mm') + "</div>");
+      tasks.append("<div class='date time first'> " + a.time + "</div>");
+      lasttime = a.time
+    }
     if (a.blocked && blocked) {
-      tasks.append("<div class='date'>Блокированные</div>");
+      tasks.append("<div class='date headdate'>Блокированные</div>");
       blocked = false;
     }
     texthtml += "<div class='task";
@@ -258,13 +276,13 @@ let render = () => {
       texthtml += "    <textarea placeholder=\"Название...\" class=\"input inputtext\" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
       texthtml += "    <textarea placeholder=\"Зависим...\" class=\"input inputtags\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
       texthtml += "    <textarea placeholder=\"Блокирует...\" class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
-      texthtml += "    <select id=\"priority\" size=\"3\" name=\"hero\">";
-      texthtml += "      <option class=\"first\" value=\"first\">Быстро<\/option>";
-      texthtml += "      <option class=\"second\" value=\"second\">Долго<\/option>";
-      texthtml += "      <option class=\"third\" value=\"third\">Идеи<\/option>";
-      // texthtml += "      <option class=\"forth\" value=\"forth\">ТО<\/option>";
-      // texthtml += "      <option class=\"fifth\" value=\"fifth\">Обязательство<\/option>";
-      // texthtml += "      <option class=\"sixth\" value=\"sixth\">Социальные<\/option>";
+      texthtml += "    <select id=\"priority\" size=\"6\" name=\"hero\">";
+      texthtml += "      <option class=\"first\" value=\"first\">Запланировано<\/option>";
+      texthtml += "      <option class=\"second\" value=\"second\">Предсказуемые<\/option>";
+      texthtml += "      <option class=\"third\" value=\"third\">Квест<\/option>";
+      texthtml += "      <option class=\"forth\" value=\"forth\">Идеи<\/option>";
+      texthtml += "      <option class=\"fifth\" value=\"fifth\">Технические<\/option>";
+      texthtml += "      <option class=\"sixth\" value=\"sixth\">Корзина<\/option>";
       // texthtml += "      <option class=\"seventh\" value=\"seventh\">Хочу!<\/option>";
       // texthtml += "      <option class=\"eighth\" value=\"eighth\">Заточка<\/option>";
       // texthtml += "      <option class=\"ninth\" value=\"ninth\">Результат<\/option>";

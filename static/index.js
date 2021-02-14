@@ -78,9 +78,11 @@ let newwish = (name, selected, tags, opns, priority, note) => {
   });
 };
 let save = () => {
-  if(true){
-  // if (isSelection) {
-    let inptval = $('.inputtext').val().trim();
+  if (true) {
+    // if (isSelection) {
+    let inptval = $('.inputtext').val()
+    if (inptval)
+      inptval.trim();
     let name;
     let note = '';
     if (inptval) {
@@ -158,6 +160,7 @@ let save = () => {
           }
         }
       }
+
       $.each(inptags.split(/\n/), function (i, tgname) {
         // empty string check
         if (tgname != "") {
@@ -229,7 +232,11 @@ let save = () => {
             }
           }
         }
+        if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
+          if (a.priority == 'first')
+            a.priority = 'forth'
       }
+
       sortdata();
     }
   }
@@ -242,13 +249,15 @@ let sortdata = () => {
     else if (a.blocked && !b.blocked) {
       return 1
     }
-    let ad = moment(a.date + "T" + a.time);
-    let bd = moment(b.date + "T" + b.time);
+    let ad = moment(a.date);
+    let bd = moment(b.date);
     if (ad.diff(moment()) < 0) {
-      ad = moment().hours(0).minutes(0);
+      ad = moment();
     }
     if (bd.diff(moment()) < 0) {
-      bd = moment().hours(0).minutes(0);
+      bd = moment();
+      // if (b.priority == 'first')
+      //   b.priority = 'third'
     }
     if (ad.year() > bd.year()) {
       return 1
@@ -348,9 +357,13 @@ let sortdata = () => {
 let select = (text) => {
   let f = false;
   for (let a of data.tasks) {
-    a.selected = (a.name.toLowerCase() == text.toLowerCase())
-    if (a.selected) {
-      f = text;
+    if (a.selected && a.name.toLowerCase() == text.toLowerCase())
+      a.selected = false
+    else {
+      a.selected = (a.name.toLowerCase() == text.toLowerCase())
+      if (a.selected) {
+        f = text;
+      }
     }
   }
   return f;

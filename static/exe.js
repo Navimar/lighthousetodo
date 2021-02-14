@@ -21,7 +21,7 @@ let onOpn = (txt) => {
 
 let onNew = () => {
     save();
-    newwish('новая запись', false, false, false, 'third');
+    newwish('новая запись', false, false, false, 'forth');
     select('новая запись');
     send();
     render();
@@ -43,8 +43,11 @@ let onToday = () => {
 }
 
 let onPlusday = () => {
-    let d = moment($('#date').val()).add(1, 'day');
+    let a = moment($('#date').val() + 'T' + $('#time').val()).add(1, 'day');
+    let b = moment($('#time').val(), 'hh:mm').add(1, 'day');
+    let d = a > b ? a : b
     $('#date').val(d.format('YYYY-MM-DD'));
+    $('#time').val(d.format('HH:mm'));
 }
 
 let onTomorrow = () => {
