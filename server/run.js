@@ -21,15 +21,15 @@ module.exports = (io) => {
             }
             user.add(msg.id, socket);
 
-            let sockets = user.get(msg.id)
-            // console.log(sockets);
-            sockets.forEach(s => {
-                if (s != socket) {
-                    // load(msg.id, s);
-                    s.disconnect(true)
-                }
-            });
-            
+            // let sockets = user.get(msg.id)
+            // // console.log(sockets);
+            // sockets.forEach(s => {
+            //     if (s != socket) {
+            //         // load(msg.id, s);
+            //         s.disconnect(true)
+            //     }
+            // });
+
             let dir = sha256(sha256.x2(msg.id + salt));
             if (!fs.existsSync('./data/' + dir)) {
                 console.log('folder created');
@@ -43,7 +43,7 @@ module.exports = (io) => {
             n++;
             if (n > 100) { n = 0 }
 
-            
+
         });
         socket.on('load', function (msg) {
             // console.log('load!');
