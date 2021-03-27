@@ -4,6 +4,7 @@ let data;
 function inputSocket() {
   socket.on('connect', function () {
     console.log('connected');
+    update();
     $('#status').removeClass("red").html('online');
   });
   socket.on('disconnect', function () {
