@@ -4,7 +4,6 @@ let data;
 function inputSocket() {
   socket.on('connect', function () {
     console.log('connected');
-    update();
     $('#status').removeClass("red").html('online');
   });
   socket.on('disconnect', function () {
@@ -29,7 +28,6 @@ function inputSocket() {
 window.onload = function () {
 
   update();
-  // data = JSON.parse(localStorage.getItem('data'));
   inputSocket();
 
   if (!data) {
@@ -220,8 +218,8 @@ let save = () => {
           a.opns = opns;
           a.ready = ready;
           a.priority = priority;
-          a.timediff = moment(date + "T" + time).format('x') - moment(a.date + "T" + a.time).format('x') || a.timediff;
-          console.log(a.timediff);
+          // a.timediff = moment(date + "T" + time).format('x') - moment(a.date + "T" + a.time).format('x') || a.timediff;
+          // console.log(a.timediff);
           a.time = time;
           a.date = date;
         }
@@ -310,7 +308,6 @@ let del = (text) => {
 };
 
 let send = () => {
-  // login.pass = findGetParameter("key");
   let id = findGetParameter("id");
   data.id = id;
   socket.emit('save', data);
