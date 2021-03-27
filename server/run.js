@@ -37,9 +37,9 @@ module.exports = (io) => {
             }
 
             // fs.createReadStream('data/' + dir + '/data.txt').pipe(fs.createWriteStream('data/' + dir + '/old' + n + '.txt'));
-            // fs.writeFile('data/' + dir + '/data.txt', JSON.stringify(msg), function (err) {
-            //     return console.log(err);
-            // });
+            fs.writeFileSync('data/' + dir + '/data.txt', JSON.stringify(msg), function (err) {
+                return console.log(err);
+            });
             n++;
             if (n > 100) { n = 0 }
 
