@@ -30,18 +30,18 @@ module.exports = (io) => {
                 }
             });
 
-            let dir = sha256(sha256.x2(msg.id + salt));
-            if (!fs.existsSync('./data/' + dir)) {
-                console.log('folder created');
-                fs.mkdirSync('./data/' + dir);
-            }
+            // let dir = sha256(sha256.x2(msg.id + salt));
+            // if (!fs.existsSync('./data/' + dir)) {
+            //     console.log('folder created');
+            //     fs.mkdirSync('./data/' + dir);
+            // }
 
-            fs.createReadStream('data/' + dir + '/data.txt').pipe(fs.createWriteStream('data/' + dir + '/old' + n + '.txt'));
-            fs.writeFile('data/' + dir + '/data.txt', JSON.stringify(msg), function (err) {
-                return console.log(err);
-            });
-            n++;
-            if (n > 100) { n = 0 }
+            // fs.createReadStream('data/' + dir + '/data.txt').pipe(fs.createWriteStream('data/' + dir + '/old' + n + '.txt'));
+            // fs.writeFile('data/' + dir + '/data.txt', JSON.stringify(msg), function (err) {
+            //     return console.log(err);
+            // });
+            // n++;
+            // if (n > 100) { n = 0 }
 
         });
         socket.on('load', function (msg) {
