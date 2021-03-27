@@ -6,28 +6,18 @@ let run = require('./server/run.js');
 const os = require('os');
 const config = require('./config.js');
 
-app.use(express.static(__dirname + '/static'));
-app.use(express.static(__dirname + '/desktop'));
-app.use(express.static(__dirname + '/mobile'));
+app.use(express.static(__dirname + '/static/'));
+app.use(express.static(__dirname + '/static/img'));
+app.use(express.static(__dirname + '/static/lib'));
+app.use(express.static(__dirname + '/desktop/'));
+app.use(express.static(__dirname + '/mobile/'));
+app.use(express.static(__dirname + '/mobile/src/'));
+
 
 
 app.get('*', function (req, res) {
     res.status(404).send("nothing there");
-    // res.sendFile('/index.html');
 });
-
-// let config = {};
-// if (os.platform() == 'darwin' || os.platform() == 'win32') {
-//     config = {
-//         ip: "127.0.0.1",
-//         port: "8888",
-//     }
-// } else {
-//     config = {
-//         ip: "165.22.49.60",
-//         port: "8080",
-//     }
-// }
 
 run(io);
 

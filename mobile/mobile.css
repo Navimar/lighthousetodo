@@ -67,24 +67,11 @@ option:checked {
   color: white;
 }
 
-.tags {
-  font-size: 10pt;
-  font-style: italic;
-}
-
-.tag {
-  font-size: 10pt;
-  font-style: italic;
-  background: #333;
-  padding: 0px;
-  color: grey;
-  border: none;
-  border-radius: 0;
-}
-
 .opns {}
 
 .opn {
+  text-align: left;
+  width: 90%;
   font-size: 10pt;
   font-style: italic;
   background: #333;
@@ -93,10 +80,12 @@ option:checked {
   color: grey;
   border: none;
   border-radius: 0;
+  margin-right: 6px;
 }
 
 .arr {
   font-size: 10pt;
+  margin-left: 10px;
 }
 
 .ready {
@@ -131,21 +120,6 @@ input[type="checkbox"] {
   font-size: 11pt;
   background: #333;
   color: whitesmoke;
-}
-
-.text {
-  padding-left: 5px;
-  width: 100%;
-  background-color: transparent;
-  border: none;
-  color: white;
-  text-align: left;
-  font-size: 14pt;
-  padding-right: 20px;
-}
-
-.text:hover {
-  cursor: pointer;
 }
 
 .clock {
@@ -185,23 +159,23 @@ input[type="checkbox"] {
 }
 
 .first {
-  border-left: 7px solid #e7ef00;
+  border-left: 7px solid #AAFF00;
 }
 
 .second {
-  border-left: 7px solid #f75200;
+  border-left: 7px solid #FFAA00;
 }
 
 .third {
-  border-left: 7px solid #10a5d2;
+  border-left: 7px solid #FF00AA;
 }
 
 .forth {
-  border-left: 7px solid #7c5690;
+  border-left: 7px solid #AA00FF;
 }
 
 .fifth {
-  border-left: 7px solid darkgoldenrod;
+  border-left: 7px solid #00AAFF;
 }
 
 .sixth {
@@ -209,7 +183,7 @@ input[type="checkbox"] {
 }
 
 .seventh {
-  border-left: 7px solid darkmagenta;
+  border-left: 7px solid rgb(47, 25, 0);
 }
 
 .eighth {
@@ -235,7 +209,7 @@ input[type="checkbox"] {
 }
 
 .cantdo {
-  /* color: grey; */
+  border-color: #333;
 }
 
 .selected {
@@ -284,12 +258,13 @@ button {
 .selected .text {}
 
 .headdate {
-  color: black;
+  /* color: black;
   background-color: #10a6d2;
-  border-left: 7px solid #10a6d2;
+  border-left: 7px solid #10a6d2; */
 }
 
 .time {
+  font-family: monospace;
   text-align: left;
   width: 10%;
   padding-left: 25px;
@@ -299,4 +274,43 @@ button {
   font-size: 16px;
   font-style: italic;
   font-family: monospace;
+}
+
+.selected .opn {
+  background: transparent;
+  margin: 0;
+  /* margin-left: 28pt; */
+  color: white;
+  /* display: block; */
+  font-style: normal;
+  font-size: 14pt;
+}
+
+.text {
+  padding-left: 5px;
+  background-color: transparent;
+  border: none;
+  color: white;
+  text-align: left;
+  font-size: 14pt;
+  /* padding-right: 20px; */
+}
+
+.text:hover {
+  cursor: pointer;
+}
+
+.bul {
+  line-height: 0;
+  font-size: 18pt;
+  font-family: monospace;
+  padding: 5px;
+}
+
+.tag {
+  /* background: #333; */
+  color: grey;
+  border: none;
+  border-radius: 0;
+  display: inline;
 }
