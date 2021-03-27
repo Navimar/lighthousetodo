@@ -57,10 +57,10 @@ let load = (key, socket) => {
         key = 'demo';
     }
     let dir = sha256(sha256.x2(key + salt));
-    if (fs.existsSync('..data/' + dir + '/data.txt')) {
+    if (fs.existsSync('../data/' + dir + '/data.txt')) {
         console.log('load ' + dir);
         // console.log(msg);
-        fs.readFile('..data/' + dir + '/data.txt', 'utf8', function (err, data) {
+        fs.readFile('../data/' + dir + '/data.txt', 'utf8', function (err, data) {
             // console.log(JSON.parse(data));
             socket.emit('update', JSON.parse(data));
         });
