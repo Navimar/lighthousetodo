@@ -37,7 +37,7 @@ module.exports = (io) => {
             }
 
             // fs.createReadStream('data/' + dir + '/data.txt').pipe(fs.createWriteStream('data/' + dir + '/old' + n + '.txt'));
-            fs.writeFileSync('data/' + dir + '/data.txt', JSON.stringify(msg), function (err) {
+            fs.writeFile('data/' + dir + '/data.txt', JSON.stringify(msg), function (err) {
                 return console.log(err);
             });
             n++;
