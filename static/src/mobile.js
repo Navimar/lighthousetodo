@@ -58,14 +58,13 @@ $('.t1').bind('input propertychange', function () {
   $(window).scrollTop(0);
 });
 $(document).on('click', '.text', function () {
+  $('.t1').val('');
   onSelect($(this).val());
 });
 $(document).on('click', '.tag', function () {
-  scrollPosition = -1
   onTag($(this).text());
 });
 $(document).on('click', '.opn', function () {
-  scrollPosition = -1
   onOpn($(this).text());
 });
 $(document).on('click', '.newtask', function () {

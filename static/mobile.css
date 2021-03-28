@@ -7,10 +7,16 @@
 body {
   background: black;
   color: whitesmoke;
-  /* /* font-size: 16pt; */
+  text-align: center;
   font-family: Verdana;
   margin: 0;
   overflow-x: hidden;
+}
+
+.search {}
+
+#tasks {
+  margin-top: 20px;
 }
 
 .justClicked {
@@ -122,17 +128,6 @@ input[type="checkbox"] {
   color: whitesmoke;
 }
 
-.clock {
-  position: fixed;
-  width: 80ex;
-  width: 100%;
-}
-
-.clock input {
-  margin: 0;
-  max-width: 80ex;
-}
-
 .mainbutton {
   margin-right: 10px;
 }
@@ -144,6 +139,7 @@ input[type="checkbox"] {
 }
 
 #status {
+  display: none;
   position: fixed;
   bottom: 10px;
   left: 10px;
@@ -246,7 +242,7 @@ button {
 }
 
 .red {
-  /* background-color: #150000; */
+  background-color: darkred;
   border-bottom: 5px solid darkred;
 }
 
@@ -314,4 +310,12 @@ button {
   border: none;
   border-radius: 0;
   display: inline;
+}
+
+.t1 {
+  font-size: 14pt;
+  transform: translateX(-50%);
+  position: fixed;
+  top: 0;
+  max-width: 72ex;
 }

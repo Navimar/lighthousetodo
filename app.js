@@ -8,10 +8,9 @@ const config = require('./config.js');
 
 app.use(express.static(__dirname + '/static/'));
 app.use(express.static(__dirname + '/static/img'));
+app.use(express.static(__dirname + '/static/src'));
 app.use(express.static(__dirname + '/static/lib'));
 app.use(express.static(__dirname + '/desktop/'));
-app.use(express.static(__dirname + '/mobile/'));
-app.use(express.static(__dirname + '/mobile/src/'));
 
 
 

@@ -1,6 +1,18 @@
 const socket = io();
 let data;
 
+window.onload = function () {
+
+  update();
+  inputSocket();
+
+  if (!data) {
+    $('#status').addClass("red").html('NO DATA!!!');
+  } else {
+    render();
+  }
+};
+
 function inputSocket() {
   socket.on('connect', function () {
     console.log('connected');
@@ -25,18 +37,6 @@ function inputSocket() {
   //     onLogin(val);
   // });
 }
-
-window.onload = function () {
-
-  update();
-  inputSocket();
-
-  if (!data) {
-    $('#status').addClass("red").html('NO DATA!!!');
-  } else {
-    render();
-  }
-};
 
 let update = () => {
   socket.emit('load', findGetParameter("id"));
