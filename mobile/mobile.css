@@ -308,6 +308,7 @@ button {
 }
 
 .tag {
+  width: auto;
   /* background: #333; */
   color: grey;
   border: none;
