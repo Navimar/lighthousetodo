@@ -44,10 +44,16 @@ let sortdata = () => {
           return -1;
         }
       }
-      if ((a.tags.length > b.tags.length)) {
+      if (a.tags.length > b.tags.length) {
         return -1
       }
       else if (a.tags.length < b.tags.length) {
+        return 1
+      }
+      if (a.tags[0] && b.tags[0] && (a.tags[0].localeCompare(b.tags[0]) > 0)) {
+        return -1
+      }
+      else if (a.tags[0] && b.tags[0] && (a.tags[0].localeCompare(b.tags[0]) < 0)) {
         return 1
       }
       if ((a.opns.length > b.opns.length)) {
