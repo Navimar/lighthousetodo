@@ -132,12 +132,11 @@ let render = () => {
     //   button = false;
     // }
     texthtml += "</button>";
-    if (a.opns && a.opns.length > 0) {
-      texthtml += "<span class='";
-      if (a.ready)
-        texthtml += "ready ";
-      texthtml += "bul'>⇒</span>";
-    }
+    if (a.ready)
+      if (a.opns && a.opns.length > 0)
+        texthtml += "<span class='ready bul'>⇒<span>";
+      else
+        texthtml += "<span class='ready bul'>•<span>";
     if (a.selected)
       texthtml += renderopns(a, 0);
 
