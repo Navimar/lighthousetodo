@@ -99,9 +99,9 @@ let render = () => {
     } else if (!isReady(a.date, a.time)) {
       texthtml += " cantdo"
     }
-    if (a.ready) {
-      texthtml += " ready";
-    }
+    // if (a.ready) {
+    //   texthtml += " ready";
+    // }
     texthtml += " " + a.priority;
     if (searchquerry.toLowerCase !== '' && !a.name.toLowerCase().includes(searchquerry.toLowerCase())) {
       texthtml += " nondisplay"
@@ -132,10 +132,11 @@ let render = () => {
     //   button = false;
     // }
     texthtml += "</button>";
+    if (a.opns && a.opns.length > 0)
+      texthtml += "<span class='ready bul'>⇒</span>";
     if (a.selected)
       texthtml += renderopns(a, 0);
-    else if (a.opns && a.opns.length > 0)
-      texthtml += "<span class='bul'>⇒<span>";
+
 
 
     texthtml += "</div>";

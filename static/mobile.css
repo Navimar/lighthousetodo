@@ -95,10 +95,7 @@ option:checked {
 }
 
 .ready {
-  border-radius: 0px;
-  /* background: #121 !important; */
-  /* color: palegreen !important; */
-  border-RIGHT: solid 7px palegreen !important;
+  color: lightgreen;
 }
 
 .nonblocked {

@@ -36,11 +36,13 @@ let sortdata = () => {
       return -1
     }
     else if (a.priority == b.priority) {
-      if (moment(a.date + "T" + a.time) > moment(b.date + "T" + b.time)) {
-        return 1;
-      }
-      else if (moment(a.date + "T" + a.time) < moment(b.date + "T" + b.time)) {
-        return -1;
+      if (a.priority == 'first') {
+        if (moment(a.date + "T" + a.time) > moment(b.date + "T" + b.time)) {
+          return 1;
+        }
+        else if (moment(a.date + "T" + a.time) < moment(b.date + "T" + b.time)) {
+          return -1;
+        }
       }
       if ((a.tags.length > b.tags.length)) {
         return -1
