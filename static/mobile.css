@@ -259,13 +259,6 @@ button {
   border-left: 7px solid #10a6d2; */
 }
 
-.time {
-  font-family: monospace;
-  text-align: left;
-  width: 10%;
-  padding-left: 25px;
-}
-
 .bottom {
   font-size: 16px;
   font-style: italic;
@@ -318,4 +311,9 @@ button {
   position: fixed;
   top: 0;
   max-width: 72ex;
+}
+
+.time {
+  font-family: monospace;
+  text-align: left;
 }

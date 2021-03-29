@@ -118,7 +118,7 @@ let render = () => {
       //   (moment().diff(moment(a.date + "T" + lasttime)) >= 0 || !lasttime)
       // )
       //   tasks.append("<div class='date headdate first time'> " + moment().format('HH:mm') + "</div>");
-      texthtml += ("<button class='tag first text time'> " + a.time + "</button>&nbsp;<span class='bul'>⇒</span>");
+      texthtml += ("<button class='tag first text time'> " + a.time + "&nbsp;</button>");
       lasttime = a.time
     }
 
