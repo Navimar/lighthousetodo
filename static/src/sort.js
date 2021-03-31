@@ -56,6 +56,12 @@ let sortdata = () => {
       else if (a.ready && !b.ready) {
         return 1
       }
+      if (moment(a.date + "T" + a.time) > moment(b.date + "T" + b.time)) {
+        return 1;
+      }
+      else if (moment(a.date + "T" + a.time) < moment(b.date + "T" + b.time)) {
+        return -1;
+      }
       if ((a.opns.length > b.opns.length)) {
         return -1
       }
