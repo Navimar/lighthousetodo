@@ -87,6 +87,7 @@ let save = () => {
     let note = '';
     if (inptval) {
       $.each(inptval.split(/\n/), function (i, text) {
+        text = text.trim();
         if (i == 0) {
           name = text;
           if (text == '') {
@@ -102,9 +103,9 @@ let save = () => {
       if ($(".checkdelete").prop('checked')) {
         return del(name);
       }
-      let inptags = $(".inputtags").val().trim();
+      let inptags = $(".inputtags").val();
       // console.log(inptags);
-      let inpopns = $(".inputopns").val().trim();
+      let inpopns = $(".inputopns").val();
       // inptags = $(".inputtags").val();
       // console.log(inptags);
       // let inpopns = $(".inputopns").val();
@@ -164,6 +165,7 @@ let save = () => {
       $.each(inptags.split(/\n/), function (i, tgname) {
         // empty string check
         if (tgname != "") {
+          tgname = tgname.trim();
           tags.push(tgname);
           let ok = true;
           for (let a of data.tasks) {
@@ -184,6 +186,7 @@ let save = () => {
       $.each(inpopns.split(/\n/), function (i, opname) {
         // empty string check
         if (opname != "") {
+          opname = opname.trim();
           opns.push(opname);
           let ok = true;
           for (let a of data.tasks) {

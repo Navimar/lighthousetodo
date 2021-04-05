@@ -127,10 +127,7 @@ let render = () => {
     texthtml += "<button class='text";
     texthtml += "' ";
     texthtml += "value='" + a.name + "'>";
-    texthtml += a.name.split('\n')[0];
-    // if (a.name == 'new item') {
-    //   button = false;
-    // }
+    texthtml += a.name;
     texthtml += "</button>";
     if (a.ready)
       if (a.opns && a.opns.length > 0)
@@ -244,7 +241,7 @@ let render = () => {
   $('.delete').val(text);
   if (isSelection) {
     scrollPosition = $('.selected').position().top;
-    scrollPosition -= mouse.y - 20;
+    scrollPosition -= mouse.y - 12;
     $(window).scrollTop(scrollPosition);
   }
 
