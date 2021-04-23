@@ -235,9 +235,9 @@ let save = () => {
             }
           }
         }
-        if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
-          if (a.priority == 'first')
-            a.priority = 'third'
+        // if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
+        //   if (a.priority == 'second')
+        //     a.priority = 'first'
       }
       sortdata();
     }

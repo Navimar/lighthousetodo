@@ -103,6 +103,9 @@ let render = () => {
     //   texthtml += " ready";
     // }
     texthtml += " " + a.priority;
+    if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear() &&
+      a.priority == 'first')
+      texthtml += " past";
     if (searchquerry.toLowerCase !== '' && !a.name.toLowerCase().includes(searchquerry.toLowerCase())) {
       texthtml += " nondisplay"
     }
@@ -118,7 +121,8 @@ let render = () => {
       //   (moment().diff(moment(a.date + "T" + lasttime)) >= 0 || !lasttime)
       // )
       //   tasks.append("<div class='date headdate first time'> " + moment().format('HH:mm') + "</div>");
-      texthtml += ("<button class='tag first text time'> " + a.time + "&nbsp;</button>");
+      if (moment().dayOfYear() <= moment(a.date + "T" + a.time).dayOfYear())
+        texthtml += ("<button class='tag first text time'> " + a.time + "&nbsp;</button>");
       lasttime = a.time
     }
 
@@ -164,13 +168,13 @@ let render = () => {
       texthtml += "    <textarea placeholder=\"Зависим...\" class=\"input inputtags\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
       texthtml += "    <textarea placeholder=\"Блокирует...\" class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
       texthtml += "    <select id=\"priority\" size=\"7\" name=\"hero\">";
-      texthtml += "      <option class=\"first\" value=\"first\">Запланировано<\/option>";
-      texthtml += "      <option class=\"second\" value=\"second\">Предсказуемые<\/option>";
-      texthtml += "      <option class=\"third\" value=\"third\">Идеи<\/option>";
-      texthtml += "      <option class=\"forth\" value=\"forth\">Квест<\/option>";
-      texthtml += "      <option class=\"fifth\" value=\"fifth\">Затык<\/option>";
-      texthtml += "      <option class=\"sixth\" value=\"sixth\">Технические<\/option>";
-      texthtml += "      <option class=\"seventh\" value=\"seventh\">Корзина<\/option>";
+      texthtml += "      <option class=\"first\" value=\"first\">План<\/option>";
+      texthtml += "      <option class=\"second\" value=\"second\">Окно<\/option>";
+      texthtml += "      <option class=\"third\" value=\"third\">Заметки<\/option>";
+      texthtml += "      <option class=\"forth\" value=\"forth\">Корзина<\/option>";
+      texthtml += "      <option class=\"fifth\" value=\"fifth\">Пять<\/option>";
+      texthtml += "      <option class=\"sixth\" value=\"sixth\">Шесть<\/option>";
+      texthtml += "      <option class=\"seventh\" value=\"seventh\">Семь<\/option>";
       // texthtml += "      <option class=\"eighth\" value=\"eighth\">Заточка<\/option>";
       // texthtml += "      <option class=\"ninth\" value=\"ninth\">Результат<\/option>";
       // texthtml += "      <option class=\"tenth\" value=\"tenth\">Новые горизонты<\/option>";

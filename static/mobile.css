@@ -152,26 +152,26 @@ input[type="checkbox"] {
 }
 
 .first {
-  border-left: 7px solid #AAFF00;
-}
-
-.second {
   border-left: 7px solid #FFAA00;
 }
 
-.third {
+.second {
   border-left: 7px solid #FF00AA;
 }
 
-.forth {
+.third {
   border-left: 7px solid #AA00FF;
 }
 
-.fifth {
+.forth {
   border-left: 7px solid #00AAFF;
 }
 
-.sixth {
+.past {
+  border-left: 7px solid #AAFF00;
+}
+
+.fifth {
   border-left: 7px solid darkgreen;
 }
 
