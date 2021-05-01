@@ -1,10 +1,13 @@
 let sortdata = () => {
   data.tasks.sort((a, b) => {
-    if ((!a.blocked && b.blocked)) {
-      return -1
-    }
-    else if (a.blocked && !b.blocked) {
-      return 1
+    if (a.priority != 'first') {
+
+      if ((!a.blocked && b.blocked)) {
+        return -1
+      }
+      else if (a.blocked && !b.blocked) {
+        return 1
+      }
     }
 
     let ad = moment(a.date);
