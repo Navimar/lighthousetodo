@@ -1,6 +1,12 @@
 let sortdata = () => {
   data.tasks.sort((a, b) => {
-    if (a.priority != 'first' && b.priority != 'first') {
+    if (a.priority != 'first' || b.priority != 'first') {
+      if (a.priority == 'first') {
+        return -1
+      }
+      else if (b.priority == 'first') {
+        return 1
+      }
       if ((!a.blocked && b.blocked)) {
         return -1
       }
