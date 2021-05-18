@@ -38,6 +38,10 @@ let sortdata = () => {
           return -1;
         }
       }
+      if (isReady(a.date, a.time) < isReady(b.date, b.time))
+        return 1
+      else if (isReady(a.date, a.time) > isReady(b.date, b.time))
+        return -1
       if (a.tags.length > b.tags.length) {
         return -1
       }

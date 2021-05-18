@@ -43,9 +43,6 @@ function clock(date) {
 function isReady(date, time) {
     return moment(date + "T" + time).format('x') < moment().format('x');;
 }
-function isReady(date, time) {
-    return moment(date + "T" + time).format('x') < moment().format('x');;
-}
 
 function findGetParameter(name, url) {
     if (!url) {
