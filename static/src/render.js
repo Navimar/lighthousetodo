@@ -133,15 +133,17 @@ let render = () => {
     texthtml += "value='" + a.name + "'>";
     texthtml += a.name;
     texthtml += "</button>";
-    if (a.ready)
-      if (a.opns && a.opns.length > 0)
+
+    if (a.opns && a.opns.length > 0)
+      if (a.ready)
         texthtml += "<span class='ready bul'>⇒</span>";
       else
+        texthtml += "<span class=' bul'>⇒</span>";
+    else
+      if (a.ready)
         texthtml += "<span class='ready bul'>•</span>";
     if (a.selected)
       texthtml += renderopns(a, 0);
-
-
 
     texthtml += "</div>";
     tasks.append(texthtml);
