@@ -1,18 +1,11 @@
 let sortdata = () => {
   data.tasks.sort((a, b) => {
-    // if (!a.blocked && (b.blocked && b.priority != 'first' && b.priority != "second")) {
-    //   return -1
-    // }
-    // else if ((a.blocked && a.priority != 'first' && a.priority != "second") && !b.blocked) {
-    //   return 1
-    // }
-
-    // if (!a.blocked && b.blocked && b.opns.length > 0) {
-    //   return -1
-    // }
-    // else if (!b.blocked && a.blocked && a.opns.length > 0) {
-    //   return 1
-    // }
+    if (!a.blocked && (b.blocked && b.priority != 'first')) {
+      return -1
+    }
+    else if ((a.blocked && a.priority != 'first') && !b.blocked) {
+      return 1
+    }
 
     let ad = moment(a.date);
     let bd = moment(b.date);
@@ -21,8 +14,6 @@ let sortdata = () => {
     }
     if (bd.diff(moment()) < 0) {
       bd = moment();
-      // if (b.priority == 'first')
-      //   b.priority = 'third'
     }
     if (ad.year() > bd.year()) {
       return 1
@@ -36,12 +27,7 @@ let sortdata = () => {
     else if (ad.dayOfYear() < bd.dayOfYear()) {
       return -1
     }
-    if (a.priority == 'first' && b.priority != "first")
-      return -1
-    else if (a.priority != 'first' && b.priority == "first")
-      return 1
-
-    if (a.priority == b.priority) {
+    else if (a.priority == b.priority) {
       if (a.priority == 'first') {
         if (moment(a.date + "T" + a.time) > moment(b.date + "T" + b.time)) {
           return 1;
@@ -49,18 +35,6 @@ let sortdata = () => {
         else if (moment(a.date + "T" + a.time) < moment(b.date + "T" + b.time)) {
           return -1;
         }
-      }
-      if (a.opns.length == 0 && b.opns.length != 0) {
-        return -1
-      }
-      else if (a.opns.length != 0 && b.opns.length == 0) {
-        return 1
-      }
-      if (!a.blocked && b.blocked) {
-        return -1
-      }
-      else if (!b.blocked && a.blocked) {
-        return 1
       }
       if (a.tags.length > b.tags.length) {
         return -1
@@ -175,5 +149,6 @@ let sortdata = () => {
     else if (b.priority == 'eleventh') {
       return 1
     }
+
   })
 };
