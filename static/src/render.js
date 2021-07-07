@@ -64,7 +64,7 @@ let render = () => {
   let lasttime = false;
   let date = "1111-11-11";
   let today = moment();
-  let blocked = true;;
+  // let blocked = true;
   let texthtml = "";
   tasks.html("");
   for (let a of data.tasks) {
@@ -76,10 +76,10 @@ let render = () => {
       tasks.append("<div class='date'> " + moment(a.date).format('dddd DD MMMM') + "</div>");
       today = moment(a.date);
     }
-    if (a.blocked && blocked) {
-      tasks.append("<div class='date headdate'>Блокированные</div>");
-      blocked = false;
-    }
+    // if (a.blocked && blocked) {
+    //   tasks.append("<div class='date headdate'>Блокированные</div>");
+    //   blocked = false;
+    // }
     texthtml += "<div class='task";
     if (a.selected) {
       isSelection = true;
@@ -164,7 +164,7 @@ let render = () => {
       texthtml += "    <button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plus15\">+15 минут<\/button>";
       texthtml += "    <button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
-      texthtml += "    <button class=\"timebutton\" id=\"pluslast\" value='" + a.timediff + "'>" + msToTime(a.timediff) + "<\/button>";
+      // texthtml += "    <button class=\"timebutton\" id=\"pluslast\" value='" + a.timediff + "'>" + msToTime(a.timediff) + "<\/button>";
       texthtml += "    <label class='mainbutton timebutton '>вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
       texthtml += "    <textarea placeholder=\"Название...\" class=\"input inputtext\" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
       texthtml += "    <textarea placeholder=\"Зависим...\" class=\"input inputtags\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
@@ -174,9 +174,9 @@ let render = () => {
       texthtml += "      <option class=\"second\" value=\"second\">Окно<\/option>";
       texthtml += "      <option class=\"third\" value=\"third\">Заметки<\/option>";
       texthtml += "      <option class=\"forth\" value=\"forth\">Корзина<\/option>";
-      texthtml += "      <option class=\"fifth\" value=\"fifth\">Пять<\/option>";
-      texthtml += "      <option class=\"sixth\" value=\"sixth\">Шесть<\/option>";
-      texthtml += "      <option class=\"seventh\" value=\"seventh\">Семь<\/option>";
+      // texthtml += "      <option class=\"fifth\" value=\"fifth\">Пять<\/option>";
+      // texthtml += "      <option class=\"sixth\" value=\"sixth\">Шесть<\/option>";
+      // texthtml += "      <option class=\"seventh\" value=\"seventh\">Семь<\/option>";
       // texthtml += "      <option class=\"eighth\" value=\"eighth\">Заточка<\/option>";
       // texthtml += "      <option class=\"ninth\" value=\"ninth\">Результат<\/option>";
       // texthtml += "      <option class=\"tenth\" value=\"tenth\">Новые горизонты<\/option>";
