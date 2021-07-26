@@ -106,8 +106,16 @@ let render = () => {
     if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear() &&
       a.priority == 'first')
       texthtml += " past";
-    if (searchquerry.toLowerCase !== '' && !a.name.toLowerCase().includes(searchquerry.toLowerCase())) {
-      texthtml += " nondisplay"
+    if (searchquerry.toLowerCase !== '') {
+      let f = true;
+      if (a.name.toLowerCase().includes(searchquerry.toLowerCase()))
+        f = false;
+      a.tags.forEach((val) => {
+        if (val.toLowerCase().includes(searchquerry.toLowerCase()))
+          f = false;
+      });
+      if (f)
+        texthtml += " nondisplay"
     }
     texthtml += "'>";
 
