@@ -80,7 +80,7 @@ let newwish = (name, selected, tags, opns, priority, note) => {
 let save = () => {
   if (true) {
     // if (isSelection) {
-    let inptval = $('.inputtext').val()
+    let inptval = $('#inputtext').val()
     if (inptval)
       inptval.trim();
     let name;
@@ -103,12 +103,8 @@ let save = () => {
       if ($(".checkdelete").prop('checked')) {
         return del(name);
       }
-      let inptags = $(".inputtags").val();
-      // console.log(inptags);
-      let inpopns = $(".inputopns").val();
-      // inptags = $(".inputtags").val();
-      // console.log(inptags);
-      // let inpopns = $(".inputopns").val();
+      let inptags = $("#inputtags").val();
+      let inpopns = $("#inputopns").val();
 
       let ready = $(".checkbox").prop('checked');
 
