@@ -36,6 +36,12 @@ let sortdata = () => {
           return -1;
         }
       }
+      if ((!a.ready && b.ready)) {
+        return -1
+      }
+      else if (a.ready && !b.ready) {
+        return 1
+      }
       if (a.tags.length > b.tags.length) {
         return -1
       }
@@ -46,12 +52,6 @@ let sortdata = () => {
         return -1
       }
       else if (a.tags[0] && b.tags[0] && (a.tags[0].localeCompare(b.tags[0]) > 0)) {
-        return 1
-      }
-      if ((!a.ready && b.ready)) {
-        return -1
-      }
-      else if (a.ready && !b.ready) {
         return 1
       }
       if (isReady(a.date, a.time) < isReady(b.date, b.time))
