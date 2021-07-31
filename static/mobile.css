@@ -29,10 +29,6 @@ td.taskmarker {
   width: 7px;
 }
 
-.main {
-  max-width: 80ex;
-}
-
 .nondisplay {
   background: red;
   display: none;
