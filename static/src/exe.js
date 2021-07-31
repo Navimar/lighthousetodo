@@ -25,6 +25,7 @@ let onNew = () => {
     select('новая запись');
     send();
     render();
+    $('#inputtext').select();
 }
 
 let onDel = (txt) => {

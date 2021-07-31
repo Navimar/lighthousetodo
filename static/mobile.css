@@ -2,30 +2,31 @@
   touch-action: manipulation;
   margin: 0;
   padding: 0;
+  border-spacing: 0;
 }
 
 body {
-  background: black;
+  background: #000510;
   color: whitesmoke;
   text-align: center;
-  font-family: Verdana;
+  font-family: 'Inter', Verdana;
   margin: 0;
   overflow-x: hidden;
 }
 
-.search {}
+table {
+  width: 100%;
+}
 
 #tasks {
   margin-top: 20px;
+  background: black;
 }
 
-.justClicked {
-  background-color: lightblue !important;
-  /* border: 1px solid blue !important; */
-}
-
-.justClicked2 {
-  background-color: lightgreen !important;
+td.taskmarker {
+  border-bottom: 4px solid black;
+  border-top: 4px solid black;
+  width: 7px;
 }
 
 .nondisplay {
@@ -41,7 +42,7 @@ body {
 
 select {
   width: 100%;
-  /* font-size: 20px; */
+  /* font-size : 20px; */
   /* background: black; */
   color: black;
 }
@@ -77,10 +78,7 @@ option:checked {
 
 .opn {
   text-align: left;
-  width: 90%;
-  font-size: 10pt;
-  font-style: italic;
-  background: #333;
+  background: none;
   margin: 2px;
   padding: 0;
   color: grey;
@@ -110,10 +108,7 @@ input[type="checkbox"] {
 .editor {
   text-align: right;
   background: #232333;
-  /* margin-top:100px; */
-  /* top: 0; */
-  /* position: fixed; */
-  /* font-size: 20pt; */
+  padding-top: 10px;
 }
 
 .input {
@@ -123,6 +118,13 @@ input[type="checkbox"] {
   font-size: 11pt;
   background: #333;
   color: whitesmoke;
+}
+
+input {
+  font-family: 'Inter', sans-serif;
+  font-size: 12pt;
+  border: none;
+  background: white;
 }
 
 .mainbutton {
@@ -152,23 +154,49 @@ input[type="checkbox"] {
 }
 
 .first {
+  background-color: #FFAA00;
+}
+
+option.first {
+  padding-left: 5px;
+  background: black;
   border-left: 7px solid #FFAA00;
 }
 
 .second {
+  background: #FF00AA;
+  /* border-left: 7px solid #522; */
+}
+
+option.second {
+  padding-left: 5px;
+  background: black;
   border-left: 7px solid #FF00AA;
 }
 
 .third {
+  background: #AA00FF;
+}
+
+option.third {
+  padding-left: 5px;
+  background: black;
   border-left: 7px solid #AA00FF;
 }
 
 .forth {
+  background: #00AAFF;
+}
+
+option.forth {
+  padding-left: 5px;
+  background: black;
   border-left: 7px solid #00AAFF;
 }
 
 .past {
-  border-left: 7px solid #AAFF00;
+  /* border-left: 7px solid #AAFF00; */
+  background-color: #AAFF00;
 }
 
 .fifth {
@@ -205,19 +233,16 @@ input[type="checkbox"] {
   border-color: #333;
 }
 
+.task {
+  margin-left: 7px;
+}
+
 .selected {
   background-color: #232333;
-  /* background-color: #011619; */
-  /* border-right: 5px solid whitesmoke; */
-  /* border-radius: 0; */
+  border-radius: 0;
 }
 
 .delete {}
-
-input {
-  font-size: 10pt;
-  background: white;
-}
 
 button {
   background-color: darkgray;
@@ -225,17 +250,16 @@ button {
   font-size: 12pt;
   border-radius: 10px;
   padding: 0;
-  padding-left: 2px;
+  font-family: 'Inter', sans-serif;
 }
 
 .timebutton {
-  font-family: arial;
   border: none;
   color: black;
   background-color: lightgray;
   padding: 2px 2px 2px 2px;
   border-radius: 0;
-  margin: 8px 0px 0px 10px;
+  margin: 8px 0px 8px 0px;
 }
 
 .red {
@@ -265,21 +289,17 @@ button {
 .selected .opn {
   background: transparent;
   margin: 0;
-  /* margin-left: 28pt; */
   color: white;
-  /* display: block; */
   font-style: normal;
   font-size: 14pt;
 }
 
 .text {
-  padding-left: 5px;
-  background-color: transparent;
+  background: none;
   border: none;
   color: white;
   text-align: left;
-  font-size: 14pt;
-  /* padding-right: 20px; */
+  font-size: 13.5pt;
 }
 
 .text:hover {
@@ -336,7 +356,7 @@ button {
 
 .autocomplete-items div {
   padding: 10px;
-  color:black;
+  color: black;
   cursor: pointer;
   background-color: #fff;
   border-bottom: 1px solid #d4d4d4;
@@ -351,4 +371,34 @@ button {
   /*when navigating through the items using the arrow keys:*/
   background-color: DodgerBlue !important;
   color: #ffffff;
+}
+
+.justClicked {
+  background-color: lightblue;
+  /* border       : 1px solid blue !important; */
+}
+
+.justClicked2 {
+  background-color: lightgreen;
+}
+
+label.mainbutton.timebutton {
+  text-align: center;
+  display: inline-block;
+}
+
+.timebuttons {
+  text-align: justify;
+}
+
+.timebuttons:after {
+  /* Justify last line */
+  content: '';
+  display: inline-block;
+  width: 100%;
+}
+
+.timebuttons {
+  /* Fix added space */
+  height: 30pt;
 }

@@ -65,7 +65,6 @@ let render = () => {
   let lasttime = false;
   let date = "1111-11-11";
   let today = moment();
-  // let blocked = true;
   let texthtml = "";
   tasks.html("");
   names = [];
@@ -79,14 +78,21 @@ let render = () => {
       tasks.append("<div class='date'> " + moment(a.date).format('dddd DD MMMM') + "</div>");
       today = moment(a.date);
     }
-    // if (a.blocked && blocked) {
-    //   tasks.append("<div class='date headdate'>Блокированные</div>");
-    //   blocked = false;
-    // }
+
+    texthtml += "<table class='"
+    if (a.selected)
+      texthtml += "selected";
+    texthtml += "'><tbody><tr><td class=' taskmarker"
+    // texthtml += "<span class=' bul"
+    texthtml += " " + a.priority;
+    if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear() && a.priority == 'first')
+      texthtml += " past";
+    // texthtml += "'>•</span > ";
+    texthtml += " '></td><td>"
     texthtml += "<div class='task";
     if (a.selected) {
       isSelection = true;
-      texthtml += " selected";
+      // texthtml += " selected";
       tags = a.tags;
       opns = a.opns;
       text = a.name;
@@ -102,13 +108,6 @@ let render = () => {
     } else if (!isReady(a.date, a.time)) {
       texthtml += " cantdo"
     }
-    // if (a.ready) {
-    //   texthtml += " ready";
-    // }
-    texthtml += " " + a.priority;
-    if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear() &&
-      a.priority == 'first')
-      texthtml += " past";
     if (searchquerry.toLowerCase !== '') {
       let f = true;
       if (a.name.toLowerCase().includes(searchquerry.toLowerCase()))
@@ -143,6 +142,8 @@ let render = () => {
     texthtml += "' ";
     texthtml += "value='" + a.name + "'>";
     texthtml += a.name;
+    if (a.note)
+      texthtml += "&hellip;"
     texthtml += "</button>";
 
     if (a.opns && a.opns.length > 0)
@@ -157,26 +158,28 @@ let render = () => {
       texthtml += renderopns(a, 0);
 
     texthtml += "</div>";
+    texthtml += "</td></tr></tbody></table>"
     tasks.append(texthtml);
 
 
     if (a.selected) {
       texthtml = "<div class=\"editor\">";
+
       texthtml += "    <input type=\"date\" id=\"date\" name=\"trip-start\">";
       texthtml += "    <input type=\"time\" id=\"time\" name=\"time\">";
-      texthtml += "<br>";
-      texthtml += "    <button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
-      texthtml += "    <button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
-      texthtml += "    <button class=\"timebutton\" id=\"morning\">9:00<\/button>";
-      texthtml += "    <button class=\"timebutton\" id=\"evening\">18:00<\/button>";
-      texthtml += "    <button class=\"timebutton\" id=\"midnight\">00:00<\/button>";
-      texthtml += "    <button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
-      texthtml += "    <button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
-      texthtml += "    <button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
-      texthtml += "    <button class=\"timebutton\" id=\"plus15\">+15 минут<\/button>";
-      texthtml += "    <button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
-      // texthtml += "    <button class=\"timebutton\" id=\"pluslast\" value='" + a.timediff + "'>" + msToTime(a.timediff) + "<\/button>";
-      texthtml += "    <label class='mainbutton timebutton '>вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
+      texthtml += "    <div class='timebuttons'>";
+      texthtml += "      <button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
+      texthtml += "      <button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
+      texthtml += "      <button class=\"timebutton\" id=\"morning\">9:00<\/button>";
+      texthtml += "      <button class=\"timebutton\" id=\"evening\">18:00<\/button>";
+      texthtml += "      <button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
+      texthtml += "      <button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
+      texthtml += "      <button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
+      texthtml += "      <button class=\"timebutton\" id=\"plus15\">+15 минут<\/button>";
+      texthtml += "      <button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
+      texthtml += "     <label class='mainbutton timebutton '>вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
+      texthtml += "    </div>";
+
       texthtml += "    <textarea placeholder=\"Название...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
       texthtml += "    <div class='autocomplete'>";
       texthtml += "         <textarea placeholder=\"Зависим...\" id ='inputtags' class=\"input\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
@@ -214,12 +217,6 @@ let render = () => {
     "<div class='date'> " + moment().format('dddd DD MMMM HH:mm') + "</div>"
   );
 
-  // tasks.css('padding-top', $('#taskheader').height() + 10);
-  // let ysc = $(window).scrollTop();  //your current y position on the page
-  // let th = $('#taskheader').height();
-  // if (!th) th = 0;
-  // $(window).scrollTop(ysc + th - lastheight);
-  // console.log('scroll',ysc,th,lastheight);
   for (let t of tags) {
     tagtext += t + "\n";
   }
@@ -253,6 +250,7 @@ let render = () => {
     scrollPosition = $('.selected').position().top;
     scrollPosition -= mouse.y - 12;
     $(window).scrollTop(scrollPosition);
+    $('#inputtext').focus();
   }
 
 };
