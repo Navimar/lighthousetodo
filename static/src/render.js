@@ -66,6 +66,7 @@ let render = () => {
   let date = "1111-11-11";
   let today = moment();
   let texthtml = "";
+  let blocked = false;
   tasks.html("");
   names = [];
   for (let a of data.tasks) {
@@ -78,11 +79,20 @@ let render = () => {
       tasks.append("<div class='date'> " + moment(a.date).format('dddd DD MMMM') + "</div>");
       today = moment(a.date);
     }
+    if (a.blocked && a.priority != 'first' && !blocked) {
+      tasks.append("<div class='date'> Блокированные </div>");
+      blocked = true;
+    }
 
     texthtml += "<table class='"
     if (a.selected)
       texthtml += "selected";
     texthtml += "'><tbody><tr><td class=' taskmarker"
+    if (a.blocked) {
+      texthtml += " cantdo";
+    } else if (!isReady(a.date, a.time)) {
+      texthtml += " cantdo"
+    }
     // texthtml += "<span class=' bul"
     texthtml += " " + a.priority;
     if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear() && a.priority == 'first')
@@ -103,11 +113,11 @@ let render = () => {
       time = a.time;
       date = a.date;
     }
-    if (a.blocked) {
-      texthtml += " cantdo";
-    } else if (!isReady(a.date, a.time)) {
-      texthtml += " cantdo"
-    }
+    // if (a.blocked) {
+    //   texthtml += " cantdo";
+    // } else if (!isReady(a.date, a.time)) {
+    //   texthtml += " cantdo"
+    // }
     if (searchquerry.toLowerCase !== '') {
       let f = true;
       if (a.name.toLowerCase().includes(searchquerry.toLowerCase()))

@@ -226,7 +226,7 @@ option.forth {
 }
 
 .cantdo {
-  border-color: #333;
+  background: #333;
 }
 
 .task {
