@@ -295,6 +295,7 @@ button {
 }
 
 .text {
+  word-break: break-word;
   background: none;
   border: none;
   color: white;
