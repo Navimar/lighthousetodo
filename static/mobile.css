@@ -127,10 +127,6 @@ input {
   background: white;
 }
 
-.mainbutton {
-  margin-right: 10px;
-}
-
 .clock .timebutton {
   top: 0px;
   right: 0px;
@@ -245,7 +241,7 @@ option.forth {
 .delete {}
 
 button {
-  background-color: darkgray;
+  background-color: none;
   color: black;
   font-size: 12pt;
   border-radius: 10px;
@@ -254,12 +250,16 @@ button {
 }
 
 .timebutton {
+  display: inline-block;
+  text-align: center;
+  width: 19%;
   border: none;
   color: black;
   background-color: lightgray;
-  padding: 2px 2px 2px 2px;
+  padding: 2px 0px 2px 0px;
   border-radius: 0;
-  margin: 8px 0px 8px 0px;
+  margin: 8px 0px 0px 0px;
+  vertical-align: bottom;
 }
 
 .red {
@@ -387,18 +387,23 @@ label.mainbutton.timebutton {
   display: inline-block;
 }
 
-.timebuttons {
-  text-align: justify;
-}
-
 .timebuttons:after {
-  /* Justify last line */
   content: '';
   display: inline-block;
   width: 100%;
 }
 
 .timebuttons {
-  /* Fix added space */
-  height: 30pt;
+  text-align: justify;
+  margin-bottom: -8pt;
+}
+
+.dateinp {
+  min-width: 24%;
+  margin: 2px;
+}
+
+.mainbutton {
+  width: auto;
+  padding: 4px;
 }
