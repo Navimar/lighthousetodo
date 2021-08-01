@@ -198,11 +198,11 @@ let render = () => {
       texthtml += "         <textarea placeholder=\"Блокирует...\" id ='inputopns' class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
       texthtml += "    </div >";
       texthtml += "    <select id=\"priority\" size=\"4\" name=\"hero\">";
-      texthtml += "      <option class=\"first\" value=\"first\">План<\/option>";
-      texthtml += "      <option class=\"second\" value=\"second\">Окно<\/option>";
-      texthtml += "      <option class=\"third\" value=\"third\">Заметки<\/option>";
-      texthtml += "      <option class=\"forth\" value=\"forth\">Корзина<\/option>";
-      // texthtml += "      <option class=\"fifth\" value=\"fifth\">Пять<\/option>";
+      texthtml += "      <option class=\"first\" value=\"first\">Ко времени<\/option>";
+      texthtml += "      <option class=\"second\" value=\"second\">Сегодня<\/option>";
+      texthtml += "      <option class=\"third\" value=\"third\">Если получится<\/option>";
+      texthtml += "      <option class=\"forth\" value=\"forth\">Заметки<\/option>";
+      texthtml += "      <option class=\"fifth\" value=\"fifth\">Корзина<\/option>";
       // texthtml += "      <option class=\"sixth\" value=\"sixth\">Шесть<\/option>";
       // texthtml += "      <option class=\"seventh\" value=\"seventh\">Семь<\/option>";
       // texthtml += "      <option class=\"eighth\" value=\"eighth\">Заточка<\/option>";
