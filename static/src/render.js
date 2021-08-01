@@ -197,7 +197,7 @@ let render = () => {
       texthtml += "    <div class='autocomplete'>";
       texthtml += "         <textarea placeholder=\"Блокирует...\" id ='inputopns' class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
       texthtml += "    </div >";
-      texthtml += "    <select id=\"priority\" size=\"4\" name=\"hero\">";
+      texthtml += "    <select id=\"priority\" size=\"5\" name=\"hero\">";
       texthtml += "      <option class=\"first\" value=\"first\">Ко времени<\/option>";
       texthtml += "      <option class=\"second\" value=\"second\">Сегодня<\/option>";
       texthtml += "      <option class=\"third\" value=\"third\">Если получится<\/option>";
