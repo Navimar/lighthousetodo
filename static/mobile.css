@@ -149,6 +149,10 @@ input {
   display: block;
 }
 
+.past {
+  background-color: #AAFF00;
+}
+
 .first {
   background-color: #FFAA00;
 }
@@ -190,12 +194,13 @@ option.forth {
   border-left: 7px solid #00AAFF;
 }
 
-.past {
-  /* border-left: 7px solid #AAFF00; */
-  background-color: #AAFF00;
+.fifth {
+  background: darkgreen;
 }
 
-.fifth {
+option.fifth {
+  padding-left: 5px;
+  background: black;
   border-left: 7px solid darkgreen;
 }
 
