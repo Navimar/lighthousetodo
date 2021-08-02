@@ -166,20 +166,20 @@ let render = () => {
     if (a.selected) {
       texthtml = "<div class=\"editor\">";
 
-      texthtml += "    <input type=\"date\" class='dateinp' id=\"date\" name=\"trip-start\">";
-      texthtml += "    <input type=\"time\"  class='dateinp' id=\"time\" name=\"time\">";
-      texthtml += "    <div class='timebuttons'>";
-      texthtml += "      <button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
-      texthtml += "      <button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
-      texthtml += "      <button class=\"timebutton\" id=\"morning\">9:00<\/button>";
-      texthtml += "      <button class=\"timebutton\" id=\"evening\">18:00<\/button>";
-      texthtml += "      <button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
-      texthtml += "      <button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
-      texthtml += "      <button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
-      texthtml += "      <button class=\"timebutton\" id=\"plus15\">+15 минут<\/button>";
-      texthtml += "      <button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
-      texthtml += "     <label class='timebutton '>вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
-      texthtml += "    </div>";
+      texthtml += "<input type=\"date\" class='dateinp' id=\"date\" name=\"trip-start\">";
+      texthtml += "<input type=\"time\"  class='dateinp' id=\"time\" name=\"time\">";
+      texthtml += "<div class='timebuttons'>";
+      texthtml += "<button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"morning\">9:00<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"evening\">18:00<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 минут<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
+      texthtml += "<label class='timebutton '>вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
+      texthtml += "</div>";
 
       texthtml += "    <textarea placeholder=\"Название...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
       texthtml += "    <div class='autocomplete'>";

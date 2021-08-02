@@ -251,16 +251,13 @@ button {
 }
 
 .timebutton {
-  display: inline-block;
+  border: 4px solid #232333;
   text-align: center;
-  width: 19%;
-  border: none;
+  width: 20%;
   color: black;
   background-color: lightgray;
-  padding: 2px 0px 2px 0px;
+  padding: 2px 5px 2px 5px;
   border-radius: 0;
-  margin: 8px 0px 0px 0px;
-  vertical-align: bottom;
 }
 
 .priorbutton {
@@ -411,7 +408,7 @@ label.mainbutton.timebutton {
 
 .timebuttons {
   text-align: justify;
-  margin-bottom: -8pt;
+  margin-bottom: -12pt;
 }
 
 .dateinp {
@@ -420,6 +417,7 @@ label.mainbutton.timebutton {
 }
 
 .mainbutton {
+  background: cadetblue;
   margin: 2px;
   width: auto;
   padding: 4px;
