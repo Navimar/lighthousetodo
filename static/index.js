@@ -108,7 +108,8 @@ let save = () => {
 
       let ready = $(".checkbox").prop('checked');
 
-      let priority = $("#priority option:selected").val();
+      // let priority = $("#priority option:selected").val();
+      let priority = $('input[name="radioprior"]:checked').val();
       let tags = [];
       let opns = [];
 
@@ -276,15 +277,6 @@ let selectnext = () => {
       break;
     }
   }
-  // for (let a in data.tasks) {
-  //   data.tasks[a].selected = false;
-  // }
-  // for (let a in data.tasks) {
-  //   if (isReady(data.tasks[a].date, data.tasks[a].time)) {
-  //     data.tasks[a].selected = true;
-  //     break;
-  //   }
-  // }
 };
 let del = (text) => {
   for (let a in data.tasks) {

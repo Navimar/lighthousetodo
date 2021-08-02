@@ -10,9 +10,10 @@ let rendertags = (a) => {
       texthtml += "<button class='tag text";
       texthtml += "'>";
       texthtml += t;
-      texthtml += "</button>&nbsp;";
+      texthtml += "</button>";
+      texthtml += '<span class="tag">&nbsp;->&nbsp;</span>'
     }
-    texthtml += "<span class='bul'>⇒</span>";
+    // texthtml += "<span class='bul'>-></span>";
   }
   return texthtml;
 }
@@ -26,12 +27,12 @@ let renderopns = (a, level) => {
     });
     for (let t = 0; t < a.opns.length; t++) {
       texthtml += "<br>";
-      texthtml += "<span class='bul'>";
+      texthtml += "<span class='bul tag'>";
       for (let i = 0; i < level; i++)
         texthtml += "&nbsp;"
       let openka = note_by_name(a.opns[t])
       if (openka.tags && openka.tags.length > 1)
-        texthtml += "⇒";
+        texthtml += "->";
       else
         texthtml += "•";
       texthtml += "</span>";
@@ -40,7 +41,7 @@ let renderopns = (a, level) => {
       texthtml += openka.name;
       texthtml += "</button>";
       if (level == 5)
-        texthtml += "<span class='arr'>⇒...</span>";
+        texthtml += "<span class='arr'>->...</span>";
       if (level < 5) {
         texthtml += renderopns(openka, level + 1);;
       }
@@ -85,39 +86,6 @@ let render = () => {
     }
 
     texthtml += "<table class='"
-    if (a.selected)
-      texthtml += "selected";
-    texthtml += "'><tbody><tr><td class=' taskmarker"
-    if (a.blocked) {
-      texthtml += " cantdo";
-    } else if (!isReady(a.date, a.time)) {
-      texthtml += " cantdo"
-    }
-    // texthtml += "<span class=' bul"
-    texthtml += " " + a.priority;
-    if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear() && a.priority == 'first')
-      texthtml += " past";
-    // texthtml += "'>•</span > ";
-    texthtml += " '></td><td>"
-    texthtml += "<div class='task";
-    if (a.selected) {
-      isSelection = true;
-      // texthtml += " selected";
-      tags = a.tags;
-      opns = a.opns;
-      text = a.name;
-      note = a.note;
-      checked = a.ready;
-      // fear = a.fear;
-
-      time = a.time;
-      date = a.date;
-    }
-    // if (a.blocked) {
-    //   texthtml += " cantdo";
-    // } else if (!isReady(a.date, a.time)) {
-    //   texthtml += " cantdo"
-    // }
     if (searchquerry.toLowerCase !== '') {
       let f = true;
       if (a.name.toLowerCase().includes(searchquerry.toLowerCase()))
@@ -128,6 +96,29 @@ let render = () => {
       });
       if (f)
         texthtml += " nondisplay"
+    }
+    if (a.selected)
+      texthtml += "selected";
+    texthtml += "'><tbody><tr><td class=' taskmarker"
+    if (a.blocked) {
+      texthtml += " cantdo";
+    } else if (!isReady(a.date, a.time)) {
+      texthtml += " cantdo"
+    }
+    texthtml += " " + a.priority;
+    if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear() && a.priority == 'first')
+      texthtml += " past";
+    texthtml += " '></td><td>"
+    texthtml += "<div class='task";
+    if (a.selected) {
+      isSelection = true;
+      tags = a.tags;
+      opns = a.opns;
+      text = a.name;
+      note = a.note;
+      checked = a.ready;
+      time = a.time;
+      date = a.date;
     }
     texthtml += "'>";
 
@@ -158,9 +149,9 @@ let render = () => {
 
     if (a.opns && a.opns.length > 0)
       if (a.ready)
-        texthtml += "<span class='ready bul'>⇒</span>";
+        texthtml += "<span class='ready bul tag'>-></span>";
       else
-        texthtml += "<span class=' bul'>⇒</span>";
+        texthtml += "<span class=' bul tag'>-></span>";
     else
       if (a.ready)
         texthtml += "<span class='ready bul'>•</span>";
@@ -197,29 +188,44 @@ let render = () => {
       texthtml += "    <div class='autocomplete'>";
       texthtml += "         <textarea placeholder=\"Блокирует...\" id ='inputopns' class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
       texthtml += "    </div >";
-      texthtml += "    <select id=\"priority\" size=\"5\" name=\"hero\">";
-      texthtml += "      <option class=\"first\" value=\"first\">Ко времени<\/option>";
-      texthtml += "      <option class=\"second\" value=\"second\">Сегодня<\/option>";
-      texthtml += "      <option class=\"third\" value=\"third\">Если получится<\/option>";
-      texthtml += "      <option class=\"forth\" value=\"forth\">Заметки<\/option>";
-      texthtml += "      <option class=\"fifth\" value=\"fifth\">Корзина<\/option>";
-      // texthtml += "      <option class=\"sixth\" value=\"sixth\">Шесть<\/option>";
-      // texthtml += "      <option class=\"seventh\" value=\"seventh\">Семь<\/option>";
-      // texthtml += "      <option class=\"eighth\" value=\"eighth\">Заточка<\/option>";
-      // texthtml += "      <option class=\"ninth\" value=\"ninth\">Результат<\/option>";
-      // texthtml += "      <option class=\"tenth\" value=\"tenth\">Новые горизонты<\/option>";
-      // texthtml += "      <option class=\"eleventh\" value=\"eleventh\">Заметки<\/option>";
-      // texthtml += "      <option class=\"twelfth\" value=\"twelfth\">???<\/option>";
-      texthtml += "    <\/select><br>";
-      texthtml += ("<button class='mainbutton timebutton task newtask'>" +
+      // texthtml += "    <select id=\"priority\" size=\"5\" name=\"hero\">";
+      // texthtml += "      <option class=\"first\" value=\"first\">Ко времени<\/option>";
+      // texthtml += "      <option class=\"second\" value=\"second\">Сегодня<\/option>";
+      // texthtml += "      <option class=\"third\" value=\"third\">Если получится<\/option>";
+      // texthtml += "      <option class=\"forth\" value=\"forth\">Заметки<\/option>";
+      // texthtml += "      <option class=\"fifth\" value=\"fifth\">Корзина<\/option>";
+      // // texthtml += "      <option class=\"sixth\" value=\"sixth\">Шесть<\/option>";
+      // // texthtml += "      <option class=\"seventh\" value=\"seventh\">Семь<\/option>";
+      // // texthtml += "      <option class=\"eighth\" value=\"eighth\">Заточка<\/option>";
+      // // texthtml += "      <option class=\"ninth\" value=\"ninth\">Результат<\/option>";
+      // // texthtml += "      <option class=\"tenth\" value=\"tenth\">Новые горизонты<\/option>";
+      // // texthtml += "      <option class=\"eleventh\" value=\"eleventh\">Заметки<\/option>";
+      // // texthtml += "      <option class=\"twelfth\" value=\"twelfth\">???<\/option>";
+      // texthtml += "    <\/select><br>";
+      ////
+      ////
+      texthtml += "    <div class='timebuttons'> ";
+      texthtml += "<div class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Ко времени<\/label><\/div>";
+      texthtml += "<div class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Сегодня<\/label><\/div>";
+      texthtml += "<div class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Потом<\/label><\/div>";
+      texthtml += "<div class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Заметки<\/label><\/div>";
+      texthtml += "<div class=\"bfifth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfifth\" value=\"fifth\"><label for=\"rfifth\">Корзина<\/label><\/div>";
+      texthtml += "    </div>";
+      ////
+      ////
+      texthtml += "<button class='mainbutton timebutton task newtask'>" +
         "Новая запись" +
-        "</button>");
-      texthtml += "    <label class='mainbutton timebutton delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
-      texthtml += "  <\/div>";
+        "</button>";
+      texthtml += "<label class='mainbutton timebutton delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
+      texthtml += "<button class='mainbutton timebutton task savetask'>" +
+        "Сохранить" +
+        "</button>";
+      texthtml += "<\/div>";
       tasks.append(texthtml);
       autocomplete(document.getElementById("inputtags"), names);
       autocomplete(document.getElementById("inputopns"), names);
-      $("#priority").val(a.priority);
+      // $("#priority").val(a.priority);
+      $('input[name="radioprior"][value=' + a.priority + ']').prop('checked', true);
     }
 
   }

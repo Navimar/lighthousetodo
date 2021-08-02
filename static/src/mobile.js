@@ -71,6 +71,9 @@ $(document).on('click', '.newtask', function () {
   onNew();
   $('.inputtext:first').val('').select();
 });
+$(document).on('click', '.savetask', function () {
+  onSelect('');
+});
 $(document).on('click', '#clearsearch', function () {
   $('.t1').val('');
   save();

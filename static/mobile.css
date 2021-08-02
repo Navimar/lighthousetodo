@@ -92,10 +92,6 @@ option:checked {
   margin-left: 10px;
 }
 
-.ready {
-  color: lightgreen;
-}
-
 .nonblocked {
   background: none;
 }
@@ -147,10 +143,6 @@ input {
   font-size: 12pt;
   color: gray;
   display: block;
-}
-
-.past {
-  background-color: #AAFF00;
 }
 
 .first {
@@ -230,6 +222,10 @@ option.fifth {
   border-left: 7px solid rgb(84, 100, 92);
 }
 
+.past {
+  background-color: #AAFF00;
+}
+
 .cantdo {
   background: #333;
 }
@@ -255,6 +251,19 @@ button {
 }
 
 .timebutton {
+  display: inline-block;
+  text-align: center;
+  width: 19%;
+  border: none;
+  color: black;
+  background-color: lightgray;
+  padding: 2px 0px 2px 0px;
+  border-radius: 0;
+  margin: 8px 0px 0px 0px;
+  vertical-align: bottom;
+}
+
+.priorbutton {
   display: inline-block;
   text-align: center;
   width: 19%;
@@ -314,8 +323,8 @@ button {
 
 .bul {
   line-height: 0;
-  font-size: 18pt;
-  font-family: monospace;
+  font-size: 13.5pt;
+  font-family: 'Inter', sans-serif;
   padding: 5px;
 }
 
@@ -329,11 +338,12 @@ button {
 }
 
 .t1 {
-  font-size: 14pt;
+  font-size: 13.3pt;
   transform: translateX(-50%);
   position: fixed;
   top: 0;
-  max-width: 72ex;
+  max-width: 72.2ex;
+  font-family: 'Inter', sans-serif;
 }
 
 .time {
@@ -410,6 +420,50 @@ label.mainbutton.timebutton {
 }
 
 .mainbutton {
+  margin: 2px;
   width: auto;
   padding: 4px;
+}
+
+.ready {
+  color: lightgreen;
+}
+
+.radiopriority {
+  margin: -4px;
+  border: 4px solid #232333;
+  width: 20%;
+}
+
+.bfirst {
+  border-bottom-color: #FFAA00;
+}
+
+.bsecond {
+  border-bottom-color: #FF00AA;
+}
+
+.bthird {
+  border-bottom-color: #AA00FF;
+}
+
+.bforth {
+  border-bottom-color: #00AAFF;
+}
+
+.bfifth {
+  border-bottom-color: darkgreen;
+}
+
+input[type=radio] {
+  display: none;
+}
+
+input[type=radio]+label {
+  width: 100%;
+  display: inline-block;
+}
+
+input[type=radio]:checked+label {
+  background: rosybrown;
 }
