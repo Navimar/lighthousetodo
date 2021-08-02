@@ -178,7 +178,7 @@ let render = () => {
       texthtml += "<button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
       texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 минут<\/button>";
       texthtml += "<button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
-      texthtml += "<label class='timebutton '>вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
+      texthtml += "<label class=' timebutton readylabel' >вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
       texthtml += "</div>";
 
       texthtml += "    <textarea placeholder=\"Название...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
@@ -205,7 +205,7 @@ let render = () => {
       ////
       ////
       texthtml += "    <div class='timebuttons'> ";
-      texthtml += "<div class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Ко времени<\/label><\/div>";
+      texthtml += "<div class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Вовремя<\/label><\/div>";
       texthtml += "<div class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Сегодня<\/label><\/div>";
       texthtml += "<div class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Потом<\/label><\/div>";
       texthtml += "<div class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Заметки<\/label><\/div>";

@@ -258,6 +258,7 @@ button {
   background-color: lightgray;
   padding: 2px 5px 2px 5px;
   border-radius: 0;
+  display: inline-block;
 }
 
 .priorbutton {
@@ -464,4 +465,13 @@ input[type=radio]+label {
 
 input[type=radio]:checked+label {
   background: rosybrown;
+}
+
+label.readylabel {
+  -webkit-box-sizing: border-box;
+  /* Safari, other WebKit */
+  -moz-box-sizing: border-box;
+  /* Firefox, other Gecko */
+  box-sizing: border-box;
+  /* Opera/IE 8+ */
 }
