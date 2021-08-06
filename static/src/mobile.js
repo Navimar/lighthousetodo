@@ -45,17 +45,17 @@ window.onfocus = function () {
   onFocus();
 };
 
-// $(document).on('swiperight', '.text', function (event) {
-//   $(event.target).addClass("red");
-// });
-// $(document).on('click', '#searchbutton', function () {
-// render();
-
-// });
 $('.t1').bind('input propertychange', function () {
   select('');
   render();
   $(window).scrollTop(0);
+});
+$(document).on('click', '.calbut', function (event) {
+  event.preventDefault();
+  // if ($(this).attr('href') != undefined)
+  $(window).scrollTop($($(this).attr('href')).offset().top - mouse.y + 6);
+  // $(window).scrollTop(0);
+
 });
 $(document).on('click', '.text', function () {
   $('.t1').val('');

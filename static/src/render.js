@@ -1,55 +1,4 @@
-let rendertags = (a) => {
-  let texthtml = "";
-  if (a.tags.length > 0) {
-    a.tags.sort((a, b) => {
-      if (a < b) { return -1; }
-      if (a > b) { return 1; }
-      return 0;
-    });
-    for (let t of a.tags) {
-      texthtml += "<button class='tag text";
-      texthtml += "'>";
-      texthtml += t;
-      texthtml += "</button>";
-      texthtml += '<span class="tag">&nbsp;->&nbsp;</span>'
-    }
-    // texthtml += "<span class='bul'>-></span>";
-  }
-  return texthtml;
-}
-let renderopns = (a, level) => {
-  let texthtml = "";
-  if (a.opns && a.opns.length > 0) {
-    a.opns.sort((a, b) => {
-      if (a < b) { return -1; }
-      if (a > b) { return 1; }
-      return 0;
-    });
-    for (let t = 0; t < a.opns.length; t++) {
-      texthtml += "<br>";
-      texthtml += "<span class='bul tag'>";
-      for (let i = 0; i < level; i++)
-        texthtml += "&nbsp;"
-      let openka = note_by_name(a.opns[t])
-      if (openka.tags && openka.tags.length > 1)
-        texthtml += "->";
-      else
-        texthtml += "•";
-      texthtml += "</span>";
-      texthtml += "<button class='opn";
-      texthtml += "'>";
-      texthtml += openka.name;
-      texthtml += "</button>";
-      if (level == 5)
-        texthtml += "<span class='arr'>->...</span>";
-      if (level < 5) {
-        texthtml += renderopns(openka, level + 1);;
-      }
-    }
-  }
-  return texthtml;
-}
-let names = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua & Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia & Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central Arfrican Republic", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cuba", "Curacao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauro", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre & Miquelon", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "St Kitts & Nevis", "St Lucia", "St Vincent", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad & Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks & Caicos", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"];
+let planeddays = new Set();
 
 let render = () => {
   isSelection = false;
@@ -69,19 +18,22 @@ let render = () => {
   let texthtml = "";
   let blocked = false;
   tasks.html("");
-  names = [];
+  let names = [];
+
+  for (let a of data.tasks) {
+    planeddays.add(moment(a.date).format('DD-MM-YYYY'));
+  }
+  tasks.append(Calendar3(moment()));
+
   for (let a of data.tasks) {
     names.push(a.name);
     texthtml = "";
-    if (moment(a.date).format() == today.format()
-      || moment().diff(moment(a.date)) >= 0
-    ) {
-    } else {
-      tasks.append("<div class='date'> " + moment(a.date).format('dddd DD MMMM') + "</div>");
+    if (moment(a.date).format() != today.format() && moment().diff(moment(a.date)) <= 0) {
       today = moment(a.date);
+      texthtml += Calendar3(today);
     }
     if (a.blocked && a.priority != 'first' && !blocked) {
-      tasks.append("<div class='date'> Блокированные </div>");
+      texthtml += ("<div class='date'> Блокированные </div>");
       blocked = true;
     }
 
@@ -176,8 +128,8 @@ let render = () => {
       texthtml += "<button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
       texthtml += "<button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
       texthtml += "<button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
-      texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 минут<\/button>";
-      texthtml += "<button class=\"timebutton\" id=\"plusweek\">+1 неделя<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 мин<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plusweek\">+1 нед<\/button>";
       texthtml += "<label class=' timebutton readylabel' >вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
       texthtml += "</div>";
 
@@ -188,31 +140,13 @@ let render = () => {
       texthtml += "    <div class='autocomplete'>";
       texthtml += "         <textarea placeholder=\"Блокирует...\" id ='inputopns' class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
       texthtml += "    </div >";
-      // texthtml += "    <select id=\"priority\" size=\"5\" name=\"hero\">";
-      // texthtml += "      <option class=\"first\" value=\"first\">Ко времени<\/option>";
-      // texthtml += "      <option class=\"second\" value=\"second\">Сегодня<\/option>";
-      // texthtml += "      <option class=\"third\" value=\"third\">Если получится<\/option>";
-      // texthtml += "      <option class=\"forth\" value=\"forth\">Заметки<\/option>";
-      // texthtml += "      <option class=\"fifth\" value=\"fifth\">Корзина<\/option>";
-      // // texthtml += "      <option class=\"sixth\" value=\"sixth\">Шесть<\/option>";
-      // // texthtml += "      <option class=\"seventh\" value=\"seventh\">Семь<\/option>";
-      // // texthtml += "      <option class=\"eighth\" value=\"eighth\">Заточка<\/option>";
-      // // texthtml += "      <option class=\"ninth\" value=\"ninth\">Результат<\/option>";
-      // // texthtml += "      <option class=\"tenth\" value=\"tenth\">Новые горизонты<\/option>";
-      // // texthtml += "      <option class=\"eleventh\" value=\"eleventh\">Заметки<\/option>";
-      // // texthtml += "      <option class=\"twelfth\" value=\"twelfth\">???<\/option>";
-      // texthtml += "    <\/select><br>";
-      ////
-      ////
       texthtml += "    <div class='timebuttons'> ";
       texthtml += "<div class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Вовремя<\/label><\/div>";
-      texthtml += "<div class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Сегодня<\/label><\/div>";
+      texthtml += "<div class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Делаю<\/label><\/div>";
       texthtml += "<div class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Потом<\/label><\/div>";
       texthtml += "<div class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Заметки<\/label><\/div>";
       texthtml += "<div class=\"bfifth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfifth\" value=\"fifth\"><label for=\"rfifth\">Корзина<\/label><\/div>";
       texthtml += "    </div>";
-      ////
-      ////
       texthtml += "<button class='mainbutton timebutton task newtask'>" +
         "Новая запись" +
         "</button>";
@@ -229,9 +163,6 @@ let render = () => {
     }
 
   }
-  tasks.prepend(
-    "<div class='date'> " + moment().format('dddd DD MMMM HH:mm') + "</div>"
-  );
 
   for (let t of tags) {
     tagtext += t + "\n";
@@ -259,7 +190,6 @@ let render = () => {
   $('#inputopns').val(opntext);
   $('#inputtext').val(text + '\n' + note);
   $('#time').val(time);
-  // console.log(date);
   $('#date').val(date);
   $('.delete').val(text);
   if (isSelection) {
@@ -378,4 +308,108 @@ function autocomplete(inp, arr) {
   document.addEventListener("click", function (e) {
     closeAllLists(e.target);
   });
+}
+
+
+function Calendar3(date) {
+  let calendar = '';
+  calendar += ("<div id=" + date.format('DD-MM-YYYY') + " class='date'> " + date.format('dddd DD MMMM') + "</div>");
+  calendar += '<table class="calendar3" id="calendar-' + date.format('DD-MM-YYYY') + '">'
+  calendar += '<tr class="days_of_week">'
+  calendar += '<td>Пн'
+  calendar += '<td>Вт'
+  calendar += '<td>Ср'
+  calendar += '<td>Чт'
+  calendar += '<td>Пт'
+  calendar += '<td>Сб'
+  calendar += '<td>Вс'
+  let Dlast = moment(date).endOf('month').date();
+  let DNfirst = moment(date).startOf('month').day();
+  calendar += '<tr>';
+  if (DNfirst != 0) {
+    for (var i = 1; i < DNfirst; i++) calendar += '<td>';
+  } else {
+    for (var i = 0; i < 6; i++) calendar += '<td>';
+  }
+  for (var i = 1; i <= Dlast; i++) {
+    calendar += '<td class="">'
+    let a = i;
+    if (moment().date() > a)
+      a = moment().date();
+    calendar += '<a class="calbut" id=' + 'calendar-' + date.format('DD-MM-YYYY') + '-' + moment(date).set('date', i).format('DD-MM-YYYY') + ' href="#' + 'calendar-' + moment(date).set('date', a).format('DD-MM-YYYY') + '-' + moment(date).set('date', a).format('DD-MM-YYYY') + '"><button class="calendarblock'
+    if (i == moment().format('D') && moment().format('MM-YYYY') == date.format('MM-YYYY'))
+      calendar += ' today';
+    if (planeddays.has(moment(date).set('date', i).format('DD-MM-YYYY'))) {
+      calendar += ' planed'
+    }
+    if (i == date.format('D')) {
+      calendar += ' highlightedday'
+    }
+    calendar += '">' + i + '</button></a>';
+    if (moment(date).set('date', i).day() == 0) {
+      calendar += '<tr>';
+    }
+  }
+  for (var i = date.day(); i < 7; i++)
+    calendar += '<td></td>';
+  calendar += '</table>'
+  return (calendar);
+  // document.querySelector('#' + id + ' tbody').innerHTML = calendar;
+  // g.value = D.getFullYear();
+  // m.selected = true;
+  // if (document.querySelectorAll('#' + id + ' tbody tr').length < 6) {
+  //   document.querySelector('#' + id + ' tbody').innerHTML += '<tr><td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;';
+  // }
+  // document.querySelector('#' + id + ' option[value="' + new Date().getMonth() + '"]').style.color = 'rgb(220, 0, 0)'; // в выпадающем списке выделен текущий месяц
+}
+
+let rendertags = (a) => {
+  let texthtml = "";
+  if (a.tags.length > 0) {
+    a.tags.sort((a, b) => {
+      if (a < b) { return -1; }
+      if (a > b) { return 1; }
+      return 0;
+    });
+    for (let t of a.tags) {
+      texthtml += "<button class='tag text";
+      texthtml += "'>";
+      texthtml += t;
+      texthtml += "</button>";
+      texthtml += '<span class="tag">&nbsp;->&nbsp;</span>'
+    }
+  }
+  return texthtml;
+}
+let renderopns = (a, level) => {
+  let texthtml = "";
+  if (a.opns && a.opns.length > 0) {
+    a.opns.sort((a, b) => {
+      if (a < b) { return -1; }
+      if (a > b) { return 1; }
+      return 0;
+    });
+    for (let t = 0; t < a.opns.length; t++) {
+      texthtml += "<br>";
+      texthtml += "<span class='bul tag'>";
+      for (let i = 0; i < level; i++)
+        texthtml += "&nbsp;"
+      let openka = note_by_name(a.opns[t])
+      if (openka.tags && openka.tags.length > 1)
+        texthtml += "->";
+      else
+        texthtml += "•";
+      texthtml += "</span>";
+      texthtml += "<button class='opn";
+      texthtml += "'>";
+      texthtml += openka.name;
+      texthtml += "</button>";
+      if (level == 5)
+        texthtml += "<span class='arr'>->...</span>";
+      if (level < 5) {
+        texthtml += renderopns(openka, level + 1);;
+      }
+    }
+  }
+  return texthtml;
 }
