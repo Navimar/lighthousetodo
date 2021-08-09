@@ -26,9 +26,21 @@ let render = () => {
   tasks.append(Calendar3(moment()));
 
   for (let a of data.tasks) {
+    let nondisplay = false;
+    if (searchquerry.toLowerCase !== '') {
+      nondisplay = true;
+      if (a.name.toLowerCase().includes(searchquerry.toLowerCase()))
+        nondisplay = false;
+      a.tags.forEach((val) => {
+        if (val.toLowerCase().includes(searchquerry.toLowerCase()))
+          nondisplay = false;
+      });
+    }
+
     names.push(a.name);
     texthtml = "";
-    if (moment(a.date).format() != today.format() && moment().diff(moment(a.date)) <= 0) {
+    // if (searchquerry.toLowerCase === '')
+    if (nondisplay == false && moment(a.date).format() != today.format() && moment().diff(moment(a.date)) <= 0) {
       today = moment(a.date);
       texthtml += Calendar3(today);
     }
@@ -38,17 +50,10 @@ let render = () => {
     }
 
     texthtml += "<table class='"
-    if (searchquerry.toLowerCase !== '') {
-      let f = true;
-      if (a.name.toLowerCase().includes(searchquerry.toLowerCase()))
-        f = false;
-      a.tags.forEach((val) => {
-        if (val.toLowerCase().includes(searchquerry.toLowerCase()))
-          f = false;
-      });
-      if (f)
-        texthtml += " nondisplay"
-    }
+
+    if (nondisplay)
+      texthtml += " nondisplay"
+
     if (a.selected)
       texthtml += "selected";
     texthtml += "'><tbody><tr><td class=' taskmarker"
