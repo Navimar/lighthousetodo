@@ -58,10 +58,10 @@ let sortdata = () => {
         return 1
       else if (isReady(a.date, a.time) > isReady(b.date, b.time))
         return -1
-      if (a.opns.length < b.opns.length) {
+      if ((a.opns.length > b.opns.length)) {
         return -1
       }
-      else if (a.opns.length > b.opns.length) {
+      else if (a.opns.length < b.opns.length) {
         return 1
       }
       if (moment(a.date + "T" + a.time) > moment(b.date + "T" + b.time)) {
@@ -69,12 +69,6 @@ let sortdata = () => {
       }
       else if (moment(a.date + "T" + a.time) < moment(b.date + "T" + b.time)) {
         return -1;
-      }
-      if ((a.opns.length > b.opns.length)) {
-        return -1
-      }
-      else if (a.opns.length < b.opns.length) {
-        return 1
       }
       if (a.name.length >= b.name.length) {
         return 1;

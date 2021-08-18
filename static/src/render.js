@@ -36,10 +36,8 @@ let render = () => {
           nondisplay = false;
       });
     }
-
     names.push(a.name);
     texthtml = "";
-    // if (searchquerry.toLowerCase === '')
     if (nondisplay == false && moment(a.date).format() != today.format() && moment().diff(moment(a.date)) <= 0) {
       today = moment(a.date);
       texthtml += Calendar3(today);
@@ -50,10 +48,8 @@ let render = () => {
     }
 
     texthtml += "<table class='"
-
     if (nondisplay)
       texthtml += " nondisplay"
-
     if (a.selected)
       texthtml += "selected";
     texthtml += "'><tbody><tr><td class=' taskmarker"
