@@ -9,7 +9,7 @@ body {
   background: #000510;
   color: whitesmoke;
   text-align: center;
-  font-family: 'Inter', Verdana;
+  font-family: 'IBM Plex Sans', sans-serif;
   margin: 0;
   overflow-x: hidden;
 }
@@ -117,7 +117,7 @@ input[type="checkbox"] {
 }
 
 input {
-  font-family: 'Inter', sans-serif;
+  font-family: 'IBM Plex Sans', sans-serif;
   font-size: 12pt;
   border: none;
   background: white;
@@ -247,7 +247,7 @@ button {
   font-size: 12pt;
   border-radius: 10px;
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'IBM Plex Sans', sans-serif;
 }
 
 .timebutton {
@@ -329,6 +329,7 @@ button {
 
 .tag {
   width: auto;
+  font-family: 'Inter', sans-serif;
   /* background: #333; */
   color: grey;
   border: none;
@@ -342,7 +343,7 @@ button {
   position: fixed;
   top: 0;
   max-width: 72.2ex;
-  font-family: 'Inter', sans-serif;
+  font-family: 'IBM Plex Sans', sans-serif;
 }
 
 .time {
