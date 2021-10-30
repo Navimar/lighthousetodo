@@ -146,7 +146,7 @@ input {
 }
 
 .first {
-  background-color: #FFAA00;
+  background-color: #EDD382;
 }
 
 option.first {
@@ -156,8 +156,7 @@ option.first {
 }
 
 .second {
-  background: #FF00AA;
-  /* border-left: 7px solid #522; */
+  background: #F0567A;
 }
 
 option.second {
@@ -167,7 +166,7 @@ option.second {
 }
 
 .third {
-  background: #AA00FF;
+  background: #06D6A0;
 }
 
 option.third {
@@ -177,7 +176,7 @@ option.third {
 }
 
 .forth {
-  background: #00AAFF;
+  background: #1B9AAA;
 }
 
 option.forth {
@@ -187,7 +186,7 @@ option.forth {
 }
 
 .fifth {
-  background: darkgreen;
+  background: #FFC43D;
 }
 
 option.fifth {
@@ -196,22 +195,24 @@ option.fifth {
   border-left: 7px solid darkgreen;
 }
 
+.sixth {
+  background: #F7A041;
+}
+
 .seventh {
-  border-left: 7px solid rgb(47, 25, 0);
+  background: #EF7B45;
 }
 
 .eighth {
-  border-left: 7px solid darkblue;
+  background: #D84727;
 }
 
 .ninth {
-  border-left: 7px solid white;
-  border-left: 7px solid darkgoldenrod;
+  background: #3D3B8E;
 }
 
 .tenth {
-  border-left: 7px solid rgb(234, 60, 83);
-  border-left: 7px solid rgb(167, 228, 212);
+  background: #550527;
 }
 
 .eleventh {
@@ -223,7 +224,7 @@ option.fifth {
 }
 
 .past {
-  background-color: #AAFF00;
+  background-color: #C3BEF7;
 }
 
 .cantdo {

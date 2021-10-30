@@ -1,32 +1,3 @@
-// $(document).ready(function () {
-//search
-//   var TRange = null;
-
-//   function findString(str) {
-//     // if (parseInt(navigator.appVersion) < 4) return;
-//     var strFound;
-//     if (window.find) {
-//       // CODE FOR BROWSERS THAT SUPPORT window.find
-//       strFound = self.find(str);
-//       if (strFound && self.getSelection && !self.getSelection().anchorNode) {
-//         strFound = self.find(str)
-//       }
-//       if (!strFound) {
-//         strFound = self.find(str, 0, 1)
-//         while (self.find(str, 0, 1)) continue
-//       }
-//     } else {
-//       alert("browser not supported")
-//       return;
-//     }
-//     if (!strFound) {
-//       $('.t1').addClass('red')
-//       return;
-//     } else {
-//       $('.t1').removeClass('red')
-//     }
-//   };
-// });
 let mouse = {
   x: 0,
   y: 0
@@ -137,14 +108,4 @@ $(document).on('click', '#plusweek', function () {
 $(document).on('click', '#scrollTopButton', function () {
   $(window).scrollTop(0);
 });
-
-
-
-
-// $(this).bind('touchend', function(e) {
-//   e.preventDefault();
-//   // Add your code here. 
-//   $(this).click();
-//   // This line still calls the standard click event, in case the user needs to interact with the element that is being clicked on, but still avoids zooming in cases of double clicking.
-// })
 

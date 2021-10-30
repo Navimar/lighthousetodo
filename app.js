@@ -12,8 +12,6 @@ app.use(express.static(__dirname + '/static/src'));
 app.use(express.static(__dirname + '/static/lib'));
 app.use(express.static(__dirname + '/desktop/'));
 
-
-
 app.get('*', function (req, res) {
     res.status(404).send("nothing there");
 });
