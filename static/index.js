@@ -227,7 +227,7 @@ let save = () => {
         a.blocked = false;
         for (let n of data.tasks) {
           for (let t of a.tags) {
-            if (t.toLowerCase() == n.name.toLowerCase() && !n.ready) {
+            if (t.toLowerCase() == n.name.toLowerCase() && !n.ready && prioritycompare(a.priority, n.priority) >= 0) {
               a.blocked = true;
             }
           }

@@ -77,72 +77,35 @@ let sortdata = () => {
         return -1;
       }
     }
-    else if (a.priority == 'first') {
-      return -1
-    }
-    else if (b.priority == 'first') {
-      return 1
-    }
-    else if (a.priority == 'second') {
-      return -1
-    }
-    else if (b.priority == 'second') {
-      return 1
-    }
-    else if (a.priority == 'third') {
-      return -1
-    }
-    else if (b.priority == 'third') {
-      return 1
-    }
-    else if (a.priority == 'forth') {
-      return -1
-    }
-    else if (b.priority == 'forth') {
-      return 1
-    }
-    else if (a.priority == 'fifth') {
-      return -1
-    }
-    else if (b.priority == 'fifth') {
-      return 1
-    }
-    else if (a.priority == 'sixth') {
-      return -1
-    }
-    else if (b.priority == 'sixth') {
-      return 1
-    }
-    else if (a.priority == 'seventh') {
-      return -1
-    }
-    else if (b.priority == 'seventh') {
-      return 1
-    }
-    else if (a.priority == 'eighth') {
-      return -1
-    }
-    else if (b.priority == 'eighth') {
-      return 1
-    }
-    else if (a.priority == 'ninth') {
-      return -1
-    }
-    else if (b.priority == 'ninth') {
-      return 1
-    }
-    else if (a.priority == 'tenth') {
-      return -1
-    }
-    else if (b.priority == 'tenth') {
-      return 1
-    }
-    else if (a.priority == 'eleventh') {
-      return -1
-    }
-    else if (b.priority == 'eleventh') {
-      return 1
-    }
-
+    else
+      return prioritycompare(a.priority, b.priority);
   })
 };
+
+let prioritycompare = (a, b) => {
+  let trans = (x) => {
+    if (x == 'first')
+      return 1;
+    if (x == 'second')
+      return 2;
+    if (x == 'third')
+      return 3;
+    if (x == 'forth')
+      return 4;
+    if (x == 'fifth')
+      return 5;
+    if (x == 'sixth')
+      return 6;
+    if (x == 'seventh')
+      return 7;
+    if (x == 'eighth')
+      return 8;
+    if (x == 'ninth')
+      return 9;
+    if (x == 'tenth')
+      return 10;
+    if (x == 'eleventh')
+      return 11;
+  }
+  return trans(a) - trans(b);
+}

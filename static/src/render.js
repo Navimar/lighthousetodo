@@ -75,20 +75,18 @@ let render = () => {
     }
     texthtml += "'>";
 
-    if (
-      a.time != lasttime &&
-      a.priority == 'first'
-    ) {
-      // if (
-      //   moment().diff(moment(a.date + "T" + a.time)) <= 0
-      //   &&
-      //   (moment().diff(moment(a.date + "T" + lasttime)) >= 0 || !lasttime)
-      // )
-      //   tasks.append("<div class='date headdate first time'> " + moment().format('HH:mm') + "</div>");
-      if (moment().dayOfYear() <= moment(a.date + "T" + a.time).dayOfYear())
-        texthtml += ("<button class='tag first text time'> " + a.time + "&nbsp;</button>");
-      lasttime = a.time
-    }
+    if (a.priority == 'first')
+      if (moment().dayOfYear() <= moment(a.date + "T" + a.time).dayOfYear()) {
+        if (a.time != lasttime) {
+          texthtml += "<button class='tag first text time'>";
+          texthtml += a.time;
+          texthtml += "&nbsp;</button>";
+          lasttime = a.time
+        }
+        else
+          texthtml += ("<button class='tag first text time'>--:--&nbsp;</button>");
+      }
+
 
     texthtml += rendertags(a);
 
