@@ -399,7 +399,13 @@ let renderopns = (a, level) => {
       texthtml += "<br>";
       texthtml += "<span class='bul tag'>";
       for (let i = 0; i < level; i++)
-        texthtml += "&nbsp;"
+        texthtml += "&nbsp;&nbsp;"
+      if (t == 5) {
+        texthtml += "•";
+        texthtml += "</span>";
+        texthtml += "<span>...</span>";
+        break;
+      }
       let openka = note_by_name(a.opns[t])
       if (openka.tags && openka.tags.length > 1)
         texthtml += "->";
