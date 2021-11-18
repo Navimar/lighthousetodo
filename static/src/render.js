@@ -106,8 +106,11 @@ let render = () => {
     else
       if (a.ready)
         texthtml += "<span class='ready bul'>•</span>";
-    if (a.selected)
-      texthtml += renderopns(a, 0);
+    if (a.selected) {
+      let r = renderopns(a);
+      texthtml += r.texthtml;
+      a.weight = r.weight;
+    }
 
     texthtml += "</div>";
     texthtml += "</td></tr></tbody></table>"
@@ -388,6 +391,9 @@ let rendertags = (a) => {
   return texthtml;
 }
 let renderopns = (a, level) => {
+  let weight = 0;
+  if (!level)
+    level = 0;
   let texthtml = "";
   if (a.opns && a.opns.length > 0) {
     a.opns.sort((a, b) => {
@@ -396,6 +402,7 @@ let renderopns = (a, level) => {
       return 0;
     });
     for (let t = 0; t < a.opns.length; t++) {
+      weight++;
       texthtml += "<br>";
       texthtml += "<span class='bul tag'>";
       for (let i = 0; i < level; i++)
@@ -419,9 +426,11 @@ let renderopns = (a, level) => {
       if (level == 5)
         texthtml += "<span class='arr'>->...</span>";
       if (level < 5) {
-        texthtml += renderopns(openka, level + 1);;
+        let r = renderopns(openka, level + 1)
+        texthtml += r.texthtml;
+        weight += r.weight;
       }
     }
   }
-  return texthtml;
+  return { texthtml, weight };
 }
