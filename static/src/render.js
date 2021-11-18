@@ -42,7 +42,7 @@ let render = () => {
       today = moment(a.date);
       texthtml += Calendar3(today);
     }
-    if (a.blocked && a.priority != 'first' && !blocked) {
+    if (a.blocked && !blocked) {
       texthtml += ("<div class='date'> Блокированные </div>");
       blocked = true;
     }
