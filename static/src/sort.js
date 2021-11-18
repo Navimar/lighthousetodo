@@ -1,9 +1,9 @@
 let sortdata = () => {
   data.tasks.sort((a, b) => {
-    if (!a.blocked) {
+    if (!a.blocked && b.blocked) {
       return -1
     }
-    else if (a.blocked) {
+    else if (a.blocked && !b.blocked) {
       return 1
     }
 
