@@ -100,9 +100,9 @@ let render = () => {
 
     if (a.opns && a.opns.length > 0)
       if (a.ready)
-        texthtml += "<span class='ready bul tag'>-></span>";
+        texthtml += "<span class='ready bul tag'>⇒</span>";
       else
-        texthtml += "<span class=' bul tag'>-></span>";
+        texthtml += "<span class=' bul tag'>⇒</span>";
     else
       if (a.ready)
         texthtml += "<span class='ready bul'>•</span>";
@@ -385,7 +385,7 @@ let rendertags = (a) => {
       texthtml += "'>";
       texthtml += t;
       texthtml += "</button>";
-      texthtml += '<span class="tag">&nbsp;->&nbsp;</span>'
+      texthtml += '<span class="tag">&nbsp;⇒&nbsp;</span>'
     }
   }
   return texthtml;
@@ -415,7 +415,7 @@ let renderopns = (a, level) => {
       }
       let openka = note_by_name(a.opns[t])
       if (openka.tags && openka.tags.length > 1)
-        texthtml += "->";
+        texthtml += "⇒";
       else
         texthtml += "•";
       texthtml += "</span>";
@@ -424,7 +424,7 @@ let renderopns = (a, level) => {
       texthtml += openka.name;
       texthtml += "</button>";
       if (level == 5)
-        texthtml += "<span class='arr'>->...</span>";
+        texthtml += "<span class='arr'>⇒...</span>";
       if (level < 5) {
         let r = renderopns(openka, level + 1)
         texthtml += r.texthtml;
