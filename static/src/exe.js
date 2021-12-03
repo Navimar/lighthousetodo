@@ -77,14 +77,18 @@ let onPlus15 = () => {
     $('#time').val(d.format('HH:mm'));
 }
 let onMorning = () => {
-    let d = moment($('#date').val() + 'T09:00');
+    let a = moment($('#date').val() + 'T' + $('#time').val());
+    let b = moment();
+    let d = a > b ? a : b;
     $('#date').val(d.format('YYYY-MM-DD'));
-    $('#time').val(d.format('HH:mm'));
+    $('#time').val(d.format('09:00'));
 }
 let onEvening = () => {
-    let d = moment($('#date').val() + 'T18:00');
+    let a = moment($('#date').val() + 'T' + $('#time').val());
+    let b = moment();
+    let d = a > b ? a : b;
     $('#date').val(d.format('YYYY-MM-DD'));
-    $('#time').val(d.format('HH:mm'));
+    $('#time').val(d.format('18:00'));
 }
 let onMidnight = () => {
     let d = moment($('#date').val() + 'T00:00');
