@@ -3,8 +3,6 @@ let data = {};
 data.timestamp = 0;
 
 window.onload = function () {
-
-  update();
   inputSocket();
 
   if (!data) {
@@ -25,8 +23,8 @@ function inputSocket() {
     $('#status').addClass("red").html('offline');
   });
   socket.on('update', function (msg) {
-    console.log('timestamp', data.timestamp, msg.timestamp);
-    if (!data.timestamp || data.timestamp < msg.timestamp) {
+    if (data.timestamp) console.log('timestamp', moment(data.timestamp).format(), moment(msg.timestamp).format());
+    if (!data.timestamp || moment(data.timestamp) < moment(msg.timestamp)) {
       data = msg;
       console.log("loaded");
       render();
@@ -36,9 +34,6 @@ function inputSocket() {
   });
   // socket.on('err', (val) => {
   //     alert(val);
-  // });
-  // socket.on('login', (val) => {
-  //     onLogin(val);
   // });
 }
 

@@ -22,11 +22,9 @@ module.exports = (io) => {
             user.add(msg.id, socket);
 
             let sockets = user.get(msg.id)
-            // console.log(sockets);
             sockets.forEach(s => {
                 if (s != socket) {
-                    // load(msg.id, s);
-                    s.disconnect(true)
+                    s.emit('update', msg);
                 }
             });
 
@@ -45,7 +43,9 @@ module.exports = (io) => {
 
         });
         socket.on('load', function (msg) {
-            // console.log('load!');
+            if (!msg)
+                msg = 'demo';
+            user.add(msg, socket);
             load(msg, socket);
         });
     });
@@ -53,9 +53,6 @@ module.exports = (io) => {
 };
 
 let load = (key, socket) => {
-    if (!key) {
-        key = 'demo';
-    }
     let dir = sha256(sha256.x2(key + salt));
     if (fs.existsSync('../data/' + dir + '/data.txt')) {
         console.log('load ' + dir);
