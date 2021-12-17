@@ -17,14 +17,11 @@ module.exports = {
         // console.log(users);
     },
     get: (id) => {
-        let r ;
+        let r;
         users.forEach((e) => {
-            // console.log (e.id,id);
-            if (e.id == id) {
+            if (e.id == id)
                 r = e.socket;
-            }
         });
-        // console.log('return',r)
         return r;
     },
     remove: (id, socket) => {
