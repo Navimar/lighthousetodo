@@ -46,7 +46,55 @@ let render = () => {
       texthtml += ("<div class='date'> Блокированные </div>");
       blocked = true;
     }
+    if (a.selected) {
+      texthtml += "<div class=\"editor\">";
 
+      texthtml += "<input type=\"date\" class='dateinp' id=\"date\" name=\"trip-start\">";
+      texthtml += "<input type=\"time\"  class='dateinp' id=\"time\" name=\"time\">";
+      texthtml += "<div class='timebuttons'>";
+      texthtml += "<button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"morning\">9:00<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"evening\">18:00<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 мин<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plusweek\">+1 нед<\/button>";
+      texthtml += "<label class=' timebutton readylabel' >вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
+      texthtml += "</div>";
+
+      texthtml += "    <textarea placeholder=\"Название...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
+      texthtml += "    <div class='autocomplete'>";
+      texthtml += "         <textarea placeholder=\"Зависим...\" id ='inputtags' class=\"input\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
+      texthtml += "    </div >";
+      texthtml += "    <div class='autocomplete'>";
+      texthtml += "         <textarea placeholder=\"Блокирует...\" id ='inputopns' class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
+      texthtml += "    </div >";
+      texthtml += "    <div class='timebuttons'> ";
+      texthtml += "<div class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Вовремя<\/label><\/div>";
+      texthtml += "<div class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">День<\/label><\/div>";
+      texthtml += "<div class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Неделя<\/label><\/div>";
+      texthtml += "<div class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Месяц<\/label><\/div>";
+      texthtml += "<div class=\"bfifth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfifth\" value=\"fifth\"><label for=\"rfifth\">Квартал<\/label><\/div>";
+      texthtml += "    </div><div class='timebuttons'> ";
+
+      texthtml += "<div class=\"bsixth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsixth\" value=\"sixth\"><label for=\"rsixth\">Полгода<\/label><\/div>";
+      texthtml += "<div class=\"bseventh priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rseventh\" value=\"seventh\"><label for=\"rseventh\">Год<\/label><\/div>";
+      texthtml += "<div class=\"beighth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"reighth\" value=\"eighth\"><label for=\"reighth\">Век<\/label><\/div>";
+      texthtml += "<div class=\"bninth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rninth\" value=\"ninth\"><label for=\"rninth\">Заметки<\/label><\/div>";
+      texthtml += "<div class=\"btenth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rtenth\" value=\"tenth\"><label for=\"rtenth\">Корзина<\/label><\/div>";
+      texthtml += "    </div>";
+      texthtml += "<button class='mainbutton timebutton task newtask'>" +
+        "Новая запись" +
+        "</button>";
+      texthtml += "<label class='mainbutton timebutton delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
+      texthtml += "<button class='mainbutton timebutton task savetask'>" +
+        "Сохранить" +
+        "</button>";
+      texthtml += "<\/div>";
+
+    }
     texthtml += "<table class='"
     if (nondisplay)
       texthtml += " nondisplay"
@@ -115,62 +163,11 @@ let render = () => {
     texthtml += "</div>";
     texthtml += "</td></tr></tbody></table>"
     tasks.append(texthtml);
-
-
     if (a.selected) {
-      texthtml = "<div class=\"editor\">";
-
-      texthtml += "<input type=\"date\" class='dateinp' id=\"date\" name=\"trip-start\">";
-      texthtml += "<input type=\"time\"  class='dateinp' id=\"time\" name=\"time\">";
-      texthtml += "<div class='timebuttons'>";
-      texthtml += "<button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
-      texthtml += "<button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
-      texthtml += "<button class=\"timebutton\" id=\"morning\">9:00<\/button>";
-      texthtml += "<button class=\"timebutton\" id=\"evening\">18:00<\/button>";
-      texthtml += "<button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
-      texthtml += "<button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
-      texthtml += "<button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
-      texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 мин<\/button>";
-      texthtml += "<button class=\"timebutton\" id=\"plusweek\">+1 нед<\/button>";
-      texthtml += "<label class=' timebutton readylabel' >вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
-      texthtml += "</div>";
-
-      texthtml += "    <textarea placeholder=\"Название...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
-      texthtml += "    <div class='autocomplete'>";
-      texthtml += "         <textarea placeholder=\"Зависим...\" id ='inputtags' class=\"input\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
-      texthtml += "    </div >";
-      texthtml += "    <div class='autocomplete'>";
-      texthtml += "         <textarea placeholder=\"Блокирует...\" id ='inputopns' class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
-      texthtml += "    </div >";
-      texthtml += "    <div class='timebuttons'> ";
-      texthtml += "<div class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Вовремя<\/label><\/div>";
-      texthtml += "<div class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">День<\/label><\/div>";
-      texthtml += "<div class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Неделя<\/label><\/div>";
-      texthtml += "<div class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Месяц<\/label><\/div>";
-      texthtml += "<div class=\"bfifth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfifth\" value=\"fifth\"><label for=\"rfifth\">Квартал<\/label><\/div>";
-      texthtml += "    </div><div class='timebuttons'> ";
-
-      texthtml += "<div class=\"bsixth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsixth\" value=\"sixth\"><label for=\"rsixth\">Полгода<\/label><\/div>";
-      texthtml += "<div class=\"bseventh priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rseventh\" value=\"seventh\"><label for=\"rseventh\">Год<\/label><\/div>";
-      texthtml += "<div class=\"beighth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"reighth\" value=\"eighth\"><label for=\"reighth\">Век<\/label><\/div>";
-      texthtml += "<div class=\"bninth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rninth\" value=\"ninth\"><label for=\"rninth\">Заметки<\/label><\/div>";
-      texthtml += "<div class=\"btenth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rtenth\" value=\"tenth\"><label for=\"rtenth\">Корзина<\/label><\/div>";
-      texthtml += "    </div>";
-      texthtml += "<button class='mainbutton timebutton task newtask'>" +
-        "Новая запись" +
-        "</button>";
-      texthtml += "<label class='mainbutton timebutton delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
-      texthtml += "<button class='mainbutton timebutton task savetask'>" +
-        "Сохранить" +
-        "</button>";
-      texthtml += "<\/div>";
-      tasks.append(texthtml);
       autocomplete(document.getElementById("inputtags"), names);
       autocomplete(document.getElementById("inputopns"), names);
-      // $("#priority").val(a.priority);
       $('input[name="radioprior"][value=' + a.priority + ']').prop('checked', true);
     }
-
   }
 
   for (let t of tags) {
@@ -230,12 +227,18 @@ function autocomplete(inp, arr) {
     /*for each item in the array...*/
     for (i = 0; i < arr.length; i++) {
       /*check if the item starts with the same letters as the text field value:*/
-      if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+      let index = arr[i].toLowerCase().indexOf(val.toLowerCase());
+      if (index >= 0) {
         /*create a DIV element for each matching element:*/
         b = document.createElement("DIV");
-        /*make the matching letters bold:*/
-        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-        b.innerHTML += arr[i].substr(val.length);
+        /*make the matching letters bold and print :*/
+        b.innerHTML = "";
+        for (ii = 0; ii < index; ii++)
+          b.innerHTML += arr[i][ii];
+        for (ii = index; ii < index + val.length; ii++)
+          b.innerHTML += "<strong>" + arr[i][ii] + "</strong>";
+        for (ii = index + val.length; ii < arr[i].length; ii++)
+          b.innerHTML += arr[i][ii];
         /*insert a input field that will hold the current array item's value:*/
         b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
         /*execute a function when someone clicks on the item value (DIV element):*/
