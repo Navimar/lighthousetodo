@@ -17,6 +17,7 @@ let render = () => {
   let today = moment();
   let texthtml = "";
   let blocked = false;
+  let profit = 0;
   tasks.html("");
   let names = [];
 
@@ -49,6 +50,7 @@ let render = () => {
     if (a.selected) {
       texthtml += "<div class=\"editor\">";
 
+      texthtml += "<input type=\"number\" class='dateinp' id=\"profit\" name=\"profitinp\">";
       texthtml += "<input type=\"date\" class='dateinp' id=\"date\" name=\"trip-start\">";
       texthtml += "<input type=\"time\"  class='dateinp' id=\"time\" name=\"time\">";
       texthtml += "<div class='timebuttons'>";
@@ -120,6 +122,7 @@ let render = () => {
       checked = a.ready;
       time = a.time;
       date = a.date;
+      profit = a.profit;
     }
     texthtml += "'>";
 
@@ -141,6 +144,9 @@ let render = () => {
     texthtml += "<button class='text";
     texthtml += "' ";
     texthtml += "value='" + a.name + "'>";
+    texthtml += "(";
+    texthtml += a.weight;
+    texthtml += ") ";
     texthtml += a.name;
     if (a.note)
       texthtml += "&hellip;"
@@ -197,6 +203,7 @@ let render = () => {
   $('#inputtext').val(text + '\n' + note);
   $('#time').val(time);
   $('#date').val(date);
+  $('#profit').val(profit);
   $('.delete').val(text);
   if (isSelection) {
     scrollPosition = $('.selected').position().top;
@@ -394,7 +401,7 @@ let rendertags = (a) => {
   return texthtml;
 }
 let renderopns = (a, level) => {
-  let weight = 0;
+  let weight = parseInt(a.profit);
   if (!level)
     level = 0;
   let texthtml = "";
@@ -405,7 +412,8 @@ let renderopns = (a, level) => {
       return 0;
     });
     for (let t = 0; t < a.opns.length; t++) {
-      weight++;
+      let openka = note_by_name(a.opns[t])
+      // weight += parseInt(openka.profit);
       texthtml += "<br>";
       texthtml += "<span class='bul tag'>";
       for (let i = 0; i < level; i++)
@@ -416,7 +424,6 @@ let renderopns = (a, level) => {
         texthtml += "<span>...</span>";
         break;
       }
-      let openka = note_by_name(a.opns[t])
       if (openka.tags && openka.tags.length > 1)
         texthtml += "⇒";
       else

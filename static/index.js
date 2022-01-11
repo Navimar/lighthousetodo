@@ -40,7 +40,7 @@ function inputSocket() {
 let update = () => {
   socket.emit('load', findGetParameter("id"));
 }
-let newwish = (name, selected, tags, opns, priority, note) => {
+let newwish = (name, selected, tags, opns, priority, profit, note) => {
   let ok = true;
   while (ok) {
     ok = false;
@@ -71,6 +71,7 @@ let newwish = (name, selected, tags, opns, priority, note) => {
     opns,
     selected,
     priority,
+    profit,
     ready: false,
     time: clock().h + ":" + clock().m,
     date: clock().year + "-" + clock().month + "-" + clock().d,
@@ -104,6 +105,7 @@ let save = () => {
     let inpopns = $("#inputopns").val();
 
     let ready = $(".checkbox").prop('checked');
+    let profit = $('#profit').val();
 
     // let priority = $("#priority option:selected").val();
     let priority = $('input[name="radioprior"]:checked').val();
@@ -215,6 +217,7 @@ let save = () => {
         a.tags = tags;
         a.opns = opns;
         a.ready = ready;
+        a.profit = profit;
         a.priority = priority;
         // a.timediff = moment(date + "T" + time).format('x') - moment(a.date + "T" + a.time).format('x') || a.timediff;
         // console.log(a.timediff);
