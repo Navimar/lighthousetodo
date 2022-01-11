@@ -137,7 +137,7 @@ let render = () => {
         else
           texthtml += ("<button class='tag first text time'>--:--&nbsp;</button>");
       }
-
+    a.weight = countweight(a);
 
     texthtml += rendertags(a);
 
@@ -163,7 +163,6 @@ let render = () => {
     if (a.selected) {
       let r = renderopns(a);
       texthtml += r.texthtml;
-      a.weight = r.weight;
     }
 
     texthtml += "</div>";
@@ -443,4 +442,26 @@ let renderopns = (a, level) => {
     }
   }
   return { texthtml, weight };
+}
+
+let countweight = (a, level) => {
+  let weight = parseInt(a.profit);
+  if (!level)
+    level = 0;
+  if (a.opns && a.opns.length > 0) {
+    a.opns.sort((a, b) => {
+      if (a < b) { return -1; }
+      if (a > b) { return 1; }
+      return 0;
+    });
+    for (let t = 0; t < a.opns.length; t++) {
+      let openka = note_by_name(a.opns[t])
+      if (level < 5) {
+        let r = countweight(openka, level + 1)
+        console.log("R", r);
+        weight += parseInt(r);
+      }
+    }
+  }
+  return weight;
 }

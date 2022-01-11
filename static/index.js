@@ -175,7 +175,7 @@ let save = () => {
           }
         }
         if (ok) {
-          newwish(tgname, false, [], [name], priority);
+          newwish(tgname, false, [], [name], priority, 0);
         }
       }
     });
@@ -194,7 +194,7 @@ let save = () => {
           }
         }
         if (ok) {
-          newwish(opname, false, [name], [], priority);
+          newwish(opname, false, [name], [], priority, 0);
         }
       }
     });
