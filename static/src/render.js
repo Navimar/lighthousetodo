@@ -125,7 +125,7 @@ let render = () => {
       profit = a.profit;
     }
     texthtml += "'>";
-    if (!profit) profit = 0;
+    if (!profit) a.profit = 0;
 
     if (a.priority == 'first')
       if (moment().dayOfYear() <= moment(a.date + "T" + a.time).dayOfYear()) {
