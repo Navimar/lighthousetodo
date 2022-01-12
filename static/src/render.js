@@ -150,9 +150,12 @@ let render = () => {
     texthtml += "<button class='text";
     texthtml += "' ";
     texthtml += "value='" + a.name + "'>";
-    texthtml += "(";
+    texthtml += "r ";
     texthtml += a.rank;
-    texthtml += ") ";
+    texthtml += " . ";
+    texthtml += "w ";
+    texthtml += a.weight;
+    texthtml += " ";
     texthtml += a.name;
     if (a.note)
       texthtml += "&hellip;"
@@ -435,9 +438,12 @@ let renderopns = (a, level) => {
       else
         texthtml += "•";
       texthtml += "</span>";
-      texthtml += "(";
+      texthtml += "r ";
       texthtml += openka.rank;
-      texthtml += ") ";
+      texthtml += " ";
+      texthtml += "w ";
+      texthtml += openka.weight;
+      texthtml += " ";
       texthtml += "<button class='opn";
       texthtml += "'>";
       texthtml += openka.name;
@@ -465,7 +471,7 @@ let countweight = (a, level) => {
 }
 
 let countrank = (a, level) => {
-  let rank = parseInt(a.profit);
+  let rank = parseInt(a.weight);
   if (!level) level = 0;
   if (a.opns && a.opns.length > 0) {
     for (let t = 0; t < a.opns.length; t++) {
