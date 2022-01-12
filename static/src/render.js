@@ -103,9 +103,10 @@ let render = () => {
     if (a.selected)
       texthtml += "selected";
     texthtml += "'><tbody><tr><td class=' taskmarker"
-    if (a.blocked) {
-      texthtml += " cantdo";
-    } else if (!isReady(a.date, a.time)) {
+    // if (a.blocked) {
+    //   texthtml += " cantdo";
+    // } else 
+    if (!isReady(a.date, a.time)) {
       texthtml += " cantdo"
     }
     texthtml += " " + a.priority;
@@ -126,17 +127,17 @@ let render = () => {
     }
     texthtml += "'>";
 
-    if (a.priority == 'first')
-      if (moment().dayOfYear() <= moment(a.date + "T" + a.time).dayOfYear()) {
-        if (a.time != lasttime) {
-          texthtml += "<button class='tag first text time'>";
-          texthtml += a.time;
-          texthtml += "&nbsp;</button>";
-          lasttime = a.time
-        }
-        else
-          texthtml += ("<button class='tag first text time'>--:--&nbsp;</button>");
+    // if (a.priority == 'first')
+    if (moment() <= moment(a.date + "T" + a.time)) {
+      if (a.time != lasttime) {
+        texthtml += "<button class='tag first text time'>";
+        texthtml += a.time;
+        texthtml += "&nbsp;</button>";
+        lasttime = a.time
       }
+      else
+        texthtml += ("<button class='tag first text time'>--:--&nbsp;</button>");
+    }
     a.weight = countweight(a);
 
     texthtml += rendertags(a);
@@ -396,9 +397,10 @@ let rendertags = (a) => {
       texthtml += "</button>";
       if (t != a.tags.length - 1)
         texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
+      else
+        texthtml += '<span class="tag">&nbsp;⇒&nbsp;</span>'
     }
   }
-  texthtml += '<span class="tag">&nbsp;⇒&nbsp;</span>'
 
   return texthtml;
 }
