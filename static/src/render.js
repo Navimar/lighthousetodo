@@ -459,6 +459,8 @@ let renderopns = (a, level) => {
 
 let countweight = (a, level) => {
   let weight = parseInt(a.profit);
+  if (a.priority == 'tenth')
+    weight = 0;
   if (!level) level = 0;
   if (a.tags && a.tags.length > 0) {
     for (let t = 0; t < a.tags.length; t++) {
