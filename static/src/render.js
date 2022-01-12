@@ -466,8 +466,11 @@ let countrank = (a, level) => {
   if (a.opns && a.opns.length > 0) {
     for (let t = 0; t < a.opns.length; t++) {
       let opn = note_by_name(a.opns[t])
-      if (level < 7)
-        rank = Math.max(rank, parseInt(countrank(opn, level + 1)));
+      if (level < 7) {
+        let r = Math.max(rank, parseInt(countrank(opn, level + 1)));
+        if (r > 0)
+          rank = r;
+      }
     }
   }
   return rank;
