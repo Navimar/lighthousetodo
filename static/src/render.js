@@ -22,6 +22,12 @@ let render = () => {
   let names = [];
 
   for (let a of data.tasks) {
+    a.weight = countweight(a);
+  }
+  for (let a of data.tasks) {
+    a.rank = countrank(a);
+  }
+  for (let a of data.tasks) {
     planeddays.add(moment(a.date).format('DD-MM-YYYY'));
   }
   tasks.append(Calendar3(moment()));
@@ -138,8 +144,6 @@ let render = () => {
       else
         texthtml += ("<button class='tag first text time'>--:--&nbsp;</button>");
     }
-    a.weight = countweight(a);
-    a.rank = countrank(a);
 
     texthtml += rendertags(a);
 
