@@ -43,10 +43,10 @@ let render = () => {
       today = moment(a.date);
       texthtml += Calendar3(today);
     }
-    if (a.blocked && !blocked) {
-      texthtml += ("<div class='date'> Блокированные </div>");
-      blocked = true;
-    }
+    // if (a.blocked && !blocked) {
+    //   texthtml += ("<div class='date'> Блокированные </div>");
+    //   blocked = true;
+    // }
     if (a.selected) {
       texthtml += "<div class=\"editor\">";
 
@@ -389,14 +389,17 @@ let rendertags = (a) => {
       if (a > b) { return 1; }
       return 0;
     });
-    for (let t of a.tags) {
+    for (let t in a.tags) {
       texthtml += "<button class='tag text";
       texthtml += "'>";
-      texthtml += t;
+      texthtml += a.tags[t];
       texthtml += "</button>";
-      texthtml += '<span class="tag">&nbsp;⇒&nbsp;</span>'
+      if (t != a.tags.length - 1)
+        texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
     }
   }
+  texthtml += '<span class="tag">&nbsp;⇒&nbsp;</span>'
+
   return texthtml;
 }
 let renderopns = (a, level) => {
@@ -449,22 +452,12 @@ let renderopns = (a, level) => {
 
 let countweight = (a, level) => {
   let weight = parseInt(a.profit);
-  let profit = parseInt(a.profit);
-  if (!level)
-    level = 0;
-  if (a.opns && a.opns.length > 0) {
-    for (let t = 0; t < a.opns.length; t++) {
-      let openka = note_by_name(a.opns[t])
-      if (level < 5) {
-        let r = countweight(openka, level + 1)
-        if (r > 0)
-          if (openka.tags.length > 0)
-            weight = Math.max(parseInt(r / openka.tags.length), profit);
-          else
-            weight = parseInt(r);
-        if (profit < 0)
-          weight += profit;
-      }
+  if (!level) level = 0;
+  if (a.tags && a.tags.length > 0) {
+    for (let t = 0; t < a.tags.length; t++) {
+      let tag = note_by_name(a.tags[t])
+      if (level < 7)
+        weight += parseInt(countweight(tag, level + 1));
     }
   }
   return weight;
