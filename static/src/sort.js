@@ -1,11 +1,11 @@
 let sortdata = () => {
   data.tasks.sort((a, b) => {
-    // if (!a.blocked && b.blocked) {
-    //   return -1
-    // }
-    // else if (a.blocked && !b.blocked) {
-    //   return 1
-    // }
+    if (!a.blocked && b.blocked) {
+      return -1
+    }
+    else if (a.blocked && !b.blocked) {
+      return 1
+    }
 
     let ad = moment(a.date);
     let bd = moment(b.date);
@@ -42,9 +42,13 @@ let sortdata = () => {
       else if (a.ready && !b.ready) {
         return 1
       }
-      if (a.weight > b.weight)
+      // if (a.weight > b.weight)
+      //   return -1
+      // else if (a.weight < b.weight)
+      //   return 1
+      if (a.rank > b.rank)
         return -1
-      else if (a.weight < b.weight)
+      else if (a.rank < b.rank)
         return 1
       if ((a.opns.length > b.opns.length)) {
         return -1

@@ -43,10 +43,10 @@ let render = () => {
       today = moment(a.date);
       texthtml += Calendar3(today);
     }
-    // if (a.blocked && !blocked) {
-    //   texthtml += ("<div class='date'> Блокированные </div>");
-    //   blocked = true;
-    // }
+    if (a.blocked && !blocked) {
+      texthtml += ("<div class='date'> Блокированные </div>");
+      blocked = true;
+    }
     if (a.selected) {
       texthtml += "<div class=\"editor\">";
 
@@ -139,6 +139,7 @@ let render = () => {
         texthtml += ("<button class='tag first text time'>--:--&nbsp;</button>");
     }
     a.weight = countweight(a);
+    a.rank = countrank(a);
 
     texthtml += rendertags(a);
 
@@ -146,7 +147,7 @@ let render = () => {
     texthtml += "' ";
     texthtml += "value='" + a.name + "'>";
     texthtml += "(";
-    texthtml += a.weight;
+    texthtml += a.rank;
     texthtml += ") ";
     texthtml += a.name;
     if (a.note)
@@ -162,8 +163,7 @@ let render = () => {
       if (a.ready)
         texthtml += "<span class='ready bul'>•</span>";
     if (a.selected) {
-      let r = renderopns(a);
-      texthtml += r.texthtml;
+      texthtml += renderopns(a);
     }
 
     texthtml += "</div>";
@@ -405,7 +405,6 @@ let rendertags = (a) => {
   return texthtml;
 }
 let renderopns = (a, level) => {
-  let weight = parseInt(a.profit);
   if (!level)
     level = 0;
   let texthtml = "";
@@ -417,7 +416,6 @@ let renderopns = (a, level) => {
     });
     for (let t = 0; t < a.opns.length; t++) {
       let openka = note_by_name(a.opns[t])
-      // weight += parseInt(openka.profit);
       texthtml += "<br>";
       texthtml += "<span class='bul tag'>";
       for (let i = 0; i < level; i++)
@@ -434,7 +432,7 @@ let renderopns = (a, level) => {
         texthtml += "•";
       texthtml += "</span>";
       texthtml += "(";
-      texthtml += openka.weight;
+      texthtml += openka.rank;
       texthtml += ") ";
       texthtml += "<button class='opn";
       texthtml += "'>";
@@ -442,14 +440,11 @@ let renderopns = (a, level) => {
       texthtml += "</button>";
       if (level == 5)
         texthtml += "<span class='arr'>⇒...</span>";
-      if (level < 5) {
-        let r = renderopns(openka, level + 1)
-        texthtml += r.texthtml;
-        weight += r.weight;
-      }
+      if (level < 5)
+        texthtml += renderopns(openka, level + 1);
     }
   }
-  return { texthtml, weight };
+  return texthtml;
 }
 
 let countweight = (a, level) => {
@@ -463,4 +458,17 @@ let countweight = (a, level) => {
     }
   }
   return weight;
+}
+
+let countrank = (a, level) => {
+  let rank = parseInt(a.profit);
+  if (!level) level = 0;
+  if (a.opns && a.opns.length > 0) {
+    for (let t = 0; t < a.opns.length; t++) {
+      let opn = note_by_name(a.opns[t])
+      if (level < 7)
+        rank = Math.max(rank, parseInt(countrank(opn, level + 1)));
+    }
+  }
+  return rank;
 }
