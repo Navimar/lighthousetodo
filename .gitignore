@@ -8,3 +8,4 @@ data/
 .vscode/settings.json
 config.js
 *.sh
+*.icloud

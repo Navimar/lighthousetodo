@@ -428,6 +428,9 @@ let renderopns = (a, level) => {
       else
         texthtml += "•";
       texthtml += "</span>";
+      texthtml += "(";
+      texthtml += openka.weight;
+      texthtml += ") ";
       texthtml += "<button class='opn";
       texthtml += "'>";
       texthtml += openka.name;
@@ -446,20 +449,21 @@ let renderopns = (a, level) => {
 
 let countweight = (a, level) => {
   let weight = parseInt(a.profit);
+  let profit = parseInt(a.profit);
   if (!level)
     level = 0;
   if (a.opns && a.opns.length > 0) {
-    a.opns.sort((a, b) => {
-      if (a < b) { return -1; }
-      if (a > b) { return 1; }
-      return 0;
-    });
     for (let t = 0; t < a.opns.length; t++) {
       let openka = note_by_name(a.opns[t])
       if (level < 5) {
         let r = countweight(openka, level + 1)
-        console.log("R", r);
-        weight += parseInt(r);
+        if (r > 0)
+          if (openka.tags.length > 0)
+            weight = Math.max(parseInt(r / openka.tags.length), profit);
+          else
+            weight = parseInt(r);
+        if (profit < 0)
+          weight += profit;
       }
     }
   }
