@@ -46,6 +46,10 @@ let sortdata = () => {
       //   return -1
       // else if (a.weight < b.weight)
       //   return 1
+      if (a.rank > 0 && b.rank < 0)
+        return 1;
+      if (a.rank < 0 && b.rank > 0)
+        return -1;
       if (a.rank > b.rank)
         return -1
       else if (a.rank < b.rank)
