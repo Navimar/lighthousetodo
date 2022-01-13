@@ -473,7 +473,8 @@ let countweight = (a, level) => {
         weight += parseInt(countweight(tag, level + 1));
     }
   }
-  // return weight;
+  if (a.priority == 'tenth')
+    return weight;
   return Math.min(weight, a.profit);
 }
 
