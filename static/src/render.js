@@ -148,7 +148,7 @@ let render = () => {
         lasttime = a.time
       }
       else
-        texthtml += ("<button class='tag first text time'>--:--&nbsp;</button>");
+        texthtml += ("<button class='tag first text time'>--:--</button>&nbsp;");
     }
     texthtml += "<button class='text";
     texthtml += "' ";
@@ -473,7 +473,8 @@ let countweight = (a, level) => {
         weight += parseInt(countweight(tag, level + 1));
     }
   }
-  return weight;
+  // return weight;
+  return Math.min(weight, a.profit);
 }
 
 let countrank = (a, level) => {
