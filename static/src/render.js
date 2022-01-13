@@ -25,7 +25,9 @@ let render = () => {
     a.weight = countweight(a);
   }
   for (let a of data.tasks) {
-    a.rank = countrank(a);
+    let r = countrank(a);
+    a.rank = r.rank;
+    a.target = r.target;
   }
   for (let a of data.tasks) {
     planeddays.add(moment(a.date).format('DD-MM-YYYY'));
@@ -59,17 +61,20 @@ let render = () => {
       texthtml += "<input type=\"number\" class='dateinp' id=\"profit\" name=\"profitinp\">";
       texthtml += "<input type=\"date\" class='dateinp' id=\"date\" name=\"trip-start\">";
       texthtml += "<input type=\"time\"  class='dateinp' id=\"time\" name=\"time\">";
+
       texthtml += "<div class='timebuttons'>";
       texthtml += "<button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
       texthtml += "<button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
       texthtml += "<button class=\"timebutton\" id=\"morning\">9:00<\/button>";
       texthtml += "<button class=\"timebutton\" id=\"evening\">18:00<\/button>";
-      texthtml += "<button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"midnight\">00:00<\/button>";
+
       texthtml += "<button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
+      texthtml += "<button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
       texthtml += "<button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
       texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 мин<\/button>";
       texthtml += "<button class=\"timebutton\" id=\"plusweek\">+1 нед<\/button>";
-      texthtml += "<label class=' timebutton readylabel' >вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
+      // texthtml += "<label class=' timebutton readylabel' >вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
       texthtml += "</div>";
 
       texthtml += "    <textarea placeholder=\"Название...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
@@ -109,9 +114,9 @@ let render = () => {
     if (a.selected)
       texthtml += "selected";
     texthtml += "'><tbody><tr><td class=' taskmarker"
-    // if (a.blocked) {
-    //   texthtml += " cantdo";
-    // } else 
+    if (a.blocked) {
+      texthtml += " cantdo";
+    }
     if (!isReady(a.date, a.time)) {
       texthtml += " cantdo"
     }
@@ -146,29 +151,31 @@ let render = () => {
     }
 
     texthtml += rendertags(a);
-
     texthtml += "<button class='text";
     texthtml += "' ";
     texthtml += "value='" + a.name + "'>";
-    texthtml += "r ";
-    texthtml += a.rank;
-    texthtml += " . ";
-    texthtml += "w ";
-    texthtml += a.weight;
-    texthtml += " ";
     texthtml += a.name;
     if (a.note)
       texthtml += "&hellip;"
     texthtml += "</button>";
 
-    if (a.opns && a.opns.length > 0)
+
+    if (a.opns && a.opns.length > 0) {
       if (a.ready)
         texthtml += "<span class='ready bul tag'>⇒</span>";
       else
         texthtml += "<span class=' bul tag'>⇒</span>";
+      if (!a.selected)
+        // a.target != a.name)
+        texthtml += "<span class='opn target'>" + a.target + "</span>";
+
+    }
     else
       if (a.ready)
         texthtml += "<span class='ready bul'>•</span>";
+    texthtml += "<span class='rank'> (";
+    texthtml += a.rank;
+    texthtml += ")</span>";
     if (a.selected) {
       texthtml += renderopns(a);
     }
@@ -404,8 +411,11 @@ let rendertags = (a) => {
       texthtml += "</button>";
       if (t != a.tags.length - 1)
         texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
-      else
-        texthtml += '<span class="tag">&nbsp;⇒&nbsp;</span>'
+      else {
+        // texthtml += '<span class="tag">&nbsp;⇒&nbsp;</span>'
+        texthtml += "<br>";
+      }
+
     }
   }
 
@@ -438,16 +448,13 @@ let renderopns = (a, level) => {
       else
         texthtml += "•";
       texthtml += "</span>";
-      texthtml += "r ";
-      texthtml += openka.rank;
-      texthtml += " ";
-      texthtml += "w ";
-      texthtml += openka.weight;
-      texthtml += " ";
       texthtml += "<button class='opn";
       texthtml += "'>";
       texthtml += openka.name;
       texthtml += "</button>";
+      texthtml += "<span class='rank'> (";
+      texthtml += openka.rank;
+      texthtml += ")</span>";
       if (level == 5)
         texthtml += "<span class='arr'>⇒...</span>";
       if (level < 5)
@@ -474,16 +481,19 @@ let countweight = (a, level) => {
 
 let countrank = (a, level) => {
   let rank = parseInt(a.weight);
+  let target = a.name;
   if (!level) level = 0;
   if (a.opns && a.opns.length > 0) {
     for (let t = 0; t < a.opns.length; t++) {
       let opn = note_by_name(a.opns[t])
       if (level < 7) {
-        let r = Math.max(rank, parseInt(countrank(opn, level + 1)));
-        if (r > 0)
-          rank = r;
+        let r = countrank(opn, level + 1);
+        if (r.rank > rank && r.rank > 0) {
+          target = r.target;
+          rank = r.rank;
+        }
       }
     }
   }
-  return rank;
+  return { rank, target };
 }
