@@ -117,9 +117,9 @@ let render = () => {
     if (a.blocked) {
       texthtml += " cantdo";
     }
-    if (!isReady(a.date, a.time)) {
-      texthtml += " cantdo"
-    }
+    // if (!isReady(a.date, a.time)) {
+    //   texthtml += " cantdo"
+    // }
     texthtml += " " + a.priority;
     if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear() && a.priority == 'first')
       texthtml += " past";
@@ -139,18 +139,17 @@ let render = () => {
     texthtml += "'>";
 
     // if (a.priority == 'first')
+    texthtml += rendertags(a);
     if (moment() <= moment(a.date + "T" + a.time)) {
       if (a.time != lasttime) {
         texthtml += "<button class='tag first text time'>";
         texthtml += a.time;
-        texthtml += "&nbsp;</button>";
+        texthtml += "</button>&nbsp;";
         lasttime = a.time
       }
       else
         texthtml += ("<button class='tag first text time'>--:--&nbsp;</button>");
     }
-
-    texthtml += rendertags(a);
     texthtml += "<button class='text";
     texthtml += "' ";
     texthtml += "value='" + a.name + "'>";
@@ -165,8 +164,7 @@ let render = () => {
         texthtml += "<span class='ready bul tag'>⇒</span>";
       else
         texthtml += "<span class=' bul tag'>⇒</span>";
-      if (!a.selected)
-        // a.target != a.name)
+      if (!a.selected && a.target != a.name)
         texthtml += "<span class='opn target'>" + a.target + "</span>";
     }
     else
