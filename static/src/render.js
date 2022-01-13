@@ -168,7 +168,6 @@ let render = () => {
       if (!a.selected)
         // a.target != a.name)
         texthtml += "<span class='opn target'>" + a.target + "</span>";
-
     }
     else
       if (a.ready)
