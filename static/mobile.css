@@ -146,7 +146,7 @@ input {
 }
 
 .first {
-  background-color: #EDD382;
+  background-color: #EE4266;
 }
 
 option.first {
@@ -156,7 +156,7 @@ option.first {
 }
 
 .second {
-  background: #F0567A;
+  background: #F6AE2D;
 }
 
 option.second {
@@ -166,7 +166,7 @@ option.second {
 }
 
 .third {
-  background: #06D6A0;
+  background: #5FAD41;
 }
 
 option.third {
@@ -196,7 +196,7 @@ option.fifth {
 }
 
 .sixth {
-  background: #F7A041;
+  background: #EDD382;
 }
 
 .seventh {
@@ -208,23 +208,18 @@ option.fifth {
 }
 
 .ninth {
-  background: #3D3B8E;
+  background: #1B9AAA;
 }
 
 .tenth {
-  background: #550527;
+  background: #37174F;
 }
 
-.eleventh {
-  border-left: 7px solid gray;
-}
 
-.twelfth {
-  border-left: 7px solid rgb(84, 100, 92);
-}
+
 
 .past {
-  background-color: #C3BEF7;
+  background-color: #E4B7E5;
 }
 
 .cantdo {
@@ -427,25 +422,7 @@ label.mainbutton.timebutton {
   width: 20%;
 }
 
-.bfirst {
-  border-bottom-color: #FFAA00;
-}
 
-.bsecond {
-  border-bottom-color: #FF00AA;
-}
-
-.bthird {
-  border-bottom-color: #AA00FF;
-}
-
-.bforth {
-  border-bottom-color: #00AAFF;
-}
-
-.bfifth {
-  border-bottom-color: darkgreen;
-}
 
 input[type=radio] {
   display: none;
@@ -522,4 +499,32 @@ label.readylabel {
   font-size:11.4pt ;
   font-family: monospace;
   text-align: left;
+}
+
+.bfirst {
+  border-bottom-color: #EE4266;
+}
+
+.bsecond {
+  border-bottom-color: #F6AE2D;
+}
+
+.bthird {
+  border-bottom-color: #5FAD41;
+}
+
+.bforth {
+  border-bottom-color: #1B9AAA;
+}
+
+.bfifth {
+  border-bottom-color: #FFC43D;
+}
+
+.bninth{
+border-bottom-color: #517AA4;
+}
+
+.btenth{
+border-bottom-color: #37174F;
 }

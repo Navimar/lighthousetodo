@@ -74,9 +74,7 @@ let render = () => {
       texthtml += "<button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
       texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 мин<\/button>";
       texthtml += "<button class=\"timebutton\" id=\"plusweek\">+1 нед<\/button>";
-      // texthtml += "<label class=' timebutton readylabel' >вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
       texthtml += "</div>";
-
       texthtml += "    <textarea placeholder=\"Название...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
       texthtml += "    <div class='autocomplete'>";
       texthtml += "         <textarea placeholder=\"Зависим...\" id ='inputtags' class=\"input\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
@@ -85,22 +83,25 @@ let render = () => {
       texthtml += "         <textarea placeholder=\"Блокирует...\" id ='inputopns' class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
       texthtml += "    </div >";
       texthtml += "    <div class='timebuttons'> ";
-      texthtml += "<div class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Вовремя<\/label><\/div>";
+      texthtml += "<div class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Время<\/label><\/div>";
       texthtml += "<div class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">День<\/label><\/div>";
-      texthtml += "<div class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Неделя<\/label><\/div>";
-      texthtml += "<div class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Месяц<\/label><\/div>";
-      texthtml += "<div class=\"bfifth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfifth\" value=\"fifth\"><label for=\"rfifth\">Квартал<\/label><\/div>";
-      texthtml += "    </div><div class='timebuttons'> ";
+      texthtml += "<div class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Поток<\/label><\/div>";
+      // texthtml += "<div class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Месяц<\/label><\/div>";
+      // texthtml += "<div class=\"bfifth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfifth\" value=\"fifth\"><label for=\"rfifth\">Квартал<\/label><\/div>";
+      // texthtml += "    </div><div class='timebuttons'> ";
 
-      texthtml += "<div class=\"bsixth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsixth\" value=\"sixth\"><label for=\"rsixth\">Полгода<\/label><\/div>";
-      texthtml += "<div class=\"bseventh priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rseventh\" value=\"seventh\"><label for=\"rseventh\">Год<\/label><\/div>";
-      texthtml += "<div class=\"beighth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"reighth\" value=\"eighth\"><label for=\"reighth\">Век<\/label><\/div>";
+      // texthtml += "<div class=\"bsixth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsixth\" value=\"sixth\"><label for=\"rsixth\">Полгода<\/label><\/div>";
+      // texthtml += "<div class=\"bseventh priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rseventh\" value=\"seventh\"><label for=\"rseventh\">Год<\/label><\/div>";
+      // texthtml += "<div class=\"beighth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"reighth\" value=\"eighth\"><label for=\"reighth\">Век<\/label><\/div>";
       texthtml += "<div class=\"bninth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rninth\" value=\"ninth\"><label for=\"rninth\">Заметки<\/label><\/div>";
       texthtml += "<div class=\"btenth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rtenth\" value=\"tenth\"><label for=\"rtenth\">Корзина<\/label><\/div>";
       texthtml += "    </div>";
+      texthtml += "<label class='mainbutton timebutton readylabel' >вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
+
       texthtml += "<button class='mainbutton timebutton task newtask'>" +
         "Новая запись" +
         "</button>";
+
       texthtml += "<label class='mainbutton timebutton delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
       texthtml += "<button class='mainbutton timebutton task savetask'>" +
         "Сохранить" +
@@ -463,7 +464,7 @@ let renderopns = (a, level) => {
 
 let countweight = (a, level) => {
   let weight = parseInt(a.profit);
-  if (a.priority == 'tenth')
+  if (a.priority == 'tenth' || a.ready)
     weight = 0;
   if (!level) level = 0;
   if (a.tags && a.tags.length > 0) {
@@ -473,7 +474,7 @@ let countweight = (a, level) => {
         weight += parseInt(countweight(tag, level + 1));
     }
   }
-  if (a.priority == 'tenth')
+  if (a.priority == 'tenth' || a.ready)
     return weight;
   return Math.min(weight, a.profit);
 }
