@@ -6,12 +6,13 @@
 }
 
 body {
-  background: #000510;
+  /* background: #000510; */
   color: whitesmoke;
   text-align: center;
   font-family: 'IBM Plex Sans', sans-serif;
   margin: 0;
   overflow-x: hidden;
+  background: black;
 }
 
 table {
@@ -21,6 +22,13 @@ table {
 #tasks {
   margin-top: 20px;
   background: black;
+}
+
+#newtaskbutton {
+  position: fixed;
+  width: 20%;
+  bottom: 10px;
+  right: 0;
 }
 
 td.taskmarker {
@@ -69,10 +77,12 @@ option:checked {
 #scrollTopButton {
   position: fixed;
   bottom: 10px;
-  right: 0;
+  left: 0;
   background: black;
   color: white;
 }
+
+
 
 .opns {}
 
@@ -103,7 +113,7 @@ input[type="checkbox"] {
 
 .editor {
   text-align: right;
-  background: #232333;
+    background-color: #222;
   padding-top: 10px;
 }
 
@@ -132,8 +142,8 @@ input {
 #status {
   /* display: none; */
   position: fixed;
-  bottom: 10px;
-  left: 10px;
+left:10px;
+  top: 10px;
 }
 
 .date {
@@ -215,9 +225,6 @@ option.fifth {
   background: #37174F;
 }
 
-
-
-
 .past {
   background-color: #E4B7E5;
 }
@@ -231,7 +238,7 @@ option.fifth {
 }
 
 .selected {
-  background-color: #232333;
+  background-color: #222;
   border-radius: 0;
 }
 

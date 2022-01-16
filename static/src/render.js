@@ -98,9 +98,9 @@ let render = () => {
       texthtml += "    </div>";
       texthtml += "<label class='mainbutton timebutton readylabel' >вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
 
-      texthtml += "<button class='mainbutton timebutton task newtask'>" +
-        "Новая запись" +
-        "</button>";
+      // texthtml += "<button class='mainbutton timebutton task newtask'>" +
+      //   "Новая запись" +
+      //   "</button>";
 
       texthtml += "<label class='mainbutton timebutton delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
       texthtml += "<button class='mainbutton timebutton task savetask'>" +
@@ -244,10 +244,14 @@ function autocomplete(inp, arr) {
     /*append the DIV element as a child of the autocomplete container:*/
     this.parentNode.appendChild(a);
     /*for each item in the array...*/
-    for (i = 0; i < arr.length; i++) {
+    let cn = 0;
+    i = 0;
+    while (i < arr.length && cn < 10) {
+      i++;
       /*check if the item starts with the same letters as the text field value:*/
       let index = arr[i].toLowerCase().indexOf(val.toLowerCase());
       if (index >= 0) {
+        cn++;
         /*create a DIV element for each matching element:*/
         b = document.createElement("DIV");
         /*make the matching letters bold and print :*/
