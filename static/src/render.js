@@ -122,8 +122,6 @@ let render = () => {
     //   texthtml += " cantdo"
     // }
     texthtml += " " + a.priority;
-    if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear() && a.priority == 'first')
-      texthtml += " past";
     texthtml += " '></td><td>"
     texthtml += "<div class='task";
     if (a.selected) {
@@ -139,8 +137,10 @@ let render = () => {
     }
     texthtml += "'>";
 
-    // if (a.priority == 'first')
     texthtml += rendertags(a);
+    if (a.priority == 'first' || a.priority == 'second')
+      if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
+        texthtml += ("<button class='tag first text time'>ДАВНО</button>&nbsp;");
     if (moment() <= moment(a.date + "T" + a.time)) {
       if (a.time != lasttime) {
         texthtml += "<button class='tag first text time'>";

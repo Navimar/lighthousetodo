@@ -142,8 +142,11 @@ input {
 #status {
   /* display: none; */
   position: fixed;
-left:10px;
-  top: 10px;
+  left:50%;
+  bottom: 10px;
+  padding: 2px;
+  border: 2px solid #333;
+  background-color: black;
 }
 
 .date {
