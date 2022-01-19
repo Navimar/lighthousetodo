@@ -30,8 +30,6 @@ let sortdata = () => {
     else if (a.priority == b.priority) {
       if (!a.ready && b.ready)
         return -1;
-      if (a.ready && !b.ready)
-        return 1;
       if (moment() <= moment(a.date + "T" + a.time) && moment() > moment(b.date + "T" + b.time))
         return 1;
       if (moment() > moment(a.date + "T" + a.time) && moment() <= moment(b.date + "T" + b.time))
@@ -44,10 +42,14 @@ let sortdata = () => {
           return -1;
         }
       }
-      if (a.rank > 0 && b.rank < 0)
+      if (a.rank >= 0 && b.rank < 0)
         return 1;
-      if (a.rank < 0 && b.rank > 0)
+      if (a.rank < 0 && b.rank >= 0)
         return -1;
+      if (a.rank > b.rank)
+        return -1
+      else if (a.rank < b.rank)
+        return 1;
       if (a.profit > b.profit)
         return -1
       else if (a.profit < b.profit)
