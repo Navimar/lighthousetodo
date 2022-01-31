@@ -106,6 +106,7 @@ let save = () => {
 
     let ready = $(".checkbox").prop('checked');
     let profit = $('#profit').val();
+    let ppd = $('#ppd').val();
 
     // let priority = $("#priority option:selected").val();
     let priority = $('input[name="radioprior"]:checked').val();
@@ -218,6 +219,7 @@ let save = () => {
         a.opns = opns;
         a.ready = ready;
         a.profit = profit;
+        a.ppd = ppd;
         a.priority = priority;
         // a.timediff = moment(date + "T" + time).format('x') - moment(a.date + "T" + a.time).format('x') || a.timediff;
         // console.log(a.timediff);

@@ -18,6 +18,7 @@ let render = () => {
   let texthtml = "";
   let blocked = false;
   let profit = 0;
+  let ppd = 0;
   tasks.html("");
   let names = [];
 
@@ -31,6 +32,8 @@ let render = () => {
   }
   for (let a of data.tasks) {
     planeddays.add(moment(a.date).format('DD-MM-YYYY'));
+    if (!a.ppd)
+      a.ppd = 0;
   }
   tasks.append(Calendar3(moment()));
 
@@ -58,7 +61,8 @@ let render = () => {
     if (a.selected) {
       texthtml += "<div class=\"editor\">";
 
-      texthtml += "<input type=\"number\" class='dateinp' id=\"profit\" name=\"profitinp\">";
+      texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"profit\" name=\"profitinp\">";
+      texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"ppd\" name=\"ppdinp\">";
       texthtml += "<input type=\"date\" class='dateinp' id=\"date\" name=\"trip-start\">";
       texthtml += "<input type=\"time\"  class='dateinp' id=\"time\" name=\"time\">";
 
@@ -134,6 +138,7 @@ let render = () => {
       time = a.time;
       date = a.date;
       profit = a.profit;
+      ppd = a.ppd;
     }
     texthtml += "'>";
 
@@ -218,6 +223,7 @@ let render = () => {
   $('#time').val(time);
   $('#date').val(date);
   $('#profit').val(profit);
+  $('#ppd').val(ppd);
   $('.delete').val(text);
   if (isSelection) {
     scrollPosition = $('.selected').position().top;
@@ -469,7 +475,8 @@ let renderopns = (a, level) => {
 }
 
 let countweight = (a, level) => {
-  let weight = parseInt(a.profit);
+  let profit = parseInt(a.profit) + moment().diff(moment(a.date), 'days') * a.ppd
+  let weight = profit;
   if (a.priority == 'tenth' || a.ready)
     weight = 0;
   if (!level) level = 0;
@@ -482,7 +489,7 @@ let countweight = (a, level) => {
   }
   if (a.priority == 'tenth' || a.ready)
     return weight;
-  return Math.min(weight, a.profit);
+  return Math.min(weight, profit);
 }
 
 let countrank = (a, level) => {
