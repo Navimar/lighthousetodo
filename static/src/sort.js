@@ -44,9 +44,9 @@ let sortdata = () => {
           return -1;
         }
       }
-      if (a.rank >= 0 && b.rank < 0)
+      if (a.rank > 0 && b.rank <= 0)
         return 1;
-      if (a.rank < 0 && b.rank >= 0)
+      if (a.rank <= 0 && b.rank > 0)
         return -1;
       if (a.rank > b.rank)
         return -1
