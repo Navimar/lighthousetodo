@@ -54,10 +54,10 @@ let render = () => {
       today = moment(a.date);
       texthtml += Calendar3(today);
     }
-    if (a.blocked && !blocked) {
-      texthtml += ("<div class='date'> Блокированные </div>");
-      blocked = true;
-    }
+    // if (a.blocked && !blocked) {
+    //   texthtml += ("<div class='date'> Блокированные </div>");
+    //   blocked = true;
+    // }
     if (a.selected) {
       texthtml += "<div class=\"editor\">";
 
@@ -119,9 +119,9 @@ let render = () => {
     if (a.selected)
       texthtml += "selected";
     texthtml += "'><tbody><tr><td class=' taskmarker"
-    if (a.blocked) {
-      texthtml += " cantdo";
-    }
+    // if (a.blocked) {
+    //   texthtml += " cantdo";
+    // }
     // if (!isReady(a.date, a.time)) {
     //   texthtml += " cantdo"
     // }
@@ -143,6 +143,11 @@ let render = () => {
     texthtml += "'>";
 
     texthtml += rendertags(a);
+
+    if (a.ready)
+      texthtml += ("<button class='tag first text time'>ГОТОВ</button>&nbsp;");
+    if (a.blocked)
+      texthtml += ("<button class='tag first text time'>ВЕТВЬ</button>&nbsp;");
     if (!a.ready && (a.priority == 'first' || a.priority == 'second'))
       if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
         texthtml += ("<div class='tag first text time past'>ДАВНО</div>&nbsp;");
@@ -156,8 +161,6 @@ let render = () => {
       else
         texthtml += ("<button class='tag first text time'>--:--</button>&nbsp;");
     }
-    if (a.ready)
-      texthtml += ("<button class='tag first text time'>ГОТОВ</button>&nbsp;");
     texthtml += "<button class='text";
     texthtml += "' ";
     texthtml += "value='" + a.name + "'>";

@@ -1,5 +1,10 @@
 let sortdata = () => {
   data.tasks.sort((a, b) => {
+
+    if (!a.ready && b.ready)
+      return -1;
+    if (a.ready && !b.ready)
+      return 1;
     if (!a.blocked && b.blocked) {
       return -1
     }
@@ -28,10 +33,6 @@ let sortdata = () => {
       return -1
     }
     else if (a.priority == b.priority) {
-      if (!a.ready && b.ready)
-        return -1;
-      if (a.ready && !b.ready)
-        return 1;
       if (moment() <= moment(a.date + "T" + a.time) && moment() > moment(b.date + "T" + b.time))
         return 1;
       if (moment() > moment(a.date + "T" + a.time) && moment() <= moment(b.date + "T" + b.time))
