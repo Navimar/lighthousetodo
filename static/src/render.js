@@ -23,7 +23,7 @@ let render = () => {
   let names = [];
 
   for (let a of data.tasks) {
-    a.weight = countweight(a);
+    a.weight = countweight(a).weight;
   }
   for (let a of data.tasks) {
     let r = countrank(a);
@@ -478,6 +478,8 @@ let renderopns = (a, level) => {
 }
 
 let countweight = (a, level) => {
+  a.future = moment(a.date + ' ' + a.time).diff(moment(), 'minutes') <= 5 ? 0 : 1;
+  console.log('check', a.name, a.future);
   let profit = parseInt(a.profit) + moment().diff(moment(a.date), 'days') * a.ppd
   let weight = profit;
   if (a.priority == 'tenth' || a.ready)
@@ -486,30 +488,40 @@ let countweight = (a, level) => {
   if (a.tags && a.tags.length > 0) {
     for (let t = 0; t < a.tags.length; t++) {
       let tag = note_by_name(a.tags[t])
-      if (level < 7)
-        weight += parseInt(countweight(tag, level + 1));
+      if (level < 12) {
+        let re = countweight(tag, level + 1)
+        weight += re.weight;
+        if (re.future)
+          a.future = true;
+      }
     }
   }
   if (a.priority == 'tenth' || a.ready)
-    return weight;
-  return Math.min(weight, profit);
+    return {
+      weight: weight, future: false
+    }
+  return {
+    weight: Math.min(weight, profit), future: a.future
+  }
 }
 
 let countrank = (a, level) => {
   let rank = parseInt(a.weight);
   let target = a.name;
+  let future = a.future;
   if (!level) level = 0;
   if (a.opns && a.opns.length > 0) {
     for (let t = 0; t < a.opns.length; t++) {
       let opn = note_by_name(a.opns[t])
-      if (level < 7) {
+      if (level < 12) {
         let r = countrank(opn, level + 1);
-        if (r.rank > rank && r.rank > 0) {
+        console.log('future', r.future);
+        if (r.rank > rank && r.rank > 0 && (r.future == false)) {
           target = r.target;
           rank = r.rank;
         }
       }
     }
   }
-  return { rank, target };
+  return { rank, target, future };
 }
