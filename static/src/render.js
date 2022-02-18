@@ -126,7 +126,7 @@ let render = () => {
     //   texthtml += " cantdo"
     // }
     texthtml += " " + a.priority;
-    texthtml += " '></td><td>"
+    texthtml += " '></td><td class='tdtask'>"
     texthtml += "<div class='task";
     if (a.selected) {
       isSelection = true;
