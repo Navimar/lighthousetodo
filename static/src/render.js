@@ -145,12 +145,12 @@ let render = () => {
     texthtml += rendertags(a);
 
     if (a.ready)
-      texthtml += ("<button class='tag first text time'>ГОТОВ</button>&nbsp;");
+      texthtml += ("<button class='tag first text time'>ГОТОВ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
     if (a.blocked)
-      texthtml += ("<button class='tag first text time'>ВЕТВЬ</button>&nbsp;");
+      texthtml += ("<button class='tag first text time'>ВЕТВЬ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
     if (!a.ready && (a.priority == 'first' || a.priority == 'second'))
       if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
-        texthtml += ("<div class='tag first text time past'>ДАВНО</div>&nbsp;");
+        texthtml += ("<div class='tag first text time past'>ДАВНО</div>&nbsp;&nbsp;&nbsp;&nbsp;");
     if (moment() <= moment(a.date + "T" + a.time)) {
       if (a.time != lasttime) {
         texthtml += "<div class='tag first text time'>";
@@ -159,7 +159,7 @@ let render = () => {
         lasttime = a.time
       }
       else
-        texthtml += ("<button class='tag first text time'>--:--</button>&nbsp;");
+        texthtml += ("<button class='tag first text time'>--:--</button>&nbsp;&nbsp;&nbsp;&nbsp;");
     }
     texthtml += "<button class='text";
     texthtml += "' ";

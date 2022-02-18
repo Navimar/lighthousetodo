@@ -1,0 +1,13 @@
+body {
+    background-color: white;
+    color: black;
+}
+
+#tasks {
+    background: none;
+    color: #000;
+}
+
+.text {
+    color: #000;
+}
