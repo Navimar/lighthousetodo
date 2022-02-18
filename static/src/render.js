@@ -155,7 +155,7 @@ let render = () => {
       if (a.time != lasttime) {
         texthtml += "<div class='tag first text time'>";
         texthtml += a.time;
-        texthtml += "</div>&nbsp;";
+        texthtml += "</div>&nbsp;&nbsp;&nbsp;&nbsp;";
         lasttime = a.time
       }
       else
