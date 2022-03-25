@@ -21,7 +21,7 @@ let onOpn = (txt) => {
 
 let onNew = () => {
     save();
-    newwish('новая запись', false, false, false, 'third', 0,);
+    newwish('новая запись', false, false, false, 'forth', 0,);
     select('новая запись');
     send();
     render();

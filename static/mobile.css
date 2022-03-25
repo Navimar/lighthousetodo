@@ -155,7 +155,7 @@ input {
 }
 
 .first {
-  background-color: #EE4266;
+  background-color: #DDD;
 }
 
 option.first {
@@ -165,7 +165,8 @@ option.first {
 }
 
 .second {
-  background: #F6AE2D;
+  background-color: #EE4266;
+
 }
 
 option.second {
@@ -175,7 +176,8 @@ option.second {
 }
 
 .third {
-  background: #5FAD41;
+  background: #F6AE2D;
+
 }
 
 option.third {
@@ -185,7 +187,8 @@ option.third {
 }
 
 .forth {
-  background: #1B9AAA;
+  background: #5FAD41;
+
 }
 
 option.forth {
@@ -195,6 +198,8 @@ option.forth {
 }
 
 .fifth {
+  background: #1B9AAA;
+
   background: #FFC43D;
 }
 
@@ -506,22 +511,24 @@ label.readylabel {
 }
 
 .bfirst {
-  border-bottom-color: #EE4266;
+  border-bottom-color: #DDD;
 }
 
 .bsecond {
-  border-bottom-color: #F6AE2D;
+  border-bottom-color: #EE4266;
 }
 
 .bthird {
-  border-bottom-color: #5FAD41;
+  border-bottom-color: #F6AE2D;
 }
 
 .bforth {
-  border-bottom-color: #1B9AAA;
+  border-bottom-color: #5FAD41;
 }
 
 .bfifth {
+  border-bottom-color: #1B9AAA;
+
   border-bottom-color: #FFC43D;
 }
 
