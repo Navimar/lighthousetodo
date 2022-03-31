@@ -385,6 +385,10 @@ button {
     display: inline-block;
 }
 
+.autocomplete div, .autocomplete div strong {
+    color: var(--color-contrast);
+}
+
 .autocomplete-items {
     position: absolute;
     border: 1px solid #d4d4d4;
@@ -399,7 +403,6 @@ button {
 
 .autocomplete-items div {
     padding: 10px;
-    color: black;
     cursor: pointer;
     background-color: #fff;
     border-bottom: 1px solid #d4d4d4;
@@ -521,11 +524,12 @@ label.readylabel {
 }
 
 .calendarblock {
+    border: 2px solid var(--background-table);
+    margin: -2x;
     /* color: whitesmoke; */
     background-color: transparent;
     border-radius: 0;
     width: 100%;
-    border: none;
 }
 
 .rank {
