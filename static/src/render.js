@@ -101,14 +101,14 @@ let render = () => {
       texthtml += "<div class=\"bninth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rninth\" value=\"ninth\"><label for=\"rninth\">Заметки<\/label><\/div>";
       // texthtml += "<div class=\"btenth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rtenth\" value=\"tenth\"><label for=\"rtenth\">Корзина<\/label><\/div>";
       texthtml += "    </div>";
-      texthtml += "<label class='mainbutton timebutton readylabel' >вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
+      texthtml += "<label class='mainbutton readylabel' >вкл/выкл <input  class='checkbox onoff' type=\"checkbox\"></label>";
 
       // texthtml += "<button class='mainbutton timebutton task newtask'>" +
       //   "Новая запись" +
       //   "</button>";
 
-      texthtml += "<label class='mainbutton timebutton delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
-      texthtml += "<button class='mainbutton timebutton task savetask'>" +
+      texthtml += "<label class='mainbutton  delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
+      texthtml += "<button class='mainbutton  task savetask'>" +
         "Сохранить" +
         "</button>";
       texthtml += "<\/div>";

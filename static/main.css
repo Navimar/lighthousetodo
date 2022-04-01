@@ -452,6 +452,12 @@ label.mainbutton.timebutton {
 }
 
 .mainbutton {
+    border: 4px solid var(--background-table);
+    text-align: center;
+    color: var(--color-contrast);
+    border-radius: 0;
+    display: inline-block;
+    vertical-align: bottom;
     background: var(--background-button-bright);
     margin: 2px;
     width: auto;
