@@ -4,11 +4,8 @@ data.timestamp = 0;
 
 window.onload = function () {
   inputSocket();
-
-  if (!data) {
+  if (!data || !data.tasks) {
     $('#status').addClass("red").html('NO DATA!!!');
-  } else {
-    render();
   }
 };
 
@@ -19,10 +16,11 @@ function inputSocket() {
     $('#status').removeClass("red").html('online');
   });
   socket.on('disconnect', function () {
-    // alert('DISCONNECT!!!');
+    console.log('DISCONNECT!!!');
     $('#status').addClass("red").html('offline');
   });
   socket.on('update', function (msg) {
+    console.log("update");
     if (data.timestamp) console.log('timestamp', moment(data.timestamp).format(), moment(msg.timestamp).format());
     if (!data.timestamp || moment(data.timestamp) < moment(msg.timestamp)) {
       data = msg;
@@ -72,6 +70,7 @@ let newwish = (name, selected, tags, opns, priority, profit, note) => {
     selected,
     priority,
     profit,
+    rank: profit,
     ready: false,
     time: clock().h + ":" + clock().m,
     date: clock().year + "-" + clock().month + "-" + clock().d,

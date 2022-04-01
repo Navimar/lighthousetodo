@@ -21,15 +21,17 @@ let render = () => {
   tasks.html("");
   let names = [];
 
+  // for (let a of data.tasks) {
+  // }
+  // for (let a of data.tasks) {
+
+  // }
   for (let a of data.tasks) {
     a.weight = countweight(a).weight;
-  }
-  for (let a of data.tasks) {
     let r = countrank(a);
     a.rank = r.rank;
     a.target = r.target;
-  }
-  for (let a of data.tasks) {
+
     planeddays.add(moment(a.date).format('DD-MM-YYYY'));
     if (!a.ppd)
       a.ppd = 0;
@@ -258,7 +260,7 @@ function autocomplete(inp, arr) {
     /*for each item in the array...*/
     let cn = 0;
     i = 0;
-    while (i < arr.length && cn < 10) {
+    while (i < arr.length && cn < 30) {
       i++;
       /*check if the item starts with the same letters as the text field value:*/
       let index = arr[i].toLowerCase().indexOf(val.toLowerCase());
@@ -480,7 +482,6 @@ let renderopns = (a, level) => {
 
 let countweight = (a, level) => {
   a.future = moment(a.date + ' ' + a.time).diff(moment(), 'minutes') <= 5 ? 0 : 1;
-  console.log('check', a.name, a.future);
   let profit = parseInt(a.profit) + moment().diff(moment(a.date), 'days') * a.ppd
   let weight = profit;
   if (a.priority == 'tenth' || a.ready)
@@ -516,7 +517,6 @@ let countrank = (a, level) => {
       let opn = note_by_name(a.opns[t])
       if (level < 12) {
         let r = countrank(opn, level + 1);
-        console.log('future', r.future);
         if (r.rank > rank && r.rank > 0 && (r.future == false)) {
           target = r.target;
           rank = r.rank;

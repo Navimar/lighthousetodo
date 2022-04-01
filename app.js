@@ -3,7 +3,6 @@ let app = express();
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
 let run = require('./server/run.js');
-const os = require('os');
 const config = require('./config.js');
 
 app.use(express.static(__dirname + '/static/'));

@@ -9,7 +9,7 @@
         --color-contrast: black;
         --old: #d57575;
         --first: #555;
-        --third: #EF7B45;
+        --third: #F6AE2D;
         --ninth: #1B9AAA;
     }
 }
@@ -26,7 +26,7 @@
         --color-contrast: black;
         --old: #995151;
         --first: #DDD;
-        --third: #EF7B45;
+        --third: #F6AE2D;
         --ninth: #1B9AAA;
     }
 }
@@ -210,8 +210,7 @@ option.second {
 }
 
 .third {
-    background: #F6AE2D;
-
+    background: var(--third);
 }
 
 option.third {
@@ -390,8 +389,10 @@ button {
 }
 
 .autocomplete-items {
+    max-height: 31.4vh;
+    overflow: scroll;
     position: absolute;
-    border: 1px solid #d4d4d4;
+    border: 1px solid var(--background-area);
     border-bottom: none;
     border-top: none;
     z-index: 99;
@@ -516,7 +517,7 @@ label.readylabel {
 }
 
 .calendar3 button.calendarblock.today {
-    background: lightcoral;
+    background: var(--third);
 }
 
 .calendar3 button.calendarblock.highlightedday {
