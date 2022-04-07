@@ -1,18 +1,32 @@
 const socket = io();
 let data = {};
+let user;
 data.timestamp = 0;
+
+
+function onTelegramAuth(data) {
+  user = data;
+  console.log('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
+  $('.search').css("display", "block");
+  $('#newtaskbutton').css("display", "block");
+  $('#scrollTopButton').css("display", "block");
+
+  update();
+}
 
 window.onload = function () {
   inputSocket();
-  if (!data || !data.tasks) {
-    $('#status').addClass("red").html('NO DATA!!!');
-  }
+  // if (!data || !data.tasks) {
+  //   $('#status').addClass("red").html('NO DATA!!!');
+  // }
+  // update();
+
+  render();
 };
 
 function inputSocket() {
   socket.on('connect', function () {
     console.log('connected');
-    update();
     $('#status').removeClass("red").html('online');
   });
   socket.on('disconnect', function () {
@@ -20,7 +34,7 @@ function inputSocket() {
     $('#status').addClass("red").html('offline');
   });
   socket.on('update', function (msg) {
-    console.log("update");
+    console.log("update", msg);
     if (data.timestamp) console.log('timestamp', moment(data.timestamp).format(), moment(msg.timestamp).format());
     if (!data.timestamp || moment(data.timestamp) < moment(msg.timestamp)) {
       data = msg;
@@ -30,14 +44,15 @@ function inputSocket() {
     } else
       console.log('local data is younger');
   });
-  // socket.on('err', (val) => {
-  //     alert(val);
-  // });
+  socket.on('err', (val) => {
+    alert(val);
+  });
 }
 
 let update = () => {
-  socket.emit('load', findGetParameter("id"));
+  socket.emit('load', user);
 }
+
 let newwish = (name, selected, tags, opns, priority, profit, note) => {
   let ok = true;
   while (ok) {
@@ -300,8 +315,7 @@ let del = (text) => {
 };
 
 let send = () => {
-  let id = findGetParameter("id");
-  data.id = id;
+  data.user = user;
   data.timestamp = moment();
   socket.emit('save', data);
 }

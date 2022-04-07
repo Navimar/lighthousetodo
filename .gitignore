@@ -9,3 +9,6 @@ data/
 config.js
 *.sh
 *.icloud
+d111ocker-coe.yaml
+.gitignore
+Dockerfile

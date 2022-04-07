@@ -652,3 +652,12 @@ label.readylabel {
     font-size: 10vh;
     font-family: monospace;
 }
+
+#telegramlogin {
+    text-align: center;
+    padding: 70px;
+}
+
+.search, #newtaskbutton, #scrollTopButton {
+    display: none;
+}

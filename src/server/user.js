@@ -1,5 +1,22 @@
+const crypto = require('crypto');
+const config = require('../../config');
+
+
 let users = [];
 module.exports = {
+    check: ({ hash, ...userData }) => {
+        const secretKey = crypto.createHash('sha256')
+            .update(config.token)
+            .digest();
+        const dataCheckString = Object.keys(userData)
+            .sort()
+            .map(key => (`${key}=${userData[key]}`))
+            .join('\n');
+        const hmac = crypto.createHmac('sha256', secretKey)
+            .update(dataCheckString)
+            .digest('hex');
+        return hmac === hash;
+    },
     add: (id, socket) => {
         let ok = true;
         users.forEach((e) => {

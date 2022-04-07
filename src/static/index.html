@@ -33,19 +33,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
-
   <div class="main">
     <div class="search">
       <input placeholder="Поиск..." type="text" class="t1 input" name="t1" value="" />
-      <!-- <button class="timebutton" id="clearsearch">Х</button> -->
     </div>
     <div id="tasks" class="list"></div>
     <button class='timebutton' id="scrollTopButton">Наверх</button>
     <button class='mainbutton timebutton task newtask' id="newtaskbutton"></button>
     <div id="status">offline</div>
+    <script src="config.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="render.js"></script>
     <script src="exe.js"></script>
@@ -56,8 +56,15 @@
 <footer>
   <br>
   <p>
-    <center class="bottom">«‎Маяк»‎ - инструмент управления делами Игоря Ваулина - v.0.0.28</center>
-  </p><br>
+    <center class="bottom">«‎Маяк»‎ –— инструмент управления делами Игоря Ваулина –— v.0.1.0
+      <br>
+      <br>
+      Подробная информация в нашем <a target="_blank" href="https://t.me/lighthousetodo">телеграм чате</a>
+    </center>
+    </center>
+    <br>
+    <center class="bottom">
+  </p>
 </footer>
 
 </html>
