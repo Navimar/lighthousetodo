@@ -28,10 +28,13 @@ function inputSocket() {
   socket.on('connect', function () {
     console.log('connected');
     $('#status').removeClass("red").html('online');
+    $('#status').css("display", "none");
+
   });
   socket.on('disconnect', function () {
     console.log('DISCONNECT!!!');
     $('#status').addClass("red").html('offline');
+    $('#status').css("display", "block");
   });
   socket.on('update', function (msg) {
     console.log("update", msg);
