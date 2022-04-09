@@ -83,14 +83,14 @@ let render = () => {
         texthtml += "<div class='header'>Дата и время</div>"
         texthtml += "<div class='timeinputs'>";
         // texthtml += "<span class='header'>Дата</span>"
-        texthtml += "<div class='fiveblock'>"
+        // texthtml += "<div class='fiveblock'>"
         texthtml += "<input type=\"date\" class='dateinp' id=\"date\" name=\"trip-start\">";
-        texthtml += "</div>";
+        // texthtml += "</div>";
         // texthtml += "<br>"
         // texthtml += "<span class='header'>Время</span>"
-        texthtml += "<div  class='fiveblock'>"
+        // texthtml += "<div  class='fiveblock'>"
         texthtml += "<input type=\"time\"  class='dateinp' id=\"time\" name=\"time\">"
-        texthtml += " </div>";
+        // texthtml += " </div>";
         texthtml += "</div>";
         texthtml += "<div class='header'>Быстрый перенос</div>"
 
@@ -103,7 +103,7 @@ let render = () => {
         texthtml += "<button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
         texthtml += "<button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
         texthtml += "<button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 мин<\/button>";
+        texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 м<\/button>";
         texthtml += "<button class=\"timebutton\" id=\"plusweek\">+1 нед<\/button>";
 
 
