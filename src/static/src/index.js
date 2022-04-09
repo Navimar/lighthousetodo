@@ -16,12 +16,17 @@ function onTelegramAuth(data) {
 
 window.onload = function () {
   inputSocket();
-  // if (!data || !data.tasks) {
-  //   $('#status').addClass("red").html('NO DATA!!!');
+  render();
+
+  // user = {
+  //   first_name: "ivan",
+  //   last_name: "ivanov",
+  //   id: 10000,
+  //   username: 'asdasd',
+  //   hash: '1',
+  //   timestamp: '1'
   // }
   // update();
-
-  render();
 };
 
 function inputSocket() {

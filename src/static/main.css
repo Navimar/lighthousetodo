@@ -48,6 +48,11 @@ body {
     background: var(--background-main);
 }
 
+div {
+    color: var(--color-main);
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
 table {
     width: 100%;
 }
@@ -109,10 +114,6 @@ option:checked {
 
 }
 
-
-
-.opns {}
-
 .opn {
     font-size: 10.8pt;
     text-align: left;
@@ -139,19 +140,11 @@ input[type="checkbox"] {
 }
 
 .editor {
-    text-align: right;
+    text-align: center;
     background-color: var(--background-table);
-    padding-top: 10px;
+    padding-top: 1px;
 }
 
-.input {
-    font-family: Arial, Helvetica, sans-serif;
-    width: 100%;
-    border: none;
-    font-size: 11pt;
-    background: var(--background-area);
-    /* color: whitesmoke; */
-}
 
 input {
     font-family: 'IBM Plex Sans', sans-serif;
@@ -288,7 +281,7 @@ button {
 }
 
 .timebutton {
-    border: 4px solid var(--background-table);
+    border: 4px solid var(--background-area);
     text-align: center;
     width: 20%;
     color: var(--color-contrast);
@@ -297,18 +290,18 @@ button {
     border-radius: 0;
     display: inline-block;
     vertical-align: bottom;
+    /* border-left: 4px solid var(--background-button-bright); */
 }
 
 .priorbutton {
     display: inline-block;
+    border: 4px solid var(--background-table);
     text-align: center;
-    width: 19%;
     border: none;
     color: var(--color-contrast);
     background-color: var(--background-button);
-    padding: 2px 0px 2px 0px;
+    padding: 4px;
     border-radius: 0;
-    margin: 8px 0px 0px 0px;
     vertical-align: bottom;
 }
 
@@ -331,10 +324,10 @@ button {
 }
 
 .bottom {
-    padding-top: 70px;
+    padding-top: 90px;
     padding-left: 15px;
     padding-right: 15px;
-    padding-bottom: 70px;
+    padding-bottom: 90px;
     font-size: 16px;
     font-style: italic;
     font-family: 'Roboto Mono', monospace;
@@ -438,33 +431,29 @@ label.mainbutton.timebutton {
     display: inline-block;
 }
 
-.timebuttons:after {
-    content: '';
-    display: inline-block;
-    width: 100%;
-}
-
-.timebuttons {
-    text-align: center;
-    margin-bottom: -12pt;
-}
 
 .dateinp {
-    height: 20px;
-    width: 25%;
-    margin: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 2px 0 2px 5px;
+    border: 4px solid var(--background-area);
+    /* border-left: 4px solid var(--background-area); */
 }
 
 .mainbutton {
+    text-align: left;
+    box-sizing: border-box;
+    margin: 0;
     border: 4px solid var(--background-table);
+    border-left: 4px solid var(--background-area);
     text-align: center;
     color: var(--color-contrast);
     border-radius: 0;
     display: inline-block;
     vertical-align: bottom;
-    background: var(--background-button-bright);
-    margin: 2px;
-    width: auto;
+    background: var(--background-button);
+    margin-right: 5px;
+    width: 100%;
     padding: 4px;
 }
 
@@ -482,6 +471,9 @@ input+label {
     color: var(--color-contrast);
     padding-top: 2px;
     padding-bottom: 4px;
+    margin: -4px;
+    border: 4px solid var(--background-table);
+    border-left: 4px solid var(--background-area);
 }
 
 input[type=radio] {
@@ -560,49 +552,59 @@ label.readylabel {
 }
 
 .bfirst>input+label {
-    margin: -4px;
-    border: 4px solid var(--background-table);
-    border-bottom-color: var(--first);
+
+    border-left: 4px solid var(--background-area);
+    border-top-color: var(--first);
+    border-bottom-color: var(--background-area);
 }
 
 .bfirst>input[type=radio]:checked+label {
-    border-top-color: var(--first);
-    border-bottom-color: var(--background-table);
+    border-bottom-color: var(--first);
+    border-top-color: var(--background-area);
 }
 
 
 .bsecond>input+label {
-    margin: -4px;
-    border: 4px solid var(--background-table);
-    border-bottom-color: #EE4266;
+    border-left: 4px solid var(--background-area);
+
+    border-top-color: #EE4266;
+    border-bottom-color: var(--background-area);
 }
 
 .bsecond>input[type=radio]:checked+label {
-    border-top-color: #EE4266;
-    border-bottom-color: var(--background-table);
+
+
+    border-bottom-color: #EE4266;
+    border-top-color: var(--background-area);
 }
 
 
 .bthird>input+label {
     margin: -4px;
-    border: 4px solid var(--background-table);
-    border-bottom-color: #F6AE2D;
+    border: 4px solid var(--background-area);
+    border-top-color: #F6AE2D;
+    border-bottom-color: var(--background-area);
 }
 
 .bthird>input[type=radio]:checked+label {
-    border-top-color: #F6AE2D;
-    border-bottom-color: var(--background-table);
+
+
+    border-bottom-color: #F6AE2D;
+    border-top-color: var(--background-area);
 }
 
 .bforth>input+label {
     margin: -4px;
-    border: 4px solid var(--background-table);
-    border-bottom-color: #5FAD41;
+    border: 4px solid var(--background-area);
+    border-top-color: #5FAD41;
+    border-bottom-color: var(--background-area);
 }
 
 .bforth>input[type=radio]:checked+label {
-    border-top-color: #5FAD41;
-    border-bottom-color: var(--background-table);
+
+
+    border-bottom-color: #5FAD41;
+    border-top-color: var(--background-area);
 }
 
 .bfifth {
@@ -613,13 +615,16 @@ label.readylabel {
 
 .bninth>input+label {
     margin: -4px;
-    border: 4px solid var(--background-table);
-    border-bottom-color: #517AA4;
+    border: 4px solid var(--background-area);
+    border-top-color: #517AA4;
+    border-bottom-color: var(--background-area);
 }
 
 .bninth>input[type=radio]:checked+label {
-    border-top-color: #517AA4;
-    border-bottom-color: var(--background-table);
+
+
+    border-bottom-color: #517AA4;
+    border-top-color: var(--background-area);
 }
 
 .btenth {
@@ -631,7 +636,8 @@ label.readylabel {
 }
 
 .profitinp {
-    width: 15%;
+    box-sizing: border-box;
+    width: 10%;
 }
 
 .tdtask {
@@ -664,4 +670,59 @@ label.readylabel {
 
 .search, #newtaskbutton, #scrollTopButton {
     display: none;
+}
+
+.input {
+    vertical-align: top;
+    box-sizing: border-box;
+    border-style: inset;
+    padding-left: 10px;
+    padding-right: 2px;
+    border-top: 5px solid var(--background-area);
+    border-bottom: 10px solid var(--background-area);
+    border-left: none;
+    border-right: none;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+    font-size: 11pt;
+    background: var(--background-area);
+    margin: 0;
+    /* color: whitesmoke; */
+}
+
+.header {
+    font-family: 'Roboto Mono';
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 10px;
+    text-align: left;
+    font-size: 12pt;
+    color: gray;
+    /* display: none; */
+}
+
+.textareacontainer {
+    background: var(--background-area);
+    text-align: left;
+    margin: 9px;
+}
+
+.fiveblock {
+    width: 20%;
+    display: inline-block;
+}
+
+.mainbuttonblock {
+    width: 33.3%;
+    display: inline-block;
+}
+
+.selected>tbody>tr>td.taskmarker {
+    border-color: var(--background-table)
+}
+
+.opnslist {
+    max-height: 20ex;
+    overflow: auto;
 }
