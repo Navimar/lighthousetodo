@@ -262,9 +262,6 @@ option.fifth {
     background: #333;
 }
 
-.task {
-    margin-left: 7px;
-}
 
 .selected {
     background: var(--background-table);
@@ -649,10 +646,9 @@ label.readylabel {
 }
 
 .tdtask {
-
-    padding-left: 10px;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-left: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 
 #newtaskbutton {
@@ -743,6 +739,7 @@ label.readylabel {
 }
 
 .t1 {
+    border-radius: 0;
     color: var(--color-main);
     border: none;
     padding: 5px;

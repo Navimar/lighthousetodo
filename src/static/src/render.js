@@ -46,6 +46,7 @@ let render = () => {
     tasks.append(Calendar3(moment()));
 
     for (let a of data.tasks) {
+      let vrank = a.rank ? '\xa0[' + a.rank + ']' : '';
       let nondisplay = false;
       if (searchquerry.toLowerCase !== '') {
         nondisplay = true;
@@ -160,13 +161,8 @@ let render = () => {
         texthtml += " nondisplay"
       if (a.selected)
         texthtml += "selected";
-      texthtml += "'><tbody><tr><td class=' taskmarker"
-      // if (a.blocked) {
-      //   texthtml += " cantdo";
-      // }
-      // if (!isReady(a.date, a.time)) {
-      //   texthtml += " cantdo"
-      // }
+      texthtml += "'><tbody><tr>"
+      texthtml += " <td class=' taskmarker"
       texthtml += " " + a.priority;
       texthtml += " '></td><td class='tdtask'>"
       texthtml += "<div class='task";
@@ -183,7 +179,6 @@ let render = () => {
         ppd = a.ppd;
       }
       texthtml += "'>";
-
       texthtml += rendertags(a);
 
       if (a.ready)
@@ -192,9 +187,9 @@ let render = () => {
         texthtml += ("<button class='tag first text time'>ВЕТВЬ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
       if (a.priority == 'first')
         texthtml += ("<div class='tag first text time'>ВАЖНО</div>&nbsp;&nbsp;&nbsp;&nbsp;");
-      if (!a.ready && (a.priority == 'second' || a.priority == 'third'))
-        if (a.priority != 'first' && moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
-          texthtml += ("<div class='tag first text time past'>ДАВНО</div>&nbsp;&nbsp;&nbsp;&nbsp;");
+      // if (!a.ready && (a.priority == 'second' || a.priority == 'third'))
+      //   if (a.priority != 'first' && moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
+      //     texthtml += ("<div class='tag first text time past'>ДАВНО</div>&nbsp;&nbsp;");
       if (moment() <= moment(a.date + "T" + a.time)) {
         if (a.time != lasttime) {
           texthtml += "<div class='tag first text time'>";
@@ -215,19 +210,29 @@ let render = () => {
 
 
       if (a.opns && a.opns.length > 0) {
-        if (a.ready)
-          texthtml += "<span class='ready bul tag'>⇒</span>";
-        else
+        if (!a.selected && a.target != a.name) {
           texthtml += "<span class=' bul tag'>⇒</span>";
-        if (!a.selected && a.target != a.name)
           texthtml += "<span class='opn target'>" + a.target + "</span>";
+          texthtml += "<span class=' rank'>";
+          texthtml += vrank;
+          texthtml += "</span>";
+        }
+        else {
+          texthtml += "\xa0<span class=' rank'>";
+          texthtml += vrank;
+          texthtml += "</span>";
+          texthtml += "<span class=' bul tag'>⇒</span>";
+        }
       }
-      else
-        if (a.ready)
+      else {
+        texthtml += "\xa0<span class=' rank'>";
+        texthtml += vrank;
+        texthtml += "</span>";
+        if (a.ready) {
           texthtml += "<span class='ready bul'>•</span>";
-      texthtml += "<span class='rank'> (";
-      texthtml += a.rank;
-      texthtml += ")</span>";
+        }
+      }
+
       if (a.selected) {
         texthtml += renderopns(a);
       }
@@ -509,9 +514,9 @@ let renderopns = (a, level) => {
       texthtml += "'>";
       texthtml += openka.name;
       texthtml += "</button>";
-      texthtml += "<span class='rank'> (";
+      texthtml += "<span class='rank'> [";
       texthtml += openka.rank;
-      texthtml += ")</span>";
+      texthtml += "]</span>";
       if (level == 5)
         texthtml += "<span class='arr'>⇒...</span>";
       if (level < 5)
