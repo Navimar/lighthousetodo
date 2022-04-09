@@ -31,7 +31,6 @@
     --second: #EE4266;
     --third: #F6AE2D;
     --ninth: #1B9AAA;
-    --font-mono: 'Anonymous Pro';
 }
 
 * {
@@ -69,7 +68,8 @@ table {
     position: fixed;
     left: 50%;
     top: 0;
-    width: 40em;
+    max-width: 40em;
+    width: 100%;
     transform: translateX(-50%);
 }
 
@@ -283,6 +283,8 @@ button {
 }
 
 .timebutton {
+    max-height: 2em;
+    overflow: hidden;
     border: 4px solid var(--background-area);
     text-align: center;
     width: 20%;
@@ -331,8 +333,7 @@ button {
     padding-right: 15px;
     padding-bottom: 90px;
     font-size: 16px;
-    font-style: italic;
-    font-family: var(--font-mono), monospace;
+    font-family: 'Noto Sans Mono', monospace;
     color: gray;
 }
 
@@ -471,6 +472,13 @@ input+label {
     margin: -4px;
     border: 4px solid var(--background-table);
     border-left: 4px solid var(--background-area);
+
+}
+
+
+.priorbutton {
+    overflow: hidden;
+
 }
 
 input[type=radio] {
@@ -503,7 +511,7 @@ label.readylabel {
 }
 
 .calendar3 tbody td {
-    font-family: var(--font-mono), monospace;
+    font-family: 'Noto Sans Mono', monospace;
     color: var(--ninth);
 }
 
@@ -531,7 +539,7 @@ label.readylabel {
     background-color: transparent;
     border-radius: 0;
     width: 100%;
-    font-family: var(--font-mono), monospace;
+    font-family: 'Noto Sans Mono', monospace;
 }
 
 .rank {
@@ -546,7 +554,7 @@ label.readylabel {
     color: white;
     color: gray;
     font-size: 11.4pt;
-    font-family: var(--font-mono), monospace;
+    font-family: 'Noto Sans Mono', monospace;
     text-align: left;
 }
 
@@ -661,7 +669,7 @@ label.readylabel {
     bottom: 15px;
     right: 15px;
     font-size: 10vh;
-    font-family: var(--font-mono), monospace;
+    font-family: 'Noto Sans Mono', monospace;
 }
 
 #telegramlogin {
@@ -693,7 +701,7 @@ label.readylabel {
 }
 
 .header {
-    font-family: var(--font-mono), monospace;
+    font-family: 'Noto Sans Mono', monospace;
     padding-left: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -735,6 +743,7 @@ label.readylabel {
 }
 
 .t1 {
+    color: var(--color-main);
     border: none;
     padding: 5px;
 }
