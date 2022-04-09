@@ -161,7 +161,6 @@ input {
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 12pt;
     border: none;
-    box-shadow: none;
     color: var(--color-contrast);
     /* background: white; */
 }
@@ -689,6 +688,7 @@ label.readylabel {
     font-size: 11pt;
     background: var(--background-area);
     margin: 0;
+    box-shadow: none;
     /* color: whitesmoke; */
 }
 
