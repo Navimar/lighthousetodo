@@ -403,7 +403,7 @@ function autocomplete(inp, arr) {
 
 function Calendar3(date) {
   let calendar = '';
-  calendar += ("<div id=" + date.format('DD-MM-YYYY') + " class='date'> " + date.format('dddd DD MMMM') + "</div>");
+  calendar += ("<div id=" + date.format('DD-MM-YYYY') + " class='header date'> " + date.format('dddd DD MMMM') + "</div>");
   calendar += '<table class="calendar3" id="calendar-' + date.format('DD-MM-YYYY') + '">'
   calendar += '<tr class="days_of_week">'
   calendar += '<td>Пн'

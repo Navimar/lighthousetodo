@@ -26,6 +26,9 @@ window.onload = function () {
   //   hash: '1',
   //   timestamp: '1'
   // }
+  // $('.search').css("display", "block");
+  // $('#newtaskbutton').css("display", "block");
+  // $('#scrollTopButton').css("display", "block");
   // update();
 };
 

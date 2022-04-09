@@ -9,8 +9,6 @@
         --color-contrast: black;
         --old: #d57575;
         --first: #555;
-        --third: #F6AE2D;
-        --ninth: #1B9AAA;
     }
 }
 
@@ -26,9 +24,14 @@
         --color-contrast: black;
         --old: #995151;
         --first: #DDD;
-        --third: #F6AE2D;
-        --ninth: #1B9AAA;
     }
+}
+
+:root {
+    --second: #EE4266;
+    --third: #F6AE2D;
+    --ninth: #1B9AAA;
+    --font-mono: 'Anonymous Pro';
 }
 
 * {
@@ -58,9 +61,17 @@ table {
 }
 
 #tasks {
-    margin-top: 20px;
+    margin-top: 27px;
 }
 
+.search {
+    font-size: 13.5pt;
+    position: fixed;
+    left: 50%;
+    top: 0;
+    width: 40em;
+    transform: translateX(-50%);
+}
 
 
 td.taskmarker {
@@ -70,12 +81,12 @@ td.taskmarker {
 }
 
 .nondisplay {
-    background: red;
     display: none;
 }
 
 .list {
-    max-width: 80ex;
+    font-size: 13.5pt;
+    max-width: 40em;
     margin: auto;
     text-align: left;
 }
@@ -172,14 +183,6 @@ input {
     ;
 }
 
-.date {
-    padding: 1px;
-    background: var(--background-table);
-    text-align: center;
-    font-size: 12pt;
-    color: gray;
-    display: block;
-}
 
 .first {
     background-color: var(--first);
@@ -192,7 +195,7 @@ option.first {
 }
 
 .second {
-    background-color: #EE4266;
+    background-color: var(--second);
 
 }
 
@@ -330,7 +333,12 @@ button {
     padding-bottom: 90px;
     font-size: 16px;
     font-style: italic;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-mono), monospace;
+    color: gray;
+}
+
+.bottom a {
+    color: gray;
 }
 
 .text {
@@ -363,16 +371,6 @@ button {
     border-radius: 0;
     display: inline;
 }
-
-.t1 {
-    font-size: 13.3pt;
-    transform: translateX(-50%);
-    position: fixed;
-    top: 0;
-    max-width: 72.2ex;
-    font-family: 'IBM Plex Sans', sans-serif;
-}
-
 
 .autocomplete {
     width: 100%;
@@ -506,6 +504,7 @@ label.readylabel {
 }
 
 .calendar3 tbody td {
+    font-family: var(--font-mono), monospace;
     color: var(--ninth);
 }
 
@@ -547,7 +546,7 @@ label.readylabel {
     color: white;
     color: gray;
     font-size: 11.4pt;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-mono), monospace;
     text-align: left;
 }
 
@@ -648,6 +647,7 @@ label.readylabel {
 }
 
 #newtaskbutton {
+    border: none;
     background: url("plus.png") center;
     background-color: var(--background-button-bright);
     background-size: 100% auto;
@@ -660,7 +660,7 @@ label.readylabel {
     bottom: 15px;
     right: 15px;
     font-size: 10vh;
-    font-family: 'Roboto Mono', monospace;
+    font-family: var(--font-mono), monospace;
 }
 
 #telegramlogin {
@@ -691,7 +691,7 @@ label.readylabel {
 }
 
 .header {
-    font-family: 'Roboto Mono';
+    font-family: var(--font-mono), monospace;
     padding-left: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -700,6 +700,11 @@ label.readylabel {
     font-size: 12pt;
     color: gray;
     /* display: none; */
+}
+
+.date {
+    background: var(--background-table);
+    text-align: center;
 }
 
 .textareacontainer {
@@ -725,4 +730,9 @@ label.readylabel {
 .opnslist {
     max-height: 20ex;
     overflow: auto;
+}
+
+.t1 {
+    border: none;
+    padding: 5px;
 }
