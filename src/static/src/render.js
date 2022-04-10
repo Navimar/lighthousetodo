@@ -39,7 +39,8 @@ let render = () => {
       a.rank = r.rank;
       a.target = r.target;
 
-      planeddays.add(moment(a.date).format('DD-MM-YYYY'));
+      if (moment() <= moment(a.date))
+        planeddays.add(moment(a.date).format('DD-MM-YYYY'));
       if (!a.ppd)
         a.ppd = 0;
     }
@@ -70,47 +71,21 @@ let render = () => {
       if (a.selected) {
         texthtml += "<div class=\"editor\">";
 
+        //ранг
         texthtml += "<div class='textareacontainer'>";
         texthtml += "<div class='timeinputs'>";
-        texthtml += "<div class='header'>Приоритет</div>"
+        texthtml += "<div class='header'>Ценность</div>"
         texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"profit\" name=\"profitinp\">";
         texthtml += "<span class='header'>+</span>"
         texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"ppd\" name=\"ppdinp\">";
         texthtml += "<span class='header'>/в день</span>"
         texthtml += "</div>"
-        texthtml += "</div>"
-
-        texthtml += "<div class='textareacontainer'>"
-        texthtml += "<div class='header'>Дата и время</div>"
-        texthtml += "<div class='timeinputs'>";
-        // texthtml += "<span class='header'>Дата</span>"
-        // texthtml += "<div class='fiveblock'>"
-        texthtml += "<input type=\"date\" class='dateinp' id=\"date\" name=\"trip-start\">";
-        // texthtml += "</div>";
-        // texthtml += "<br>"
-        // texthtml += "<span class='header'>Время</span>"
-        // texthtml += "<div  class='fiveblock'>"
-        texthtml += "<input type=\"time\"  class='dateinp' id=\"time\" name=\"time\">"
-        // texthtml += " </div>";
-        texthtml += "</div>";
-        texthtml += "<div class='header'>Быстрый перенос</div>"
-
-        texthtml += "<button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"morning\">9:00<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"evening\">18:00<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"midnight\">00:00<\/button>";
-
-        texthtml += "<button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 м<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"plusweek\">+1 нед<\/button>";
+        // texthtml += "</div>"
 
 
-        texthtml += "</div>";
-        texthtml += "<div class='textareacontainer'>"
-        texthtml += "<div class='header'>Важность</div>"
+        // //важность
+        // texthtml += "<div class='textareacontainer'>"
+        texthtml += "<div class='header'>Приоритет</div>"
         texthtml += "<button class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Закреп<\/label><\/button>";
         texthtml += "<button class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Время<\/label><\/button>";
         texthtml += "<button class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">День<\/label><\/button>";
@@ -124,22 +99,55 @@ let render = () => {
         texthtml += "<button class=\"bninth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rninth\" value=\"ninth\"><label for=\"rninth\">Заметки<\/label><\/button>";
         // texthtml += "<div class=\"btenth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rtenth\" value=\"tenth\"><label for=\"rtenth\">Корзина<\/label><\/div>";
         texthtml += "    </div>";
+
+        //тексты
         texthtml += "<div class='textareacontainer'>"
         texthtml += "<div class='header'>Название</div>"
-        texthtml += "    <textarea placeholder=\"Название...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
-        texthtml += "</div>"
-        texthtml += "<div class='textareacontainer'>"
+        texthtml += "    <textarea placeholder=\"...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
+        // texthtml += "</div>"
+        // texthtml += "<div class='textareacontainer'>"
         texthtml += "<div class='header'>Зависим</div>"
         texthtml += "    <div class='autocomplete'>";
-        texthtml += "         <textarea placeholder=\"Зависим...\" id ='inputtags' class=\"input\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
+        texthtml += "         <textarea placeholder=\"...\" id ='inputtags' class=\"input\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
         texthtml += "    </div >";
-        texthtml += "</div>"
-        texthtml += "<div class='textareacontainer'>"
+        // texthtml += "</div>"
+        // texthtml += "<div class='textareacontainer'>"
         texthtml += "<div class='header'>Блокирует</div>"
         texthtml += "    <div class='autocomplete'>";
-        texthtml += "         <textarea placeholder=\"Блокирует...\" id ='inputopns' class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
+        texthtml += "         <textarea placeholder=\"...\" id ='inputopns' class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
         texthtml += "    </div >";
         texthtml += "</div>"
+
+        //дата и время
+        texthtml += "<div class='textareacontainer'>"
+        texthtml += "<div class='header'>Дата и время</div>"
+        texthtml += "<div class='timeinputs'>";
+        // texthtml += "<span class='header'>Дата</span>"
+        // texthtml += "<div class='fiveblock'>"
+        texthtml += "<input type=\"date\" class='dateinp' id=\"date\" name=\"trip-start\">";
+        // texthtml += "</div>";
+        // texthtml += "<br>"
+        // texthtml += "<span class='header'>Время</span>"
+        // texthtml += "<div  class='fiveblock'>"
+        texthtml += "<input type=\"time\"  class='dateinp' id=\"time\" name=\"time\">"
+        // texthtml += " </div>";
+        texthtml += "</div>";
+
+        texthtml += "<div class='header'>Быстрый перенос</div>"
+        texthtml += "<button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
+        texthtml += "<button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
+        texthtml += "<button class=\"timebutton\" id=\"morning\">9:00<\/button>";
+        texthtml += "<button class=\"timebutton\" id=\"evening\">18:00<\/button>";
+        texthtml += "<button class=\"timebutton\" id=\"midnight\">00:00<\/button>";
+
+        texthtml += "<button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
+        texthtml += "<button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
+        texthtml += "<button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
+        texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 м<\/button>";
+        texthtml += "<button class=\"timebutton\" id=\"plusweek\">+1 нед<\/button>";
+        texthtml += "</div>";
+
+        //управляющие кнопки
         texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<label class='mainbutton readylabel' >Готово <input  class='checkbox onoff' type=\"checkbox\"></label>";
         texthtml += "</div>"
@@ -429,9 +437,10 @@ function Calendar3(date) {
   for (var i = 1; i <= Dlast; i++) {
     calendar += '<td class="">'
     let a = i;
-    if (moment().date() > a)
-      a = moment().date();
-    calendar += '<a class="calbut" id=' + 'calendar-' + date.format('DD-MM-YYYY') + '-' + moment(date).set('date', i).format('DD-MM-YYYY') + ' href="#' + 'calendar-' + moment(date).set('date', a).format('DD-MM-YYYY') + '-' + moment(date).set('date', a).format('DD-MM-YYYY') + '"><button class="calendarblock'
+    if (planeddays.has(moment(date).set('date', i).format('DD-MM-YYYY'))) {
+      calendar += '<a class="calbut" id=' + 'calendar-' + date.format('DD-MM-YYYY') + '-' + moment(date).set('date', i).format('DD-MM-YYYY') + ' href="#' + 'calendar-' + moment(date).set('date', a).format('DD-MM-YYYY') + '-' + moment(date).set('date', a).format('DD-MM-YYYY') + '">'
+    }
+    calendar += '<button class="calendarblock'
     if (i == moment().format('D') && moment().format('MM-YYYY') == date.format('MM-YYYY'))
       calendar += ' today';
     if (planeddays.has(moment(date).set('date', i).format('DD-MM-YYYY'))) {
@@ -440,7 +449,9 @@ function Calendar3(date) {
     if (i == date.format('D')) {
       calendar += ' highlightedday'
     }
-    calendar += '">' + i + '</button></a>';
+    calendar += '">' + i + '</button>'
+    if (planeddays.has(moment(date).set('date', i).format('DD-MM-YYYY')))
+      calendar += '</a>';
     if (moment(date).set('date', i).day() == 0) {
       calendar += '<tr>';
     }

@@ -521,12 +521,12 @@ label.readylabel {
     background: var(--background-area);
 }
 
-.calendar3 button.calendarblock.today {
-    background: var(--third);
-}
-
 .calendar3 button.calendarblock.highlightedday {
     background: var(--background-button-bright);
+}
+
+.calendar3 button.calendarblock.today {
+    background: var(--third);
 }
 
 .calendarblock {
