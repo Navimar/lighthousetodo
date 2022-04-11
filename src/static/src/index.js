@@ -38,6 +38,7 @@ function inputSocket() {
     console.log('connected');
     $('#status').removeClass("red").html('online');
     $('#status').css("display", "none");
+    update();
   });
   socket.on('disconnect', function () {
     console.log('DISCONNECT!!!');
