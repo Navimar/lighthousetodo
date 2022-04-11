@@ -10,6 +10,7 @@ function onTelegramAuth(data) {
   $('.search').css("display", "block");
   $('#newtaskbutton').css("display", "block");
   $('#scrollTopButton').css("display", "block");
+  $('.bottom').css("display", "none")
 
   update();
 }
@@ -286,18 +287,24 @@ let select = (text) => {
   }
   return f;
 };
-let selectnext = () => {
+
+let focuss = (text) => {
+  for (let a of data.tasks) {
+    a.focused = (a.name.toLowerCase() == text.toLowerCase())
+  }
+}
+
+let focusnext = () => {
   for (let a in data.tasks) {
-    if (data.tasks[a].selected) {
-      data.tasks[a].selected = false;
+    if (data.tasks[a].focused) {
+      data.tasks[a].focused = false;
       a = parseInt(a);
       let b = a + 1;
       console.log(b, data.tasks[b], data.tasks[1]);
-
       if (data.tasks[b]) {
-        data.tasks[b].selected = true;
+        data.tasks[b].focused = true;
       } else {
-        data.tasks[0].selected = true;
+        data.tasks[0].focused = true;
       }
       break;
     }
@@ -307,8 +314,9 @@ let del = (text) => {
   for (let a in data.tasks) {
     // console.log(a);
     if (data.tasks[a].name == text) {
+      if (data.tasks[a].focused)
+        focusnext();
       data.tasks.splice(a, 1);
-      // console.log(a, '!!!');
     }
     for (let t in data.tasks[a].tags) {
       if (data.tasks[a].tags[t] == text) {

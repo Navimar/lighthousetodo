@@ -157,9 +157,17 @@ let render = () => {
         texthtml += "</div>"
 
         texthtml += "<div class='mainbuttonblock'>"
-        texthtml += "<button class='mainbutton  task savetask'>" +
+        texthtml += "<button value='" + a.name + "' class='mainbutton task focustask' >" +
+          "Фокус" +
+          "</button>";
+        texthtml += "</div>"
+
+        texthtml += "<div class='mainbuttonblock'>"
+        texthtml += "<button value='" + a.name + "' class='mainbutton task savetask' >" +
           "Сохранить" +
           "</button>";
+        texthtml += "</div>"
+
         texthtml += "</div>"
         texthtml += "<\/div>";
 
@@ -168,11 +176,21 @@ let render = () => {
       if (nondisplay)
         texthtml += " nondisplay"
       if (a.selected)
-        texthtml += "selected";
+        texthtml += " selected";
+      if (a.focused)
+        texthtml += " focused";
       texthtml += "'><tbody><tr>"
+      // if (a.focused) 
+      // {
+      //   texthtml += " <td class='focushead"
+      //   texthtml += " " + a.priority
+      //   texthtml += " '></td>"
+      // }
       texthtml += " <td class=' taskmarker"
       texthtml += " " + a.priority;
-      texthtml += " '></td><td class='tdtask'>"
+      if (a.focused)
+        texthtml += " focushead";
+      texthtml += "'></td><td class='tdtask'>"
       texthtml += "<div class='task";
       if (a.selected) {
         isSelection = true;

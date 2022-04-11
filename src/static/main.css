@@ -693,6 +693,7 @@ label.readylabel {
     background: var(--background-area);
     margin: 0;
     box-shadow: none;
+    outline: none;
     /* color: whitesmoke; */
 }
 
@@ -725,7 +726,8 @@ label.readylabel {
 }
 
 .mainbuttonblock {
-    width: 33.3%;
+    /* width: 33.3%; */
+    width: 25%;
     display: inline-block;
 }
 
@@ -743,4 +745,13 @@ label.readylabel {
     color: var(--color-main);
     border: none;
     padding: 5px;
+}
+
+.focused {
+    /* background-color: red; */
+}
+
+td.focushead {
+    text-align: center;
+    width: 3em;
 }

@@ -35,7 +35,8 @@ let onDel = (txt) => {
     render();
 }
 
-let onFocus = () => {
+let onFocus = (text) => {
+    focuss(text)
 }
 
 let onToday = () => {
@@ -145,6 +146,10 @@ $(document).on('click', '.text', function () {
     $('.t1').val('');
     onSelect($(this).val());
 });
+$(document).on('click', '.focushead', function () {
+    focusnext();
+    render();
+});
 $(document).on('click', '.tag', function () {
     onTag($(this).text());
 });
@@ -156,6 +161,10 @@ $(document).on('click', '.newtask', function () {
     $('.inputtext:first').val('').select();
 });
 $(document).on('click', '.savetask', function () {
+    onSelect('');
+});
+$(document).on('click', '.focustask', function () {
+    onFocus($(this).prop('value'));
     onSelect('');
 });
 $(document).on('click', '#clearsearch', function () {
