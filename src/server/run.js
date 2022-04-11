@@ -43,7 +43,7 @@ module.exports = (io) => {
 
         });
         socket.on('load', function (userdata) {
-            if (userdata.hash && user.check(userdata)) {
+            if (userdata && userdata.hash && user.check(userdata)) {
                 user.add(userdata.id, socket);
                 load(userdata.id, socket);
             } else {
