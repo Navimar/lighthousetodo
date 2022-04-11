@@ -11,6 +11,12 @@ let sortdata = () => {
     else if (a.blocked && !b.blocked) {
       return 1
     }
+    if (a.blocked && b.blocked) {
+      if ((a.opns.length == 0 && b.opns.length > 0))
+        return -1
+      if ((b.opns.length == 0 && a.opns.length > 0))
+        return 1
+    }
 
     let ad = moment(a.date);
     let bd = moment(b.date);

@@ -27,19 +27,13 @@ let render = () => {
     tasks.html("");
     let names = [];
 
-    // for (let a of data.tasks) {
-    // }
-    // for (let a of data.tasks) {
-
-    // }
-    // console.log('data', data.tasks);
     for (let a of data.tasks) {
       a.weight = countweight(a).weight;
       let r = countrank(a);
       a.rank = r.rank;
       a.target = r.target;
 
-      if (moment() <= moment(a.date))
+      if (moment().isSameOrBefore(a.date, 'day'))
         planeddays.add(moment(a.date).format('DD-MM-YYYY'));
       if (!a.ppd)
         a.ppd = 0;
@@ -74,7 +68,7 @@ let render = () => {
         //ранг
         texthtml += "<div class='textareacontainer'>";
         texthtml += "<div class='timeinputs'>";
-        texthtml += "<div class='header'>Ценность</div>"
+        texthtml += "<div class='header'>Приоритет</div>"
         texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"profit\" name=\"profitinp\">";
         texthtml += "<span class='header'>+</span>"
         texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"ppd\" name=\"ppdinp\">";
@@ -85,10 +79,10 @@ let render = () => {
 
         // //важность
         // texthtml += "<div class='textareacontainer'>"
-        texthtml += "<div class='header'>Приоритет</div>"
+        texthtml += "<div class='header'>Разновидность</div>"
         texthtml += "<button class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Закреп<\/label><\/button>";
-        texthtml += "<button class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Время<\/label><\/button>";
-        texthtml += "<button class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">День<\/label><\/button>";
+        texthtml += "<button class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Хронос<\/label><\/button>";
+        texthtml += "<button class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Кайрос<\/label><\/button>";
         texthtml += "<button class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Поток<\/label><\/button>";
         // texthtml += "<div class=\"bfifth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfifth\" value=\"fifth\"><label for=\"rfifth\">Квартал<\/label><\/div>";
         // texthtml += "    </div><div class='timebuttons'> ";
@@ -96,7 +90,7 @@ let render = () => {
         // texthtml += "<div class=\"bsixth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsixth\" value=\"sixth\"><label for=\"rsixth\">Полгода<\/label><\/div>";
         // texthtml += "<div class=\"bseventh priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rseventh\" value=\"seventh\"><label for=\"rseventh\">Год<\/label><\/div>";
         // texthtml += "<div class=\"beighth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"reighth\" value=\"eighth\"><label for=\"reighth\">Век<\/label><\/div>";
-        texthtml += "<button class=\"bninth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rninth\" value=\"ninth\"><label for=\"rninth\">Заметки<\/label><\/button>";
+        texthtml += "<button class=\"bninth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rninth\" value=\"ninth\"><label for=\"rninth\">Заметка<\/label><\/button>";
         // texthtml += "<div class=\"btenth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rtenth\" value=\"tenth\"><label for=\"rtenth\">Корзина<\/label><\/div>";
         texthtml += "    </div>";
 
@@ -210,7 +204,10 @@ let render = () => {
       if (a.ready)
         texthtml += ("<button class='tag first text time'>ГОТОВ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
       if (a.blocked)
-        texthtml += ("<button class='tag first text time'>ВЕТВЬ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
+        if (a.opns.length > 0)
+          texthtml += ("<button class='tag first text time'>ВЕТВЬ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
+        else
+          texthtml += ("<button class='tag first text time'>МЕЧТА</button>&nbsp;&nbsp;&nbsp;&nbsp;");
       if (a.priority == 'first')
         texthtml += ("<div class='tag first text time'>ВАЖНО</div>&nbsp;&nbsp;&nbsp;&nbsp;");
       // if (!a.ready && (a.priority == 'second' || a.priority == 'third'))

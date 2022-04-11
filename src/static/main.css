@@ -8,7 +8,6 @@
         --color-main: #000000;
         --color-contrast: black;
         --old: #d57575;
-        --first: #555;
     }
 }
 
@@ -23,14 +22,15 @@
         --color-main: #FFFFFF;
         --color-contrast: black;
         --old: #995151;
-        --first: #DDD;
     }
 }
 
 :root {
-    --second: #EE4266;
-    --third: #F6AE2D;
-    --ninth: #1B9AAA;
+    --first: gray;
+    --second: #CC2936;
+    --third: #2991BD;
+    --forth: #23CE6B;
+    --ninth: #F4E4BA;
 }
 
 * {
@@ -215,8 +215,7 @@ option.third {
 }
 
 .forth {
-    background: #5FAD41;
-
+    background: var(--forth);
 }
 
 option.forth {
@@ -250,7 +249,7 @@ option.fifth {
 }
 
 .ninth {
-    background: #1B9AAA;
+    background: var(--ninth);
 }
 
 .tenth {
@@ -509,11 +508,11 @@ label.readylabel {
 
 .calendar3 tbody td {
     font-family: 'Noto Sans Mono', monospace;
-    color: var(--ninth);
+    color: var(--third);
 }
 
 .calendar3 tbody td:nth-child(n+6), #calendar3 .holiday {
-    color: var(--third);
+    color: var(--second);
 }
 
 .calendar3 button.calendarblock.planed {
@@ -522,11 +521,15 @@ label.readylabel {
 }
 
 .calendar3 button.calendarblock.highlightedday {
-    background: var(--background-button-bright);
+    /* background: var(--ninth); */
+    border-color: var(--third);
+
 }
 
 .calendar3 button.calendarblock.today {
-    background: var(--third);
+    /* background: var(--third); */
+    border-color: gray;
+
 }
 
 .calendarblock {
@@ -571,14 +574,12 @@ label.readylabel {
 .bsecond>input+label {
     border-left: 4px solid var(--background-area);
 
-    border-top-color: #EE4266;
+    border-top-color: var(--second);
     border-bottom-color: var(--background-area);
 }
 
 .bsecond>input[type=radio]:checked+label {
-
-
-    border-bottom-color: #EE4266;
+    border-bottom-color: var(--second);
     border-top-color: var(--background-area);
 }
 
@@ -586,28 +587,24 @@ label.readylabel {
 .bthird>input+label {
     margin: -4px;
     border: 4px solid var(--background-area);
-    border-top-color: #F6AE2D;
+    border-top-color: var(--third);
     border-bottom-color: var(--background-area);
 }
 
 .bthird>input[type=radio]:checked+label {
-
-
-    border-bottom-color: #F6AE2D;
+    border-bottom-color: var(--third);
     border-top-color: var(--background-area);
 }
 
 .bforth>input+label {
     margin: -4px;
     border: 4px solid var(--background-area);
-    border-top-color: #5FAD41;
+    border-top-color: var(--forth);
     border-bottom-color: var(--background-area);
 }
 
 .bforth>input[type=radio]:checked+label {
-
-
-    border-bottom-color: #5FAD41;
+    border-bottom-color: var(--forth);
     border-top-color: var(--background-area);
 }
 
@@ -620,14 +617,13 @@ label.readylabel {
 .bninth>input+label {
     margin: -4px;
     border: 4px solid var(--background-area);
-    border-top-color: #517AA4;
+    border-top-color: var(--ninth);
     border-bottom-color: var(--background-area);
 }
 
 .bninth>input[type=radio]:checked+label {
 
-
-    border-bottom-color: #517AA4;
+    border-bottom-color: var(--ninth);
     border-top-color: var(--background-area);
 }
 
