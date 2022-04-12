@@ -184,7 +184,10 @@ let render = () => {
       texthtml += " " + a.priority;
       if (a.focused)
         texthtml += " focushead";
-      texthtml += "'></td><td class='tdtask'>"
+      texthtml += "'>"
+      if (a.focused)
+        texthtml += "<div class='focustimer'><div id='timer' class='center'>" + "00:00:00" + "</div></div>";
+      texthtml += " </td><td class='tdtask'>"
       texthtml += "<div class='task";
       if (a.selected) {
         isSelection = true;

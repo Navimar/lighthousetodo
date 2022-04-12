@@ -18,6 +18,10 @@ function onTelegramAuth(data) {
 window.onload = function () {
   inputSocket();
   render();
+  setInterval(function () {
+    let sec = moment($('#timer').text(), 'HH:mm:ss');
+    $('#timer').text(sec.add(1, 's').format('HH:mm:ss'));
+  }, 1000);
 
   // user = {
   //   first_name: "ivan",
@@ -301,7 +305,7 @@ let focusnext = () => {
       data.tasks[a].focused = false;
       a = parseInt(a);
       let b = a + 1;
-      console.log(b, data.tasks[b], data.tasks[1]);
+      // console.log(b, data.tasks[b], data.tasks[1]);
       if (data.tasks[b]) {
         data.tasks[b].focused = true;
       } else {
