@@ -674,6 +674,9 @@ label.readylabel {
 }
 
 .input {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
     vertical-align: top;
     box-sizing: border-box;
     border-style: inset;
@@ -690,7 +693,6 @@ label.readylabel {
     margin: 0;
     box-shadow: none;
     outline: none;
-    /* color: whitesmoke; */
 }
 
 .header {

@@ -61,7 +61,7 @@ function inputSocket() {
       console.log('local data is younger');
   });
   socket.on('err', (val) => {
-    alert(val);
+    console.log(val);
   });
 }
 
