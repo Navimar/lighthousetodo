@@ -110,12 +110,60 @@ let newwish = (name, selected, tags, opns, priority, profit, note) => {
   });
 };
 let save = () => {
+
+  let countweight = (a, level) => {
+    a.future = moment(a.date + ' ' + a.time).diff(moment(), 'minutes') <= 5 ? 0 : 1;
+    let profit = parseInt(a.profit) + moment().diff(moment(a.date), 'days') * a.ppd
+    let weight = profit;
+    if (a.priority == 'tenth' || a.ready)
+      weight = 0;
+    if (!level) level = 0;
+    if (a.tags && a.tags.length > 0) {
+      for (let t = 0; t < a.tags.length; t++) {
+        let tag = note_by_name(a.tags[t])
+        if (level < 12) {
+          let re = countweight(tag, level + 1)
+          weight += re.weight;
+          if (re.future)
+            a.future = true;
+        }
+      }
+    }
+    if (a.priority == 'tenth' || a.ready)
+      return {
+        weight: weight, future: false
+      }
+    return {
+      weight: Math.min(weight, profit), future: a.future
+    }
+  }
+
+  let countrank = (a, level) => {
+    let rank = parseInt(a.weight);
+    let target = a.name;
+    let future = a.future;
+    if (!level) level = 0;
+    if (a.opns && a.opns.length > 0) {
+      for (let t = 0; t < a.opns.length; t++) {
+        let opn = note_by_name(a.opns[t])
+        if (level < 12) {
+          let r = countrank(opn, level + 1);
+          if (r.rank > rank && r.rank > 0 && (r.future == false)) {
+            target = r.target;
+            rank = r.rank;
+          }
+        }
+      }
+    }
+    return { rank, target, future };
+  }
+
   let inptval = $('#inputtext').val()
-  if (inptval)
-    inptval.trim();
   let name;
+  let selectedname;
   let note = '';
   if (inptval) {
+    inptval.trim();
     $.each(inptval.split(/\n/), function (i, text) {
       text = text.trim();
       if (i == 0) {
@@ -123,7 +171,8 @@ let save = () => {
         if (text == '') {
           name = 'новая запись';
         }
-      } else if (i == 1) {
+      }
+      else if (i == 1) {
         note += text;
       }
       else {
@@ -169,26 +218,25 @@ let save = () => {
     }
 
     for (let a of data.tasks) {
-      if (a.selected && name) {
-        for (let n of data.tasks) {
-          for (let t in n.tags) {
-            if (n.tags[t].toLowerCase() == a.name.toLowerCase()) {
-              n.tags.splice(t, 1);
-            }
-          }
-        }
+      if (a.selected) {
+        selectedname = a.name
+        break;
       }
     }
-    for (let a of data.tasks) {
-      if (a.selected && name) {
-        for (let n of data.tasks) {
-          for (let t in n.opns) {
-            if (n.opns[t].toLowerCase() == a.name.toLowerCase()) {
-              n.opns.splice(t, 1);
-            }
-          }
+    for (let n of data.tasks) {
+
+      for (let t in n.tags) {
+        if (n.tags[t].toLowerCase() == selectedname.toLowerCase()) {
+          n.tags.splice(t, 1);
         }
       }
+
+      for (let t in n.opns) {
+        if (n.opns[t].toLowerCase() == selectedname.toLowerCase()) {
+          n.opns.splice(t, 1);
+        }
+      }
+
     }
 
     $.each(inptags.split(/\n/), function (i, tgname) {
@@ -233,18 +281,6 @@ let save = () => {
     });
     for (let a of data.tasks) {
       if (a.selected && inptval) {
-        for (let n of data.tasks) {
-          for (let t in n.tags) {
-            if (n.tags[t].toLowerCase() == a.name.toLowerCase()) {
-              n.tags[t] = name;
-            }
-          }
-          for (let t in n.opns) {
-            if (n.opns[t].toLowerCase() == a.name.toLowerCase()) {
-              n.opns[t] = name;
-            }
-          }
-        }
         a.name = name;
         a.note = note;
         a.tags = tags;
@@ -266,9 +302,10 @@ let save = () => {
           }
         }
       }
-      // if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
-      //   if (a.priority == 'second')
-      //     a.priority = 'first'
+      a.weight = countweight(a).weight;
+      let r = countrank(a);
+      a.rank = r.rank;
+      a.target = r.target;
     }
     sortdata();
   }

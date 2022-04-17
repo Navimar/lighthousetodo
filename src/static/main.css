@@ -4,7 +4,6 @@
         --background-table: #f0f0f0;
         --background-area: #e0e0e0;
         --background-button: white;
-        --background-button-bright: lightblue;
         --color-main: #000000;
         --color-contrast: black;
         --old: #d57575;
@@ -18,7 +17,6 @@
         --background-table: #222;
         --background-area: #333;
         --background-button: lightgray;
-        --background-button-bright: cadetblue;
         --color-main: #FFFFFF;
         --color-contrast: black;
         --old: #995151;
@@ -650,7 +648,7 @@ label.readylabel {
 #newtaskbutton {
     border: none;
     background: url("plus.png") center;
-    background-color: var(--background-button-bright);
+    background-color: var(--forth);
     background-size: 100% auto;
     border-radius: 50%;
     position: fixed;

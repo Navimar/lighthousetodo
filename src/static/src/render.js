@@ -8,7 +8,6 @@ let render = () => {
     texthtml = '<div id="telegramlogin"><script async src="https://telegram.org/js/telegram-widget.js?18" data-telegram-login="' + botname + '" data-size="large" data-onauth="onTelegramAuth(user)"></script></div>';
     tasks.append(texthtml);
   } else {
-    // console.log(user);
     isSelection = false;
     let searchquerry = $('.t1').val();
     let tags = [];
@@ -29,11 +28,6 @@ let render = () => {
     let names = [];
 
     for (let a of data.tasks) {
-      a.weight = countweight(a).weight;
-      let r = countrank(a);
-      a.rank = r.rank;
-      a.target = r.target;
-
       if (moment().isSameOrBefore(a.date, 'day'))
         planeddays.add(moment(a.date).format('DD-MM-YYYY'));
       if (!a.ppd)
@@ -340,9 +334,11 @@ function autocomplete(inp, arr) {
     let cn = 0;
     i = 0;
     while (i < arr.length && cn < 30) {
+      let index
       i++;
       /*check if the item starts with the same letters as the text field value:*/
-      let index = arr[i].toLowerCase().indexOf(val.toLowerCase());
+      if (arr[i])
+        index = arr[i].toLowerCase().indexOf(val.toLowerCase());
       if (index >= 0) {
         cn++;
         /*create a DIV element for each matching element:*/
@@ -562,49 +558,4 @@ let renderopns = (a, level) => {
   return texthtml + "</div>";
 }
 
-let countweight = (a, level) => {
-  a.future = moment(a.date + ' ' + a.time).diff(moment(), 'minutes') <= 5 ? 0 : 1;
-  let profit = parseInt(a.profit) + moment().diff(moment(a.date), 'days') * a.ppd
-  let weight = profit;
-  if (a.priority == 'tenth' || a.ready)
-    weight = 0;
-  if (!level) level = 0;
-  if (a.tags && a.tags.length > 0) {
-    for (let t = 0; t < a.tags.length; t++) {
-      let tag = note_by_name(a.tags[t])
-      if (level < 12) {
-        let re = countweight(tag, level + 1)
-        weight += re.weight;
-        if (re.future)
-          a.future = true;
-      }
-    }
-  }
-  if (a.priority == 'tenth' || a.ready)
-    return {
-      weight: weight, future: false
-    }
-  return {
-    weight: Math.min(weight, profit), future: a.future
-  }
-}
 
-let countrank = (a, level) => {
-  let rank = parseInt(a.weight);
-  let target = a.name;
-  let future = a.future;
-  if (!level) level = 0;
-  if (a.opns && a.opns.length > 0) {
-    for (let t = 0; t < a.opns.length; t++) {
-      let opn = note_by_name(a.opns[t])
-      if (level < 12) {
-        let r = countrank(opn, level + 1);
-        if (r.rank > rank && r.rank > 0 && (r.future == false)) {
-          target = r.target;
-          rank = r.rank;
-        }
-      }
-    }
-  }
-  return { rank, target, future };
-}
