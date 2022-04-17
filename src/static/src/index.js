@@ -10,8 +10,7 @@ function onTelegramAuth(data) {
   $('.search').css("display", "block");
   $('#newtaskbutton').css("display", "block");
   $('#scrollTopButton').css("display", "block");
-  $('.bottom').css("display", "none")
-
+  $('.bottom').text("")
   update();
 }
 
@@ -23,18 +22,21 @@ window.onload = function () {
     $('#timer').text(sec.add(1, 's').format('HH:mm:ss'));
   }, 1000);
 
-  // user = {
-  //   first_name: "ivan",
-  //   last_name: "ivanov",
-  //   id: 10000,
-  //   username: 'asdasd',
-  //   hash: '1',
-  //   timestamp: '1'
-  // }
-  // $('.search').css("display", "block");
-  // $('#newtaskbutton').css("display", "block");
-  // $('#scrollTopButton').css("display", "block");
-  // update();
+  if (findGetParameter('sandbox') == 'sandbox') {
+    user = {
+      first_name: "sandbox",
+      last_name: "sandbox",
+      id: 'sandbox',
+      username: 'sandbox',
+      hash: 'sandbox',
+      timestamp: 'sandbox'
+    }
+    $('.search').css("display", "block");
+    $('#newtaskbutton').css("display", "block");
+    $('#scrollTopButton').css("display", "block");
+    $('.bottom').text("")
+    update();
+  }
 };
 
 function inputSocket() {
@@ -248,8 +250,8 @@ let save = () => {
         a.tags = tags;
         a.opns = opns;
         a.ready = ready;
-        a.profit = profit;
-        a.ppd = ppd;
+        a.profit = profit ? profit : 0;
+        a.ppd = ppd ? ppd : 0;
         a.priority = priority;
         // a.timediff = moment(date + "T" + time).format('x') - moment(a.date + "T" + a.time).format('x') || a.timediff;
         // console.log(a.timediff);

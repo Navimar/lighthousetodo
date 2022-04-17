@@ -343,7 +343,7 @@ button {
     border: none;
     /* color: white; */
     text-align: left;
-    font-size: 13.5pt;
+    font-size: 13.3pt;
 }
 
 .text:hover {
@@ -429,7 +429,7 @@ label.mainbutton.timebutton {
 .dateinp {
     background: white;
     box-sizing: border-box;
-    padding: 2px 10px 2px 5px;
+    padding: 2px 5px 2px 5px;
     border: 4px solid var(--background-area);
     /* border-left: 4px solid var(--background-area); */
 }
@@ -452,7 +452,7 @@ label.mainbutton.timebutton {
 }
 
 .ready {
-    color: lightgreen;
+    color: var(--forth);
 }
 
 .radiopriority {
@@ -681,12 +681,12 @@ label.readylabel {
     box-sizing: border-box;
     border-style: inset;
     padding-left: 10px;
-    padding-right: 2px;
+    padding-right: 10px;
     border-top: 5px solid var(--background-area);
     border-bottom: 10px solid var(--background-area);
     border-left: none;
     border-right: none;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Roboto', sans-serif;
     width: 100%;
     font-size: 11pt;
     background: var(--background-area);
@@ -710,6 +710,7 @@ label.readylabel {
 .date {
     background: var(--background-table);
     text-align: center;
+    text-transform: uppercase;
 }
 
 .textareacontainer {
@@ -733,7 +734,7 @@ label.readylabel {
     border-color: var(--background-table)
 }
 
-.opnslist {
+#opnslistcont {
     max-height: 20ex;
     overflow: auto;
 }

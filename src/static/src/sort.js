@@ -1,9 +1,9 @@
 let sortdata = () => {
   data.tasks.sort((a, b) => {
 
-    if (!a.ready && b.ready)
+    if (!a.ready && b.ready && b.opns.length > 0)
       return -1;
-    if (a.ready && !b.ready)
+    if (a.ready && a.opns.length > 0 && !b.ready)
       return 1;
     if (!a.blocked && b.blocked) {
       return -1

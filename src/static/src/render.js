@@ -24,6 +24,7 @@ let render = () => {
     let today = moment();
     let profit = 0;
     let ppd = 0;
+    let blocked = false;
     tasks.html("");
     let names = [];
 
@@ -58,10 +59,10 @@ let render = () => {
         today = moment(a.date);
         texthtml += Calendar3(today);
       }
-      // if (a.blocked && !blocked) {
-      //   texthtml += ("<div class='date'> Блокированные </div>");
-      //   blocked = true;
-      // }
+      if (a.blocked && !blocked) {
+        texthtml += ("<div class='date'><div class='header date'>ФИНИСФЕРА</div></div>");
+        blocked = true;
+      }
       if (a.selected) {
         texthtml += "<div class=\"editor\">";
 
@@ -204,18 +205,18 @@ let render = () => {
       texthtml += "'>";
       texthtml += rendertags(a);
 
-      if (a.ready)
-        texthtml += ("<button class='tag first text time'>ГОТОВ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
-      if (a.blocked)
+      if (a.ready && a.opns.length > 0)
+        texthtml += ("<button class='tag first text time'>АКТИВ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
+      else if (a.blocked)
         if (a.opns.length > 0)
           texthtml += ("<button class='tag first text time'>ВЕТВЬ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
         else
           texthtml += ("<button class='tag first text time'>МЕЧТА</button>&nbsp;&nbsp;&nbsp;&nbsp;");
       if (a.priority == 'first')
         texthtml += ("<div class='tag first text time'>ВАЖНО</div>&nbsp;&nbsp;&nbsp;&nbsp;");
-      // if (!a.ready && (a.priority == 'second' || a.priority == 'third'))
-      //   if (a.priority != 'first' && moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
-      //     texthtml += ("<div class='tag first text time past'>ДАВНО</div>&nbsp;&nbsp;");
+      if (!a.ready && (a.priority == 'second'))
+        if (a.priority != 'first' && moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
+          texthtml += ("<div class='tag first text time past'>ВЧЕРА</div>&nbsp;&nbsp;");
       if (moment() <= moment(a.date + "T" + a.time)) {
         if (a.time != lasttime) {
           texthtml += "<div class='tag first text time'>";
@@ -247,7 +248,11 @@ let render = () => {
           texthtml += "\xa0<span class=' rank'>";
           texthtml += vrank;
           texthtml += "</span>";
-          texthtml += "<span class=' bul tag'>⇒</span>";
+          if (a.ready) {
+            texthtml += "<span class='ready bul'>⇒</span>";
+          }
+          else
+            texthtml += "<span class=' bul tag'>⇒</span>";
         }
       }
       else {
@@ -260,7 +265,9 @@ let render = () => {
       }
 
       if (a.selected) {
+        texthtml += "<div id='opnslistcont'>"
         texthtml += renderopns(a);
+        texthtml += "</div>"
       }
 
       texthtml += "</div>";
