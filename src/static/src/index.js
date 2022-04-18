@@ -1,6 +1,7 @@
 const socket = io();
 let data = {};
 let user;
+let selected = { i: - 1 };
 data.timestamp = 0;
 
 
@@ -72,6 +73,7 @@ let update = () => {
 }
 
 let newwish = (name, selected, tags, opns, priority, profit, note) => {
+  let run = false;
   let ok = true;
   while (ok) {
     ok = false;
@@ -79,10 +81,13 @@ let newwish = (name, selected, tags, opns, priority, profit, note) => {
       if (a.name.toLowerCase() == name.toLowerCase()) {
         name += '!';
         ok = true;
+        run = true
         break;
       }
     }
   }
+  if (run)
+    return;
   if (!note) {
     note = '';
   }
@@ -110,6 +115,8 @@ let newwish = (name, selected, tags, opns, priority, profit, note) => {
   });
 };
 let save = () => {
+  if (selected.i == -1)
+    return
 
   let countweight = (a, level) => {
     a.future = moment(a.date + ' ' + a.time).diff(moment(), 'minutes') <= 5 ? 0 : 1;
@@ -160,7 +167,6 @@ let save = () => {
 
   let inptval = $('#inputtext').val()
   let name;
-  let selectedname;
   let note = '';
   if (inptval) {
     inptval.trim();
@@ -192,19 +198,30 @@ let save = () => {
     // let priority = $("#priority option:selected").val();
     let priority = $('input[name="radioprior"]:checked').val();
     let tags = [];
+    $.each(inptags.split(/\n/), function (i, tgname) {
+      if (tgname != "") {
+        tgname = tgname.trim();
+        tags.push(tgname);
+      }
+    });
     let opns = [];
+    $.each(inpopns.split(/\n/), function (i, opname) {
+      if (opname != "") {
+        opname = opname.trim();
+        opns.push(opname);
+      }
+    });
+    let newscribestags = tags.slice();
+    let newscribesopns = opns.slice();
+
 
     let time = $("#time").val();
     if (!time) {
       time = clock().h + ":" + clock().m;
     }
     let date = $("#date").val();
-    // console.log("date val "+date);
-    if (!date) {
+    if (!date)
       date = clock().year + "-" + clock().month + "-" + clock().d;
-      // console.log("set date "+date);
-    }
-    // let d = 0
     let ok = true;
     while (ok) {
       ok = false;
@@ -218,68 +235,6 @@ let save = () => {
     }
 
     for (let a of data.tasks) {
-      if (a.selected) {
-        selectedname = a.name
-        break;
-      }
-    }
-    for (let n of data.tasks) {
-
-      for (let t in n.tags) {
-        if (n.tags[t].toLowerCase() == selectedname.toLowerCase()) {
-          n.tags.splice(t, 1);
-        }
-      }
-
-      for (let t in n.opns) {
-        if (n.opns[t].toLowerCase() == selectedname.toLowerCase()) {
-          n.opns.splice(t, 1);
-        }
-      }
-
-    }
-
-    $.each(inptags.split(/\n/), function (i, tgname) {
-      // empty string check
-      if (tgname != "") {
-        tgname = tgname.trim();
-        tags.push(tgname);
-        let ok = true;
-        for (let a of data.tasks) {
-          if (a.name.toLowerCase() == tgname.toLowerCase()) {
-            ok = false;
-            if (a.opns) {
-              if (a.opns.indexOf(name) === -1) {
-                a.opns.push(name);
-              }
-            }
-          }
-        }
-        if (ok) {
-          newwish(tgname, false, [], [name], priority, 0);
-        }
-      }
-    });
-    $.each(inpopns.split(/\n/), function (i, opname) {
-      // empty string check
-      if (opname != "") {
-        opname = opname.trim();
-        opns.push(opname);
-        let ok = true;
-        for (let a of data.tasks) {
-          if (a.name.toLowerCase() == opname.toLowerCase()) {
-            ok = false;
-            if (a.tags.indexOf(name) === -1) {
-              a.tags.push(name);
-            }
-          }
-        }
-        if (ok) {
-          newwish(opname, false, [name], [], priority, 0);
-        }
-      }
-    });
-    for (let a of data.tasks) {
       if (a.selected && inptval) {
         a.name = name;
         a.note = note;
@@ -289,11 +244,49 @@ let save = () => {
         a.profit = profit ? profit : 0;
         a.ppd = ppd ? ppd : 0;
         a.priority = priority;
-        // a.timediff = moment(date + "T" + time).format('x') - moment(a.date + "T" + a.time).format('x') || a.timediff;
-        // console.log(a.timediff);
         a.time = time;
         a.date = date;
       }
+      for (let t in a.tags) {
+        if (a.tags[t].toLowerCase() == selected.text.toLowerCase()) {
+          a.tags.splice(t, 1);
+        }
+      }
+
+      for (let t in a.opns) {
+        if (a.opns[t].toLowerCase() == selected.text.toLowerCase()) {
+          a.opns.splice(t, 1);
+        }
+      }
+
+      tags.forEach((tag) => {
+        if (a.name.toLowerCase() == tag.toLowerCase()) {
+          newscribestags.splice(newscribestags.indexOf(tag), 1);
+          if (a.opns && a.opns.indexOf(name) === -1) {
+            a.opns.push(name);
+          }
+        }
+      });
+
+      opns.forEach((opn) => {
+        if (a.name.toLowerCase() == opn.toLowerCase()) {
+          newscribesopns.splice(newscribesopns.indexOf(opn), 1);
+          if (a.tags && a.tags.indexOf(name) === -1) {
+            a.tags.push(name);
+          }
+        }
+      });
+
+    }
+    newscribestags.forEach((txt) => {
+      newwish(txt, false, [], [name], priority, 0);
+    });
+    newscribesopns.forEach((txt) => {
+      console.log('new op', txt);
+      newwish(txt, false, [name], [], priority, 0);
+    });
+
+    for (let a of data.tasks) {
       a.blocked = false;
       for (let n of data.tasks) {
         for (let t of a.tags) {
@@ -318,18 +311,19 @@ let note_by_name = (name) => {
 }
 
 let select = (text) => {
-  let f = false;
-  for (let a of data.tasks) {
-    if (a.selected && a.name.toLowerCase() == text.toLowerCase())
-      a.selected = false
+  selected.text = false;
+  selected.i = -1;
+  for (let i in data.tasks) {
+    if (data.tasks[i].selected && data.tasks[i].name.toLowerCase() == text.toLowerCase())
+      data.tasks[i].selected = false
     else {
-      a.selected = (a.name.toLowerCase() == text.toLowerCase())
-      if (a.selected) {
-        f = text;
+      data.tasks[i].selected = (data.tasks[i].name.toLowerCase() == text.toLowerCase())
+      if (data.tasks[i].selected) {
+        selected.text = text;
+        selected.i = i;
       }
     }
   }
-  return f;
 };
 
 let focuss = (text) => {
