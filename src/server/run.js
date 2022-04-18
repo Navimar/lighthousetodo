@@ -27,13 +27,13 @@ module.exports = (io) => {
 
                 // let dir = sha256(sha256.x2(msg.id + salt));
                 let dir = path(msg.user.id);
-                if (!fs.existsSync('./data/' + dir)) {
+                if (!fs.existsSync('../data/' + dir)) {
                     console.log('folder created');
-                    fs.mkdirSync('./data/' + dir);
+                    fs.mkdirSync('../data/' + dir);
                 }
 
                 // fs.createReadStream('../data/' + dir + '/data.txt').pipe(fs.createWriteStream('..data/' + dir + '/old' + n + '.txt'));
-                fs.writeFileSync('./data/' + dir + '/data.txt', JSON.stringify({ tasks: msg.tasks, timestamp: msg.timestamp }), function (err) {
+                fs.writeFileSync('../data/' + dir + '/data.txt', JSON.stringify({ tasks: msg.tasks, timestamp: msg.timestamp }), function (err) {
                     return console.log(err);
                 });
                 n++;
@@ -66,10 +66,10 @@ let load = (key, socket) => {
     let dir = path(key);
 
 
-    if (fs.existsSync('./data/' + dir + '/data.txt')) {
+    if (fs.existsSync('../data/' + dir + '/data.txt')) {
         console.log('load ' + dir);
         // console.log(msg);
-        fs.readFile('./data/' + dir + '/data.txt', 'utf8', function (err, data) {
+        fs.readFile('../data/' + dir + '/data.txt', 'utf8', function (err, data) {
             // console.log(JSON.parse(data));
             socket.emit('update', JSON.parse(data));
         });
@@ -82,8 +82,8 @@ let load = (key, socket) => {
             // let o = {
             //     tasks: [{ name: 'hello!', tags: [], opns: [] }]
             // }
-            fs.mkdirSync('./data/' + dir);
-            fs.writeFileSync('./data/' + dir + '/data.txt', data);
+            fs.mkdirSync('../data/' + dir);
+            fs.writeFileSync('../data/' + dir + '/data.txt', data);
             socket.emit('update', JSON.parse(data));
         });
 
