@@ -138,7 +138,7 @@ let render = () => {
 
         //управляющие кнопки
         texthtml += "<div class='mainbuttonblock'>"
-        texthtml += "<label class='mainbutton readylabel' >Готово <input  class='checkbox onoff' type=\"checkbox\"></label>";
+        texthtml += "<label class='mainbutton readylabel' >Активно <input  class='checkbox onoff' type=\"checkbox\"></label>";
         texthtml += "</div>"
 
         texthtml += "<div class='mainbuttonblock'>"

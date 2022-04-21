@@ -282,7 +282,6 @@ let save = () => {
       newwish(txt, false, [], [name], priority, 0);
     });
     newscribesopns.forEach((txt) => {
-      console.log('new op', txt);
       newwish(txt, false, [name], [], priority, 0);
     });
 
