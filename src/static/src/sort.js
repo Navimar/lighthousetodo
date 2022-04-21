@@ -1,14 +1,14 @@
 let sortdata = () => {
   data.tasks.sort((a, b) => {
 
-    if (!a.ready && b.ready && b.opns.length > 0)
+    if (!a.ready && b.ready)
       return -1;
-    if (a.ready && a.opns.length > 0 && !b.ready)
+    if (a.ready && !b.ready)
       return 1;
-    if (!a.blocked && b.blocked && !b.ready) {
+    if (!a.blocked && b.blocked) {
       return -1
     }
-    else if (a.blocked && !a.ready && !b.blocked) {
+    else if (a.blocked && !b.blocked) {
       return 1
     }
     if (a.blocked && b.blocked) {
