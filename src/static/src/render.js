@@ -92,7 +92,7 @@ let render = () => {
         //тексты
         texthtml += "<div class='textareacontainer'>"
         texthtml += "<div class='header'>Название</div>"
-        texthtml += "    <textarea placeholder=\"...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"4\"><\/textarea>";
+        texthtml += "    <textarea placeholder=\"...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"1\"><\/textarea>";
         // texthtml += "</div>"
         // texthtml += "<div class='textareacontainer'>"
         texthtml += "<div class='header'>Зависим</div>"
