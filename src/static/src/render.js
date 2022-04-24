@@ -308,7 +308,7 @@ let render = () => {
       scrollPosition = $('.selected').position().top;
       scrollPosition -= mouse.y - 12;
       $(window).scrollTop(scrollPosition);
-      $('#inputtext').focus();
+      // $('#inputtext').focus();
     }
   }
 };
