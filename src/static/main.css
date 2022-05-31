@@ -117,8 +117,8 @@ option:checked {
 
 #scrollTopButton {
     position: fixed;
-    bottom: 10px;
-    left: 0;
+    bottom: 15px;
+    left: 15px;
     /* background: var(--background-main); */
 
 }
@@ -281,7 +281,7 @@ button {
     overflow: hidden;
     border: 4px solid var(--background-area);
     text-align: center;
-    width: 20%;
+    width: 18%;
     color: var(--color-contrast);
     background-color: var(--background-button);
     padding: 2px 5px 2px 5px;
@@ -774,4 +774,28 @@ td.focushead {
 .focustimer div {
     color: gray;
     font-size: 11.4pt;
+}
+
+#buttoncontainer{
+    font-size: 13.5pt;
+    max-width: 65em;
+width: 100%;
+position: fixed;
+bottom: 0;
+left: 50%;
+    transform: translateX(-50%);
+}
+
+.calendarmark{
+/* margin-top: -7px;
+position: absolute;
+font-size: 19pt; */
+}
+
+.markforth{
+color: var(--forth);
+}
+
+.marksecond{
+color: var(--second);
 }

@@ -29,9 +29,8 @@ let render = () => {
 
     for (let a of data.tasks) {
       if (moment().isSameOrBefore(a.date, 'day'))
-        planeddays.add(moment(a.date).format('DD-MM-YYYY'));
-      if (!a.ppd)
-        a.ppd = 0;
+        if (a.priority == 'second')
+          planeddays.add(moment(a.date).format('DD-MM-YYYY'));
     }
     tasks.append(Calendar3(moment()));
 
@@ -91,7 +90,10 @@ let render = () => {
 
         //тексты
         texthtml += "<div class='textareacontainer'>"
-        texthtml += "<div class='header'>Название</div>"
+        if (a.note)
+          texthtml += "<div class='header'>Название" + " + 📝" + "</div>"
+        else
+          texthtml += "<div class='header'>Название" + "</div>"
         texthtml += "    <textarea placeholder=\"...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"1\"><\/textarea>";
         // texthtml += "</div>"
         // texthtml += "<div class='textareacontainer'>"
@@ -470,7 +472,9 @@ function Calendar3(date) {
     if (i == date.format('D')) {
       calendar += ' highlightedday'
     }
-    calendar += '">' + i + '</button>'
+    calendar += '">' + i
+      // + ' <span class="calendarmark marksecond">•</span><span class="calendarmark markforth ">•</span>'
+      + '</button>'
     if (planeddays.has(moment(date).set('date', i).format('DD-MM-YYYY')))
       calendar += '</a>';
     if (moment(date).set('date', i).day() == 0) {
