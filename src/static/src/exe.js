@@ -127,6 +127,7 @@ let scrollPosition = 0;
 window.onfocus = function () {
     onFocus();
 };
+window.screen.orientation.lock('portrait');
 
 $(document).on('change', '.dateinp', function (event) {
     $('.readylabel input').prop("checked", false);
