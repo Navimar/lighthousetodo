@@ -127,6 +127,12 @@ let scrollPosition = 0;
 window.onfocus = function () {
     onFocus();
 };
+
+document.addEventListener('gesturestart', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+}, { passive: false });
+
 $(document).on('change', '.dateinp', function (event) {
     $('.readylabel input').prop("checked", false);
 });
