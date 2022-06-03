@@ -40,6 +40,7 @@
 }
 
 body {
+    touch-action: none;
     color: var(--color-main);
     text-align: center;
     font-family: 'IBM Plex Sans', sans-serif;
