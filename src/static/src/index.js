@@ -16,6 +16,7 @@ function onTelegramAuth(data) {
 }
 
 window.onload = function () {
+  window.screen.orientation.lock('portrait');
   inputSocket();
   render();
   setInterval(function () {
