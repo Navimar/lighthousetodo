@@ -282,7 +282,7 @@ button {
     overflow: hidden;
     border: 4px solid var(--background-area);
     text-align: center;
-    width: 18%;
+    width: 20%;
     color: var(--color-contrast);
     background-color: var(--background-button);
     padding: 2px 5px 2px 5px;
