@@ -60,7 +60,7 @@ let render = () => {
         texthtml += "<div class=\"editor\">";
 
         //ранг
-        // texthtml += "<div class='textareacontainer'>";
+        texthtml += "<div class='textareacontainer'>";
         // texthtml += "<div class='timeinputs'>";
         // texthtml += "<div class='header'>Приоритет</div>"
         // texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"profit\" name=\"profitinp\">";
