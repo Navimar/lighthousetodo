@@ -34,6 +34,12 @@ let sortdata = () => {
     else if (bd.isBefore(a.date, 'year')) {
       return 1
     }
+    if (ad.isBefore(b.date, 'month')) {
+      return -1
+    }
+    else if (bd.isBefore(a.date, 'month')) {
+      return 1
+    }
     else if (ad.isBefore(b.date, 'day')) {
       return -1
     }
