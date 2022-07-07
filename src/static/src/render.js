@@ -182,7 +182,7 @@ let render = () => {
         texthtml += " focushead";
       texthtml += "'>"
       if (a.focused)
-        texthtml += "<div class='focustimer'><div id='timer' class='center'>" + "00:00:00" + "</div></div>";
+        texthtml += "<div class='focustimer'><div id='timer' class='center'>" + moment.utc(foucusstimer * 1000).format('HH:mm:ss') + "</div></div>";
       texthtml += " </td><td class='tdtask'>"
       texthtml += "<div class='task";
       if (a.selected) {

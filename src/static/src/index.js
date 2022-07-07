@@ -1,6 +1,7 @@
 const socket = io();
 let data = {};
 let user;
+let foucusstimer = 0;
 let selected = { i: - 1 };
 data.timestamp = 0;
 
@@ -21,6 +22,7 @@ window.onload = function () {
   setInterval(function () {
     let sec = moment($('#timer').text(), 'HH:mm:ss');
     $('#timer').text(sec.add(1, 's').format('HH:mm:ss'));
+    foucusstimer++;
   }, 1000);
 
   if (findGetParameter('sandbox') == 'sandbox') {
@@ -326,12 +328,14 @@ let select = (text) => {
 };
 
 let focuss = (text) => {
+  foucusstimer = 0;
   for (let a of data.tasks) {
     a.focused = (a.name.toLowerCase() == text.toLowerCase())
   }
 }
 
 let focusnext = () => {
+  foucusstimer = 0;
   for (let a in data.tasks) {
     if (data.tasks[a].focused) {
       data.tasks[a].focused = false;
