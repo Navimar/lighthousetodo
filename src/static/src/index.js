@@ -294,10 +294,10 @@ let save = () => {
           }
         }
       }
-      a.weight = countweight(a).weight;
-      let r = countrank(a);
-      a.rank = r.rank;
-      a.target = r.target;
+      // a.weight = countweight(a).weight;
+      // let r = countrank(a);
+      // a.rank = r.rank;
+      // a.target = r.target;
     }
     sortdata();
   }

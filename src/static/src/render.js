@@ -35,7 +35,7 @@ let render = () => {
     tasks.append(Calendar3(moment()));
 
     for (let a of data.tasks) {
-      let vrank = a.rank ? '\xa0[' + a.rank + ']' : '';
+      // let vrank = a.rank ? '\xa0[' + a.rank + ']' : '';
       let nondisplay = false;
       if (searchquerry.toLowerCase !== '') {
         nondisplay = true;
@@ -237,13 +237,13 @@ let render = () => {
           texthtml += "<span class=' bul tag'>⇒</span>";
           texthtml += "<span class='opn target'>" + a.target + "</span>";
           texthtml += "<span class=' rank'>";
-          texthtml += vrank;
+          // texthtml += vrank;
           texthtml += "</span>";
         }
         else {
-          texthtml += "\xa0<span class=' rank'>";
-          texthtml += vrank;
-          texthtml += "</span>";
+          // texthtml += "\xa0<span class=' rank'>";
+          // texthtml += vrank;
+          // texthtml += "</span>";
           if (a.ready) {
             texthtml += "<span class='ready bul'>⇒</span>";
           }
@@ -252,9 +252,9 @@ let render = () => {
         }
       }
       else {
-        texthtml += "\xa0<span class=' rank'>";
-        texthtml += vrank;
-        texthtml += "</span>";
+        // texthtml += "\xa0<span class=' rank'>";
+        // texthtml += vrank;
+        // texthtml += "</span>";
         if (a.ready) {
           texthtml += "<span class='ready bul'>•</span>";
         }
@@ -439,7 +439,11 @@ function autocomplete(inp, arr) {
 
 function Calendar3(date) {
   let calendar = '';
-  calendar += ("<div id=" + date.format('DD-MM-YYYY') + " class='header date'> " + date.format('dddd DD MMMM') + "</div>");
+  calendar += ("<div id=" + date.format('DD-MM-YYYY') + " class='header date'> ");
+  if (moment().isSame(date, 'year'))
+    calendar += date.format('dddd DD MMMM') + "</div>";
+  else
+    calendar += date.format('dddd DD MMMM YYYY') + "</div>";
   calendar += '<table class="calendar3" id="calendar-' + date.format('DD-MM-YYYY') + '">'
   calendar += '<tr class="days_of_week">'
   calendar += '<td>Пн'
@@ -550,9 +554,9 @@ let renderopns = (a, level) => {
       texthtml += "'>";
       texthtml += openka.name;
       texthtml += "</button>";
-      texthtml += "<span class='rank'> [";
-      texthtml += openka.rank;
-      texthtml += "]</span>";
+      // texthtml += "<span class='rank'> [";
+      // texthtml += openka.rank;
+      // texthtml += "]</span>";
       if (level == 5)
         texthtml += "<span class='arr'>⇒...</span>";
       if (level < 5)
