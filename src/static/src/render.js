@@ -60,14 +60,13 @@ let render = () => {
         texthtml += "<div class=\"editor\">";
 
         //ранг
-        texthtml += "<div class='textareacontainer'>";
-        texthtml += "<div class='timeinputs'>";
-        texthtml += "<div class='header'>Приоритет</div>"
-        texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"profit\" name=\"profitinp\">";
-        texthtml += "<span class='header'>+</span>"
-        texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"ppd\" name=\"ppdinp\">";
-        texthtml += "<span class='header'>/в день</span>"
-        texthtml += "</div>"
+        // texthtml += "<div class='textareacontainer'>";
+        // texthtml += "<div class='timeinputs'>";
+        // texthtml += "<div class='header'>Приоритет</div>"
+        // texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"profit\" name=\"profitinp\">";
+        // texthtml += "<span class='header'>+</span>"
+        // texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"ppd\" name=\"ppdinp\">";
+        // texthtml += "<span class='header'>/в день</span>"
         // texthtml += "</div>"
 
 
