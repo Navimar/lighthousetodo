@@ -108,9 +108,9 @@ let prioritycompare = (a, b) => {
     if (x == 'second')
       return 2;
     if (x == 'third')
-      return 3;
-    if (x == 'forth')
       return 4;
+    if (x == 'forth')
+      return 3;
     if (x == 'fifth')
       return 5;
     if (x == 'sixth')
