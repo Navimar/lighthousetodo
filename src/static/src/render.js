@@ -72,9 +72,9 @@ let render = () => {
 
         // //важность
         // texthtml += "<div class='textareacontainer'>"
-        texthtml += "<div class='header'>Разновидность</div>"
-        texthtml += "<button class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Закреп<\/label><\/button>";
-        texthtml += "<button class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Хронос<\/label><\/button>";
+        texthtml += "<div class='header'>Приоритет</div>"
+        texthtml += "<button class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Хронос<\/label><\/button>";
+        texthtml += "<button class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Важно<\/label><\/button>";
         texthtml += "<button class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Кайрос<\/label><\/button>";
         texthtml += "<button class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Поток<\/label><\/button>";
         // texthtml += "<div class=\"bfifth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfifth\" value=\"fifth\"><label for=\"rfifth\">Квартал<\/label><\/div>";
@@ -207,10 +207,10 @@ let render = () => {
           texthtml += ("<button class='tag first text time'>ВЕТВЬ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
         else
           texthtml += ("<button class='tag first text time'>МЕЧТА</button>&nbsp;&nbsp;&nbsp;&nbsp;");
-      if (a.priority == 'first')
-        texthtml += ("<div class='tag first text time'>ВАЖНО</div>&nbsp;&nbsp;&nbsp;&nbsp;");
-      if (!a.ready && (a.priority == 'second'))
-        if (a.priority != 'first' && moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
+      // if (a.priority == 'first')
+      //   texthtml += ("<div class='tag first text time'>ВАЖНО</div>&nbsp;&nbsp;&nbsp;&nbsp;");
+      if (!a.ready && (a.priority == 'first' || a.priority == 'second'))
+        if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
           texthtml += ("<div class='tag first text time past'>ВЧЕРА</div>&nbsp;&nbsp;");
       if (moment() <= moment(a.date + "T" + a.time)) {
         if (a.time != lasttime) {
