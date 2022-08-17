@@ -232,23 +232,23 @@ let render = () => {
 
 
       if (a.opns && a.opns.length > 0) {
-        if (!a.selected && a.target != a.name) {
+        // if (!a.selected && a.target && a.target != a.name) {
+        //   texthtml += "<span class=' bul tag'>⇒</span>";
+        //   texthtml += "<span class='opn target'>" + a.target + "</span>";
+        //   texthtml += "<span class=' rank'>";
+        //   // texthtml += vrank;
+        //   texthtml += "</span>";
+        // }
+        // else {
+        // texthtml += "\xa0<span class=' rank'>";
+        // texthtml += vrank;
+        // texthtml += "</span>";
+        if (a.ready) {
+          texthtml += "<span class='ready bul'>⇒</span>";
+        }
+        else
           texthtml += "<span class=' bul tag'>⇒</span>";
-          texthtml += "<span class='opn target'>" + a.target + "</span>";
-          texthtml += "<span class=' rank'>";
-          // texthtml += vrank;
-          texthtml += "</span>";
-        }
-        else {
-          // texthtml += "\xa0<span class=' rank'>";
-          // texthtml += vrank;
-          // texthtml += "</span>";
-          if (a.ready) {
-            texthtml += "<span class='ready bul'>⇒</span>";
-          }
-          else
-            texthtml += "<span class=' bul tag'>⇒</span>";
-        }
+        // }
       }
       else {
         // texthtml += "\xa0<span class=' rank'>";
@@ -306,10 +306,9 @@ let render = () => {
     $('#ppd').val(ppd);
     $('.delete').val(text);
     if (isSelection) {
-      scrollPosition = $('.selected').position().top;
-      scrollPosition -= mouse.y - 12;
+      scrollPosition = $('.selected').position().top + $('.selected').height() / 2;
+      scrollPosition -= mouse.y;
       $(window).scrollTop(scrollPosition);
-      // $('#inputtext').focus();
     }
   }
 };
