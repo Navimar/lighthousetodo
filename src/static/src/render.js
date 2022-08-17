@@ -29,7 +29,7 @@ let render = () => {
 
     for (let a of data.tasks) {
       if (moment().isSameOrBefore(a.date, 'day'))
-        if (a.priority == 'second')
+        if (a.priority == 'first')
           planeddays.add(moment(a.date).format('DD-MM-YYYY'));
     }
     tasks.append(Calendar3(moment()));
