@@ -230,5 +230,10 @@ $(document).on('click', '#plusweek', function () {
     onPlusWeek();
 });
 $(document).on('click', '#scrollTopButton', function () {
-    $(window).scrollTop(0);
+    // scrollPosition = 0;
+    scrollPosition = parseInt($('.focused').position().top - $(window).height() / 2);
+    if ($(window).scrollTop() == scrollPosition)
+        scrollPosition = 0;
+    console.log($(window).scrollTop(), scrollPosition);
+    $(window).scrollTop(scrollPosition);
 });
