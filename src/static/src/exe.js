@@ -147,10 +147,10 @@ $(document).on('click', '.text', function () {
     $('.t1').val('');
     onSelect($(this).val());
 });
-$(document).on('click', '.focushead', function () {
-    focusnext();
-    render();
-});
+// $(document).on('click', '.focushead', function () {
+//     focusnext();
+//     render();
+// });
 $(document).on('click', '.tag', function () {
     onTag($(this).text());
 });

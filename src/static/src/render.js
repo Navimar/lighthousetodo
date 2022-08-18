@@ -146,11 +146,11 @@ let render = () => {
         texthtml += "<label class='mainbutton  delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
         texthtml += "</div>"
 
-        texthtml += "<div class='mainbuttonblock'>"
-        texthtml += "<button value='" + a.name + "' class='mainbutton task focustask' >" +
-          "Фокус" +
-          "</button>";
-        texthtml += "</div>"
+        // texthtml += "<div class='mainbuttonblock'>"
+        // texthtml += "<button value='" + a.name + "' class='mainbutton task focustask' >" +
+        //   "Фокус" +
+        //   "</button>";
+        // texthtml += "</div>"
 
         texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<button value='" + a.name + "' class='mainbutton task savetask' >" +

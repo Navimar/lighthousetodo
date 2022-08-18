@@ -60,6 +60,7 @@ function inputSocket() {
     if (!data.timestamp || moment(data.timestamp) < moment(msg.timestamp)) {
       data = msg;
       console.log("loaded");
+      focusfisrt();
       render();
       $('#status').removeClass("red").html('online');
     } else
@@ -302,6 +303,7 @@ let save = () => {
       // a.target = r.target;
     }
     sortdata();
+    focusfisrt();
   }
 };
 
@@ -334,29 +336,27 @@ let focuss = (text) => {
   }
 }
 
-let focusnext = () => {
-  foucusstimer = 0;
+let focusfisrt = () => {
+  let ok = true;
+  let z = false
   for (let a in data.tasks) {
     if (data.tasks[a].focused) {
+      z = a;
       data.tasks[a].focused = false;
-      a = parseInt(a);
-      let b = a + 1;
-      // console.log(b, data.tasks[b], data.tasks[1]);
-      if (data.tasks[b]) {
-        data.tasks[b].focused = true;
-      } else {
-        data.tasks[0].focused = true;
-      }
-      break;
+    }
+    if (data.tasks[a].priority != 'third' && !isFuture(data.tasks[a]) && ok) {
+      ok = false;
+      data.tasks[a].focused = true
+      if (z != a)
+        foucusstimer = 0;
     }
   }
-};
+}
+
 let del = (text) => {
   for (let a in data.tasks) {
     // console.log(a);
     if (data.tasks[a].name == text) {
-      if (data.tasks[a].focused)
-        focusnext();
       data.tasks.splice(a, 1);
     }
     for (let t in data.tasks[a].tags) {
@@ -371,6 +371,7 @@ let del = (text) => {
     }
   }
   sortdata();
+  focusfisrt();
 };
 
 let send = () => {

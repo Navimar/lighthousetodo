@@ -40,8 +40,8 @@ function clock(date) {
     };
 }
 
-function isReady(date, time) {
-    return moment(date + "T" + time).format('x') < moment().format('x');;
+function isFuture(date, time) {
+    return moment() < moment(date + "T" + time);
 }
 
 function findGetParameter(name, url) {
