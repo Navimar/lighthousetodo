@@ -344,7 +344,7 @@ let focusfisrt = () => {
       z = a;
       data.tasks[a].focused = false;
     }
-    if (data.tasks[a].priority != 'third' && !isFuture(data.tasks[a].date, data.tasks[a].time) && ok) {
+    if (!isFuture(data.tasks[a].date, data.tasks[a].time) && ok) {
       ok = false;
       data.tasks[a].focused = true
       if (z != a)
