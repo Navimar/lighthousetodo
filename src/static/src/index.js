@@ -370,6 +370,16 @@ let del = (text) => {
       }
     }
   }
+  for (let a of data.tasks) {
+    a.blocked = false;
+    for (let n of data.tasks) {
+      for (let t of a.tags) {
+        if (t.toLowerCase() == n.name.toLowerCase() && !n.ready && prioritycompare(a.priority, n.priority) >= 0) {
+          a.blocked = true;
+        }
+      }
+    }
+  }
   sortdata();
   focusfisrt();
 };
