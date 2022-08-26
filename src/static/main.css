@@ -664,7 +664,7 @@ label.readylabel {
 #newtaskbutton {
     border: none;
     background: url("plus.png") center;
-    background-color: var(--forth);
+    background-color: var(--third);
     background-size: 100% auto;
     border-radius: 50%;
     position: fixed;
