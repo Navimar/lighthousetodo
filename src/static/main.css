@@ -26,8 +26,8 @@
 :root {
     --first: #CC2936;
     --second: #FFAD05;
-    --third: #2991BD;
-    --forth: #23CE6B;
+    --third: #23CE6B;
+    --forth: #2991BD;
     --ninth: #F4E4BA;
 }
 
@@ -123,6 +123,18 @@ option:checked {
     /* background: var(--background-main); */
 
 }
+.text {
+    word-break: break-word;
+    background: none;
+    border: none;
+    /* color: white; */
+    text-align: left;
+    font-size: 13.3pt;
+}
+
+.text:hover {
+    cursor: pointer;
+}
 
 .opn {
     font-size: 10.8pt;
@@ -181,9 +193,30 @@ input {
     background-color: var(--background-main);
 }
 
+.bul {
+    line-height: 0;
+    font-size: 13.5pt;
+    font-family: 'Inter', sans-serif;
+    padding: 5px;
+}
+
+.tag {
+    font-size: 10.8pt;
+    width: auto;
+    font-family: 'Inter', sans-serif;
+    /* background: #333; */
+    color: grey;
+    border: none;
+    border-radius: 0;
+    display: inline;
+}
 
 .first {
     background-color: var(--first);
+}
+
+.first-color {
+    color: var(--first);
 }
 
 option.first {
@@ -194,7 +227,10 @@ option.first {
 
 .second {
     background-color: var(--second);
+}
 
+.second-color {
+    color: var(--second);
 }
 
 option.second {
@@ -207,6 +243,10 @@ option.second {
     background: var(--third);
 }
 
+.third-color {
+    color: var(--third);
+}
+
 option.third {
     padding-left: 5px;
     background: black;
@@ -215,6 +255,10 @@ option.third {
 
 .forth {
     background: var(--forth);
+}
+
+.forth-color {
+    color: var(--forth);
 }
 
 option.forth {
@@ -336,36 +380,7 @@ button {
     color: gray;
 }
 
-.text {
-    word-break: break-word;
-    background: none;
-    border: none;
-    /* color: white; */
-    text-align: left;
-    font-size: 13.3pt;
-}
 
-.text:hover {
-    cursor: pointer;
-}
-
-.bul {
-    line-height: 0;
-    font-size: 13.5pt;
-    font-family: 'Inter', sans-serif;
-    padding: 5px;
-}
-
-.tag {
-    font-size: 10.8pt;
-    width: auto;
-    font-family: 'Inter', sans-serif;
-    /* background: #333; */
-    color: grey;
-    border: none;
-    border-radius: 0;
-    display: inline;
-}
 
 .autocomplete {
     width: 100%;
@@ -507,7 +522,7 @@ label.readylabel {
 
 .calendar3 tbody td {
     font-family: 'Noto Sans Mono', monospace;
-    color: var(--third);
+    color: var(--forth);
 }
 
 .calendar3 tbody td:nth-child(n+6), #calendar3 .holiday {
@@ -521,7 +536,7 @@ label.readylabel {
 
 .calendar3 button.calendarblock.highlightedday {
     /* background: var(--ninth); */
-    border-color: var(--third);
+    border-color: var(--forth);
 
 }
 

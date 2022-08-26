@@ -36,7 +36,7 @@ let onDel = (txt) => {
 }
 
 let onFocus = (text) => {
-    focuss(text)
+    // focuss(text)
 }
 
 let onToday = () => {
@@ -125,7 +125,7 @@ let isSelection = false;
 let scrollPosition = 0;
 
 window.onfocus = function () {
-    onFocus();
+    // onFocus();
 };
 
 $(document).on('change', '.dateinp', function (event) {
@@ -164,10 +164,10 @@ $(document).on('click', '.newtask', function () {
 $(document).on('click', '.savetask', function () {
     onSelect('');
 });
-$(document).on('click', '.focustask', function () {
-    onFocus($(this).prop('value'));
-    onSelect('');
-});
+// $(document).on('click', '.focustask', function () {
+//     onFocus($(this).prop('value'));
+//     onSelect('');
+// });
 $(document).on('click', '#clearsearch', function () {
     $('.t1').val('');
     save();

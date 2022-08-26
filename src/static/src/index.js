@@ -292,7 +292,9 @@ let save = () => {
       a.blocked = false;
       for (let n of data.tasks) {
         for (let t of a.tags) {
-          if (t.toLowerCase() == n.name.toLowerCase() && !n.ready && prioritycompare(a.priority, n.priority) >= 0) {
+          if (t.toLowerCase() == n.name.toLowerCase() && !n.ready
+            && prioritycompare(a.priority, n.priority) >= -1
+          ) {
             a.blocked = true;
           }
         }
@@ -329,12 +331,12 @@ let select = (text) => {
   }
 };
 
-let focuss = (text) => {
-  foucusstimer = 0;
-  for (let a of data.tasks) {
-    a.focused = (a.name.toLowerCase() == text.toLowerCase())
-  }
-}
+// let focuss = (text) => {
+//   foucusstimer = 0;
+//   for (let a of data.tasks) {
+//     a.focused = (a.name.toLowerCase() == text.toLowerCase())
+//   }
+// }
 
 let focusfisrt = () => {
   let ok = true;
@@ -374,7 +376,9 @@ let del = (text) => {
     a.blocked = false;
     for (let n of data.tasks) {
       for (let t of a.tags) {
-        if (t.toLowerCase() == n.name.toLowerCase() && !n.ready && prioritycompare(a.priority, n.priority) >= 0) {
+        if (t.toLowerCase() == n.name.toLowerCase() && !n.ready
+          && prioritycompare(a.priority, n.priority) >= -1
+        ) {
           a.blocked = true;
         }
       }

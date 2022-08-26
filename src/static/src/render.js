@@ -75,8 +75,8 @@ let render = () => {
         texthtml += "<div class='header'>Приоритет</div>"
         texthtml += "<button class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Хронос<\/label><\/button>";
         texthtml += "<button class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Важно<\/label><\/button>";
-        texthtml += "<button class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Кайрос<\/label><\/button>";
-        texthtml += "<button class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Поток<\/label><\/button>";
+        texthtml += "<button class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Поток<\/label><\/button>";
+        texthtml += "<button class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Кайрос<\/label><\/button>";
         // texthtml += "<div class=\"bfifth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfifth\" value=\"fifth\"><label for=\"rfifth\">Квартал<\/label><\/div>";
         // texthtml += "    </div><div class='timebuttons'> ";
 
@@ -201,26 +201,26 @@ let render = () => {
       texthtml += rendertags(a);
 
       if (a.ready && a.opns.length > 0)
-        texthtml += ("<button class='tag first text time'>АКТИВ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
+        texthtml += ("<button class='tag text time'>АКТИВ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
       else if (a.blocked)
         if (a.opns.length > 0)
-          texthtml += ("<button class='tag first text time'>ВЕТВЬ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
+          texthtml += ("<button class='tag text time'>ВЕТВЬ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
         else
-          texthtml += ("<button class='tag first text time'>МЕЧТА</button>&nbsp;&nbsp;&nbsp;&nbsp;");
+          texthtml += ("<button class='tag text time'>МЕЧТА</button>&nbsp;&nbsp;&nbsp;&nbsp;");
       // if (a.priority == 'first')
       //   texthtml += ("<div class='tag first text time'>ВАЖНО</div>&nbsp;&nbsp;&nbsp;&nbsp;");
       if (!a.ready && (a.priority == 'first' || a.priority == 'second'))
         if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
-          texthtml += ("<div class='tag first text time past'>ВЧЕРА</div>&nbsp;&nbsp;");
+          texthtml += ("<div class='tag text time past'>ВЧЕРА</div>&nbsp;&nbsp;");
       if (moment() <= moment(a.date + "T" + a.time)) {
         if (a.time != lasttime) {
-          texthtml += "<div class='tag first text time'>";
+          texthtml += "<div class='tag text time'>";
           texthtml += a.time;
           texthtml += "</div>&nbsp;&nbsp;&nbsp;&nbsp;";
           lasttime = a.time
         }
         else
-          texthtml += ("<button class='tag first text time'>--:--</button>&nbsp;&nbsp;&nbsp;&nbsp;");
+          texthtml += ("<button class='tag text time'>--:--</button>&nbsp;&nbsp;&nbsp;&nbsp;");
       }
       texthtml += "<button class='text";
       texthtml += "' ";
@@ -243,19 +243,21 @@ let render = () => {
         // texthtml += "\xa0<span class=' rank'>";
         // texthtml += vrank;
         // texthtml += "</span>";
+        let opnprior = elder(a.opns)
+        opnprior = retrans(opnprior);
+        opnprior += '-color';
         if (a.ready) {
-          texthtml += "<span class='ready bul'>⇒</span>";
+          texthtml += "<span class=' bul'>✓</span>";
         }
-        else
-          texthtml += "<span class=' bul tag'>⇒</span>";
-        // }
+        texthtml += "<span class=' bul tag " + opnprior + "'> ►</span>";
+        //◉►
       }
       else {
         // texthtml += "\xa0<span class=' rank'>";
         // texthtml += vrank;
         // texthtml += "</span>";
         if (a.ready) {
-          texthtml += "<span class='ready bul'>•</span>";
+          texthtml += "<span class=' bul'>✓</span>";
         }
       }
 
