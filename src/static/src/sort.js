@@ -46,62 +46,57 @@ let sortdata = () => {
     else if (bd.isBefore(a.date, 'day')) {
       return 1
     }
-    if (a.priority == b.priority) {
-      if (moment() <= moment(a.date + "T" + a.time) && moment() > moment(b.date + "T" + b.time))
-        return 1;
-      if (moment() > moment(a.date + "T" + a.time) && moment() <= moment(b.date + "T" + b.time))
-        return -1;
-      if (moment() < moment(a.date + "T" + a.time) && moment() < moment(b.date + "T" + b.time)) {
-        if (moment(a.date + "T" + a.time) > moment(b.date + "T" + b.time)) {
-          return 1;
-        }
-        else if (moment(a.date + "T" + a.time) < moment(b.date + "T" + b.time)) {
-          return -1;
-        }
-      }
-      //       // if (a.rank > 0 && b.rank <= 0)
-      //       //   return 1;
-      //       // if (a.rank <= 0 && b.rank > 0)
-      //       //   return -1;
-      //       // if (a.rank > b.rank)
-      //       //   return -1
-      //       // else if (a.rank < b.rank)
-      //       //   return 1;
-      //       // if (a.profit > b.profit)
-      //       //   return -1
-      //       // else if (a.profit < b.profit)
-      //       //   return 1
-      if (elder(a.opns) < elder(b.opns))
-        return -1
-      else if (elder(a.opns) > elder(b.opns))
-        return 1
-      if ((a.opns.length > b.opns.length)) {
-        return -1
-      }
-      else if (a.opns.length < b.opns.length) {
-        return 1
-      }
-      if (a.tags.length > b.tags.length) {
-        return -1
-      }
-      else if (a.tags.length < b.tags.length) {
-        return 1
-      }
-      if (a.tags[0] && b.tags[0] && (a.tags[0].localeCompare(b.tags[0]) < 0)) {
-        return -1
-      }
-      else if (a.tags[0] && b.tags[0] && (a.tags[0].localeCompare(b.tags[0]) > 0)) {
-        return 1
-      }
-      if (a.name.length >= b.name.length) {
+
+    let ap = Math.min(trans(a.priority), elder(a.opns))
+    let bp = Math.min(trans(b.priority), elder(b.opns))
+
+    if (ap - bp > 0)
+      return 1
+    else if (ap - bp < 0)
+      return -1
+    if (trans(a.priority) - trans(b.priority) > 0)
+      return 1
+    if (trans(a.priority) - trans(b.priority) < 0)
+      return -1
+
+    if (moment() <= moment(a.date + "T" + a.time) && moment() > moment(b.date + "T" + b.time))
+      return 1;
+    if (moment() > moment(a.date + "T" + a.time) && moment() <= moment(b.date + "T" + b.time))
+      return -1;
+    if (moment() < moment(a.date + "T" + a.time) && moment() < moment(b.date + "T" + b.time)) {
+      if (moment(a.date + "T" + a.time) > moment(b.date + "T" + b.time)) {
         return 1;
       }
-      else if (a.name.length < b.name.length) {
+      else if (moment(a.date + "T" + a.time) < moment(b.date + "T" + b.time)) {
         return -1;
       }
     }
-    else
-      return prioritycompare(a.priority, b.priority);
+
+
+    if (a.tags.length > b.tags.length) {
+      return -1
+    }
+    else if (a.tags.length < b.tags.length) {
+      return 1
+    }
+    if ((a.opns.length > b.opns.length)) {
+      return -1
+    }
+    else if (a.opns.length < b.opns.length) {
+      return 1
+    }
+    if (a.tags[0] && b.tags[0] && (a.tags[0].localeCompare(b.tags[0]) < 0)) {
+      return -1
+    }
+    else if (a.tags[0] && b.tags[0] && (a.tags[0].localeCompare(b.tags[0]) > 0)) {
+      return 1
+    }
+    if (a.name.length >= b.name.length) {
+      return 1;
+    }
+    else if (a.name.length < b.name.length) {
+      return -1;
+    }
   })
 };
 
