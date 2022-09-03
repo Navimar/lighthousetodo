@@ -159,7 +159,8 @@ elder = parr => {
   parr.forEach(e => {
     for (let a of data.tasks) {
       if (a.name == e)
-        e = a.priority;
+        if (!moment().isBefore(moment(a.date + "T" + a.time), 'day'))
+          e = a.priority;
     }
     e = trans(e)
     if (e < champion)
