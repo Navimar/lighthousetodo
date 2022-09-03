@@ -337,7 +337,7 @@ function autocomplete(inp, arr) {
     i = 0;
     while (i < arr.length && cn < 30) {
       let index
-      i++;
+
       /*check if the item starts with the same letters as the text field value:*/
       if (arr[i])
         index = arr[i].toLowerCase().indexOf(val.toLowerCase());
@@ -370,6 +370,7 @@ function autocomplete(inp, arr) {
         });
         a.appendChild(b);
       }
+      i++;
     }
   });
   /*execute a function presses a key on the keyboard:*/
