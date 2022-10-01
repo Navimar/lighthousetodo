@@ -163,6 +163,8 @@ $(document).on('click', '.newtask', function () {
 });
 $(document).on('click', '.savetask', function () {
     onSelect('');
+    scrollPosition = parseInt($('.focused').position().top - $(window).height() / 2);
+    $(window).scrollTop(scrollPosition);
 });
 // $(document).on('click', '.focustask', function () {
 //     onFocus($(this).prop('value'));
