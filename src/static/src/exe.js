@@ -145,7 +145,7 @@ $(document).on('click', '.calbut', function (event) {
 });
 $(document).on('click', '.text', function () {
     $('.t1').val('');
-    onSelect($(this).val());
+    onSelect($(this).text());
 });
 // $(document).on('click', '.focushead', function () {
 //     focusnext();
