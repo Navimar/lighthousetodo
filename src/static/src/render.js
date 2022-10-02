@@ -223,13 +223,11 @@ let render = () => {
           texthtml += ("<button class='tag text time'>--:--</button>&nbsp;&nbsp;&nbsp;&nbsp;");
       }
       texthtml += "<button class='text";
-      texthtml += "' ";
-      texthtml += "value='" + a.name + "'>";
+      texthtml += "'>";
       texthtml += a.name;
+      texthtml += "</button>";
       if (a.note)
         texthtml += "&hellip;"
-      texthtml += "</button>";
-
 
       if (a.opns && a.opns.length > 0) {
         // if (!a.selected && a.target && a.target != a.name) {
