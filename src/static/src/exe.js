@@ -151,9 +151,9 @@ $(document).on('click', '.text', function () {
 //     focusnext();
 //     render();
 // });
-$(document).on('click', '.tag', function () {
-    onTag($(this).text());
-});
+// $(document).on('click', '.tag', function () {
+//     onTag($(this).text());
+// });
 $(document).on('click', '.opn', function () {
     onOpn($(this).text());
 });
