@@ -506,10 +506,13 @@ let rendertags = (a) => {
       return 0;
     });
     for (let t in a.tags) {
+      let scribe = note_by_name(a.tags[t])
       texthtml += "<button class='tag text";
       texthtml += "'>";
       texthtml += a.tags[t];
       texthtml += "</button>";
+      if (scribe.ready)
+        texthtml += '<span class="tag">&nbsp;✓</span>'
       if (t != a.tags.length - 1)
         texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
       else {
