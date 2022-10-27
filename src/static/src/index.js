@@ -117,57 +117,25 @@ let newwish = (name, selected, tags, opns, priority, profit, note) => {
     date: clock().year + "-" + clock().month + "-" + clock().d,
   });
 };
+let countpriorarr = (a, level) => {
+  // let target = a.name;
+  if (!level) level = 0;
+  if (a.opns && a.opns.length > 0) {
+    for (let t = 0; t < a.opns.length; t++) {
+      let opn = note_by_name(a.opns[t])
+      if (level < 12) {
+        countpriorarr(opn, level + 1);
+      }
+    }
+  }
+  if (!moment().isBefore(moment(a.date + "T" + a.time), 'day'))
+    if (!a.ready && trans(a.priority) < countpriorarr.priorarr[level])
+      countpriorarr.priorarr[level] = trans(a.priority);
+}
+
 let save = () => {
   if (selected.i == -1)
     return
-
-  let countweight = (a, level) => {
-    a.future = moment(a.date + ' ' + a.time).diff(moment(), 'minutes') <= 5 ? 0 : 1;
-    let profit = parseInt(a.profit) + moment().diff(moment(a.date), 'days') * a.ppd
-    let weight = profit;
-    if (a.priority == 'tenth' || a.ready)
-      weight = 0;
-    if (!level) level = 0;
-    if (a.tags && a.tags.length > 0) {
-      for (let t = 0; t < a.tags.length; t++) {
-        let tag = note_by_name(a.tags[t])
-        if (level < 12) {
-          let re = countweight(tag, level + 1)
-          weight += re.weight;
-          if (re.future)
-            a.future = true;
-        }
-      }
-    }
-    if (a.priority == 'tenth' || a.ready)
-      return {
-        weight: weight, future: false
-      }
-    return {
-      weight: Math.min(weight, profit), future: a.future
-    }
-  }
-
-  let countrank = (a, level) => {
-    let rank = parseInt(a.weight);
-    let target = a.name;
-    let future = a.future;
-    if (!level) level = 0;
-    if (a.opns && a.opns.length > 0) {
-      for (let t = 0; t < a.opns.length; t++) {
-        let opn = note_by_name(a.opns[t])
-        if (level < 12) {
-          let r = countrank(opn, level + 1);
-          if (r.rank > rank && r.rank > 0 && (r.future == false)) {
-            target = r.target;
-            rank = r.rank;
-          }
-        }
-      }
-    }
-    return { rank, target, future };
-  }
-
   let inptval = $('#inputtext').val()
   let name;
   let note = '';
@@ -299,10 +267,9 @@ let save = () => {
           }
         }
       }
-      // a.weight = countweight(a).weight;
-      // let r = countrank(a);
-      // a.rank = r.rank;
-      // a.target = r.target;
+      countpriorarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
+      countpriorarr(a);
+      a.priorarr = countpriorarr.priorarr;
     }
     sortdata();
     focusfisrt();

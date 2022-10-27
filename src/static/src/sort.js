@@ -47,12 +47,10 @@ let sortdata = () => {
       return 1
     }
 
-    let ap = Math.min(trans(a.priority), elder(a.opns))
-    let bp = Math.min(trans(b.priority), elder(b.opns))
-
-    if (ap - bp > 0)
+    let e = elder(a, b)
+    if (e > 0)
       return 1
-    else if (ap - bp < 0)
+    if (e < 0)
       return -1
     if (trans(a.priority) - trans(b.priority) > 0)
       return 1
@@ -154,19 +152,34 @@ let prioritycompare = (a, b) => {
   return trans(a) - trans(b);
 }
 
-elder = parr => {
-  let champion = 11;
-  parr.forEach(e => {
-    for (let a of data.tasks) {
-      if (a.name == e)
-        if (!moment().isBefore(moment(a.date + "T" + a.time), 'day')) {
-          e = a.priority;
-          break;
-        }
+let elder = (a, b) => {
+  a = [...a.priorarr]
+  b = [...b.priorarr]
+
+  let amin = 99
+  let bmin = 99
+  let ai = 0
+  let bi = 0
+
+  while (amin == bmin && ai == bi && a.length > 0 && b.length > 0) {
+    amin = 99
+    bmin = 99
+    ai = 0
+    bi = 0
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] < amin) {
+        amin = a[i]
+        ai = i;
+      }
+      if (b[i] < bmin) {
+        bmin = b[i]
+        bi = i;
+      }
     }
-    e = trans(e)
-    if (e < champion)
-      champion = e;
-  });
-  return champion;
+    a.splice(ai, 1)
+    b.splice(bi, 1)
+  }
+  if (amin == bmin)
+    return (ai - bi)
+  return amin - bmin
 }

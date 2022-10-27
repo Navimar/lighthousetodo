@@ -230,25 +230,17 @@ let render = () => {
         texthtml += "&hellip;"
 
       if (a.opns && a.opns.length > 0) {
-        // if (!a.selected && a.target && a.target != a.name) {
-        //   texthtml += "<span class=' bul tag'>⇒</span>";
-        //   texthtml += "<span class='opn target'>" + a.target + "</span>";
-        //   texthtml += "<span class=' rank'>";
-        //   // texthtml += vrank;
-        //   texthtml += "</span>";
-        // }
-        // else {
-        // texthtml += "\xa0<span class=' rank'>";
-        // texthtml += vrank;
-        // texthtml += "</span>";
-        let opnprior = elder(a.opns)
-        opnprior = retrans(opnprior);
-        opnprior += '-color';
         if (a.ready) {
           texthtml += "<span class=' bul'>✓</span>";
         }
-        texthtml += "<span class=' bul tag " + opnprior + "'> ►</span>";
-        //◉►
+        if (a.priorarr)
+          a.priorarr.forEach((e, index) => {
+            if (e != 99 && index > 0) {
+              e = retrans(e);
+              e += '-color';
+              texthtml += "<span class=' bul tag " + e + "'> ►</span>";
+            }
+          });
       }
       else {
         // texthtml += "\xa0<span class=' rank'>";
