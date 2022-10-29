@@ -490,8 +490,8 @@ function Calendar3(date) {
 }
 
 let rendertags = (a) => {
-  if (a.name == 'заметка')
-    console.log(a.tags, a.blocks, a.tags.filter(x => !a.blocks.includes(x)));
+  if (!a.blocks)
+    a.blocks = [];
   let texthtml = "";
   if (a.tags.length > 0) {
     a.tags.sort((a, b) => {
