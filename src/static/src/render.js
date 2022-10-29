@@ -513,7 +513,7 @@ let rendertags = (a) => {
     }
     let readyarr = a.tags.filter(x => !a.blocks.includes(x))
 
-    if (readyarr.length > 0)
+    if (a.blocks.length > 0)
       texthtml += "<br>";
 
     for (let t in readyarr) {
@@ -528,7 +528,8 @@ let rendertags = (a) => {
       // if (t != a.tags.length - 1)
       // texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
     }
-    texthtml += "<br>";
+    if (readyarr.length > 0)
+      texthtml += "<br>";
   }
 
   return texthtml;
