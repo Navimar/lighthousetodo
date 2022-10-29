@@ -4,6 +4,7 @@ let user;
 let foucusstimer = 0;
 let selected = { i: - 1 };
 data.timestamp = 0;
+let cn = 0
 
 
 function onTelegramAuth(data) {
@@ -81,6 +82,7 @@ let newwish = (name, selected, tags, opns, priority, profit, note) => {
   while (ok) {
     ok = false;
     for (let a of data.tasks) {
+      cn++
       if (a.name.toLowerCase() == name.toLowerCase()) {
         name += '!';
         ok = true;
@@ -113,6 +115,7 @@ let newwish = (name, selected, tags, opns, priority, profit, note) => {
     profit,
     rank: profit,
     ready: false,
+    blocks: [],
     time: clock().h + ":" + clock().m,
     date: clock().year + "-" + clock().month + "-" + clock().d,
   });
@@ -197,6 +200,7 @@ let save = () => {
     while (ok) {
       ok = false;
       for (let a of data.tasks) {
+        // cn++
         if (!a.selected && a.name.toLowerCase() == name.toLowerCase()) {
           name += '!';
           ok = true;
@@ -206,6 +210,9 @@ let save = () => {
     }
 
     for (let a of data.tasks) {
+      // cn++ 
+      if (!a.blocks)
+        a.blocks = []
       if (a.selected && inptval) {
         a.name = name;
         a.note = note;
@@ -217,10 +224,17 @@ let save = () => {
         a.priority = priority;
         a.time = time;
         a.date = date;
+
       }
       for (let t in a.tags) {
         if (a.tags[t].toLowerCase() == selected.text.toLowerCase()) {
           a.tags.splice(t, 1);
+        }
+      }
+
+      for (let b in a.blocks) {
+        if (a.blocks[b].toLowerCase() == selected.text.toLowerCase()) {
+          a.blocks.splice(b, 1);
         }
       }
 
@@ -244,6 +258,8 @@ let save = () => {
           newscribesopns.splice(newscribesopns.indexOf(opn), 1);
           if (a.tags && a.tags.indexOf(name) === -1) {
             a.tags.push(name);
+            if (!ready)
+              a.blocks.push(name);
           }
         }
       });
@@ -257,16 +273,6 @@ let save = () => {
     });
 
     for (let a of data.tasks) {
-      a.blocked = false;
-      for (let n of data.tasks) {
-        for (let t of a.tags) {
-          if (t.toLowerCase() == n.name.toLowerCase() && !n.ready
-            // && prioritycompare(a.priority, n.priority) >= -1
-          ) {
-            a.blocked = true;
-          }
-        }
-      }
       countpriorarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
       countpriorarr(a);
       a.priorarr = countpriorarr.priorarr;
@@ -274,12 +280,16 @@ let save = () => {
     sortdata();
     focusfisrt();
   }
+  console.log(cn);
+  cn = 0;
 };
 
 let note_by_name = (name) => {
-  for (let a of data.tasks)
+  for (let a of data.tasks) {
+    // cn++
     if (a.name.toLowerCase() == name.toLowerCase())
       return a;
+  }
 }
 
 let select = (text) => {
@@ -333,21 +343,14 @@ let del = (text) => {
         data.tasks[a].tags.splice(t, 1);
       }
     }
+    for (let t in data.tasks[a].blocks) {
+      if (data.tasks[a].blocks[t] == text) {
+        data.tasks[a].blocks.splice(t, 1);
+      }
+    }
     for (let t in data.tasks[a].opns) {
       if (data.tasks[a].opns[t] == text) {
         data.tasks[a].opns.splice(t, 1);
-      }
-    }
-  }
-  for (let a of data.tasks) {
-    a.blocked = false;
-    for (let n of data.tasks) {
-      for (let t of a.tags) {
-        if (t.toLowerCase() == n.name.toLowerCase() && !n.ready
-          // && prioritycompare(a.priority, n.priority) >= -1
-        ) {
-          a.blocked = true;
-        }
       }
     }
   }

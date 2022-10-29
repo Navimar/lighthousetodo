@@ -52,7 +52,7 @@ let render = () => {
         today = moment(a.date);
         texthtml += Calendar3(today);
       }
-      if (a.blocked && !blocked) {
+      if (a.blocks && a.blocks.length > 0 && !blocked) {
         texthtml += ("<div class='date'><div class='header date'>ФИНИСФЕРА</div></div>");
         blocked = true;
       }
@@ -202,7 +202,7 @@ let render = () => {
 
       if (a.ready && a.opns.length > 0)
         texthtml += ("<button class='tag text time'>АКТИВ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
-      else if (a.blocked)
+      else if (a.blocks && a.blocks.length > 0)
         if (a.opns.length > 0)
           texthtml += ("<button class='tag text time'>ВЕТВЬ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
         else
@@ -490,6 +490,8 @@ function Calendar3(date) {
 }
 
 let rendertags = (a) => {
+  if (a.name == 'заметка')
+    console.log(a.tags, a.blocks, a.tags.filter(x => !a.blocks.includes(x)));
   let texthtml = "";
   if (a.tags.length > 0) {
     a.tags.sort((a, b) => {
@@ -497,22 +499,36 @@ let rendertags = (a) => {
       if (a > b) { return 1; }
       return 0;
     });
-    for (let t in a.tags) {
-      let scribe = note_by_name(a.tags[t])
+    for (let t in a.blocks) {
+      texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
       texthtml += "<button class='tag text";
       texthtml += "'>";
-      texthtml += a.tags[t];
+      texthtml += a.blocks[t];
       texthtml += "</button>";
-      if (scribe.ready)
-        texthtml += '<span class="tag">&nbsp;✓</span>'
-      if (t != a.tags.length - 1)
-        texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
-      else {
-        // texthtml += '<span class="tag">&nbsp;⇒&nbsp;</span>'
-        texthtml += "<br>";
-      }
-
+      // if (t != a.blocks.length - 1)
+      //   texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
+      // else {
+      // texthtml += '<span class="tag">&nbsp;⇒&nbsp;</span>'
+      // }
     }
+    let readyarr = a.tags.filter(x => !a.blocks.includes(x))
+
+    if (readyarr.length > 0)
+      texthtml += "<br>";
+
+    for (let t in readyarr) {
+      // if (t == 0)
+      texthtml += '<span class="tag">&nbsp;✓&nbsp;</span>'
+      // else
+      // texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
+      texthtml += "<button class='tag text";
+      texthtml += "'>";
+      texthtml += readyarr[t];
+      texthtml += "</button>";
+      // if (t != a.tags.length - 1)
+      // texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
+    }
+    texthtml += "<br>";
   }
 
   return texthtml;
