@@ -76,7 +76,7 @@ let update = () => {
   socket.emit('load', user);
 }
 
-let newwish = (name, selected, tags, opns, priority, profit, note) => {
+let newwish = (name, selected, tags, blocks, opns, priority, profit, note) => {
   let run = false;
   let ok = true;
   while (ok) {
@@ -99,6 +99,8 @@ let newwish = (name, selected, tags, opns, priority, profit, note) => {
   if (!tags) {
     tags = [];
   }
+  if (!blocks)
+    blocks = [];
   if (!opns) {
     opns = [];
   }
@@ -109,13 +111,13 @@ let newwish = (name, selected, tags, opns, priority, profit, note) => {
     name,
     note,
     tags,
+    blocks,
     opns,
     selected,
     priority,
     profit,
     rank: profit,
     ready: false,
-    blocks: [],
     time: clock().h + ":" + clock().m,
     date: clock().year + "-" + clock().month + "-" + clock().d,
   });
@@ -266,10 +268,14 @@ let save = () => {
 
     }
     newscribestags.forEach((txt) => {
-      newwish(txt, false, [], [name], priority, 0);
+      newwish(txt, false, [], [], [name], priority, 0);
     });
     newscribesopns.forEach((txt) => {
-      newwish(txt, false, [name], [], priority, 0);
+      if (ready)
+        newwish(txt, false, [name], [], [], priority, 0);
+      if (!ready) {
+        newwish(txt, false, [name], [name], [], priority, 0);
+      }
     });
 
     for (let a of data.tasks) {
