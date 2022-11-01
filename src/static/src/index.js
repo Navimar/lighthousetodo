@@ -116,6 +116,7 @@ let newwish = (name, selected, tags, blocks, opns, priority, profit, note) => {
     selected,
     priority,
     profit,
+    priorarr: [],
     rank: profit,
     ready: false,
     time: clock().h + ":" + clock().m,
