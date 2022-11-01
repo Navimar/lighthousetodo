@@ -123,7 +123,6 @@ let newwish = (name, selected, tags, blocks, opns, priority, profit, note) => {
   });
 };
 let countpriorarr = (a, level) => {
-  // let target = a.name;
   if (!level) level = 0;
   if (a.opns && a.opns.length > 0) {
     for (let t = 0; t < a.opns.length; t++) {
@@ -138,6 +137,12 @@ let countpriorarr = (a, level) => {
       countpriorarr.priorarr[level] = trans(a.priority);
 }
 
+let findancestors = (a) => {
+  findancestors.ancestors.push(a);
+  for (let t = 0; t < a.tags.length; t++) {
+    findancestors(note_by_name(a.tags[t]))
+  }
+}
 let save = () => {
   if (selected.i == -1)
     return
@@ -211,11 +216,14 @@ let save = () => {
       }
     }
 
+    let hero = {};
+    let blocks = [];
     for (let a of data.tasks) {
       // cn++ 
       if (!a.blocks)
         a.blocks = []
       if (a.selected && inptval) {
+        hero = a;
         a.name = name;
         a.note = note;
         a.tags = tags;
@@ -252,6 +260,8 @@ let save = () => {
           if (a.opns && a.opns.indexOf(name) === -1) {
             a.opns.push(name);
           }
+          if (!a.ready)
+            blocks.push(a.name);
         }
       });
 
@@ -265,9 +275,10 @@ let save = () => {
           }
         }
       });
-
     }
+    hero.blocks = blocks;
     newscribestags.forEach((txt) => {
+      hero.blocks.push(txt);
       newwish(txt, false, [], [], [name], priority, 0);
     });
     newscribesopns.forEach((txt) => {
@@ -278,7 +289,10 @@ let save = () => {
       }
     });
 
-    for (let a of data.tasks) {
+    findancestors.ancestors = [];
+    findancestors(hero);
+    let ancestors = [... new Set(findancestors.ancestors)]
+    for (let a of ancestors) {
       countpriorarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
       countpriorarr(a);
       a.priorarr = countpriorarr.priorarr;
