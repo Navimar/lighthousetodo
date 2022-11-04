@@ -301,7 +301,6 @@ let save = () => {
     sortdata();
     focusfisrt();
   }
-  console.log(cn);
   cn = 0;
 };
 
@@ -354,9 +353,12 @@ let focusfisrt = () => {
 }
 
 let del = (text) => {
+  let ancestors;
   for (let a in data.tasks) {
-    // console.log(a);
     if (data.tasks[a].name == text) {
+      findancestors.ancestors = [];
+      findancestors(data.tasks[a]);
+      ancestors = [... new Set(findancestors.ancestors)]
       data.tasks.splice(a, 1);
     }
     for (let t in data.tasks[a].tags) {
@@ -375,6 +377,14 @@ let del = (text) => {
       }
     }
   }
+
+  for (let anc of ancestors) {
+    countpriorarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
+    console.log("anc", anc);
+    countpriorarr(anc);
+    anc.priorarr = countpriorarr.priorarr;
+  }
+
   sortdata();
   focusfisrt();
 };
