@@ -153,7 +153,6 @@ let prioritycompare = (a, b) => {
 }
 
 let elder = (a, b) => {
-  console.log(a.name, a.priorarr, b.name, b.priorarr);
   a = [...a.priorarr]
   b = [...b.priorarr]
 

@@ -133,7 +133,7 @@ let countpriorarr = (a, level) => {
       }
     }
   }
-  if (!moment().isBefore(moment(a.date + "T" + a.time), 'day'))
+  if (!moment().isBefore(moment(a.date + "T" + a.time), 'day') || a.blocks.length == 0)
     if (!a.ready && trans(a.priority) < countpriorarr.priorarr[level])
       countpriorarr.priorarr[level] = trans(a.priority);
 }
