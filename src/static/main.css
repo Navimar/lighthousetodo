@@ -57,6 +57,9 @@ div {
 table {
     width: 100%;
 }
+table.selected{
+    word-wrap: anywhere;
+}
 
 #tasks {
     margin-top: 27px;
