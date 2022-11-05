@@ -1,5 +1,6 @@
 let onSelect = (txt) => {
     save();
+    focusfisrt()
     select(txt);
     send();
     render();
@@ -7,6 +8,7 @@ let onSelect = (txt) => {
 
 let onTag = (txt) => {
     save();
+    focusfisrt()
     select(txt);
     send();
     render();
@@ -14,6 +16,7 @@ let onTag = (txt) => {
 
 let onOpn = (txt) => {
     save();
+    focusfisrt()
     select(txt);
     send();
     render();
@@ -167,7 +170,8 @@ $(document).on('click', '.savetask', function () {
     select(focusfisrt());
     send();
     render();
-    scrollPosition = parseInt($('.focused').position().top - $(window).height() + $('.selected').height() * 1.5);
+    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.95 + $('.selected').height()
+    );
     $(window).scrollTop(scrollPosition);
 });
 // $(document).on('click', '.focustask', function () {
