@@ -29,8 +29,8 @@ let onNew = () => {
 }
 
 let onDel = (txt) => {
-    selectnext();
     del(txt);
+    select(focusfisrt());
     send();
     render();
 }
@@ -162,8 +162,12 @@ $(document).on('click', '.newtask', function () {
     $('.inputtext:first').val('').select();
 });
 $(document).on('click', '.savetask', function () {
-    onSelect('');
-    scrollPosition = parseInt($('.focused').position().top - $(window).height() / 2);
+    // onSelect('');
+    save();
+    select(focusfisrt());
+    send();
+    render();
+    scrollPosition = parseInt($('.focused').position().top - $(window).height() + $('.selected').height() * 1.5);
     $(window).scrollTop(scrollPosition);
 });
 // $(document).on('click', '.focustask', function () {

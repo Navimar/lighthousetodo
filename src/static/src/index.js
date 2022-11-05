@@ -299,7 +299,6 @@ let save = () => {
       a.priorarr = countpriorarr.priorarr;
     }
     sortdata();
-    focusfisrt();
   }
   cn = 0;
 };
@@ -328,16 +327,10 @@ let select = (text) => {
   }
 };
 
-// let focuss = (text) => {
-//   foucusstimer = 0;
-//   for (let a of data.tasks) {
-//     a.focused = (a.name.toLowerCase() == text.toLowerCase())
-//   }
-// }
-
 let focusfisrt = () => {
   let ok = true;
   let z = false
+  let hero = false;
   for (let a in data.tasks) {
     if (data.tasks[a].focused) {
       z = a;
@@ -346,10 +339,13 @@ let focusfisrt = () => {
     if (!isFuture(data.tasks[a].date, data.tasks[a].time) && ok) {
       ok = false;
       data.tasks[a].focused = true
+      // console.log(data.tasks[a])
+      hero = data.tasks[a].name;
       if (z != a)
         foucusstimer = 0;
     }
   }
+  return hero;
 }
 
 let del = (text) => {
@@ -380,7 +376,6 @@ let del = (text) => {
 
   for (let anc of ancestors) {
     countpriorarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
-    console.log("anc", anc);
     countpriorarr(anc);
     anc.priorarr = countpriorarr.priorarr;
   }

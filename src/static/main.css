@@ -769,6 +769,7 @@ label.readylabel {
 
 td.focushead {
     height: 1px;
+    word-wrap: break-word;
 }
 
 .focustimer {
