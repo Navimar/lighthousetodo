@@ -170,7 +170,7 @@ $(document).on('click', '.savetask', function () {
     select(focusfisrt());
     send();
     render();
-    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.95 + $('.selected').height()
+    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height()
     );
     $(window).scrollTop(scrollPosition);
 });
