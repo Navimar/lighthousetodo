@@ -1,6 +1,11 @@
 let sortdata = () => {
   data.tasks.sort((a, b) => {
 
+    if (!a.ready && b.ready)
+      return -1;
+    if (a.ready && !b.ready)
+      return 1;
+
     if (a.blocks.length == 0 && b.blocks.length > 0) {
       return -1
     }
