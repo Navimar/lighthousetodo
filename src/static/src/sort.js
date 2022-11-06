@@ -1,11 +1,6 @@
 let sortdata = () => {
   data.tasks.sort((a, b) => {
 
-    if (!a.ready && b.ready)
-      return -1;
-    if (a.ready && !b.ready)
-      return 1;
-
     if (a.blocks.length == 0 && b.blocks.length > 0) {
       return -1
     }
@@ -46,6 +41,12 @@ let sortdata = () => {
     else if (bd.isBefore(a.date, 'day')) {
       return 1
     }
+
+    if (!a.ready && b.ready)
+      return -1;
+    if (a.ready && !b.ready)
+      return 1;
+
 
     let e = elder(a, b)
     if (e > 0)
