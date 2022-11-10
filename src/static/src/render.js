@@ -17,6 +17,7 @@ let render = () => {
     let text = "";
     let note = "";
     let checked = false;
+    let searchresultisempty = true;
     let time = "00:00";
     let lasttime = false;
     let date = "1111-11-11";
@@ -39,12 +40,18 @@ let render = () => {
       let nondisplay = false;
       if (searchquerry.toLowerCase !== '') {
         nondisplay = true;
-        if (a.name.toLowerCase().includes(searchquerry.toLowerCase()))
+        if (a.name.toLowerCase().includes(searchquerry.toLowerCase())) {
           nondisplay = false;
+          searchresultisempty = false;
+        }
         a.tags.forEach((val) => {
-          if (val.toLowerCase().includes(searchquerry.toLowerCase()))
+          if (val.toLowerCase().includes(searchquerry.toLowerCase())) {
             nondisplay = false;
+            searchresultisempty = false;
+          }
         });
+      } else {
+        searchresultisempty = false;
       }
       names.push(a.name);
       texthtml = "";
@@ -139,18 +146,16 @@ let render = () => {
 
         //управляющие кнопки
         texthtml += "<div class='mainbuttonblock'>"
+        texthtml += "<label value='" + a.name + "' class='mainbutton divetask' >Нырок <input  class='checkdive' type=\"checkbox\"></label>";
+        texthtml += "</div>"
+
+        texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<label class='mainbutton readylabel' >Активно <input  class='checkbox onoff' type=\"checkbox\"></label>";
         texthtml += "</div>"
 
         texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<label class='mainbutton  delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
         texthtml += "</div>"
-
-        // texthtml += "<div class='mainbuttonblock'>"
-        // texthtml += "<button value='" + a.name + "' class='mainbutton task focustask' >" +
-        //   "Фокус" +
-        //   "</button>";
-        // texthtml += "</div>"
 
         texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<button value='" + a.name + "' class='mainbutton task savetask' >" +
@@ -266,6 +271,8 @@ let render = () => {
         $('input[name="radioprior"][value=' + a.priority + ']').prop('checked', true);
       }
     }
+    if (searchresultisempty)
+      tasks.append('<div id="searchresultisempty">Ничего не найдено, измените поисковый запрос</div><br><button class="clearsearch">Очистить строку поиска</button>');
 
     for (let t of tags) {
       tagtext += t + "\n";
@@ -275,6 +282,10 @@ let render = () => {
         opntext += t + "\n";
       }
     }
+
+    if ($('.divetask').attr('value') == $('.t1').val())
+      $('.checkdive').prop("checked", true);
+
     $(".onoff").prop({
       checked: checked
     });
@@ -545,26 +556,26 @@ let renderopns = (a, level) => {
       return 0;
     });
     for (let t = 0; t < a.opns.length; t++) {
-      // let openka = note_by_name(a.opns[t])
+      let openka = note_by_name(a.opns[t])
       texthtml += "<span class='bul tag ";
-      // texthtml += openka.priority + '-color';
+      texthtml += openka.priority + '-color';
       texthtml += "'>";
       for (let i = 0; i < level; i++)
         texthtml += "&nbsp;&nbsp;"
 
-      // if (openka.tags && openka.tags.length > 1)
-      //   texthtml += "⇒";
-      // else
-      texthtml += "•";
+      if (openka.tags && openka.tags.length > 1)
+        texthtml += "⇒";
+      else
+        texthtml += "•";
       texthtml += "</span>";
       texthtml += "<button class='opn";
       texthtml += "'>";
       texthtml += a.opns[t];
       texthtml += "</button>";
-      // if (level == 5)
-      //   texthtml += "<span class='arr'>⇒...</span>";
-      // if (level < 5)
-      //   texthtml += renderopns(openka, level + 1);
+      if (level == 5)
+        texthtml += "<span class='arr'>⇒...</span>";
+      if (level < 5)
+        texthtml += renderopns(openka, level + 1);
     }
   }
   return texthtml + "</div>";

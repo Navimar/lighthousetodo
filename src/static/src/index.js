@@ -3,6 +3,7 @@ let data = {};
 let user;
 let foucusstimer = 0;
 let selected = { i: - 1 };
+let searchlock = false;
 data.timestamp = 0;
 let cn = 0
 

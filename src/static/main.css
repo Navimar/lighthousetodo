@@ -75,6 +75,14 @@ table.selected{
     transform: translateX(-50%);
 }
 
+#clearsearchbutton{
+     font-size: 13pt;
+    position: absolute;
+    right: 4px;
+    background: var(--background-area);
+    border:none;
+    border-radius: 0;
+}
 
 td.taskmarker {
     border-bottom: 5px solid var(--background-main);
@@ -742,8 +750,8 @@ label.readylabel {
 }
 
 .mainbuttonblock {
-    width: 33.3%;
-    /* width: 25%; */
+    /* width: 33.3%; */
+    width: 25%;
     display: inline-block;
 }
 

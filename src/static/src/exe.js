@@ -136,6 +136,8 @@ $(document).on('change', '.dateinp', function (event) {
 });
 $('.t1').bind('input propertychange', function () {
     select('');
+    searchlock = false;
+    $('#clearsearchbutton').text('╳')
     render();
     $(window).scrollTop(0);
 });
@@ -147,7 +149,8 @@ $(document).on('click', '.calbut', function (event) {
 
 });
 $(document).on('click', '.text', function () {
-    $('.t1').val('');
+    if (!searchlock)
+        $('.t1').val('');
     onSelect($(this).text());
 });
 // $(document).on('click', '.focushead', function () {
@@ -174,18 +177,28 @@ $(document).on('click', '.savetask', function () {
     );
     $(window).scrollTop(scrollPosition);
 });
-// $(document).on('click', '.focustask', function () {
-//     onFocus($(this).prop('value'));
-//     onSelect('');
-// });
-$(document).on('click', '#clearsearch', function () {
-    $('.t1').val('');
-    save();
-    render();
-    // select('');
-    // render();
-    // $(window).scrollTop(0);
+$(document).on('click', '.divetask', function () {
+    let val = $(this).attr('value');
+    if (val != $('.t1').val()) {
+        $('.t1').val(val);
+        searchlock = true;
+        $('#clearsearchbutton').text('🔒')
+        render();
+    } else {
+        $('.t1').val('');
+        searchlock = false;
+        $('#clearsearchbutton').text('╳')
+        onSelect('');
+    }
 });
+
+$(document).on('click', '.clearsearch', function () {
+    $('.t1').val('');
+    searchlock = false;
+    $('#clearsearchbutton').text('╳')
+    render();
+});
+
 $(document).on('click', '.timebutton', function () {
     $('.readylabel input').prop("checked", false);
     let clear = () => {
