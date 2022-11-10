@@ -545,35 +545,26 @@ let renderopns = (a, level) => {
       return 0;
     });
     for (let t = 0; t < a.opns.length; t++) {
-      let openka = note_by_name(a.opns[t])
-      // texthtml += "<br>";
+      // let openka = note_by_name(a.opns[t])
       texthtml += "<span class='bul tag ";
-      texthtml += openka.priority + '-color';
+      // texthtml += openka.priority + '-color';
       texthtml += "'>";
       for (let i = 0; i < level; i++)
         texthtml += "&nbsp;&nbsp;"
-      // if (t == 5) {
-      //   texthtml += "•";
-      //   texthtml += "</span>";
-      //   texthtml += "<span>...</span>";
-      //   break;
-      // }
-      if (openka.tags && openka.tags.length > 1)
-        texthtml += "⇒";
-      else
-        texthtml += "•";
+
+      // if (openka.tags && openka.tags.length > 1)
+      //   texthtml += "⇒";
+      // else
+      texthtml += "•";
       texthtml += "</span>";
       texthtml += "<button class='opn";
       texthtml += "'>";
-      texthtml += openka.name;
+      texthtml += a.opns[t];
       texthtml += "</button>";
-      // texthtml += "<span class='rank'> [";
-      // texthtml += openka.rank;
-      // texthtml += "]</span>";
-      if (level == 5)
-        texthtml += "<span class='arr'>⇒...</span>";
-      if (level < 5)
-        texthtml += renderopns(openka, level + 1);
+      // if (level == 5)
+      //   texthtml += "<span class='arr'>⇒...</span>";
+      // if (level < 5)
+      //   texthtml += renderopns(openka, level + 1);
     }
   }
   return texthtml + "</div>";
