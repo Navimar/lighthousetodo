@@ -28,6 +28,7 @@ let render = () => {
     tasks.html("");
     let names = [];
 
+    let testcn = 0
     for (let a of data.tasks) {
       if (moment().isSameOrBefore(a.date, 'day'))
         if (a.priority == 'first')
@@ -36,6 +37,9 @@ let render = () => {
     tasks.append(Calendar3(moment()));
 
     for (let a of data.tasks) {
+      testcn++;
+      if (testcn > 40)
+        break;
       // let vrank = a.rank ? '\xa0[' + a.rank + ']' : '';
       let nondisplay = false;
       if (searchquerry.toLowerCase !== '') {
