@@ -49,6 +49,8 @@ let render = () => {
             searchresultisempty = false;
           }
         });
+        if (a.selected)
+          nondisplay = false;
       } else {
         searchresultisempty = false;
       }
@@ -144,12 +146,13 @@ let render = () => {
         texthtml += "</div>";
 
         //управляющие кнопки
-        texthtml += "<div class='mainbuttonblock'>"
-        texthtml += "<label value='" + a.name + "' class='mainbutton divetask' >Нырок <input  class='checkdive' type=\"checkbox\"></label>";
-        texthtml += "</div>"
 
         texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<label class='mainbutton readylabel' >Активно <input  class='checkbox onoff' type=\"checkbox\"></label>";
+        texthtml += "</div>"
+
+        texthtml += "<div class='mainbuttonblock'>"
+        texthtml += "<label value='" + a.name + "' class='mainbutton divetask' >Нырок <input  class='checkdive' type=\"checkbox\"></label>";
         texthtml += "</div>"
 
         texthtml += "<div class='mainbuttonblock'>"
