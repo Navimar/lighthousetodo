@@ -231,8 +231,6 @@ let save = () => {
         a.tags = tags;
         a.opns = opns;
         a.ready = ready;
-        a.profit = profit ? profit : 0;
-        a.ppd = ppd ? ppd : 0;
         a.priority = priority;
         a.time = time;
         a.date = date;

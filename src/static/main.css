@@ -194,7 +194,7 @@ input {
 }
 
 #status {
-    /* display: none; */
+    color: red;
     position: fixed;
     left: 50%;
     transform: translateX(-50%);

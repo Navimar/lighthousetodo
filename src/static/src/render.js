@@ -39,12 +39,12 @@ let render = () => {
       let nondisplay = false;
       if (searchquerry.toLowerCase !== '') {
         nondisplay = true;
-        if (a.name.toLowerCase().includes(searchquerry.toLowerCase())) {
+        if (a.name.toLowerCase().replace(/ё/g, "е").includes(searchquerry.toLowerCase().replace(/ё/g, "е"))) {
           nondisplay = false;
           searchresultisempty = false;
         }
         a.tags.forEach((val) => {
-          if (val.toLowerCase().includes(searchquerry.toLowerCase())) {
+          if (val.toLowerCase().replace(/ё/g, "е").includes(searchquerry.toLowerCase().replace(/ё/g, "е"))) {
             nondisplay = false;
             searchresultisempty = false;
           }
@@ -217,7 +217,7 @@ let render = () => {
       // if (a.priority == 'first')
       //   texthtml += ("<div class='tag first text time'>ВАЖНО</div>&nbsp;&nbsp;&nbsp;&nbsp;");
       if (!a.ready && (a.priority == 'first' || a.priority == 'second'))
-        if (moment().dayOfYear() > moment(a.date + "T" + a.time).dayOfYear())
+        if (moment(a.date + "T" + a.time).isBefore(moment(), 'day'))
           texthtml += ("<div class='tag text time past'>ВЧЕРА</div>&nbsp;&nbsp;");
       if (moment() <= moment(a.date + "T" + a.time)) {
         if (a.time != lasttime) {
@@ -268,6 +268,9 @@ let render = () => {
       texthtml += "</td></tr></tbody></table>"
       tasks.append(texthtml);
       if (a.selected) {
+        names.sort(function (a, b) {
+          return b.length - a.length;
+        });
         autocomplete(document.getElementById("inputtags"), names);
         autocomplete(document.getElementById("inputopns"), names);
         $('input[name="radioprior"][value=' + a.priority + ']').prop('checked', true);
@@ -340,10 +343,9 @@ function autocomplete(inp, arr) {
     i = 0;
     while (i < arr.length && cn < 30) {
       let index
-
       /*check if the item starts with the same letters as the text field value:*/
       if (arr[i])
-        index = arr[i].toLowerCase().indexOf(val.toLowerCase());
+        index = arr[i].toLowerCase().replace(/ё/g, "е").indexOf(val.toLowerCase().replace(/ё/g, "е"));
       if (index >= 0) {
         cn++;
         /*create a DIV element for each matching element:*/

@@ -41,7 +41,7 @@ function clock(date) {
 }
 
 function isFuture(date, time) {
-    return moment() < moment(date + "T" + time);
+    return moment().diff(moment(date + "T" + time)) < 0 ? true : false
 }
 
 function findGetParameter(name, url) {
