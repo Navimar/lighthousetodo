@@ -13,7 +13,7 @@ let sortdata = () => {
       return 1
     }
 
-    if (a.blocks.length > 0 && b.blocks.length > 0) {
+    if (a.blocks.length > 0 && !a.vip && b.blocks.length > 0 && !b.vip) {
       if ((a.opns.length == 0 && b.opns.length > 0))
         return -1
       if ((b.opns.length == 0 && a.opns.length > 0))
