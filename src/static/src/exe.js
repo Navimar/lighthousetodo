@@ -132,7 +132,7 @@ window.onfocus = function () {
 };
 
 $(document).on('change', '.dateinp', function (event) {
-    $('.readylabel input').prop("checked", false);
+    $('.checkboxready').prop("checked", false);
 });
 $('.t1').bind('input propertychange', function () {
     select('');
@@ -200,7 +200,7 @@ $(document).on('click', '.clearsearch', function () {
 });
 
 $(document).on('click', '.timebutton', function () {
-    $('.readylabel input').prop("checked", false);
+    $('.checkboxready').prop("checked", false);
     let clear = () => {
         $('.timebutton').removeClass('justClicked')
         $('.timebutton').removeClass('justClicked2')

@@ -68,6 +68,10 @@ function inputSocket() {
     } else
       console.log('local data is younger');
   });
+  socket.on('event', function (msg) {
+    console.log(msg.event, msg.data)
+  });
+
   socket.on('err', (val) => {
     console.log(val);
   });
@@ -174,9 +178,10 @@ let save = () => {
     let inptags = $("#inputtags").val();
     let inpopns = $("#inputopns").val();
 
-    let ready = $(".checkbox").prop('checked');
-    let profit = $('#profit').val();
-    let ppd = $('#ppd').val();
+    let ready = $(".checkboxready").prop('checked');
+    if (!inpopns || inpopns.length == 0)
+      ready = false;
+    let vip = $(".checkboxvip").prop('checked');
 
     // let priority = $("#priority option:selected").val();
     let priority = $('input[name="radioprior"]:checked').val();
@@ -231,10 +236,10 @@ let save = () => {
         a.tags = tags;
         a.opns = opns;
         a.ready = ready;
+        a.vip = vip;
         a.priority = priority;
         a.time = time;
         a.date = date;
-
       }
       for (let t in a.tags) {
         if (a.tags[t].toLowerCase() == selected.text.toLowerCase()) {
@@ -264,7 +269,8 @@ let save = () => {
             blocks.push(a.name);
         }
       });
-
+      if (a.opns.length == 0)
+        a.ready = false;
       opns.forEach((opn) => {
         if (a.name.toLowerCase() == opn.toLowerCase()) {
           newscribesopns.splice(newscribesopns.indexOf(opn), 1);
@@ -371,6 +377,8 @@ let del = (text) => {
         data.tasks[a].opns.splice(t, 1);
       }
     }
+    if (data.tasks[a].opns.length == 0)
+      data.tasks[a].ready = false;
   }
 
   for (let anc of ancestors) {
@@ -386,5 +394,10 @@ let del = (text) => {
 let send = () => {
   data.user = user;
   data.timestamp = moment();
+  socket.emit('save', data);
+}
+
+let sendevents = () => {
+  eventarr
   socket.emit('save', data);
 }

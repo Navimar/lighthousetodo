@@ -16,7 +16,8 @@ let render = () => {
     let opntext = "";
     let text = "";
     let note = "";
-    let checked = false;
+    let checkedready = false;
+    let checkedvip = false;
     let searchresultisempty = true;
     let time = "00:00";
     let lasttime = false;
@@ -60,7 +61,7 @@ let render = () => {
         today = moment(a.date);
         texthtml += Calendar3(today);
       }
-      if (a.blocks && a.blocks.length > 0 && !blocked) {
+      if (!a.vip && a.blocks && a.blocks.length > 0 && !blocked) {
         texthtml += ("<div class='date'><div class='header date'>ФИНИСФЕРА</div></div>");
         blocked = true;
       }
@@ -104,13 +105,17 @@ let render = () => {
         texthtml += "    <textarea placeholder=\"...\" id='inputtext' class=\"input \" type=\"text\" cols=\"35\" rows=\"1\"><\/textarea>";
         // texthtml += "</div>"
         // texthtml += "<div class='textareacontainer'>"
-        texthtml += "<div class='header'>Зависим</div>"
+        // texthtml += "<div class='header'>Зависим</div>"
+        texthtml += "<label class='header readylabel' >Зависим <input  class='checkboxvip onoff' type=\"checkbox\"></label>";
+
         texthtml += "    <div class='autocomplete'>";
         texthtml += "         <textarea placeholder=\"...\" id ='inputtags' class=\"input\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
         texthtml += "    </div >";
         // texthtml += "</div>"
         // texthtml += "<div class='textareacontainer'>"
-        texthtml += "<div class='header'>Блокирует</div>"
+        // texthtml += "<div class='header'>Блокирует</div>"
+        texthtml += "<label class='header readylabel' >Блокирует <input  class='checkboxready onoff' type=\"checkbox\"></label>";
+
         texthtml += "    <div class='autocomplete'>";
         texthtml += "         <textarea placeholder=\"...\" id ='inputopns' class=\"input inputopns\" name=\"tags\" cols=\"35\" rows=\"1\"><\/textarea>";
         texthtml += "    </div >";
@@ -147,9 +152,9 @@ let render = () => {
 
         //управляющие кнопки
 
-        texthtml += "<div class='mainbuttonblock'>"
-        texthtml += "<label class='mainbutton readylabel' >Активно <input  class='checkbox onoff' type=\"checkbox\"></label>";
-        texthtml += "</div>"
+        // texthtml += "<div class='mainbuttonblock'>"
+        // texthtml += "<label class='mainbutton readylabel' >Активно <input  class='checkbox onoff' type=\"checkbox\"></label>";
+        // texthtml += "</div>"
 
         texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<label value='" + a.name + "' class='mainbutton divetask' >Нырок <input  class='checkdive' type=\"checkbox\"></label>";
@@ -198,7 +203,8 @@ let render = () => {
         opns = a.opns;
         text = a.name;
         note = a.note;
-        checked = a.ready;
+        checkedready = a.ready;
+        checkedvip = a.vip ? a.vip : false
         time = a.time;
         date = a.date;
         profit = a.profit;
@@ -207,18 +213,24 @@ let render = () => {
       texthtml += "'>";
       texthtml += rendertags(a);
 
-      if (a.ready && a.opns.length > 0)
-        texthtml += ("<button class='tag text time'>АКТИВ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
-      else if (a.blocks && a.blocks.length > 0)
-        if (a.opns.length > 0)
-          texthtml += ("<button class='tag text time'>ВЕТВЬ</button>&nbsp;&nbsp;&nbsp;&nbsp;");
-        else
-          texthtml += ("<button class='tag text time'>МЕЧТА</button>&nbsp;&nbsp;&nbsp;&nbsp;");
-      // if (a.priority == 'first')
-      //   texthtml += ("<div class='tag first text time'>ВАЖНО</div>&nbsp;&nbsp;&nbsp;&nbsp;");
-      if (!a.ready && (a.priority == 'first' || a.priority == 'second'))
-        if (moment(a.date + "T" + a.time).isBefore(moment(), 'day'))
-          texthtml += ("<div class='tag text time past'>ВЧЕРА</div>&nbsp;&nbsp;");
+      if (a.ready)
+        //&& a.opns.length > 0)
+        texthtml += ("<button class='tag text time ready'>ГОТОВ</button>&nbsp;&nbsp;");
+      if (a.vip)
+        //&& a.opns.length > 0)
+        texthtml += ("<button class='tag text time vip'>СУПЕР</button>&nbsp;&nbsp;");
+      else {
+        if (!a.ready && (a.priority == 'first' || a.priority == 'second'))
+          if (moment(a.date + "T" + a.time).diff(moment(), 'day') == -1)
+            texthtml += ("<div class='tag text time past'>ВЧЕРА</div>&nbsp;&nbsp;");
+          else if (moment(a.date + "T" + a.time).isBefore(moment(), 'day'))
+            texthtml += ("<div class='tag text time past'>ДАВНО</div>&nbsp;&nbsp;");
+        if (a.blocks && a.blocks.length > 0)
+          if (a.opns.length > 0)
+            texthtml += ("<button class='tag text time'>ВЕТВЬ</button>&nbsp;&nbsp;");
+          else
+            texthtml += ("<button class='tag text time'>МЕЧТА</button>&nbsp;&nbsp;");
+      }
       if (moment() <= moment(a.date + "T" + a.time)) {
         if (a.time != lasttime) {
           texthtml += "<div class='tag text time'>";
@@ -237,9 +249,9 @@ let render = () => {
         texthtml += "&hellip;"
 
       if (a.opns && a.opns.length > 0) {
-        if (a.ready) {
-          texthtml += "<span class=' bul'>✓</span>";
-        }
+        // if (a.ready) {
+        //   texthtml += "<span class=' bul'>✓</span>";
+        // }
         if (a.priorarr)
           a.priorarr.forEach((e, index) => {
             if (e != 99 && index > 0) {
@@ -253,9 +265,9 @@ let render = () => {
         // texthtml += "\xa0<span class=' rank'>";
         // texthtml += vrank;
         // texthtml += "</span>";
-        if (a.ready) {
-          texthtml += "<span class=' bul'>✓</span>";
-        }
+        // if (a.ready) {
+        //   texthtml += "<span class=' bul'>✓</span>";
+        // }
       }
 
       if (a.selected) {
@@ -291,8 +303,11 @@ let render = () => {
     if ($('.divetask').attr('value') == $('.t1').val())
       $('.checkdive').prop("checked", true);
 
-    $(".onoff").prop({
-      checked: checked
+    $(".checkboxready").prop({
+      checked: checkedready
+    });
+    $(".checkboxvip").prop({
+      checked: checkedvip
     });
 
     $('textarea').keyup(function () {

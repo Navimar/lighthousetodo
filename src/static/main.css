@@ -170,6 +170,8 @@ option:checked {
 input[type="checkbox"] {
     vertical-align: middle;
     cursor: pointer;
+    transform: scale(1.2);
+    margin: 2px;
 }
 
 .editor {
@@ -476,10 +478,6 @@ label.mainbutton.timebutton {
     padding: 4px;
 }
 
-.ready {
-    color: var(--forth);
-}
-
 .radiopriority {
     /* margin: -4px;
     border: 4px solid var(--background-table); */
@@ -750,8 +748,8 @@ label.readylabel {
 }
 
 .mainbuttonblock {
-    /* width: 33.3%; */
-    width: 25%;
+    width: 33.3%;
+    /* width: 25%; */
     display: inline-block;
 }
 
@@ -826,4 +824,11 @@ color: var(--forth);
 
 .marksecond{
 color: var(--second);
+}
+
+.ready {
+    color: #1ba655
+}
+.vip {
+    /* color: #1ba655 */
 }

@@ -1,17 +1,18 @@
 let sortdata = () => {
   data.tasks.sort((a, b) => {
 
-    if (!a.ready && b.ready && b.opns.length > 0)
+    if (!a.ready && b.ready)
       return -1;
-    if (a.ready && a.opns.length > 0 && !b.ready)
+    if (a.ready && !b.ready)
       return 1;
 
-    if (a.blocks.length == 0 && b.blocks.length > 0) {
+    if (a.blocks.length == 0 && b.blocks.length > 0 && !b.vip) {
       return -1
     }
-    else if (a.blocks.length > 0 && b.blocks.length == 0) {
+    else if (!a.vip && a.blocks.length > 0 && b.blocks.length == 0) {
       return 1
     }
+
     if (a.blocks.length > 0 && b.blocks.length > 0) {
       if ((a.opns.length == 0 && b.opns.length > 0))
         return -1
@@ -27,7 +28,6 @@ let sortdata = () => {
     if (bd.diff(moment()) < 0) {
       bd = moment();
     }
-
     if (ad.isBefore(b.date, 'year')) {
       return -1
     }
@@ -52,10 +52,10 @@ let sortdata = () => {
       return 1
     if (e < 0)
       return -1
-    if (trans(a.priority) - trans(b.priority) > 0)
-      return 1
-    if (trans(a.priority) - trans(b.priority) < 0)
-      return -1
+    // if (trans(a.priority) - trans(b.priority) > 0)
+    //   return 1
+    // if (trans(a.priority) - trans(b.priority) < 0)
+    //   return -1
 
     if (moment() <= moment(a.date + "T" + a.time) && moment() > moment(b.date + "T" + b.time))
       return 1;
@@ -89,10 +89,16 @@ let sortdata = () => {
     else if (a.tags[0] && b.tags[0] && (a.tags[0].localeCompare(b.tags[0]) > 0)) {
       return 1
     }
-    if (a.name.length >= b.name.length) {
+    if (a.name.length > b.name.length) {
       return 1;
     }
     else if (a.name.length < b.name.length) {
+      return -1;
+    }
+    if (a.name >= b.name) {
+      return 1;
+    }
+    else if (a.name < b.name) {
       return -1;
     }
   })
@@ -153,9 +159,13 @@ let prioritycompare = (a, b) => {
 }
 
 let elder = (a, b) => {
+  console.log('elder', a.name, b.name, a.priorarr, b.priorarr);
+  if (!a.priorarr || a.priorarr.length == 0)
+    a.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
+  if (!b.priorarr || b.priorarr.length == 0)
+    b.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
   a = [...a.priorarr]
   b = [...b.priorarr]
-
   let amin = 99
   let bmin = 99
   let ai = 0
