@@ -1,4 +1,8 @@
 let planeddays = new Set();
+// let g_time = 0;
+// let g_avgtime = 0;
+// let g_max = 0;
+// let g_timecn = 0;
 
 let render = () => {
   let tasks = $('#tasks');
@@ -35,8 +39,10 @@ let render = () => {
           planeddays.add(moment(a.date).format('DD-MM-YYYY'));
     }
     tasks.append(Calendar3(moment()));
-
+    // let irrr = -1
     for (let a of data.tasks) {
+      // if (irrr-- == 0)
+      //   break;
       let nondisplay = false;
       if (searchquerry.toLowerCase !== '') {
         nondisplay = true;
@@ -247,6 +253,13 @@ let render = () => {
       texthtml += "</button>";
       if (a.note)
         texthtml += "&hellip;"
+      // texthtml += ' ['
+      // if (a.priorarr)
+      //   a.priorarr.forEach((e, index) => {
+      //     texthtml += e + ',';
+
+      //   });
+      // texthtml += '] '
 
       if (a.opns && a.opns.length > 0) {
         // if (a.ready) {
@@ -334,6 +347,15 @@ let render = () => {
       $(window).scrollTop(scrollPosition);
     }
   }
+  // const d = new Date();
+  // r_time = d.getTime();
+  // if (g_time == 0)
+  //   g_time = r_time
+  // if (r_time - g_time > g_max)
+  //   g_max = r_time - g_time;
+  // g_avgtime = parseInt((g_avgtime * g_timecn + (r_time - g_time)) / ++g_timecn)
+  // document.getElementById("speed").innerHTML = 'last: ' + (r_time - g_time) + '<br>avg: ' + g_avgtime + '<br>max: ' + g_max;
+
 };
 
 function autocomplete(inp, arr) {

@@ -1,4 +1,6 @@
 let onSelect = (txt) => {
+    // const d = new Date();
+    // g_time = d.getTime();
     save();
     focusfisrt()
     select(txt);
@@ -7,6 +9,8 @@ let onSelect = (txt) => {
 };
 
 let onTag = (txt) => {
+    // const d = new Date();
+    // g_time = d.getTime();
     save();
     focusfisrt()
     select(txt);
@@ -15,6 +19,8 @@ let onTag = (txt) => {
 }
 
 let onOpn = (txt) => {
+    // const d = new Date();
+    // g_time = d.getTime();
     save();
     focusfisrt()
     select(txt);
@@ -23,6 +29,8 @@ let onOpn = (txt) => {
 }
 
 let onNew = () => {
+    // const d = new Date();
+    // g_time = d.getTime();
     save();
     newwish('новая запись', false, false, false, false, 'third', 0,);
     select('новая запись');
@@ -32,6 +40,8 @@ let onNew = () => {
 }
 
 let onDel = (txt) => {
+    const d = new Date();
+    g_time = d.getTime();
     del(txt);
     select(focusfisrt());
     send();
@@ -169,6 +179,8 @@ $(document).on('click', '.newtask', function () {
 });
 $(document).on('click', '.savetask', function () {
     // onSelect('');
+    // const d = new Date();
+    // g_time = d.getTime();
     save();
     select(focusfisrt());
     send();

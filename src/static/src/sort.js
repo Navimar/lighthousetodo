@@ -5,11 +5,10 @@ let sortdata = () => {
       return -1;
     if (a.ready && !b.ready)
       return 1;
-
-    if (a.blocks.length == 0 && b.blocks.length > 0 && !b.vip) {
+    if ((a.blocks.length == 0 || a.vip) && b.blocks.length > 0 && !b.vip) {
       return -1
     }
-    else if (!a.vip && a.blocks.length > 0 && b.blocks.length == 0) {
+    else if (!a.vip && a.blocks.length > 0 && (b.blocks.length == 0 || b.vip)) {
       return 1
     }
 
@@ -52,10 +51,6 @@ let sortdata = () => {
       return 1
     if (e < 0)
       return -1
-    // if (trans(a.priority) - trans(b.priority) > 0)
-    //   return 1
-    // if (trans(a.priority) - trans(b.priority) < 0)
-    //   return -1
 
     if (moment() <= moment(a.date + "T" + a.time) && moment() > moment(b.date + "T" + b.time))
       return 1;
@@ -159,7 +154,6 @@ let prioritycompare = (a, b) => {
 }
 
 let elder = (a, b) => {
-  console.log('elder', a.name, b.name, a.priorarr, b.priorarr);
   if (!a.priorarr || a.priorarr.length == 0)
     a.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
   if (!b.priorarr || b.priorarr.length == 0)

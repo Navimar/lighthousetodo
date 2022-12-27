@@ -830,5 +830,15 @@ color: var(--second);
     color: #1ba655
 }
 .vip {
-    /* color: #1ba655 */
+color: var(--old);
+}
+
+#speed {
+position: fixed;
+left:5%;
+top:5%;
+border: 1px solid var(--first);
+padding: 4px;
+background: var(--background-main);
+color: var(--color-main);
 }
