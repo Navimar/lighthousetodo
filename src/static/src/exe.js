@@ -153,9 +153,18 @@ $('.t1').bind('input propertychange', function () {
 });
 $(document).on('click', '.calbut', function (event) {
     event.preventDefault();
-    // if ($(this).attr('href') != undefined)
-    $(window).scrollTop($($(this).attr('href')).offset().top - mouse.y + 6);
-    // $(window).scrollTop(0);
+    let date = $(this).attr('href')
+    date = date.substring(date.length - 10)
+    if ($($(this).attr('href')).offset())
+        $(window).scrollTop($($(this).attr('href')).offset().top - mouse.y + 6);
+    else if (moment().isBefore(date, 'day')) {
+        newwish('новая запись ' + date, false, false, false, false, 'first', 0, false, date);
+        save();
+        select('новая запись ' + date);
+        send();
+        render();
+        $('#inputtext').select();
+    }
 
 });
 $(document).on('click', '.text', function () {
@@ -269,6 +278,6 @@ $(document).on('click', '#scrollTopButton', function () {
     scrollPosition = parseInt($('.focused').position().top - $(window).height() / 2);
     if ($(window).scrollTop() == scrollPosition)
         scrollPosition = 0;
-    console.log($(window).scrollTop(), scrollPosition);
+    // console.log($(window).scrollTop(), scrollPosition);
     $(window).scrollTop(scrollPosition);
 });

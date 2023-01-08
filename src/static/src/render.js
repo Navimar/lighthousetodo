@@ -1,4 +1,4 @@
-let planeddays = new Set();
+let planeddays = new Map();
 // let g_time = 0;
 // let g_avgtime = 0;
 // let g_max = 0;
@@ -7,6 +7,7 @@ let planeddays = new Set();
 let render = () => {
   let tasks = $('#tasks');
   let texthtml = "";
+  planeddays = new Map();
 
   if (!user) {
     texthtml = '<div id="telegramlogin"><script async src="https://telegram.org/js/telegram-widget.js?18" data-telegram-login="' + botname + '" data-size="large" data-onauth="onTelegramAuth(user)"></script></div>';
@@ -33,16 +34,22 @@ let render = () => {
     tasks.html("");
     let names = [];
 
-    for (let a of data.tasks) {
-      if (moment().isSameOrBefore(a.date, 'day'))
-        if (a.priority == 'first')
-          planeddays.add(moment(a.date).format('DD-MM-YYYY'));
-    }
-    tasks.append(Calendar3(moment()));
+    tasks.append('<div class="calendarplace">' + moment().format() + '</div>');
     // let irrr = -1
     for (let a of data.tasks) {
       // if (irrr-- == 0)
       //   break;
+      if (moment().isSameOrBefore(a.date, 'day')) {
+        let value = planeddays.get(moment(a.date).format('YYYY-MM-DD'))
+        if (value) {
+          if (!value.includes(a.priority)) {
+            value.push(a.priority)
+            planeddays.set(moment(a.date).format('YYYY-MM-DD'), value)
+          }
+        } else
+          planeddays.set(moment(a.date).format('YYYY-MM-DD'), [a.priority]);
+      }
+
       let nondisplay = false;
       if (searchquerry.toLowerCase !== '') {
         nondisplay = true;
@@ -65,7 +72,8 @@ let render = () => {
       texthtml = "";
       if (nondisplay == false && moment(a.date).format() != today.format() && moment().diff(moment(a.date)) <= 0) {
         today = moment(a.date);
-        texthtml += Calendar3(today);
+        texthtml += '<div class="calendarplace">' + today.format() + '</div>'
+        // Calendar3(today);
       }
       if (!a.vip && a.blocks && a.blocks.length > 0 && !blocked) {
         texthtml += ("<div class='date'><div class='header date'>ФИНИСФЕРА</div></div>");
@@ -89,8 +97,8 @@ let render = () => {
         // texthtml += "<div class='textareacontainer'>"
         texthtml += "<div class='header'>Приоритет</div>"
         texthtml += "<button class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Хронос<\/label><\/button>";
-        texthtml += "<button class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Важно<\/label><\/button>";
-        texthtml += "<button class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Поток<\/label><\/button>";
+        texthtml += "<button class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Диес<\/label><\/button>";
+        texthtml += "<button class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Нептун<\/label><\/button>";
         texthtml += "<button class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Кайрос<\/label><\/button>";
         // texthtml += "<div class=\"bfifth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfifth\" value=\"fifth\"><label for=\"rfifth\">Квартал<\/label><\/div>";
         // texthtml += "    </div><div class='timebuttons'> ";
@@ -98,7 +106,7 @@ let render = () => {
         // texthtml += "<div class=\"bsixth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsixth\" value=\"sixth\"><label for=\"rsixth\">Полгода<\/label><\/div>";
         // texthtml += "<div class=\"bseventh priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rseventh\" value=\"seventh\"><label for=\"rseventh\">Год<\/label><\/div>";
         // texthtml += "<div class=\"beighth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"reighth\" value=\"eighth\"><label for=\"reighth\">Век<\/label><\/div>";
-        texthtml += "<button class=\"bninth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rninth\" value=\"ninth\"><label for=\"rninth\">Заметка<\/label><\/button>";
+        texthtml += "<button class=\"bninth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rninth\" value=\"ninth\"><label for=\"rninth\">Набу<\/label><\/button>";
         // texthtml += "<div class=\"btenth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rtenth\" value=\"tenth\"><label for=\"rtenth\">Корзина<\/label><\/div>";
         texthtml += "    </div>";
 
@@ -301,6 +309,12 @@ let render = () => {
         $('input[name="radioprior"][value=' + a.priority + ']').prop('checked', true);
       }
     }
+    const calendars = document.getElementsByClassName("calendarplace");
+    // console.log(calendars)
+    for (let cal of calendars) {
+      // console.log(cal.textContent)
+      cal.innerHTML = Calendar3(moment(cal.textContent))
+    }
     if (searchresultisempty)
       tasks.append('<div id="searchresultisempty">Ничего не найдено, измените поисковый запрос</div><br><button class="clearsearch">Очистить строку поиска</button>');
 
@@ -347,14 +361,14 @@ let render = () => {
       $(window).scrollTop(scrollPosition);
     }
   }
-  // const d = new Date();
-  // r_time = d.getTime();
-  // if (g_time == 0)
-  //   g_time = r_time
-  // if (r_time - g_time > g_max)
-  //   g_max = r_time - g_time;
-  // g_avgtime = parseInt((g_avgtime * g_timecn + (r_time - g_time)) / ++g_timecn)
-  // document.getElementById("speed").innerHTML = 'last: ' + (r_time - g_time) + '<br>avg: ' + g_avgtime + '<br>max: ' + g_max;
+  const d = new Date();
+  r_time = d.getTime();
+  if (g_time == 0)
+    g_time = r_time
+  if (r_time - g_time > g_max)
+    g_max = r_time - g_time;
+  g_avgtime = parseInt((g_avgtime * g_timecn + (r_time - g_time)) / ++g_timecn)
+  document.getElementById("speed").innerHTML = 'last: ' + (r_time - g_time) + '<br>avg: ' + g_avgtime + '<br>max: ' + g_max;
 
 };
 
@@ -482,12 +496,12 @@ function autocomplete(inp, arr) {
 
 function Calendar3(date) {
   let calendar = '';
-  calendar += ("<div id=" + date.format('DD-MM-YYYY') + " class='header date'> ");
+  calendar += ("<div id=" + date.format('YYYY-MM-DD') + " class='header date'> ");
   if (moment().isSame(date, 'year'))
     calendar += date.format('dddd DD MMMM') + "</div>";
   else
     calendar += date.format('dddd DD MMMM YYYY') + "</div>";
-  calendar += '<table class="calendar3" id="calendar-' + date.format('DD-MM-YYYY') + '">'
+  calendar += '<table class="calendar3" id="calendar-' + date.format('YYYY-MM-DD') + '">'
   calendar += '<tr class="days_of_week">'
   calendar += '<td>Пн'
   calendar += '<td>Вт'
@@ -507,23 +521,40 @@ function Calendar3(date) {
   for (var i = 1; i <= Dlast; i++) {
     calendar += '<td class="">'
     let a = i;
-    if (planeddays.has(moment(date).set('date', i).format('DD-MM-YYYY'))) {
-      calendar += '<a class="calbut" id=' + 'calendar-' + date.format('DD-MM-YYYY') + '-' + moment(date).set('date', i).format('DD-MM-YYYY') + ' href="#' + 'calendar-' + moment(date).set('date', a).format('DD-MM-YYYY') + '-' + moment(date).set('date', a).format('DD-MM-YYYY') + '">'
-    }
+    calendar += '<a class="calbut" id=' + 'calendar-' + date.format('YYYY-MM-DD') + '-' + moment(date).set('date', i).format('YYYY-MM-DD') + ' href="#' + 'calendar-' + moment(date).set('date', a).format('YYYY-MM-DD') + '-' + moment(date).set('date', a).format('YYYY-MM-DD') + '">'
     calendar += '<button class="calendarblock'
     if (i == moment().format('D') && moment().format('MM-YYYY') == date.format('MM-YYYY'))
       calendar += ' today';
-    if (planeddays.has(moment(date).set('date', i).format('DD-MM-YYYY'))) {
-      calendar += ' planed'
-    }
+    // if (planeddays.has(moment(date).set('date', i).format('YYYY-MM-DD'))) {
+    //   let prarr = planeddays.get(moment(date).set('date', i).format('YYYY-MM-DD'))
+    //   prarr.forEach((e) => calendar += ' ' + e);
+    //   calendar += ' planed'
+    // }
     if (i == date.format('D')) {
       calendar += ' highlightedday'
     }
-    calendar += '">' + i
-      // + ' <span class="calendarmark marksecond">•</span><span class="calendarmark markforth ">•</span>'
-      + '</button>'
-    if (planeddays.has(moment(date).set('date', i).format('DD-MM-YYYY')))
-      calendar += '</a>';
+    calendar += '">'
+    // calendar += '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>'
+    // if (Math.floor(i / 10) > 0)
+    calendar += + i
+    // else
+    // calendar += '&nbsp;' + i +'&nbsp;'
+
+    if (planeddays.has(moment(date).set('date', i).format('YYYY-MM-DD'))) {
+      let prarr = planeddays.get(moment(date).set('date', i).format('YYYY-MM-DD'))
+      let cn = '';
+      prarr.forEach((e) => {
+        calendar += '<span class="calendardot ' + e + '-color">' + cn + '•</span>'
+        cn += '&nbsp;'
+      });
+
+    }
+    // calendar += '<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>'
+
+
+    // + ' <span class="calendarmark marksecond">•</span><span class="calendarmark markforth ">•</span>'
+    + '</button>'
+    // calendar += '</a>';
     if (moment(date).set('date', i).day() == 0) {
       calendar += '<tr>';
     }

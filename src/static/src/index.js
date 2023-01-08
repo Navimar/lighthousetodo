@@ -81,13 +81,12 @@ let update = () => {
   socket.emit('load', user);
 }
 
-let newwish = (name, selected, tags, blocks, opns, priority, profit, note) => {
+let newwish = (name, selected, tags, blocks, opns, priority, profit, note, date) => {
   let run = false;
   let ok = true;
   while (ok) {
     ok = false;
     for (let a of data.tasks) {
-      cn++
       if (a.name.toLowerCase() == name.toLowerCase()) {
         name += '!';
         ok = true;
@@ -98,6 +97,8 @@ let newwish = (name, selected, tags, blocks, opns, priority, profit, note) => {
   }
   if (run)
     return;
+  if (!date)
+    date = clock().year + "-" + clock().month + "-" + clock().d
   if (!note) {
     note = '';
   }
@@ -125,7 +126,7 @@ let newwish = (name, selected, tags, blocks, opns, priority, profit, note) => {
     rank: profit,
     ready: false,
     time: clock().h + ":" + clock().m,
-    date: clock().year + "-" + clock().month + "-" + clock().d,
+    date
   });
 };
 let countpriorarr = (a, level) => {
@@ -226,9 +227,10 @@ let save = () => {
     let hero = {};
     let blocks = [];
     for (let a of data.tasks) {
-      // cn++ 
       if (!a.blocks)
         a.blocks = []
+      if (a.readytill && moment(a.date + "T" + a.time).isSameOrBefore(moment()))
+        a.ready = false
       if (a.selected && inptval) {
         hero = a;
         a.name = name;
@@ -236,6 +238,8 @@ let save = () => {
         a.tags = tags;
         a.opns = opns;
         a.ready = ready;
+        if (ready && moment(a.date + "T" + a.time).isAfter(moment()))
+          a.readytill = true
         a.vip = vip;
         a.priority = priority;
         a.time = time;

@@ -326,8 +326,8 @@ option.fifth {
 .delete {}
 
 button {
+    background: none;
     background-color: none;
-    /* color: black; */
     font-size: 12pt;
     border-radius: 10px;
     padding: 0;
@@ -365,7 +365,9 @@ button {
     background-color: darkred;
     border-bottom: 5px solid darkred;
 }
-
+.calendardot{
+    position: absolute;
+}
 /* #f1 {
     position: fixed;
     right: 0
@@ -540,7 +542,7 @@ label.readylabel {
 
 .calendar3 button.calendarblock.planed {
     /* background: blanchedalmond; */
-    background: var(--background-area);
+    /* background: var(--background-area); */
 }
 
 .calendar3 button.calendarblock.highlightedday {
@@ -559,7 +561,7 @@ label.readylabel {
     border: 2px solid var(--background-table);
     margin: -2x;
     /* color: whitesmoke; */
-    background-color: transparent;
+    /* background-color: transparent; */
     border-radius: 0;
     width: 100%;
     font-family: 'Noto Sans Mono', monospace;
