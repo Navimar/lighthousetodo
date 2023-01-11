@@ -302,11 +302,6 @@ let render = () => {
       texthtml += "</td></tr></tbody></table>"
       tasks.append(texthtml);
       if (a.selected) {
-        names.sort(function (a, b) {
-          return b.length - a.length;
-        });
-        autocomplete(document.getElementById("inputtags"), names);
-        autocomplete(document.getElementById("inputopns"), names);
         $('input[name="radioprior"][value=' + a.priority + ']').prop('checked', true);
       }
     }
@@ -360,6 +355,13 @@ let render = () => {
       scrollPosition = $('.selected').position().top + $('.selected').height() / 2;
       scrollPosition -= mouse.y;
       $(window).scrollTop(scrollPosition);
+    }
+    if (selected.i != -1) {
+      names.sort(function (a, b) {
+        return a.length > b.length;
+      });
+      autocomplete(document.getElementById("inputtags"), names);
+      autocomplete(document.getElementById("inputopns"), names);
     }
   }
   if (debug) {
