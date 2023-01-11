@@ -836,6 +836,7 @@ color: var(--old);
 }
 
 #speed {
+    visibility: hidden;
 position: fixed;
 left:5%;
 top:5%;

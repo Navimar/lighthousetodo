@@ -1,8 +1,9 @@
 let planeddays = new Map();
-// let g_time = 0;
-// let g_avgtime = 0;
-// let g_max = 0;
-// let g_timecn = 0;
+
+let g_time = 0;
+let g_avgtime = 0;
+let g_max = 0;
+let g_timecn = 0;
 
 let render = () => {
   let tasks = $('#tasks');
@@ -361,15 +362,17 @@ let render = () => {
       $(window).scrollTop(scrollPosition);
     }
   }
-  const d = new Date();
-  r_time = d.getTime();
-  if (g_time == 0)
-    g_time = r_time
-  if (r_time - g_time > g_max)
-    g_max = r_time - g_time;
-  g_avgtime = parseInt((g_avgtime * g_timecn + (r_time - g_time)) / ++g_timecn)
-  document.getElementById("speed").innerHTML = 'last: ' + (r_time - g_time) + '<br>avg: ' + g_avgtime + '<br>max: ' + g_max;
-
+  if (debug) {
+    const d = new Date();
+    r_time = d.getTime();
+    if (g_time == 0)
+      g_time = r_time
+    if (r_time - g_time > g_max)
+      g_max = r_time - g_time;
+    g_avgtime = parseInt((g_avgtime * g_timecn + (r_time - g_time)) / ++g_timecn)
+    document.getElementById("speed").style.visibility = 'visible';
+    document.getElementById("speed").innerHTML = 'last: ' + (r_time - g_time) + '<br>avg: ' + g_avgtime + '<br>max: ' + g_max;
+  }
 };
 
 function autocomplete(inp, arr) {
