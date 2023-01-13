@@ -121,6 +121,7 @@ let newwish = (name, selected, tags, blocks, opns, priority, profit, note, date)
     opns,
     selected,
     priority,
+    rank: 0,
     profit,
     priorarr: [],
     rank: profit,
@@ -144,6 +145,21 @@ let countpriorarr = (a, level) => {
       countpriorarr.priorarr[level] = trans(a.priority);
 }
 
+let countrankrarr = (a, level) => {
+  if (!level) level = 0;
+  if (a.opns && a.opns.length > 0) {
+    for (let t = 0; t < a.opns.length; t++) {
+      let opn = note_by_name(a.opns[t])
+      if (level < 12) {
+        countrankrarr(opn, level + 1);
+      }
+    }
+  }
+  if (!moment().isBefore(moment(a.date + "T" + a.time), 'day') || a.blocks.length == 0)
+    if (!a.ready && a.rank < countrankrarr.priorarr[level])
+      countrankrarr.priorarr[level] = a.rank;
+}
+
 let findancestors = (a) => {
   findancestors.ancestors.push(a);
   for (let t = 0; t < a.tags.length; t++) {
@@ -154,6 +170,8 @@ let save = () => {
   if (selected.i == -1)
     return
   let inptval = $('#inputtext').val()
+  let inptrank = $('#profit').val()
+
   let name;
   let note = '';
   if (inptval) {
@@ -244,6 +262,7 @@ let save = () => {
         a.priority = priority;
         a.time = time;
         a.date = date;
+        a.rank = inptrank;
       }
       for (let t in a.tags) {
         if (a.tags[t].toLowerCase() == selected.text.toLowerCase()) {
@@ -303,9 +322,12 @@ let save = () => {
     findancestors(hero);
     let ancestors = [... new Set(findancestors.ancestors)]
     for (let a of ancestors) {
-      countpriorarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
-      countpriorarr(a);
-      a.priorarr = countpriorarr.priorarr;
+      // countpriorarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
+      countrankrarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
+      // countpriorarr(a);
+      countrankrarr(a)
+      a.priorarr = countrankrarr.priorarr;
+      // a.priorarr = countpriorarr.priorarr;
     }
     sortdata();
   }
@@ -386,8 +408,11 @@ let del = (text) => {
   }
 
   for (let anc of ancestors) {
-    countpriorarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
-    countpriorarr(anc);
+    // countpriorarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
+    countrankrarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
+    // countpriorarr(anc);
+    countrankrarr(anc);
+    // anc.priorarr = countrankrarr.priorarr;
     anc.priorarr = countpriorarr.priorarr;
   }
 

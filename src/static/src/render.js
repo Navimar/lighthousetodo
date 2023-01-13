@@ -30,16 +30,17 @@ let render = () => {
     let date = "1111-11-11";
     let today = moment();
     let profit = 0;
+    let rank = 0;
     let ppd = 0;
     let blocked = false;
     tasks.html("");
     let names = [];
 
     tasks.append('<div class="calendarplace">' + moment().format() + '</div>');
-    // let irrr = -1
     for (let a of data.tasks) {
-      // if (irrr-- == 0)
-      //   break;
+      // if ((data.tasks.indexOf(a) <= parseInt(selected.i) + 5 && data.tasks.indexOf(a) >= parseInt(selected.i) - 5) || selected.i == -1) {
+      // if (true) {
+      // console.log(data.tasks.indexOf(a), selected.i);
       if (moment().isSameOrBefore(a.date, 'day')) {
         let value = planeddays.get(moment(a.date).format('YYYY-MM-DD'))
         if (value) {
@@ -85,9 +86,9 @@ let render = () => {
 
         //ранг
         texthtml += "<div class='textareacontainer'>";
-        // texthtml += "<div class='timeinputs'>";
-        // texthtml += "<div class='header'>Приоритет</div>"
-        // texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"profit\" name=\"profitinp\">";
+        texthtml += "<div class='timeinputs'>";
+        texthtml += "<div class='header'>Приоритет</div>"
+        texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"profit\" name=\"profitinp\">";
         // texthtml += "<span class='header'>+</span>"
         // texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"ppd\" name=\"ppdinp\">";
         // texthtml += "<span class='header'>/в день</span>"
@@ -197,12 +198,9 @@ let render = () => {
       if (a.focused)
         texthtml += " focused";
       texthtml += "'><tbody><tr>"
-      // if (a.focused) 
-      // {
-      //   texthtml += " <td class='focushead"
-      //   texthtml += " " + a.priority
-      //   texthtml += " '></td>"
-      // }
+      texthtml += " <td class='priority'>"
+      texthtml += " " + a.rank
+      texthtml += " </td>"
       texthtml += " <td class=' taskmarker"
       texthtml += " " + a.priority;
       if (a.focused)
@@ -223,6 +221,7 @@ let render = () => {
         time = a.time;
         date = a.date;
         profit = a.profit;
+        rank = a.rank;
         ppd = a.ppd;
       }
       texthtml += "'>";
@@ -277,9 +276,12 @@ let render = () => {
         if (a.priorarr)
           a.priorarr.forEach((e, index) => {
             if (e != 99 && index > 0) {
-              e = retrans(e);
-              e += '-color';
-              texthtml += "<span class=' bul tag " + e + "'> ►</span>";
+              let cl = retrans(e);
+              cl += '-color';
+              texthtml += "<span class=' bul tag " + cl + "'> ►"
+              texthtml += "</span>";
+              texthtml += e
+
             }
           });
       }
@@ -304,6 +306,7 @@ let render = () => {
       if (a.selected) {
         $('input[name="radioprior"][value=' + a.priority + ']').prop('checked', true);
       }
+      // }
     }
     const calendars = document.getElementsByClassName("calendarplace");
     // console.log(calendars)
@@ -343,20 +346,25 @@ let render = () => {
       $('.checkdelete ').prop('checked', false);
     });
 
+    // console.log(rank);
+    // // $('#profit').val(rank);
+    // console.log($('#profit').val());
+    // console.log($('#inputtags').val());
+
     $('#inputtags').val(tagtext);
     $('#inputopns').val(opntext);
     $('#inputtext').val(text + '\n' + note);
     $('#time').val(time);
     $('#date').val(date);
-    $('#profit').val(profit);
+    $('#profit').val(rank);
     $('#ppd').val(ppd);
     $('.delete').val(text);
     if (isSelection) {
       scrollPosition = $('.selected').position().top + $('.selected').height() / 2;
       scrollPosition -= mouse.y;
       $(window).scrollTop(scrollPosition);
-    }
-    if (selected.i != -1) {
+      // }
+      // if (selected.i != -1) {
       names.sort(function (a, b) {
         return a.length > b.length;
       });

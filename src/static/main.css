@@ -845,3 +845,8 @@ padding: 4px;
 background: var(--background-main);
 color: var(--color-main);
 }
+
+.priority{
+text-align: center;
+width: 2em;
+}

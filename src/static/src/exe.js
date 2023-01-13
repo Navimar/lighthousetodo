@@ -1,6 +1,8 @@
 let onSelect = (txt) => {
-    // const d = new Date();
-    // g_time = d.getTime();
+    if (debug) {
+        const d = new Date();
+        g_time = d.getTime();
+    }
     save();
     focusfisrt()
     select(txt);
@@ -9,8 +11,10 @@ let onSelect = (txt) => {
 };
 
 let onTag = (txt) => {
-    // const d = new Date();
-    // g_time = d.getTime();
+    if (debug) {
+        const d = new Date();
+        g_time = d.getTime();
+    }
     save();
     focusfisrt()
     select(txt);
@@ -19,8 +23,10 @@ let onTag = (txt) => {
 }
 
 let onOpn = (txt) => {
-    // const d = new Date();
-    // g_time = d.getTime();
+    if (debug) {
+        const d = new Date();
+        g_time = d.getTime();
+    }
     save();
     focusfisrt()
     select(txt);

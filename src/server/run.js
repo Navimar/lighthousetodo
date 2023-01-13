@@ -82,7 +82,8 @@ let load = (key, socket) => {
             // let o = {
             //     tasks: [{ name: 'hello!', tags: [], opns: [] }]
             // }
-            fs.mkdirSync('../data/' + dir);
+            if (!fs.existsSync('../data/' + dir))
+                fs.mkdirSync('../data/' + dir);
             fs.writeFileSync('../data/' + dir + '/data.txt', data);
             socket.emit('update', JSON.parse(data));
         });
