@@ -93,6 +93,9 @@ let render = () => {
         // texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"ppd\" name=\"ppdinp\">";
         // texthtml += "<span class='header'>/в день</span>"
         // texthtml += "</div>"
+        texthtml += "<button value='" + a.name + "' class='mainbutton task squeezeout' >" +
+          "Вытеснить" +
+          "</button>";
 
 
         // //важность

@@ -177,6 +177,19 @@ let findancestors = (a) => {
     findancestors(note_by_name(a.tags[t]))
   }
 }
+
+let squeezeout = () => {
+  for (let a of data.tasks) {
+    if (!a.selected && a.rank >= selected.scribe.rank) {
+      a.rank++;
+    }
+  }
+  for (let a of data.tasks) {
+    countrankrarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
+    countrankrarr(a)
+    a.priorarr = countrankrarr.priorarr;
+  }
+}
 let save = () => {
   if (selected.i == -1)
     return
@@ -362,6 +375,7 @@ let select = (text) => {
     else {
       data.tasks[i].selected = (data.tasks[i].name.toLowerCase() == text.toLowerCase())
       if (data.tasks[i].selected) {
+        selected.scribe = data.tasks[i];
         selected.text = text;
         selected.i = i;
       }

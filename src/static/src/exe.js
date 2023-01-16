@@ -204,6 +204,19 @@ $(document).on('click', '.savetask', function () {
     );
     $(window).scrollTop(scrollPosition);
 });
+$(document).on('click', '.squeezeout', function () {
+    // onSelect('');
+    // const d = new Date();
+    // g_time = d.getTime();
+    squeezeout();
+    save();
+    select(focusfisrt());
+    send();
+    render();
+    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height()
+    );
+    $(window).scrollTop(scrollPosition);
+});
 $(document).on('click', '.divetask', function () {
     let val = $(this).attr('value');
     if (val != $('.t1').val()) {
