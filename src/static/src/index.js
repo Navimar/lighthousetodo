@@ -423,8 +423,8 @@ let del = (text) => {
     countrankrarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
     // countpriorarr(anc);
     countrankrarr(anc);
-    // anc.priorarr = countrankrarr.priorarr;
-    anc.priorarr = countpriorarr.priorarr;
+    anc.priorarr = countrankrarr.priorarr;
+    // anc.priorarr = countpriorarr.priorarr;
   }
 
   sortdata();
