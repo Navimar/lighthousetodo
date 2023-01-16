@@ -63,6 +63,7 @@ function inputSocket() {
       data = msg;
       console.log("loaded");
       focusfisrt();
+      makelinks();
       render();
       $('#status').removeClass("red").html('online');
     } else
@@ -130,26 +131,36 @@ let newwish = (name, selected, tags, blocks, opns, priority, profit, note, date)
     date
   });
 };
-let countpriorarr = (a, level) => {
-  if (!level) level = 0;
-  if (a.opns && a.opns.length > 0) {
+// let countpriorarr = (a, level) => {
+//   if (!level) level = 0;
+//   if (a.opns && a.opns.length > 0) {
+//     for (let t = 0; t < a.opns.length; t++) {
+//       let opn = note_by_name(a.opns[t])
+//       if (level < 12) {
+//         countpriorarr(opn, level + 1);
+//       }
+//     }
+//   }
+//   if (!moment().isBefore(moment(a.date + "T" + a.time), 'day') || a.blocks.length == 0)
+//     if (!a.ready && trans(a.priority) < countpriorarr.priorarr[level])
+//       countpriorarr.priorarr[level] = trans(a.priority);
+// }
+
+let makelinks = () => {
+  for (let a of data.tasks) {
+    a.linksto = [];
     for (let t = 0; t < a.opns.length; t++) {
-      let opn = note_by_name(a.opns[t])
-      if (level < 12) {
-        countpriorarr(opn, level + 1);
-      }
+      a.linksto.push(note_by_name(a.opns[t]))
     }
   }
-  if (!moment().isBefore(moment(a.date + "T" + a.time), 'day') || a.blocks.length == 0)
-    if (!a.ready && trans(a.priority) < countpriorarr.priorarr[level])
-      countpriorarr.priorarr[level] = trans(a.priority);
 }
 
 let countrankrarr = (a, level) => {
   if (!level) level = 0;
   if (a.opns && a.opns.length > 0) {
-    for (let t = 0; t < a.opns.length; t++) {
-      let opn = note_by_name(a.opns[t])
+    if (!a.linksto)
+      makelinks(a)
+    for (let opn of a.linksto) {
       if (level < 12) {
         countrankrarr(opn, level + 1);
       }
@@ -423,10 +434,14 @@ let del = (text) => {
 let send = () => {
   data.user = user;
   data.timestamp = moment();
+  // console.log(data)
+  for (let a of data.tasks) {
+    delete a.linksto;
+  }
   socket.emit('save', data);
 }
 
-let sendevents = () => {
-  eventarr
-  socket.emit('save', data);
-}
+// let sendevents = () => {
+//   eventarr
+//   socket.emit('save', data);
+// }
