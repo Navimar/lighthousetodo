@@ -157,9 +157,7 @@ let makelinks = () => {
 
 let countrankrarr = (a, level) => {
   if (!level) level = 0;
-  if (a.opns && a.opns.length > 0) {
-    if (!a.linksto)
-      makelinks()
+  if (a.linksto && a.opns && a.opns.length > 0) {
     for (let opn of a.linksto) {
       if (level < 12) {
         countrankrarr(opn, level + 1);
