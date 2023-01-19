@@ -29,7 +29,6 @@ let render = () => {
     let lasttime = false;
     let date = "1111-11-11";
     let today = moment();
-    let profit = 0;
     let rank = 0;
     let ppd = 0;
     let blocked = false;

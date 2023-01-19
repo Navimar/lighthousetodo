@@ -146,11 +146,18 @@ let newwish = (name, selected, tags, blocks, opns, priority, profit, note, date)
 //       countpriorarr.priorarr[level] = trans(a.priority);
 // }
 
-let makelinks = () => {
-  for (let a of data.tasks) {
-    a.linksto = [];
-    for (let t = 0; t < a.opns.length; t++) {
-      a.linksto.push(note_by_name(a.opns[t]))
+let makelinks = (task) => {
+  if (!task)
+    for (let a of data.tasks) {
+      a.linksto = [];
+      for (let t = 0; t < a.opns.length; t++) {
+        a.linksto.push(note_by_name(a.opns[t]))
+      }
+    }
+  else {
+    task.linksto = [];
+    for (let t = 0; t < task.opns.length; t++) {
+      task.linksto.push(note_by_name(task.opns[t]))
     }
   }
 }
@@ -328,6 +335,7 @@ let save = () => {
       });
     }
     hero.blocks = blocks;
+    makelinks(hero);
     newscribestags.forEach((txt) => {
       hero.blocks.push(txt);
       newwish(txt, false, [], [], [name], priority, 0);
@@ -444,13 +452,12 @@ let del = (text) => {
 };
 
 let send = () => {
-  data.user = user;
-  data.timestamp = moment();
-  // console.log(data)
-  for (let a of data.tasks) {
-    delete a.linksto;
+  let sentdata = {
+    user: user,
+    timestamp: moment(),
+    tasks: data.tasks.map(({ linksto, ...rest }) => rest),
   }
-  socket.emit('save', data);
+  socket.emit('save', sentdata);
 }
 
 // let sendevents = () => {
