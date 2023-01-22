@@ -144,6 +144,7 @@ let makelinks = (task) => {
 let findtarget = (a, level) => {
   let target = a
   level = level ? level : 0;
+  console.log(a)
   for (let linkto of a.linksto) {
     if (level < 12) {
       let child = findtarget(linkto, level + 1);
