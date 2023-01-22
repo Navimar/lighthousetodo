@@ -85,9 +85,11 @@ table.selected{
 }
 
 td.taskmarker {
+    text-align: center;
+    width: 3em;
+    background-color: var(--background-table);
     border-bottom: 5px solid var(--background-main);
     border-top: 5px solid var(--background-main);
-    width: 0.5em;
 }
 
 .nondisplay {
@@ -309,7 +311,7 @@ option.fifth {
 }
 
 .tenth {
-    background: #37174F;
+    background: var(--background-area);
 }
 
 
@@ -848,5 +850,10 @@ color: var(--color-main);
 
 .priority{
 text-align: center;
-width: 2em;
+width: 3em;
+margin-left: 1em;
+margin-top: 1em;
+margin-bottom: 1em;
+background: var( --background-table);
+
 }

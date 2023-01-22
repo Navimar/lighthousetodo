@@ -5,19 +5,12 @@ let sortdata = () => {
       return -1;
     if (a.ready && !b.ready)
       return 1;
-    if ((a.blocks.length == 0 || a.vip) && b.blocks.length > 0 && !b.vip) {
-      return -1
-    }
-    else if (!a.vip && a.blocks.length > 0 && (b.blocks.length == 0 || b.vip)) {
-      return 1
-    }
 
-    if (a.blocks.length > 0 && !a.vip && b.blocks.length > 0 && !b.vip) {
-      if ((a.opns.length == 0 && b.opns.length > 0))
-        return -1
-      if ((b.opns.length == 0 && a.opns.length > 0))
-        return 1
-    }
+    if ((a.linksfrom.length == 0 || a.linksfrom.every(e => e.ready === true) || b.vip) && (b.linksfrom.some(b => b.ready === false) && !b.vip))
+      return -1
+    if ((b.linksfrom.length == 0 || b.linksfrom.every(e => e.ready === true) || b.vip) && (a.linksfrom.some(a => a.ready === false) && !b.vip))
+      return 1
+
 
     let ad = moment(a.date);
     let bd = moment(b.date);
@@ -46,10 +39,13 @@ let sortdata = () => {
       return 1
     }
 
-    let e = elder(a, b)
-    if (e > 0)
+
+    let adip = a.target ? a.target.dip : a.dip
+    let bdip = b.target ? b.target.dip : b.dip
+
+    if (parseInt(adip) > parseInt(bdip))
       return 1
-    if (e < 0)
+    if (parseInt(bdip) > parseInt(adip))
       return -1
 
     if (moment() <= moment(a.date + "T" + a.time) && moment() > moment(b.date + "T" + b.time))
@@ -66,10 +62,10 @@ let sortdata = () => {
     }
 
 
-    if (a.tags.length > b.tags.length) {
+    if (a.linksfromNames.length > b.linksfromNames.length) {
       return -1
     }
-    else if (a.tags.length < b.tags.length) {
+    else if (a.linksfromNames.length < b.linksfromNames.length) {
       return 1
     }
     if (moment(a.date + "T" + a.time) > moment(b.date + "T" + b.time)) {
@@ -78,16 +74,16 @@ let sortdata = () => {
     else if (moment(a.date + "T" + a.time) < moment(b.date + "T" + b.time)) {
       return -1;
     }
-    if ((a.opns.length > b.opns.length)) {
+    if ((a.linkstoNames.length > b.linkstoNames.length)) {
       return -1
     }
-    else if (a.opns.length < b.opns.length) {
+    else if (a.linkstoNames.length < b.linkstoNames.length) {
       return 1
     }
-    if (a.tags[0] && b.tags[0] && (a.tags[0].localeCompare(b.tags[0]) < 0)) {
+    if (a.linksfromNames[0] && b.linksfromNames[0] && (a.linksfromNames[0].localeCompare(b.linksfromNames[0]) < 0)) {
       return -1
     }
-    else if (a.tags[0] && b.tags[0] && (a.tags[0].localeCompare(b.tags[0]) > 0)) {
+    else if (a.linksfromNames[0] && b.linksfromNames[0] && (a.linksfromNames[0].localeCompare(b.linksfromNames[0]) > 0)) {
       return 1
     }
     if (a.name.length > b.name.length) {

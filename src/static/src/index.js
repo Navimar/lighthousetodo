@@ -62,6 +62,7 @@ function inputSocket() {
     if (!data.timestamp || moment(data.timestamp) < moment(msg.timestamp)) {
       data = msg;
       console.log("loaded");
+      oldversions();
       focusfisrt();
       makelinks();
       render();
@@ -82,8 +83,8 @@ let update = () => {
   socket.emit('load', user);
 }
 
-let newwish = (name, selected, tags, blocks, opns, priority, profit, note, date) => {
-  let run = false;
+let uniqueName = (name) => {
+  name = name ? name : 'Новая запись'
   let ok = true;
   while (ok) {
     ok = false;
@@ -91,115 +92,100 @@ let newwish = (name, selected, tags, blocks, opns, priority, profit, note, date)
       if (a.name.toLowerCase() == name.toLowerCase()) {
         name += '!';
         ok = true;
-        run = true
         break;
       }
     }
   }
-  if (run)
-    return;
-  if (!date)
-    date = clock().year + "-" + clock().month + "-" + clock().d
-  if (!note) {
-    note = '';
-  }
-  if (!tags) {
-    tags = [];
-  }
-  if (!blocks)
-    blocks = [];
-  if (!opns) {
-    opns = [];
-  }
-  if (!priority) {
-    priority = 'first';
-  }
+  return name
+}
+
+let newwish = (name, dip, linksfromNames, linkstoNames, date, note,) => {
   data.tasks.unshift({
-    name,
-    note,
-    tags,
-    blocks,
-    opns,
-    selected,
-    priority,
-    rank: 0,
-    profit,
-    priorarr: [],
-    rank: profit,
+    name: uniqueName(name),
+    note: note ? note : '',
+    linksfromNames: linksfromNames ? linksfromNames : [],
+    linkstoNames: linkstoNames ? linkstoNames : [],
+    dip: dip ? dip : 0,
     ready: false,
     time: clock().h + ":" + clock().m,
-    date
+    date: date ? date : clock().year + "-" + clock().month + "-" + clock().d,
+    target: {
+      dip,
+      name
+    },
   });
-};
-// let countpriorarr = (a, level) => {
-//   if (!level) level = 0;
-//   if (a.opns && a.opns.length > 0) {
-//     for (let t = 0; t < a.opns.length; t++) {
-//       let opn = note_by_name(a.opns[t])
-//       if (level < 12) {
-//         countpriorarr(opn, level + 1);
-//       }
-//     }
-//   }
-//   if (!moment().isBefore(moment(a.date + "T" + a.time), 'day') || a.blocks.length == 0)
-//     if (!a.ready && trans(a.priority) < countpriorarr.priorarr[level])
-//       countpriorarr.priorarr[level] = trans(a.priority);
-// }
+  makelinks(data.tasks[0]);
+}
 
 let makelinks = (task) => {
   if (!task)
-    for (let a of data.tasks) {
-      a.linksto = [];
-      for (let t = 0; t < a.opns.length; t++) {
-        a.linksto.push(note_by_name(a.opns[t]))
+    for (let task of data.tasks) {
+      task.linksto = [];
+      for (let t = 0; t < task.linkstoNames.length; t++) {
+        task.linksto.push(note_by_name(task.linkstoNames[t]))
+      }
+      task.linksfrom = [];
+      for (let t = 0; t < task.linksfromNames.length; t++) {
+        task.linksfrom.push(note_by_name(task.linksfromNames[t]))
       }
     }
   else {
     task.linksto = [];
-    for (let t = 0; t < task.opns.length; t++) {
-      task.linksto.push(note_by_name(task.opns[t]))
+    for (let t = 0; t < task.linkstoNames.length; t++) {
+      task.linksto.push(note_by_name(task.linkstoNames[t]))
+    }
+    task.linksfrom = [];
+    for (let t = 0; t < task.linksfromNames.length; t++) {
+      task.linksfrom.push(note_by_name(task.linksfromNames[t]))
     }
   }
 }
 
-let countrankrarr = (a, level) => {
-  if (!level) level = 0;
-  if (a.linksto && a.opns && a.opns.length > 0) {
-    for (let opn of a.linksto) {
-      if (level < 12) {
-        countrankrarr(opn, level + 1);
+let findtarget = (a, level) => {
+  let target = a
+  level = level ? level : 0;
+  for (let linkto of a.linksto) {
+    if (level < 12) {
+      let child = findtarget(linkto, level + 1);
+      console.log('newtartge before if', target, child)
+      if (parseInt(child.dip) < parseInt(target.dip)
+        && moment().isSameOrAfter(moment(a.date + "T" + a.time), 'day')
+      ) {
+        target = child
+        console.log('newtartge', target, child)
       }
     }
   }
-  if (!moment().isBefore(moment(a.date + "T" + a.time), 'day') || a.blocks.length == 0)
-    if (!a.ready && a.rank < countrankrarr.priorarr[level])
-      countrankrarr.priorarr[level] = a.rank;
+  return target
 }
+
 
 let findancestors = (a) => {
   findancestors.ancestors.push(a);
-  for (let t = 0; t < a.tags.length; t++) {
-    findancestors(note_by_name(a.tags[t]))
+  for (let t = 0; t < a.linksfromNames.length; t++) {
+    findancestors(note_by_name(a.linksfromNames[t]))
   }
 }
 
 let squeezeout = () => {
   for (let a of data.tasks) {
-    if (!a.selected && a.rank >= selected.scribe.rank) {
-      a.rank++;
+    if (!a.selected && a.dip >= selected.scribe.dip) {
+      a.dip++;
     }
   }
   for (let a of data.tasks) {
-    countrankrarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
-    countrankrarr(a)
-    a.priorarr = countrankrarr.priorarr;
+    let target = findtarget(a)
+    a.target = {
+      name: target.name,
+      dip: target.dip,
+    }
   }
 }
 let save = () => {
   if (selected.i == -1)
     return
   let inptval = $('#inputtext').val()
-  let inptrank = $('#profit').val()
+  let dip = parseInt($('#dip').val())
 
   let name;
   let note = '';
@@ -231,8 +217,6 @@ let save = () => {
       ready = false;
     let vip = $(".checkboxvip").prop('checked');
 
-    // let priority = $("#priority option:selected").val();
-    let priority = $('input[name="radioprior"]:checked').val();
     let tags = [];
     $.each(inptags.split(/\n/), function (i, tgname) {
       if (tgname != "") {
@@ -250,7 +234,6 @@ let save = () => {
     let newscribestags = tags.slice();
     let newscribesopns = opns.slice();
 
-
     let time = $("#time").val();
     if (!time) {
       time = clock().h + ":" + clock().m;
@@ -262,8 +245,7 @@ let save = () => {
     while (ok) {
       ok = false;
       for (let a of data.tasks) {
-        // cn++
-        if (!a.selected && a.name.toLowerCase() == name.toLowerCase()) {
+        if (selected.scribe != a && a.name.toLowerCase() == name.toLowerCase()) {
           name += '!';
           ok = true;
           break;
@@ -273,91 +255,77 @@ let save = () => {
 
     let hero = {};
     let blocks = [];
+
     for (let a of data.tasks) {
       if (!a.blocks)
         a.blocks = []
       if (a.readytill && moment(a.date + "T" + a.time).isSameOrBefore(moment()))
         a.ready = false
-      if (a.selected && inptval) {
+      if (selected.scribe == a && inptval) {
         hero = a;
         a.name = name;
         a.note = note;
-        a.tags = tags;
-        a.opns = opns;
+        a.linksfromNames = tags;
+        a.linkstoNames = opns;
         a.ready = ready;
         if (ready && moment(a.date + "T" + a.time).isAfter(moment()))
           a.readytill = true
         a.vip = vip;
-        a.priority = priority;
         a.time = time;
         a.date = date;
-        a.rank = inptrank;
+        a.dip = dip;
       }
-      for (let t in a.tags) {
-        if (a.tags[t].toLowerCase() == selected.text.toLowerCase()) {
-          a.tags.splice(t, 1);
+      for (let t in a.linksfromNames) {
+        if (a.linksfromNames[t].toLowerCase() == selected.text.toLowerCase()) {
+          a.linksfromNames.splice(t, 1);
         }
       }
 
-      for (let b in a.blocks) {
-        if (a.blocks[b].toLowerCase() == selected.text.toLowerCase()) {
-          a.blocks.splice(b, 1);
-        }
-      }
-
-      for (let t in a.opns) {
-        if (a.opns[t].toLowerCase() == selected.text.toLowerCase()) {
-          a.opns.splice(t, 1);
+      for (let t in a.linkstoNames) {
+        if (a.linkstoNames[t].toLowerCase() == selected.text.toLowerCase()) {
+          a.linkstoNames.splice(t, 1);
         }
       }
 
       tags.forEach((tag) => {
         if (a.name.toLowerCase() == tag.toLowerCase()) {
           newscribestags.splice(newscribestags.indexOf(tag), 1);
-          if (a.opns && a.opns.indexOf(name) === -1) {
-            a.opns.push(name);
+          if (a.linkstoNames && a.linkstoNames.indexOf(name) === -1) {
+            a.linkstoNames.push(name);
           }
           if (!a.ready)
             blocks.push(a.name);
         }
       });
-      if (a.opns.length == 0)
+      if (a.linkstoNames.length == 0)
         a.ready = false;
       opns.forEach((opn) => {
         if (a.name.toLowerCase() == opn.toLowerCase()) {
           newscribesopns.splice(newscribesopns.indexOf(opn), 1);
-          if (a.tags && a.tags.indexOf(name) === -1) {
-            a.tags.push(name);
-            if (!ready)
-              a.blocks.push(name);
+          if (a.linksfromNames && a.linksfromNames.indexOf(name) === -1) {
+            a.linksfromNames.push(name);
           }
         }
       });
     }
-    hero.blocks = blocks;
-    makelinks(hero);
+
     newscribestags.forEach((txt) => {
-      hero.blocks.push(txt);
-      newwish(txt, false, [], [], [name], priority, 0);
+      newwish(txt, dip, [], [name],);
     });
     newscribesopns.forEach((txt) => {
-      if (ready)
-        newwish(txt, false, [name], [], [], priority, 0);
-      if (!ready) {
-        newwish(txt, false, [name], [name], [], priority, 0);
-      }
+      newwish(txt, dip, [name], [],);
     });
+    makelinks(hero);
 
     findancestors.ancestors = [];
     findancestors(hero);
     let ancestors = [... new Set(findancestors.ancestors)]
     for (let a of ancestors) {
-      // countpriorarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
-      countrankrarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
-      // countpriorarr(a);
-      countrankrarr(a)
-      a.priorarr = countrankrarr.priorarr;
-      // a.priorarr = countpriorarr.priorarr;
+      let target = findtarget(a)
+      a.target = {
+        name: target.name,
+        dip: target.dip,
+      }
     }
     sortdata();
   }
@@ -420,8 +388,8 @@ let del = (text) => {
       data.tasks.splice(a, 1);
     }
     for (let t in data.tasks[a].tags) {
-      if (data.tasks[a].tags[t] == text) {
-        data.tasks[a].tags.splice(t, 1);
+      if (data.tasks[a].linksfromNames[t] == text) {
+        data.tasks[a].linksfromNames.splice(t, 1);
       }
     }
     for (let t in data.tasks[a].blocks) {
@@ -430,11 +398,11 @@ let del = (text) => {
       }
     }
     for (let t in data.tasks[a].opns) {
-      if (data.tasks[a].opns[t] == text) {
-        data.tasks[a].opns.splice(t, 1);
+      if (data.tasks[a].linkstoNames[t] == text) {
+        data.tasks[a].linkstoNames.splice(t, 1);
       }
     }
-    if (data.tasks[a].opns.length == 0)
+    if (data.tasks[a].linkstoNames.length == 0)
       data.tasks[a].ready = false;
   }
 
@@ -455,7 +423,7 @@ let send = () => {
   let sentdata = {
     user: user,
     timestamp: moment(),
-    tasks: data.tasks.map(({ linksto, ...rest }) => rest),
+    tasks: data.tasks.map(({ linksto, linksfrom, ...rest }) => rest),
   }
   socket.emit('save', sentdata);
 }

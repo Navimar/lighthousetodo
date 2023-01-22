@@ -35,11 +35,11 @@ let onOpn = (txt) => {
 }
 
 let onNew = () => {
-    // const d = new Date();
-    // g_time = d.getTime();
+    let name = 'Новая запись'
     save();
-    newwish('новая запись', false, false, false, false, 'third', 0,);
-    select('новая запись');
+    if (uniqueName(name) == name)
+        newwish();
+    select(name);
     send();
     render();
     $('#inputtext').select();
@@ -164,7 +164,7 @@ $(document).on('click', '.calbut', function (event) {
     if ($($(this).attr('href')).offset())
         $(window).scrollTop($($(this).attr('href')).offset().top - mouse.y + 6);
     else if (moment().isBefore(date, 'day')) {
-        newwish('новая запись ' + date, false, false, false, false, 'first', 0, false, date);
+        newwish('новая запись ' + date, false, false, false, date,);
         save();
         select('новая запись ' + date);
         send();
@@ -193,9 +193,6 @@ $(document).on('click', '.newtask', function () {
     $('.inputtext:first').val('').select();
 });
 $(document).on('click', '.savetask', function () {
-    // onSelect('');
-    // const d = new Date();
-    // g_time = d.getTime();
     save();
     select(focusfisrt());
     send();
@@ -204,6 +201,18 @@ $(document).on('click', '.savetask', function () {
     );
     $(window).scrollTop(scrollPosition);
 });
+
+$(document).on('click', '.stomp', function () {
+    $('#dip').val(+$('#dip').val() + 1);
+    save();
+    select(focusfisrt());
+    send();
+    render();
+    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height()
+    );
+    $(window).scrollTop(scrollPosition);
+});
+
 $(document).on('click', '.squeezeout', function () {
     // onSelect('');
     // const d = new Date();

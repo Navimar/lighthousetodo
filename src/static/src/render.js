@@ -16,8 +16,8 @@ let render = () => {
   } else {
     isSelection = false;
     let searchquerry = $('.t1').val();
-    let tags = [];
-    let opns = [];
+    let linksfromNames = [];
+    let linkstoNames = [];
     let tagtext = "";
     let opntext = "";
     let text = "";
@@ -29,8 +29,6 @@ let render = () => {
     let lasttime = false;
     let date = "1111-11-11";
     let today = moment();
-    let rank = 0;
-    let ppd = 0;
     let blocked = false;
     tasks.html("");
     let names = [];
@@ -58,7 +56,7 @@ let render = () => {
           nondisplay = false;
           searchresultisempty = false;
         }
-        a.tags.forEach((val) => {
+        a.linksfromNames.forEach((val) => {
           if (val.toLowerCase().replace(/ё/g, "е").includes(searchquerry.toLowerCase().replace(/ё/g, "е"))) {
             nondisplay = false;
             searchresultisempty = false;
@@ -76,7 +74,7 @@ let render = () => {
         texthtml += '<div class="calendarplace">' + today.format() + '</div>'
         // Calendar3(today);
       }
-      if (!a.vip && a.blocks && a.blocks.length > 0 && !blocked) {
+      if (!a.vip && a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !blocked) {
         texthtml += ("<div class='date'><div class='header date'>ФИНИСФЕРА</div></div>");
         blocked = true;
       }
@@ -85,34 +83,25 @@ let render = () => {
 
         //ранг
         texthtml += "<div class='textareacontainer'>";
-        texthtml += "<div class='timeinputs'>";
-        texthtml += "<div class='header'>Приоритет</div>"
-        texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"profit\" name=\"profitinp\">";
-        // texthtml += "<span class='header'>+</span>"
-        // texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"ppd\" name=\"ppdinp\">";
-        // texthtml += "<span class='header'>/в день</span>"
-        // texthtml += "</div>"
-        texthtml += "<button value='" + a.name + "' class='mainbutton task squeezeout' >" +
-          "Вытеснить" +
-          "</button>";
+        // texthtml += "<div class='timeinputs'>";
 
 
         // //важность
         // texthtml += "<div class='textareacontainer'>"
-        texthtml += "<div class='header'>Приоритет</div>"
-        texthtml += "<button class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Хронос<\/label><\/button>";
-        texthtml += "<button class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Диес<\/label><\/button>";
-        texthtml += "<button class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Нептун<\/label><\/button>";
-        texthtml += "<button class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Кайрос<\/label><\/button>";
+        // texthtml += "<div class='header'>Приоритет</div>"
+        // texthtml += "<button class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Хронос<\/label><\/button>";
+        // texthtml += "<button class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Диес<\/label><\/button>";
+        // texthtml += "<button class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Нептун<\/label><\/button>";
+        // texthtml += "<button class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Кайрос<\/label><\/button>";
         // texthtml += "<div class=\"bfifth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfifth\" value=\"fifth\"><label for=\"rfifth\">Квартал<\/label><\/div>";
         // texthtml += "    </div><div class='timebuttons'> ";
 
         // texthtml += "<div class=\"bsixth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsixth\" value=\"sixth\"><label for=\"rsixth\">Полгода<\/label><\/div>";
         // texthtml += "<div class=\"bseventh priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rseventh\" value=\"seventh\"><label for=\"rseventh\">Год<\/label><\/div>";
         // texthtml += "<div class=\"beighth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"reighth\" value=\"eighth\"><label for=\"reighth\">Век<\/label><\/div>";
-        texthtml += "<button class=\"bninth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rninth\" value=\"ninth\"><label for=\"rninth\">Набу<\/label><\/button>";
+        // texthtml += "<button class=\"bninth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rninth\" value=\"ninth\"><label for=\"rninth\">Набу<\/label><\/button>";
         // texthtml += "<div class=\"btenth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rtenth\" value=\"tenth\"><label for=\"rtenth\">Корзина<\/label><\/div>";
-        texthtml += "    </div>";
+        // texthtml += "    </div>";
 
         //тексты
         texthtml += "<div class='textareacontainer'>"
@@ -173,6 +162,37 @@ let render = () => {
         // texthtml += "<div class='mainbuttonblock'>"
         // texthtml += "<label class='mainbutton readylabel' >Активно <input  class='checkbox onoff' type=\"checkbox\"></label>";
         // texthtml += "</div>"
+        texthtml += "<div class='textareacontainer'>"
+
+        texthtml += "<div class='header'>Приоритет</div>"
+
+        texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"dip\" name=\"profitinp\">";
+
+        texthtml += "</div>";
+
+        // texthtml += "<span class='header'>+</span>"
+        // texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"ppd\" name=\"ppdinp\">";
+        // texthtml += "<span class='header'>/в день</span>"
+        // texthtml += "</div>"
+        texthtml += "<div class='mainbuttonblock'>"
+
+        texthtml += "<button value='" + a.name + "' class='mainbutton task squeezeout' >" +
+          "Вытеснить" +
+          "</button>";
+        texthtml += "</div>";
+
+        texthtml += "<div class='mainbuttonblock'>"
+
+        texthtml += "<button value='" + a.name + "' class='mainbutton task stomp' >" +
+          "Притоптать" +
+          "</button>";
+        texthtml += "</div>";
+
+        texthtml += "<div class='mainbuttonblock'>"
+        texthtml += "<button value='" + a.name + "' class='mainbutton task savetask' >" +
+          "Сохранить" +
+          "</button>";
+        texthtml += "</div>"
 
         texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<label value='" + a.name + "' class='mainbutton divetask' >Нырок <input  class='checkdive' type=\"checkbox\"></label>";
@@ -182,11 +202,7 @@ let render = () => {
         texthtml += "<label class='mainbutton  delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
         texthtml += "</div>"
 
-        texthtml += "<div class='mainbuttonblock'>"
-        texthtml += "<button value='" + a.name + "' class='mainbutton task savetask' >" +
-          "Сохранить" +
-          "</button>";
-        texthtml += "</div>"
+
 
         texthtml += "</div>"
         texthtml += "<\/div>";
@@ -200,22 +216,29 @@ let render = () => {
       if (a.focused)
         texthtml += " focused";
       texthtml += "'><tbody><tr>"
-      texthtml += " <td class='priority'>"
-      texthtml += " " + a.rank
-      texthtml += " </td>"
+
       texthtml += " <td class=' taskmarker"
-      texthtml += " " + a.priority;
+      // texthtml += " " + a.priority;
+      // texthtml += " " + 'tenth';
       if (a.focused)
         texthtml += " focushead";
       texthtml += "'>"
-      if (a.focused)
+      if (!a.focused) {
+        texthtml += "<span class='tag'>" + a.dip
+        if (a.target && a.target.dip < a.dip)
+          texthtml += ' ► ' + a.target.dip
+        texthtml += "</span>"
+      }
+      else
         texthtml += "<div class='focustimer'><div id='timer' class='center'>" + moment.utc(foucusstimer * 1000).format('HH:mm:ss') + "</div></div>";
-      texthtml += " </td><td class='tdtask'>"
+      texthtml += " </td>"
+
+      texthtml += "<td class='tdtask'>"
       texthtml += "<div class='task";
       if (a.selected) {
         isSelection = true;
-        tags = a.tags;
-        opns = a.opns;
+        linksfromNames = a.linksfromNames;
+        linkstoNames = a.linkstoNames;
         text = a.name;
         note = a.note;
         checkedready = a.ready;
@@ -223,8 +246,7 @@ let render = () => {
         time = a.time;
         date = a.date;
         profit = a.profit;
-        rank = a.rank;
-        ppd = a.ppd;
+        dip = a.dip;
       }
       texthtml += "'>";
       texthtml += rendertags(a);
@@ -241,8 +263,8 @@ let render = () => {
             texthtml += ("<div class='tag text time past'>ВЧЕРА</div>&nbsp;&nbsp;");
           else if (moment(a.date + "T" + a.time).isBefore(moment(), 'day'))
             texthtml += ("<div class='tag text time past'>ДАВНО</div>&nbsp;&nbsp;");
-        if (a.blocks && a.blocks.length > 0)
-          if (a.opns.length > 0)
+        if (a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false))
+          if (a.linkstoNames.length > 0)
             texthtml += ("<button class='tag text time'>ВЕТВЬ</button>&nbsp;&nbsp;");
           else
             texthtml += ("<button class='tag text time'>МЕЧТА</button>&nbsp;&nbsp;");
@@ -262,7 +284,10 @@ let render = () => {
       texthtml += a.name;
       texthtml += "</button>";
       if (a.note)
-        texthtml += "&hellip;"
+        // texthtml += "&hellip;"
+        texthtml += "+ 📝"
+
+
       // texthtml += ' ['
       // if (a.priorarr)
       //   a.priorarr.forEach((e, index) => {
@@ -270,30 +295,13 @@ let render = () => {
 
       //   });
       // texthtml += '] '
-
-      if (a.opns && a.opns.length > 0) {
-        // if (a.ready) {
-        //   texthtml += "<span class=' bul'>✓</span>";
-        // }
-        if (a.priorarr)
-          a.priorarr.forEach((e, index) => {
-            if (e != 99 && index > 0) {
-              let cl = retrans(e);
-              cl += '-color';
-              texthtml += "<span class=' bul tag " + cl + "'> ►"
-              texthtml += "</span>";
-              texthtml += e
-
-            }
-          });
+      if (a.linkstoNames.length > 0) {
+        texthtml += "<span class=' bul tag '> ► "
+        texthtml += "</span>";
       }
-      else {
-        // texthtml += "\xa0<span class=' rank'>";
-        // texthtml += vrank;
-        // texthtml += "</span>";
-        // if (a.ready) {
-        //   texthtml += "<span class=' bul'>✓</span>";
-        // }
+      if (selected.scribe != a && a.target && a.name != a.target.name) {
+
+        texthtml += '<div class="tag text">' + a.target.name + '</div>'
       }
 
       if (a.selected) {
@@ -303,7 +311,8 @@ let render = () => {
       }
 
       texthtml += "</div>";
-      texthtml += "</td></tr></tbody></table>"
+      texthtml += "</td>";
+      texthtml += "</tr></tbody></table>"
       tasks.append(texthtml);
       if (a.selected) {
         $('input[name="radioprior"][value=' + a.priority + ']').prop('checked', true);
@@ -319,11 +328,11 @@ let render = () => {
     if (searchresultisempty)
       tasks.append('<div id="searchresultisempty">Ничего не найдено, измените поисковый запрос</div><br><button class="clearsearch">Очистить строку поиска</button>');
 
-    for (let t of tags) {
+    for (let t of linksfromNames) {
       tagtext += t + "\n";
     }
-    if (opns) {
-      for (let t of opns) {
+    if (linkstoNames) {
+      for (let t of linkstoNames) {
         opntext += t + "\n";
       }
     }
@@ -353,15 +362,15 @@ let render = () => {
     // console.log($('#profit').val());
     // console.log($('#inputtags').val());
 
-    $('#inputtags').val(tagtext);
-    $('#inputopns').val(opntext);
-    $('#inputtext').val(text + '\n' + note);
-    $('#time').val(time);
-    $('#date').val(date);
-    $('#profit').val(rank);
-    $('#ppd').val(ppd);
-    $('.delete').val(text);
+
     if (isSelection) {
+      $('#inputtags').val(tagtext);
+      $('#inputopns').val(opntext);
+      $('#inputtext').val(text + '\n' + note);
+      $('#time').val(time);
+      $('#date').val(date);
+      $('#dip').val(dip);
+      $('.delete').val(text);
       scrollPosition = $('.selected').position().top + $('.selected').height() / 2;
       scrollPosition -= mouse.y;
       $(window).scrollTop(scrollPosition);
@@ -587,84 +596,82 @@ function Calendar3(date) {
   // document.querySelector('#' + id + ' option[value="' + new Date().getMonth() + '"]').style.color = 'rgb(220, 0, 0)'; // в выпадающем списке выделен текущий месяц
 }
 
-let rendertags = (a) => {
-  if (!a.blocks)
-    a.blocks = [];
+let rendertags = (task) => {
   let texthtml = "";
-  if (a.tags.length > 0) {
-    a.tags.sort((a, b) => {
-      if (a < b) { return -1; }
-      if (a > b) { return 1; }
-      return 0;
-    });
-    for (let t in a.blocks) {
-      texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
-      texthtml += "<button class='tag text";
-      texthtml += "'>";
-      texthtml += a.blocks[t];
-      texthtml += "</button>";
-      // if (t != a.blocks.length - 1)
-      //   texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
-      // else {
-      // texthtml += '<span class="tag">&nbsp;⇒&nbsp;</span>'
-      // }
-    }
-    let readyarr = a.tags.filter(x => !a.blocks.includes(x))
+  let blocksarr = []
+  let readyarr = []
 
-    if (a.blocks.length > 0)
-      texthtml += "<br>";
+  blocksarr = task.linksfrom.filter(a => a.ready === false);
+  readyarr = task.linksfrom.filter(a => a.ready === true);
 
-    for (let t in readyarr) {
-      // if (t == 0)
-      texthtml += '<span class="tag">&nbsp;✓&nbsp;</span>'
-      // else
-      // texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
-      texthtml += "<button class='tag text";
-      texthtml += "'>";
-      texthtml += readyarr[t];
-      texthtml += "</button>";
-      // if (t != a.tags.length - 1)
-      // texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
-    }
-    if (readyarr.length > 0)
-      texthtml += "<br>";
+  for (let t in blocksarr) {
+    texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
+    texthtml += "<button class='tag text";
+    texthtml += "'>";
+    texthtml += blocksarr[t].name;
+    texthtml += "</button>";
+    // if (t != a.blocks.length - 1)
+    //   texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
+    // else {
+    // texthtml += '<span class="tag">&nbsp;⇒&nbsp;</span>'
+    // }
   }
 
+  // let readyarr = a.tags.filter(x => !a.blocks.includes(x))
+
+  if (blocksarr.length > 0)
+    texthtml += "<br>";
+
+  for (let t in readyarr) {
+    // if (t == 0)
+    texthtml += '<span class="tag">&nbsp;✓&nbsp;</span>'
+    // else
+    // texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
+    texthtml += "<button class='tag text";
+    texthtml += "'>";
+    texthtml += readyarr[t].name;
+    texthtml += "</button>";
+    // if (t != a.tags.length - 1)
+    // texthtml += '<span class="tag">&nbsp;•&nbsp;</span>'
+  }
+  if (readyarr.length > 0)
+    texthtml += "<br>";
   return texthtml;
 }
 let renderopns = (a, level) => {
   if (!level)
     level = 0;
   let texthtml = "<div class='opnslist'>";
-  if (a.opns && a.opns.length > 0) {
-    a.opns.sort((a, b) => {
-      if (a < b) { return -1; }
-      if (a > b) { return 1; }
-      return 0;
-    });
-    for (let t = 0; t < a.opns.length; t++) {
-      let openka = note_by_name(a.opns[t])
-      texthtml += "<span class='bul tag'>" + openka.rank + "</span><span class='bul tag ";
-      texthtml += openka.priority + '-color';
-      texthtml += "'>";
-      for (let i = 0; i < level; i++)
-        texthtml += "&nbsp;&nbsp;"
 
-      if (openka.tags && openka.tags.length > 1)
-        texthtml += "⇒";
-      else
-        texthtml += "•";
-      texthtml += "</span>";
-      texthtml += "<button class='opn";
-      texthtml += "'>";
-      texthtml += a.opns[t];
-      texthtml += "</button>";
-      if (level == 5)
-        texthtml += "<span class='arr'>⇒...</span>";
-      if (level < 5)
-        texthtml += renderopns(openka, level + 1);
-    }
+  a.linksto.sort((a, b) => {
+    if (a.dip < b.dip) { return -1; }
+    if (a.dip > b.dip) { return 1; }
+    return 0;
+  });
+
+  for (let t = 0; t < a.linksto.length; t++) {
+    let openka = a.linksto[t];
+    texthtml += "<span class='bul tag'>" + openka.dip + "</span><span class='bul tag ";
+    texthtml += openka.priority + '-color';
+    texthtml += "'>";
+    for (let i = 0; i < level; i++)
+      texthtml += "&nbsp;&nbsp;"
+
+    if (openka.tags && openka.tags.length > 1)
+      texthtml += "⇒";
+    else
+      texthtml += "•";
+    texthtml += "</span>";
+    texthtml += "<button class='opn";
+    texthtml += "'>";
+    texthtml += a.linkstoNames[t];
+    texthtml += "</button>";
+    if (level == 5)
+      texthtml += "<span class='arr'>⇒...</span>";
+    if (level < 5)
+      texthtml += renderopns(openka, level + 1);
   }
+
   return texthtml + "</div>";
 }
 
