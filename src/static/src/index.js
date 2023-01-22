@@ -122,21 +122,25 @@ let makelinks = (task) => {
     for (let task of data.tasks) {
       task.linksto = [];
       for (let t = 0; t < task.linkstoNames.length; t++) {
-        task.linksto.push(note_by_name(task.linkstoNames[t]))
+        let scribe = note_by_name(task.linkstoNames[t])
+        if (scribe) task.linksto.push(scribe)
       }
       task.linksfrom = [];
       for (let t = 0; t < task.linksfromNames.length; t++) {
-        task.linksfrom.push(note_by_name(task.linksfromNames[t]))
+        let scribe = note_by_name(task.linksfromNames[t])
+        if (scribe) task.linksfrom.push(scribe)
       }
     }
   else {
     task.linksto = [];
     for (let t = 0; t < task.linkstoNames.length; t++) {
-      task.linksto.push(note_by_name(task.linkstoNames[t]))
+      let scribe = note_by_name(task.linkstoNames[t])
+      if (scribe) task.linksto.push(scribe)
     }
     task.linksfrom = [];
     for (let t = 0; t < task.linksfromNames.length; t++) {
-      task.linksfrom.push(note_by_name(task.linksfromNames[t]))
+      let scribe = note_by_name(task.linksfromNames[t])
+      if (scribe) task.linksfrom.push(scribe)
     }
   }
 }
