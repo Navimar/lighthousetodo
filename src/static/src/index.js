@@ -147,12 +147,10 @@ let findtarget = (a, level) => {
   for (let linkto of a.linksto) {
     if (level < 12) {
       let child = findtarget(linkto, level + 1);
-      console.log('newtartge before if', target, child)
       if (parseInt(child.dip) < parseInt(target.dip)
         && moment().isSameOrAfter(moment(a.date + "T" + a.time), 'day')
       ) {
         target = child
-        console.log('newtartge', target, child)
       }
     }
   }
@@ -379,12 +377,8 @@ let focusfisrt = () => {
 }
 
 let del = (text) => {
-  let ancestors;
   for (let a in data.tasks) {
     if (data.tasks[a].name == text) {
-      findancestors.ancestors = [];
-      findancestors(data.tasks[a]);
-      ancestors = [... new Set(findancestors.ancestors)]
       data.tasks.splice(a, 1);
     }
     for (let t in data.tasks[a].tags) {
@@ -404,15 +398,6 @@ let del = (text) => {
     }
     if (data.tasks[a].linkstoNames.length == 0)
       data.tasks[a].ready = false;
-  }
-
-  for (let anc of ancestors) {
-    // countpriorarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
-    countrankrarr.priorarr = [99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,];
-    // countpriorarr(anc);
-    countrankrarr(anc);
-    anc.priorarr = countrankrarr.priorarr;
-    // anc.priorarr = countpriorarr.priorarr;
   }
 
   sortdata();
