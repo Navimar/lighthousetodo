@@ -381,17 +381,12 @@ let del = (text) => {
     if (data.tasks[a].name == text) {
       data.tasks.splice(a, 1);
     }
-    for (let t in data.tasks[a].tags) {
+    for (let t in data.tasks[a].linksfromNames) {
       if (data.tasks[a].linksfromNames[t] == text) {
         data.tasks[a].linksfromNames.splice(t, 1);
       }
     }
-    for (let t in data.tasks[a].blocks) {
-      if (data.tasks[a].blocks[t] == text) {
-        data.tasks[a].blocks.splice(t, 1);
-      }
-    }
-    for (let t in data.tasks[a].opns) {
+    for (let t in data.tasks[a].linkstoNames) {
       if (data.tasks[a].linkstoNames[t] == text) {
         data.tasks[a].linkstoNames.splice(t, 1);
       }
