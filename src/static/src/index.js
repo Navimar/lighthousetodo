@@ -147,6 +147,7 @@ let findtarget = (a, level) => {
   console.log(a)
   for (let linkto of a.linksto) {
     if (level < 12) {
+      console.log(linkto)
       let child = findtarget(linkto, level + 1);
       if (parseInt(child.dip) < parseInt(target.dip)
         && moment().isSameOrAfter(moment(a.date + "T" + a.time), 'day')
