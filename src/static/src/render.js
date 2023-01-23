@@ -78,11 +78,25 @@ let render = () => {
         texthtml += ("<div class='date'><div class='header date'>ФИНИСФЕРА</div></div>");
         blocked = true;
       }
+
+      texthtml += "<table class='"
+      if (nondisplay)
+        texthtml += " nondisplay"
+      if (a.selected)
+        texthtml += " selected";
+      if (a.focused)
+        texthtml += " focused";
+      texthtml += " task'><tbody>"
+
+
+
       if (a.selected) {
+        texthtml += "<tr><td colspan='3'>";
+
         texthtml += "<div class=\"editor\">";
 
         //ранг
-        texthtml += "<div class='textareacontainer'>";
+        // texthtml += "<div class='textareacontainer'>";
         // texthtml += "<div class='timeinputs'>";
 
 
@@ -174,6 +188,8 @@ let render = () => {
         // texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"ppd\" name=\"ppdinp\">";
         // texthtml += "<span class='header'>/в день</span>"
         // texthtml += "</div>"
+        texthtml += "<div class='textareacontainer'>";
+
         texthtml += "<div class='mainbuttonblock'>"
 
         texthtml += "<button value='" + a.name + "' class='mainbutton task squeezeout' >" +
@@ -205,37 +221,49 @@ let render = () => {
 
 
         texthtml += "</div>"
-        texthtml += "<\/div>";
-
+        texthtml += "</div>";
+        texthtml += "</td></tr>";
       }
-      texthtml += "<table class='"
-      if (nondisplay)
-        texthtml += " nondisplay"
-      if (a.selected)
-        texthtml += " selected";
-      if (a.focused)
-        texthtml += " focused";
-      texthtml += "'><tbody><tr>"
 
-      texthtml += " <td class=' taskmarker"
-      // texthtml += " " + a.priority;
-      // texthtml += " " + 'tenth';
-      if (a.focused)
-        texthtml += " focushead";
-      texthtml += "'>"
-      if (!a.focused) {
-        texthtml += "<span class='tag'>" + a.dip
-        if (a.target && a.target.dip < a.dip)
-          texthtml += ' ► ' + a.target.dip
-        texthtml += "</span>"
+      texthtml += "<tr class='task'>";
+      texthtml += "<td class='plate'>"
+
+      if (a.ready)
+        //&& a.opns.length > 0)
+        texthtml += ("<div class='tag text time ready'>ГОТОВ</div>&nbsp;&nbsp;");
+      if (a.vip)
+        //&& a.opns.length > 0)
+        texthtml += ("<div class='tag text time vip'>СУПЕР</div>&nbsp;&nbsp;");
+      else {
+        if (!a.ready)
+          if (moment(a.date + "T" + a.time).diff(moment(), 'day') == -1)
+            texthtml += ("<div class='tag time past'>ВЧЕРА</div>&nbsp;&nbsp;");
+          else if (moment(a.date + "T" + a.time).isBefore(moment(), 'day'))
+            texthtml += ("<div class='tag time past'>ДАВНО</div>&nbsp;&nbsp;");
+        if (a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false))
+          if (a.linkstoNames.length > 0)
+            texthtml += ("<div class='tag time'>ВЕТВЬ</div>&nbsp;&nbsp;");
+          else
+            texthtml += ("<div class='tag time'>МЕЧТА</div>&nbsp;&nbsp;");
       }
-      else
-        texthtml += "<div class='focustimer'><div id='timer' class='center'>" + moment.utc(foucusstimer * 1000).format('HH:mm:ss') + "</div></div>";
-      texthtml += " </td>"
+      if (moment() <= moment(a.date + "T" + a.time)) {
+        if (a.time != lasttime) {
+          texthtml += "<div class='tag time'>";
+          texthtml += a.time;
+          texthtml += "</div>&nbsp;&nbsp;";
+          lasttime = a.time
+        }
+        else
+          texthtml += ("<div class='tag  time'>--:--</div>&nbsp;&nbsp;");
+      }
+
+      texthtml += "</td>"
+
 
       texthtml += "<td class='tdtask'>"
       texthtml += "<div class='task";
       if (a.selected) {
+        texthtml += " position";
         isSelection = true;
         linksfromNames = a.linksfromNames;
         linkstoNames = a.linkstoNames;
@@ -251,38 +279,13 @@ let render = () => {
       texthtml += "'>";
       texthtml += rendertags(a);
 
-      if (a.ready)
-        //&& a.opns.length > 0)
-        texthtml += ("<button class='tag text time ready'>ГОТОВ</button>&nbsp;&nbsp;");
-      if (a.vip)
-        //&& a.opns.length > 0)
-        texthtml += ("<button class='tag text time vip'>СУПЕР</button>&nbsp;&nbsp;");
-      else {
-        if (!a.ready)
-          if (moment(a.date + "T" + a.time).diff(moment(), 'day') == -1)
-            texthtml += ("<div class='tag text time past'>ВЧЕРА</div>&nbsp;&nbsp;");
-          else if (moment(a.date + "T" + a.time).isBefore(moment(), 'day'))
-            texthtml += ("<div class='tag text time past'>ДАВНО</div>&nbsp;&nbsp;");
-        if (a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false))
-          if (a.linkstoNames.length > 0)
-            texthtml += ("<button class='tag text time'>ВЕТВЬ</button>&nbsp;&nbsp;");
-          else
-            texthtml += ("<button class='tag text time'>МЕЧТА</button>&nbsp;&nbsp;");
-      }
-      if (moment() <= moment(a.date + "T" + a.time)) {
-        if (a.time != lasttime) {
-          texthtml += "<div class='tag text time'>";
-          texthtml += a.time;
-          texthtml += "</div>&nbsp;&nbsp;&nbsp;&nbsp;";
-          lasttime = a.time
-        }
-        else
-          texthtml += ("<button class='tag text time'>--:--</button>&nbsp;&nbsp;&nbsp;&nbsp;");
-      }
-      texthtml += "<button class='text";
+
+
+
+      texthtml += "<div class='text";
       texthtml += "'>";
       texthtml += a.name;
-      texthtml += "</button>";
+      texthtml += "</div>";
       if (a.note)
         // texthtml += "&hellip;"
         texthtml += "+ 📝"
@@ -296,9 +299,10 @@ let render = () => {
       //   });
       // texthtml += '] '
       if (a.linkstoNames.length > 0) {
-        texthtml += "<span class=' bul tag '> ► "
+        texthtml += "<span class=' tag '> ⇨ "
         texthtml += "</span>";
       }
+      //►⇨
       if (selected.scribe != a && a.target && a.name != a.target.name) {
         texthtml += '<div class="tag text">' + a.target.name + '</div>'
       }
@@ -311,6 +315,23 @@ let render = () => {
 
       texthtml += "</div>";
       texthtml += "</td>";
+
+
+      texthtml += " <td class=' taskmarker"
+      if (a.focused)
+        texthtml += " focushead";
+      texthtml += "'>"
+      if (!a.focused) {
+        texthtml += "<div class=' dip '>" + a.dip
+        if (a.target && a.target.dip < a.dip)
+          texthtml += ' ► ' + a.target.dip
+        texthtml += "</div>"
+      }
+      else
+        texthtml += "<div class='focustimer'><div id='timer' class='center'>" + moment.utc(foucusstimer * 1000).format('HH:mm:ss') + "</div></div>";
+      texthtml += " </td>"
+
+
       texthtml += "</tr></tbody></table>"
       tasks.append(texthtml);
       if (a.selected) {
@@ -370,7 +391,7 @@ let render = () => {
       $('#date').val(date);
       $('#dip').val(dip);
       $('.delete').val(text);
-      scrollPosition = $('.selected').position().top + $('.selected').height() / 2;
+      scrollPosition = $('.position').offset().top + $('.position').height() / 2;
       scrollPosition -= mouse.y;
       $(window).scrollTop(scrollPosition);
       // }

@@ -4,6 +4,8 @@
         --background-table: #f0f0f0;
         --background-area: #e0e0e0;
         --background-button: white;
+        --background-image: url("back.jpeg");
+        /* --background-image: none; */
         --color-main: #000000;
         --color-contrast: black;
         --old: #d57575;
@@ -17,6 +19,8 @@
         --background-table: #222;
         --background-area: #333;
         --background-button: lightgray;
+        --background-image: url("backdark.jpeg");
+        --background-image: none;
         --color-main: #FFFFFF;
         --color-contrast: black;
         --old: #995151;
@@ -46,7 +50,10 @@ body {
     font-family: 'IBM Plex Sans', sans-serif;
     margin: 0;
     overflow-x: hidden;
-    background: var(--background-main);
+    background-color: var(--background-main);
+ background-image: var(--background-image);
+  background-attachment: fixed;
+      background-size: cover;
 }
 
 div {
@@ -57,8 +64,20 @@ div {
 table {
     width: 100%;
 }
-table.selected{
-    word-wrap: anywhere;
+
+table.task{
+    background-color: var(--background-main);
+    
+    border-radius: 0.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+
+}
+table.selected tr.task{
+      background: var(--background-table);
+      /* border: 0.5em solid var(--background-table); */
+display: block;
+border-radius: 0 0 0.5em 0.5em;
 }
 
 #tasks {
@@ -84,12 +103,21 @@ table.selected{
     border-radius: 0;
 }
 
+.tdtask {
+    width: 100%;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
 td.taskmarker {
     text-align: center;
-    width: 3em;
-    background-color: var(--background-table);
-    border-bottom: 5px solid var(--background-main);
-    border-top: 5px solid var(--background-main);
+
+}
+
+td.plate {
+padding-left: 0.5em;
+    /* padding-top: 1em; */
+/* vertical-align: top; */
 }
 
 .nondisplay {
@@ -133,13 +161,26 @@ option:checked {
     position: fixed;
     bottom: 15px;
     left: 15px;
-    /* background: var(--background-main); */
+    border: none;
+    color:white;
+background-color: var(--old);
+background-size: 100% auto;
+border-radius: 5px;
+width: 13vh;
+height: 13vh;
+max-height: 13vw;
+max-width: 13vw;
+bottom: 15px;
+font-size: 10vh;
+vertical-align: middle;
+font-family: 'Noto Sans Mono', monospace;
 
 }
 .text {
     word-break: break-word;
     background: none;
     border: none;
+    width:90%;
     /* color: white; */
     text-align: left;
     font-size: 13.3pt;
@@ -180,15 +221,7 @@ input[type="checkbox"] {
     text-align: center;
     background-color: var(--background-table);
     padding-top: 1px;
-}
-
-
-input {
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 12pt;
-    border: none;
-    color: var(--color-contrast);
-    /* background: white; */
+    border-radius:  0.5em 0.5em 0 0;
 }
 
 .clock .timebutton {
@@ -339,7 +372,7 @@ button {
 .timebutton {
     max-height: 2em;
     overflow: hidden;
-    border: 4px solid var(--background-area);
+    border: 4px solid var(--background-table);
     text-align: center;
     width: 20%;
     color: var(--color-contrast);
@@ -458,10 +491,12 @@ label.mainbutton.timebutton {
 
 
 .dateinp {
+    color:var(--color-contrast);
+    font-size: 11pt;
     background: white;
     box-sizing: border-box;
     padding: 2px 5px 2px 5px;
-    border: 4px solid var(--background-area);
+    border: 4px solid var(--background-table);
     /* border-left: 4px solid var(--background-area); */
 }
 
@@ -575,6 +610,7 @@ label.readylabel {
 }
 
 .time {
+    white-space: nowrap;
     border: 2px solid var(--background-area);
     padding-left: 2px;
     padding-right: 2px;
@@ -668,16 +704,10 @@ label.readylabel {
     width: 4em;
 }
 
-.tdtask {
-    padding-left: 1em;
-    padding-top: 1em;
-    padding-bottom: 1em;
-}
-
 #newtaskbutton {
     border: none;
     background: url("plus.png") center;
-    background-color: var(--third);
+    background-color: var(--old);
     background-size: 100% auto;
     border-radius: 50%;
     position: fixed;
@@ -701,6 +731,8 @@ label.readylabel {
 }
 
 .input {
+    font-family: 'IBM Plex Sans', sans-serif;
+    /* color: var(--color-contrast); */
     appearance: none;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -709,14 +741,15 @@ label.readylabel {
     border-style: inset;
     padding-left: 10px;
     padding-right: 10px;
-    border-top: 5px solid var(--background-area);
-    border-bottom: 10px solid var(--background-area);
+    border-radius: 0.2em;
+    border-top: 5px solid var(--background-table);
+    border-bottom: 10px solid var(--background-table);
     border-left: none;
     border-right: none;
     font-family: 'Roboto', sans-serif;
     width: 100%;
     font-size: 11pt;
-    background: var(--background-area);
+    background: var(--background-table);
     margin: 0;
     box-shadow: none;
     outline: none;
@@ -741,9 +774,12 @@ label.readylabel {
 }
 
 .textareacontainer {
-    background: var(--background-area);
+    /* background: var(--background-area); */
     text-align: left;
-    margin: 0.5em;
+    /* margin: 0.5em; */
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+
 }
 
 .fiveblock {
@@ -774,7 +810,7 @@ label.readylabel {
 }
 
 .focused {
-    height: 1px;
+border:solid 0.1em  var(--old);
 }
 
 td.focushead {
@@ -786,9 +822,7 @@ td.focushead {
     position: relative;
     width: 5em;
     height: calc(100% - 17px);
-    background: var(--background-main);
     margin-right: 9px;
-
     font-family: 'Noto Sans Mono', monospace;
 }
 
@@ -856,4 +890,14 @@ margin-top: 1em;
 margin-bottom: 1em;
 background: var( --background-table);
 
+}
+
+.dip{
+white-space: nowrap;
+width: 5em;
+height: calc(100% - 17px);
+margin-right: 9px;
+font-family: 'Noto Sans Mono', monospace;
+color: gray;
+font-size: 11.4pt;
 }

@@ -222,8 +222,7 @@ $(document).on('click', '.squeezeout', function () {
     select(focusfisrt());
     send();
     render();
-    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height()
-    );
+    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
     $(window).scrollTop(scrollPosition);
 });
 $(document).on('click', '.divetask', function () {
