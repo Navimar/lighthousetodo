@@ -642,9 +642,9 @@ let renderopns = (a, level) => {
     level = 0;
   let texthtml = "<div class='opnslist'>";
 
-  a.linksto.sort((a, b) => {
-    if (a.dip < b.dip) { return -1; }
-    if (a.dip > b.dip) { return 1; }
+  a.linksto.sort((aa, bb) => {
+    if (aa.dip < bb.dip) { return -1; }
+    if (aa.dip > bb.dip) { return 1; }
     return 0;
   });
 
@@ -660,7 +660,7 @@ let renderopns = (a, level) => {
     texthtml += "</span>";
     texthtml += "<button class='opn";
     texthtml += "'>";
-    texthtml += a.linkstoNames[t];
+    texthtml += a.linksto[t].name;
     texthtml += "</button>";
     if (level == 5)
       texthtml += "<span class='arr'>⇒...</span>";
