@@ -20,7 +20,7 @@
         --background-area: #333;
         --background-button: lightgray;
         --background-image: url("backdark.jpeg");
-        --background-image: none;
+        /* --background-image: none; */
         --color-main: #FFFFFF;
         --color-contrast: black;
         --old: #995151;
@@ -800,6 +800,7 @@ label.readylabel {
 #opnslistcont {
     max-height: 20ex;
     overflow: auto;
+    word-break: break-word;
 }
 
 .t1 {
