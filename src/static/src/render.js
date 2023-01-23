@@ -258,7 +258,7 @@ let render = () => {
         //&& a.opns.length > 0)
         texthtml += ("<button class='tag text time vip'>СУПЕР</button>&nbsp;&nbsp;");
       else {
-        if (!a.ready && (a.priority == 'first' || a.priority == 'second'))
+        if (!a.ready)
           if (moment(a.date + "T" + a.time).diff(moment(), 'day') == -1)
             texthtml += ("<div class='tag text time past'>ВЧЕРА</div>&nbsp;&nbsp;");
           else if (moment(a.date + "T" + a.time).isBefore(moment(), 'day'))
@@ -300,7 +300,6 @@ let render = () => {
         texthtml += "</span>";
       }
       if (selected.scribe != a && a.target && a.name != a.target.name) {
-
         texthtml += '<div class="tag text">' + a.target.name + '</div>'
       }
 
@@ -650,14 +649,11 @@ let renderopns = (a, level) => {
   });
 
   for (let t = 0; t < a.linksto.length; t++) {
-    let openka = a.linksto[t];
-    texthtml += "<span class='bul tag'>" + openka.dip + "</span><span class='bul tag ";
-    texthtml += openka.priority + '-color';
+    texthtml += "<span class='bul tag'>" + a.linksto[t].dip + "</span><span class='bul tag ";
     texthtml += "'>";
     for (let i = 0; i < level; i++)
       texthtml += "&nbsp;&nbsp;"
-
-    if (openka.tags && openka.tags.length > 1)
+    if (a.linksto[t].linkstoNames && a.linksto[t].linkstoNames.length > 1)
       texthtml += "⇒";
     else
       texthtml += "•";
@@ -669,7 +665,7 @@ let renderopns = (a, level) => {
     if (level == 5)
       texthtml += "<span class='arr'>⇒...</span>";
     if (level < 5)
-      texthtml += renderopns(openka, level + 1);
+      texthtml += renderopns(a.linksto[t], level + 1);
   }
 
   return texthtml + "</div>";

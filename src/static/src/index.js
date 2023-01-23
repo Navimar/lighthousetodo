@@ -158,6 +158,10 @@ let findtarget = (a, level) => {
       }
     }
   }
+  a.target = {
+    name: target.name,
+    dip: target.dip,
+  }
   return target
 }
 
@@ -176,11 +180,7 @@ let squeezeout = () => {
     }
   }
   for (let a of data.tasks) {
-    let target = findtarget(a)
-    a.target = {
-      name: target.name,
-      dip: target.dip,
-    }
+    findtarget(a)
   }
 }
 let save = () => {
@@ -323,11 +323,7 @@ let save = () => {
     findancestors(hero);
     let ancestors = [... new Set(findancestors.ancestors)]
     for (let a of ancestors) {
-      let target = findtarget(a)
-      a.target = {
-        name: target.name,
-        dip: target.dip,
-      }
+      findtarget(a)
     }
     sortdata();
   }
@@ -345,6 +341,7 @@ let note_by_name = (name) => {
 let select = (text) => {
   selected.text = false;
   selected.i = -1;
+  selected.scribe = false;
   for (let i in data.tasks) {
     if (data.tasks[i].selected && data.tasks[i].name.toLowerCase() == text.toLowerCase())
       data.tasks[i].selected = false
