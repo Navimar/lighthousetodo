@@ -30,9 +30,11 @@ let render = () => {
     let date = "1111-11-11";
     let today = moment();
     let blocked = false;
+    let lastdip = -1;
     tasks.html("");
     let names = [];
 
+    tasks.append("<div id=" + moment().format('YYYY-MM-DD') + " class='header date'> " + moment().format('dddd DD MMMM') + "</div>");
     tasks.append('<div class="calendarplace">' + moment().format() + '</div>');
     for (let a of data.tasks) {
       // if ((data.tasks.indexOf(a) <= parseInt(selected.i) + 5 && data.tasks.indexOf(a) >= parseInt(selected.i) - 5) || selected.i == -1) {
@@ -71,12 +73,24 @@ let render = () => {
       texthtml = "";
       if (nondisplay == false && moment(a.date).format() != today.format() && moment().diff(moment(a.date)) <= 0) {
         today = moment(a.date);
+        texthtml += ("<div id=" + today.format('YYYY-MM-DD') + " class='header date'> ");
+        if (moment().isSame(today, 'year'))
+          texthtml += today.format('dddd DD MMMM') + "</div>";
+        else
+          texthtml += today.format('dddd DD MMMM YYYY') + "</div>";
         texthtml += '<div class="calendarplace">' + today.format() + '</div>'
+        lastdip = a.dip - 1
         // Calendar3(today);
       }
       if (!a.vip && a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !blocked) {
-        texthtml += ("<div class='date'><div class='header date'>ФИНИСФЕРА</div></div>");
+        texthtml += ("<div class='header date'>ФИНИСФЕРА</div>");
         blocked = true;
+      }
+
+      let diphead = a.target ? a.target.dip : a.dip
+      if (diphead > lastdip) {
+        texthtml += ("<div class='header dipheader date '><span>" + (diphead) + "</span></div>");
+        lastdip = diphead
       }
 
       texthtml += "<table class='"
@@ -322,9 +336,10 @@ let render = () => {
         texthtml += " focushead";
       texthtml += "'>"
       if (!a.focused) {
-        texthtml += "<div class=' dip '>" + a.dip
-        if (a.target && a.target.dip < a.dip)
-          texthtml += ' ► ' + a.target.dip
+        if (a.target && a.target.dip < a.dip) {
+          texthtml += "<div class=' dip '>" + a.dip
+          // texthtml += ' ► ' + a.target.dip
+        }
         texthtml += "</div>"
       }
       else
@@ -540,11 +555,6 @@ function autocomplete(inp, arr) {
 
 function Calendar3(date) {
   let calendar = '';
-  calendar += ("<div id=" + date.format('YYYY-MM-DD') + " class='header date'> ");
-  if (moment().isSame(date, 'year'))
-    calendar += date.format('dddd DD MMMM') + "</div>";
-  else
-    calendar += date.format('dddd DD MMMM YYYY') + "</div>";
   calendar += '<table class="calendar3" id="calendar-' + date.format('YYYY-MM-DD') + '">'
   calendar += '<tr class="days_of_week">'
   calendar += '<td>Пн'
