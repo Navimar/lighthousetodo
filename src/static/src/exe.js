@@ -299,7 +299,10 @@ $(document).on('click', '#plusweek', function () {
     onPlusWeek();
 });
 $(document).on('click', '#scrollTopButton', function () {
-    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
+    if (selected.scribe && selected.scribe.focused)
+        scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
+    else
+        scrollPosition = parseInt($('.focused').position().top) - $(window).height() / 2 + $('.focused').height() / 2;
     if ($(window).scrollTop() == scrollPosition)
         scrollPosition = 0;
     $(window).scrollTop(scrollPosition);
