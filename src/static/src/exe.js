@@ -48,7 +48,7 @@ let onNew = () => {
 let onDel = (txt) => {
     const d = new Date();
     g_time = d.getTime();
-    del(txt);
+    deletescribe(txt);
     select(focusfisrt());
     send();
     render();
@@ -197,8 +197,7 @@ $(document).on('click', '.savetask', function () {
     select(focusfisrt());
     send();
     render();
-    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height()
-    );
+    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
     $(window).scrollTop(scrollPosition);
 });
 
@@ -208,8 +207,7 @@ $(document).on('click', '.stomp', function () {
     select(focusfisrt());
     send();
     render();
-    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height()
-    );
+    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
     $(window).scrollTop(scrollPosition);
 });
 
@@ -301,10 +299,8 @@ $(document).on('click', '#plusweek', function () {
     onPlusWeek();
 });
 $(document).on('click', '#scrollTopButton', function () {
-    // scrollPosition = 0;
-    scrollPosition = parseInt($('.focused').position().top - $(window).height() / 2);
+    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
     if ($(window).scrollTop() == scrollPosition)
         scrollPosition = 0;
-    // console.log($(window).scrollTop(), scrollPosition);
     $(window).scrollTop(scrollPosition);
 });

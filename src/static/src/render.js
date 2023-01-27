@@ -83,13 +83,13 @@ let render = () => {
         lastdip = a.dip - 1
         // Calendar3(today);
       }
-      if (!a.vip && a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !blocked) {
+      if (!a.vip && a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !blocked && !nondisplay) {
         texthtml += ("<div class='header date'>ФИНИСФЕРА</div>");
         blocked = true;
       }
 
       let diphead = a.target ? a.target.dip : a.dip
-      if (diphead > lastdip) {
+      if (diphead > lastdip && !nondisplay) {
         texthtml += ("<div class='header dipheader date '><span>" + (diphead) + "</span></div>");
         lastdip = diphead
       }
@@ -198,8 +198,6 @@ let render = () => {
         texthtml += "</div>";
         texthtml += "<div class='textareacontainer'>";
 
-
-
         texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<label value='" + a.name + "' class='mainbutton divetask' >Нырок <input  class='checkdive' type=\"checkbox\"></label>";
         texthtml += "</div>"
@@ -300,7 +298,7 @@ let render = () => {
         texthtml += "</span>";
       }
       //►⇨
-      if (selected.scribe != a && a.target && a.name != a.target.name) {
+      if (a.target && a.name != a.target.name) {
         texthtml += '<div class="tag text">' + a.target.name + '</div>'
       }
 
@@ -344,7 +342,7 @@ let render = () => {
       cal.innerHTML = Calendar3(moment(cal.textContent))
     }
     if (searchresultisempty)
-      tasks.append('<div id="searchresultisempty">Ничего не найдено, измените поисковый запрос</div><br><button class="clearsearch">Очистить строку поиска</button>');
+      tasks.append('<div id="searchresultisempty">Ничего не найдено, измените поисковый запрос</div><br><button class="clearsearch mainbutton">Очистить строку поиска</button>');
 
     for (let t of linksfromNames) {
       tagtext += t + "\n";

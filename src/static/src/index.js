@@ -14,7 +14,7 @@ function onTelegramAuth(data) {
   $('.search').css("display", "block");
   $('#newtaskbutton').css("display", "block");
   $('#scrollTopButton').css("display", "block");
-  $('.bottom').text("")
+  // $('.bottom').text("")
   update();
 }
 
@@ -39,7 +39,7 @@ window.onload = function () {
     $('.search').css("display", "block");
     $('#newtaskbutton').css("display", "block");
     $('#scrollTopButton').css("display", "block");
-    $('.bottom').text("")
+    // $('.bottom').text("")
     update();
   }
 };
@@ -210,7 +210,7 @@ let save = () => {
       }
     });
     if ($(".checkdelete").prop('checked')) {
-      return del(name);
+      return deletescribe(name);
     }
     let inptags = $("#inputtags").val();
     let inpopns = $("#inputopns").val();
@@ -380,7 +380,7 @@ let focusfisrt = () => {
   return hero;
 }
 
-let del = (text) => {
+let deletescribe = (text) => {
   for (let a in data.tasks) {
     if (data.tasks[a].name == text) {
       data.tasks.splice(a, 1);
@@ -390,9 +390,19 @@ let del = (text) => {
         data.tasks[a].linksfromNames.splice(t, 1);
       }
     }
+    for (let t in data.tasks[a].linksfrom) {
+      if (data.tasks[a].linksfrom[t].name == text) {
+        data.tasks[a].linksfrom.splice(t, 1);
+      }
+    }
     for (let t in data.tasks[a].linkstoNames) {
       if (data.tasks[a].linkstoNames[t] == text) {
         data.tasks[a].linkstoNames.splice(t, 1);
+      }
+    }
+    for (let t in data.tasks[a].linksto) {
+      if (data.tasks[a].linksto[t].name == text) {
+        data.tasks[a].linksto.splice(t, 1);
       }
     }
     if (data.tasks[a].linkstoNames.length == 0)
