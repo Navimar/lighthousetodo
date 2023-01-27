@@ -151,8 +151,9 @@ let findtarget = (a, level) => {
   for (let linkto of a.linksto) {
     if (level < 12) {
       let child = findtarget(linkto, level + 1);
-      if (parseInt(child.dip) < parseInt(target.dip)
-        && moment().isSameOrAfter(moment(a.date + "T" + a.time), 'day')
+      if (parseInt(child.dip) <= parseInt(target.dip)
+        && moment().isSameOrAfter(moment(child.date + "T" + child.time), 'day')
+        && !child.situational
       ) {
         target = child
       }
@@ -218,6 +219,7 @@ let save = () => {
     if (!inpopns || inpopns.length == 0)
       ready = false;
     let vip = $(".checkboxvip").prop('checked');
+    let situational = $(".checkboxdip").prop('checked');
 
     let tags = [];
     $.each(inptags.split(/\n/), function (i, tgname) {
@@ -273,6 +275,7 @@ let save = () => {
         if (ready && moment(a.date + "T" + a.time).isAfter(moment()))
           a.readytill = true
         a.vip = vip;
+        a.situational = situational;
         a.time = time;
         a.date = date;
         a.dip = dip;

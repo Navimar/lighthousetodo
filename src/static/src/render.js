@@ -24,6 +24,7 @@ let render = () => {
     let note = "";
     let checkedready = false;
     let checkedvip = false;
+    let checkeddip = false;
     let searchresultisempty = true;
     let time = "00:00";
     let lasttime = false;
@@ -109,28 +110,6 @@ let render = () => {
 
         texthtml += "<div class=\"editor\">";
 
-        //ранг
-        // texthtml += "<div class='textareacontainer'>";
-        // texthtml += "<div class='timeinputs'>";
-
-
-        // //важность
-        // texthtml += "<div class='textareacontainer'>"
-        // texthtml += "<div class='header'>Приоритет</div>"
-        // texthtml += "<button class=\"bfirst priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfirst\" value=\"first\"><label for=\"rfirst\">Хронос<\/label><\/button>";
-        // texthtml += "<button class=\"bsecond priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsecond\" value=\"second\"><label for=\"rsecond\">Диес<\/label><\/button>";
-        // texthtml += "<button class=\"bthird priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rthird\" value=\"third\"><label for=\"rthird\">Нептун<\/label><\/button>";
-        // texthtml += "<button class=\"bforth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rforth\" value=\"forth\"><label for=\"rforth\">Кайрос<\/label><\/button>";
-        // texthtml += "<div class=\"bfifth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rfifth\" value=\"fifth\"><label for=\"rfifth\">Квартал<\/label><\/div>";
-        // texthtml += "    </div><div class='timebuttons'> ";
-
-        // texthtml += "<div class=\"bsixth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rsixth\" value=\"sixth\"><label for=\"rsixth\">Полгода<\/label><\/div>";
-        // texthtml += "<div class=\"bseventh priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rseventh\" value=\"seventh\"><label for=\"rseventh\">Год<\/label><\/div>";
-        // texthtml += "<div class=\"beighth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"reighth\" value=\"eighth\"><label for=\"reighth\">Век<\/label><\/div>";
-        // texthtml += "<button class=\"bninth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rninth\" value=\"ninth\"><label for=\"rninth\">Набу<\/label><\/button>";
-        // texthtml += "<div class=\"btenth priorbutton radiopriority\"><input name=\"radioprior\" type=\"radio\" id=\"rtenth\" value=\"tenth\"><label for=\"rtenth\">Корзина<\/label><\/div>";
-        // texthtml += "    </div>";
-
         //тексты
         texthtml += "<div class='textareacontainer'>"
         if (a.note)
@@ -192,7 +171,7 @@ let render = () => {
         // texthtml += "</div>"
         texthtml += "<div class='textareacontainer'>"
 
-        texthtml += "<div class='header'>Приоритет</div>"
+        texthtml += "<div class='header'>Приоритет <input  class='checkboxdip onoff' type=\"checkbox\"></label></div>"
 
         texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"dip\" name=\"profitinp\">";
 
@@ -202,27 +181,24 @@ let render = () => {
         // texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"ppd\" name=\"ppdinp\">";
         // texthtml += "<span class='header'>/в день</span>"
         // texthtml += "</div>"
+
         texthtml += "<div class='textareacontainer'>";
-
+        texthtml += "<div class='header'>Управление</div>"
         texthtml += "<div class='mainbuttonblock'>"
-
         texthtml += "<button value='" + a.name + "' class='mainbutton task squeezeout' >" +
           "Вытеснить" +
           "</button>";
         texthtml += "</div>";
 
         texthtml += "<div class='mainbuttonblock'>"
-
         texthtml += "<button value='" + a.name + "' class='mainbutton task stomp' >" +
           "Притоптать" +
           "</button>";
         texthtml += "</div>";
+        texthtml += "</div>";
+        texthtml += "<div class='textareacontainer'>";
 
-        texthtml += "<div class='mainbuttonblock'>"
-        texthtml += "<button value='" + a.name + "' class='mainbutton task savetask' >" +
-          "Сохранить" +
-          "</button>";
-        texthtml += "</div>"
+
 
         texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<label value='" + a.name + "' class='mainbutton divetask' >Нырок <input  class='checkdive' type=\"checkbox\"></label>";
@@ -232,7 +208,11 @@ let render = () => {
         texthtml += "<label class='mainbutton  delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
         texthtml += "</div>"
 
-
+        texthtml += "<div class='mainbuttonblock'>"
+        texthtml += "<button value='" + a.name + "' class='mainbutton task savetask' >" +
+          "Сохранить" +
+          "</button>";
+        texthtml += "</div>"
 
         texthtml += "</div>"
         texthtml += "</div>";
@@ -244,10 +224,12 @@ let render = () => {
 
       if (a.ready)
         //&& a.opns.length > 0)
-        texthtml += ("<div class='tag text time ready'>ГОТОВ</div>&nbsp;&nbsp;");
+        texthtml += ("<div class='tag time ready'>ГОТОВ</div>&nbsp;&nbsp;");
       if (a.vip)
         //&& a.opns.length > 0)
-        texthtml += ("<div class='tag text time vip'>СУПЕР</div>&nbsp;&nbsp;");
+        texthtml += ("<div class='tag time vip'>СУПЕР</div>&nbsp;&nbsp;");
+      if (a.situational)
+        texthtml += ("<div class='tag time'>МОМЕНТ</div>&nbsp;&nbsp;");
       else {
         if (!a.ready)
           if (moment(a.date + "T" + a.time).diff(moment(), 'day') == -1)
@@ -268,7 +250,7 @@ let render = () => {
           lasttime = a.time
         }
         else
-          texthtml += ("<div class='tag  time'>--:--</div>&nbsp;&nbsp;");
+          texthtml += ("<div class='tag time'>--:--</div>&nbsp;&nbsp;");
       }
 
       texthtml += "</td>"
@@ -283,8 +265,9 @@ let render = () => {
         linkstoNames = a.linkstoNames;
         text = a.name;
         note = a.note;
-        checkedready = a.ready;
-        checkedvip = a.vip ? a.vip : false
+        checkedready = a.ready || false
+        checkedvip = a.vip || false
+        checkeddip = a.situational || false
         time = a.time;
         date = a.date;
         profit = a.profit;
@@ -380,6 +363,9 @@ let render = () => {
     });
     $(".checkboxvip").prop({
       checked: checkedvip
+    });
+    $(".checkboxdip").prop({
+      checked: checkeddip
     });
 
     $('textarea').keyup(function () {
