@@ -100,17 +100,18 @@ let uniqueName = (name) => {
 }
 
 let newwish = (name, dip, linksfromNames, linkstoNames, date, note,) => {
+  name = uniqueName(name)
   data.tasks.unshift({
-    name: uniqueName(name),
-    note: note ? note : '',
-    linksfromNames: linksfromNames ? linksfromNames : [],
-    linkstoNames: linkstoNames ? linkstoNames : [],
-    dip: dip ? dip : 0,
+    name,
+    note: note || '',
+    linksfromNames: linksfromNames || [],
+    linkstoNames: linkstoNames || [],
+    dip: dip || 1,
     ready: false,
     time: clock().h + ":" + clock().m,
-    date: date ? date : clock().year + "-" + clock().month + "-" + clock().d,
+    date: date || clock().year + "-" + clock().month + "-" + clock().d,
     target: {
-      dip,
+      dip: dip || 1,
       name
     },
   });
@@ -189,7 +190,8 @@ let save = () => {
     return
   let inptval = $('#inputtext').val()
   let dip = parseInt($('#dip').val())
-
+  if (dip <= 0)
+    dip = 1
   let name;
   let note = '';
   if (inptval) {
@@ -216,8 +218,10 @@ let save = () => {
     let inpopns = $("#inputopns").val();
 
     let ready = $(".checkboxready").prop('checked');
-    if (!inpopns || inpopns.length == 0)
+    if (!inpopns || inpopns.length == 0) {
       ready = false;
+      console.log('ready: ', ready);
+    }
     let vip = $(".checkboxvip").prop('checked');
     let situational = $(".checkboxdip").prop('checked');
 
@@ -263,8 +267,10 @@ let save = () => {
     for (let a of data.tasks) {
       if (!a.blocks)
         a.blocks = []
-      if (a.readytill && moment(a.date + "T" + a.time).isSameOrBefore(moment()))
+      if (a.readytill && moment(a.date + "T" + a.time).isSameOrBefore(moment())) {
         a.ready = false
+        console.log('a.ready: ', a.ready);
+      }
       if (selected.scribe == a && inptval) {
         hero = a;
         a.name = name;
@@ -272,8 +278,11 @@ let save = () => {
         a.linksfromNames = tags;
         a.linkstoNames = opns;
         a.ready = ready;
-        if (ready && moment(a.date + "T" + a.time).isAfter(moment()))
+        console.log('ready: ', ready);
+        if (ready && moment(a.date + "T" + a.time).isAfter(moment())) {
           a.readytill = true
+          console.log('a.readytill: ', a.readytill);
+        }
         a.vip = vip;
         a.situational = situational;
         a.time = time;

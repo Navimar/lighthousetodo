@@ -14,7 +14,6 @@ let render = () => {
     texthtml = '<div id="telegramlogin"><script async src="https://telegram.org/js/telegram-widget.js?18" data-telegram-login="' + botname + '" data-size="large" data-onauth="onTelegramAuth(user)"></script></div>';
     tasks.append(texthtml);
   } else {
-    isSelection = false;
     let searchquerry = $('.t1').val();
     let linksfromNames = [];
     let linkstoNames = [];
@@ -31,7 +30,7 @@ let render = () => {
     let date = "1111-11-11";
     let today = moment();
     let blocked = false;
-    let lastdip = -1;
+    let lastdip = 0;
     tasks.html("");
     let names = [];
 
@@ -89,11 +88,12 @@ let render = () => {
       }
 
       let diphead = a.target ? a.target.dip : a.dip
+      if (diphead > lastdip + 1 && !nondisplay)
+        texthtml += ("<button value='" + (lastdip + 1) + "' class='timebutton slapbutton'>Схлопнуть " + (lastdip + 1) + "</button>");
       if (diphead > lastdip && !nondisplay) {
         texthtml += ("<div class='header dipheader date '><span>" + (diphead) + "</span></div>");
         lastdip = diphead
       }
-
       texthtml += "<table class='"
       if (nondisplay)
         texthtml += " nondisplay"
@@ -258,7 +258,6 @@ let render = () => {
       texthtml += "<div class='task";
       if (a.selected) {
         texthtml += " position";
-        isSelection = true;
         linksfromNames = a.linksfromNames;
         linkstoNames = a.linkstoNames;
         text = a.name;
@@ -381,8 +380,7 @@ let render = () => {
     // console.log($('#profit').val());
     // console.log($('#inputtags').val());
 
-
-    if (isSelection) {
+    if (selected.i != -1) {
       $('#inputtags').val(tagtext);
       $('#inputopns').val(opntext);
       $('#inputtext').val(text + '\n' + note);
@@ -393,8 +391,6 @@ let render = () => {
       scrollPosition = $('.position').offset().top + $('.position').height() / 2;
       scrollPosition -= mouse.y;
       $(window).scrollTop(scrollPosition);
-      // }
-      // if (selected.i != -1) {
       names.sort(function (a, b) {
         return a.length > b.length;
       });

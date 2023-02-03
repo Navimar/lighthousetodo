@@ -76,7 +76,7 @@ let load = (key, socket) => {
     } else {
         fs.readFile('src/server/welcome.txt', 'utf8', function (err, data) {
             if (err)
-                throw 0;
+                throw err;
             // console.log(JSON.parse(data));
             console.log('create ' + dir);
             // let o = {

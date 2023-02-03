@@ -139,13 +139,7 @@ $(document).on("mousemove", function (event) {
     // console.log(mouse.x + " " + mouse.y);
 });
 
-
-let isSelection = false;
 let scrollPosition = 0;
-
-window.onfocus = function () {
-    // onFocus();
-};
 
 $(document).on('change', '.dateinp', function (event) {
     $('.checkboxready').prop("checked", false);
@@ -185,6 +179,22 @@ $(document).on('click', '.text', function () {
 // $(document).on('click', '.tag', function () {
 //     onTag($(this).text());
 // });
+$(document).on('click', '.slapbutton', function () {
+    for (let a of data.tasks) {
+        if (a.dip > parseInt($(this).val()))
+            a.dip--
+    }
+    for (let a of data.tasks) {
+        findtarget(a)
+    }
+    save();
+    select(focusfisrt());
+    send();
+    render();
+    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
+    $(window).scrollTop(scrollPosition);
+});
+
 $(document).on('click', '.opn', function () {
     onOpn($(this).text());
 });
