@@ -220,7 +220,6 @@ let save = () => {
     let ready = $(".checkboxready").prop('checked');
     if (!inpopns || inpopns.length == 0) {
       ready = false;
-      console.log('ready: ', ready);
     }
     let vip = $(".checkboxvip").prop('checked');
     let situational = $(".checkboxdip").prop('checked');
@@ -269,7 +268,7 @@ let save = () => {
         a.blocks = []
       if (a.readytill && moment(a.date + "T" + a.time).isSameOrBefore(moment())) {
         a.ready = false
-        console.log('a.readytill: ', a, a.ready);
+        a.readytill = false
       }
       if (selected.scribe == a && inptval) {
         hero = a;
@@ -278,10 +277,8 @@ let save = () => {
         a.linksfromNames = tags;
         a.linkstoNames = opns;
         a.ready = ready;
-        console.log('ready: ', ready);
         if (ready && moment(a.date + "T" + a.time).isAfter(moment())) {
           a.readytill = true
-          console.log('a.readytill: ', a.readytill);
         }
         a.vip = vip;
         a.situational = situational;
