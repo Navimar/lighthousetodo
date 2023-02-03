@@ -269,7 +269,7 @@ let save = () => {
         a.blocks = []
       if (a.readytill && moment(a.date + "T" + a.time).isSameOrBefore(moment())) {
         a.ready = false
-        console.log('a.ready: ', a.ready);
+        console.log('a.readytill: ', a, a.ready);
       }
       if (selected.scribe == a && inptval) {
         hero = a;
