@@ -229,12 +229,12 @@ let render = () => {
       if (a.situational)
         texthtml += ("<div class='tag time'>МОМЕНТ</div>&nbsp;&nbsp;");
       else {
-        if (!a.ready)
+        if (!a.ready && !a.vip)
           if (moment(a.date + "T" + a.time).diff(moment(), 'day') == -1)
             texthtml += ("<div class='tag time past'>ВЧЕРА</div>&nbsp;&nbsp;");
           else if (moment(a.date + "T" + a.time).isBefore(moment(), 'day'))
             texthtml += ("<div class='tag time past'>ДАВНО</div>&nbsp;&nbsp;");
-        if (a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false))
+        if (a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !a.vip)
           if (a.linkstoNames.length > 0)
             texthtml += ("<div class='tag time'>ВЕТВЬ</div>&nbsp;&nbsp;");
           else

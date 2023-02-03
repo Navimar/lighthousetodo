@@ -51,18 +51,18 @@ body {
     font-family: 'IBM Plex Sans', sans-serif;
     margin: 0;
     overflow-x: hidden;
- background-color: var(--background-main);
-   
+    background-color: var(--background-main);
+
 }
-#staticbackground{
+
+#staticbackground {
     width: 100%;
-height: 100%;
-z-index: -1;
+    height: 100%;
+    z-index: -1;
     position: fixed;
- background-color: var(--background-main);
- background-image: var(--background-image);
-  background-attachment: fixed;
-      background-size: cover;
+    background-color: var(--background-main);
+    background-image: var(--background-image);
+    background-size: cover;
 }
 
 div {
@@ -74,19 +74,18 @@ table {
     width: 100%;
 }
 
-table.task{
+table.task {
     background-color: var(--background-main);
-    
     border-radius: 0.5em;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-
 }
-table.selected tr.task{
-      background: var(--background-table);
-      /* border: 0.5em solid var(--background-table); */
-display: block;
-border-radius: 0 0 0.5em 0.5em;
+
+table.selected tr.task {
+    background: var(--background-table);
+    /* border: 0.5em solid var(--background-table); */
+    display: block;
+    border-radius: 0 0 0.5em 0.5em;
 }
 
 #tasks {
@@ -103,12 +102,12 @@ border-radius: 0 0 0.5em 0.5em;
     transform: translateX(-50%);
 }
 
-#clearsearchbutton{
-     font-size: 13pt;
+#clearsearchbutton {
+    font-size: 13pt;
     position: absolute;
     right: 4px;
 
-    border:none;
+    border: none;
     border-radius: 0;
 }
 
@@ -124,9 +123,9 @@ td.taskmarker {
 }
 
 td.plate {
-padding-left: 0.5em;
+    padding-left: 0.5em;
     /* padding-top: 1em; */
-/* vertical-align: top; */
+    /* vertical-align: top; */
 }
 
 .nondisplay {
@@ -171,25 +170,26 @@ option:checked {
     bottom: 15px;
     left: 15px;
     border: none;
-    color:white;
-background-color: var(--old);
-background-size: 100% auto;
-border-radius: 5px;
-width: 13vh;
-height: 13vh;
-max-height: 13vw;
-max-width: 13vw;
-bottom: 15px;
-font-size: 10vh;
-vertical-align: middle;
-font-family: 'Noto Sans Mono', monospace;
+    color: white;
+    background-color: var(--old);
+    background-size: 100% auto;
+    border-radius: 5px;
+    width: 13vh;
+    height: 13vh;
+    max-height: 13vw;
+    max-width: 13vw;
+    bottom: 15px;
+    font-size: 10vh;
+    vertical-align: middle;
+    font-family: 'Noto Sans Mono', monospace;
 
 }
+
 .text {
     word-break: break-word;
     background: none;
     border: none;
-    width:90%;
+    width: 90%;
     /* color: white; */
     text-align: left;
     font-size: 13.3pt;
@@ -230,7 +230,7 @@ input[type="checkbox"] {
     text-align: center;
     background-color: var(--background-table);
     padding-top: 1px;
-    border-radius:  0.5em 0.5em 0 0;
+    border-radius: 0.5em 0.5em 0 0;
 }
 
 .clock .timebutton {
@@ -409,9 +409,11 @@ button {
     background-color: darkred;
     border-bottom: 5px solid darkred;
 }
-.calendardot{
+
+.calendardot {
     position: absolute;
 }
+
 /* #f1 {
     position: fixed;
     right: 0
@@ -500,7 +502,7 @@ label.mainbutton.timebutton {
 
 
 .dateinp {
-    color:var(--color-contrast);
+    color: var(--color-contrast);
     font-size: 11pt;
     background: white;
     box-sizing: border-box;
@@ -782,7 +784,7 @@ label.readylabel {
     text-align: center;
     text-transform: uppercase;
     position: sticky;
-    top:27px;
+    top: 27px;
 }
 
 .textareacontainer {
@@ -824,7 +826,7 @@ label.readylabel {
 }
 
 .focused {
-border:solid 0.1em  var(--old);
+    border: solid 0.1em var(--old);
 }
 
 td.focushead {
@@ -854,86 +856,89 @@ td.focushead {
     font-size: 11.4pt;
 }
 
-#buttoncontainer{
+#buttoncontainer {
     font-size: 13.5pt;
     max-width: 65em;
-width: 100%;
-position: fixed;
-bottom: 0;
-left: 50%;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
     transform: translateX(-50%);
 }
 
-.calendarmark{
-/* margin-top: -7px;
+.calendarmark {
+    /* margin-top: -7px;
 position: absolute;
 font-size: 19pt; */
 }
 
-.markforth{
-color: var(--forth);
+.markforth {
+    color: var(--forth);
 }
 
-.marksecond{
-color: var(--second);
+.marksecond {
+    color: var(--second);
 }
 
 .ready {
     color: #1ba655
 }
+
 .vip {
-color: var(--old);
+    color: var(--old);
 }
 
 #speed {
     visibility: hidden;
-position: fixed;
-left:5%;
-top:5%;
-border: 1px solid var(--first);
-padding: 4px;
-background: var(--background-main);
-color: var(--color-main);
+    position: fixed;
+    left: 5%;
+    top: 5%;
+    border: 1px solid var(--first);
+    padding: 4px;
+    background: var(--background-main);
+    color: var(--color-main);
 }
 
-.priority{
-text-align: center;
-width: 3em;
-margin-left: 1em;
-margin-top: 1em;
-margin-bottom: 1em;
-background: var( --background-table);
+.priority {
+    text-align: center;
+    width: 3em;
+    margin-left: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    background: var(--background-table);
 
 }
 
-.dip{
-white-space: nowrap;
-width: 5em;
-height: calc(100% - 17px);
-margin-right: 9px;
-font-family: 'Noto Sans Mono', monospace;
-color: var(--gray);
-font-size: 11.4pt;
+.dip {
+    white-space: nowrap;
+    width: 5em;
+    height: calc(100% - 17px);
+    margin-right: 9px;
+    font-family: 'Noto Sans Mono', monospace;
+    color: var(--gray);
+    font-size: 11.4pt;
 }
 
-.dipheader{
-text-align: left;
-background: none;
+.dipheader {
+    text-align: left;
+    background: none;
 }
 
-.dipheader span{
- margin-left: 0.5em; 
+.dipheader span {
+    margin-left: 0.5em;
     /* margin-top:0.5em; */
-color:var(--gray);
-text-align: center;
-display: inline-block;
-background: var(--background-table);
-background: var(--old);
-color:var(--color-main);
-width: 3.5em;
+    color: var(--gray);
+    text-align: center;
+    display: inline-block;
+    background: var(--background-table);
+    background: var(--old);
+    color: var(--color-main);
+    width: 3.5em;
 }
 
-.slapbutton{
-margin-bottom: 0.5em;
-background: var(--background-table);
+.slapbutton {
+    min-width: fit-content;
+    color: var(--color-main);
+    margin-bottom: 0.5em;
+    background: var(--background-table);
 }

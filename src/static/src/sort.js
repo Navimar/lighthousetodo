@@ -6,9 +6,9 @@ let sortdata = () => {
     if (a.ready && !b.ready)
       return 1;
 
-    if ((a.linksfrom.length == 0 || a.linksfrom.every(e => e.ready === true) || b.vip) && (b.linksfrom.some(b => b.ready === false) && !b.vip))
+    if ((a.linksfrom.length == 0 || a.linksfrom.every(e => e.ready === true) || a.vip) && (b.linksfrom.some(b => b.ready === false) && !b.vip))
       return -1
-    if ((b.linksfrom.length == 0 || b.linksfrom.every(e => e.ready === true) || b.vip) && (a.linksfrom.some(a => a.ready === false) && !b.vip))
+    if ((b.linksfrom.length == 0 || b.linksfrom.every(e => e.ready === true) || b.vip) && (a.linksfrom.some(a => a.ready === false) && !a.vip))
       return 1
 
 
