@@ -714,7 +714,6 @@ label.readylabel {
     padding-right: 0;
     box-sizing: border-box;
     width: 4em;
-    position: absolute;
 }
 
 #newtaskbutton {
