@@ -173,7 +173,10 @@ let render = () => {
 
         texthtml += "<div class='header'>Приоритет <input  class='checkboxdip onoff' type=\"checkbox\"></label></div>"
 
+        texthtml += "<div class='timeinputs'>";
         texthtml += "<input type=\"number\" class='dateinp profitinp' id=\"dip\" name=\"profitinp\">";
+        texthtml += "<input type=\"number\" style ='visibility:hidden'class='dateinp ' id=\"\" name=\"\">";
+        texthtml += "</div>";
 
         texthtml += "</div>";
 
