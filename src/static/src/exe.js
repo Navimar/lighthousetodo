@@ -103,6 +103,14 @@ let onMorning = () => {
     $('#date').val(d.format('YYYY-MM-DD'));
     $('#time').val(d.format('09:00'));
 }
+
+let onHour = (hour) => {
+    let a = moment($('#date').val() + 'T' + $('#time').val());
+    let b = moment();
+    let d = a > b ? a : b;
+    $('#date').val(d.format('YYYY-MM-DD'));
+    $('#time').val(d.format(hour + ':00'));
+}
 let onEvening = () => {
     let a = moment($('#date').val() + 'T' + $('#time').val());
     let b = moment();
@@ -294,6 +302,10 @@ $(document).on('click', '#morning', function () {
 $(document).on('click', '#evening', function () {
     onEvening();
 });
+$(document).on('click', '.hourbutton', function (e) {
+    onHour($(this).val());
+});
+
 $(document).on('click', '#midnight', function () {
     onMidnight();
 });
@@ -316,4 +328,13 @@ $(document).on('click', '#scrollTopButton', function () {
     if ($(window).scrollTop() == scrollPosition)
         scrollPosition = 0;
     $(window).scrollTop(scrollPosition);
+});
+
+$(document).on('click', '#increment', function () {
+    $('#dip').val(+$('#dip').val() + 1);
+});
+$(document).on('click', '#decrement', function () {
+    let val = +$('#dip').val()
+    if (val > 1)
+        $('#dip').val(val - 1);
 });

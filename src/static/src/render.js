@@ -153,15 +153,20 @@ let render = () => {
         texthtml += "<div class='header'>Быстрый перенос</div>"
         texthtml += "<button class=\"timebutton\" id=\"plustoday\">Сегодня<\/button>";
         texthtml += "<button class=\"timebutton\" id=\"plusnow\">Сейчас<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"morning\">9:00<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"evening\">18:00<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"midnight\">00:00<\/button>";
-
         texthtml += "<button class=\"timebutton\" id=\"tomorrow\">Завтра<\/button>";
         texthtml += "<button class=\"timebutton\" id=\"plusday\">+1 день<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"plushour\">+1 час<\/button>";
-        texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 м<\/button>";
         texthtml += "<button class=\"timebutton\" id=\"plusweek\">+1 нед<\/button>";
+
+        texthtml += "<button class=\"timebutton \" id=\"plushour\">+1 час<\/button>";
+        texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 м<\/button>";
+        texthtml += "<button class=\"timebutton hourbutton\" value = '00' >00:00<\/button>";
+        texthtml += "<button class=\"timebutton hourbutton\" value = '03' >03:00<\/button>";
+        texthtml += "<button class=\"timebutton hourbutton\" value = '06' >06:00<\/button>";
+        texthtml += "<button class=\"timebutton hourbutton\" value = '09' >09:00<\/button>";
+        texthtml += "<button class=\"timebutton hourbutton\" value = '12' >12:00<\/button>";
+        texthtml += "<button class=\"timebutton hourbutton\" value = '15' >15:00<\/button>";
+        texthtml += "<button class=\"timebutton hourbutton\" value = '18' >18:00<\/button>";
+        texthtml += "<button class=\"timebutton hourbutton\" value = '21' >21:00<\/button>";
         texthtml += "</div>";
 
         //управляющие кнопки
@@ -174,6 +179,9 @@ let render = () => {
         texthtml += "<div class='header'>Приоритет <input  class='checkboxdip onoff' type=\"checkbox\"></label></div>"
 
         texthtml += "<input type=\"number\" inputmode='decimal' class='dateinp profitinp' id=\"dip\" name=\"profitinp\">";
+        // texthtml += "<div class='header'>Быстрый перенос</div>"
+        texthtml += '<button class="timebutton dipbutton" id="increment" >+</button >'
+        texthtml += '<button class="timebutton dipbutton" id="decrement">-</button>'
         texthtml += "</div>";
 
         // texthtml += "<span class='header'>+</span>"
@@ -395,13 +403,6 @@ let render = () => {
       });
       autocomplete(document.getElementById("inputtags"), names);
       autocomplete(document.getElementById("inputopns"), names);
-      const inputs = document.querySelectorAll('input');
-      inputs.forEach(input => {
-        input.addEventListener('focus', function () {
-          const currentY = window.pageYOffset;
-          window.scrollTo(input.offsetLeft, currentY + 1);
-        });
-      });
     }
   }
   if (debug) {
