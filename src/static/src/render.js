@@ -381,10 +381,6 @@ let render = () => {
     // console.log($('#inputtags').val());
 
     if (selected.i != -1) {
-      $('input').focus((e) => {
-        e.preventDefault();
-        e.target.focus({ preventScroll: true });
-      })
       $('#inputtags').val(tagtext);
       $('#inputopns').val(opntext);
       $('#inputtext').val(text + '\n' + note);
