@@ -173,8 +173,7 @@ let render = () => {
 
         texthtml += "<div class='header'>Приоритет <input  class='checkboxdip onoff' type=\"checkbox\"></label></div>"
 
-        texthtml += "<input inputmode='decimal' class='dateinp profitinp' id=\"dip\" name=\"profitinp\">";
-        //type=\"number\"
+        texthtml += "<input type=\"number\" inputmode='decimal' class='dateinp profitinp' id=\"dip\" name=\"profitinp\">";
         texthtml += "</div>";
 
         // texthtml += "<span class='header'>+</span>"
@@ -396,6 +395,13 @@ let render = () => {
       });
       autocomplete(document.getElementById("inputtags"), names);
       autocomplete(document.getElementById("inputopns"), names);
+      const inputs = document.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function () {
+          const currentY = window.pageYOffset;
+          window.scrollTo(0, currentY);
+        });
+      });
     }
   }
   if (debug) {
