@@ -399,7 +399,7 @@ let render = () => {
       inputs.forEach(input => {
         input.addEventListener('focus', function () {
           const currentY = window.pageYOffset;
-          window.scrollTo(input.offsetLeft, currentY);
+          window.scrollTo(input.offsetLeft, currentY + 1);
         });
       });
     }
