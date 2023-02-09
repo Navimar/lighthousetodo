@@ -64,7 +64,7 @@ let render = () => {
             searchresultisempty = false;
           }
         });
-        if (a.selected)
+        if (selected.scribe == a)
           nondisplay = false;
       } else {
         searchresultisempty = false;
@@ -97,7 +97,7 @@ let render = () => {
       texthtml += "<table class='"
       if (nondisplay)
         texthtml += " nondisplay"
-      if (a.selected)
+      if (selected.scribe == a)
         texthtml += " selected";
       if (a.focused)
         texthtml += " focused";
@@ -105,7 +105,7 @@ let render = () => {
 
 
 
-      if (a.selected) {
+      if (selected.scribe == a) {
         texthtml += "<tr><td colspan='3'>";
 
         texthtml += "<div class=\"editor\">";
@@ -263,7 +263,7 @@ let render = () => {
 
       texthtml += "<td class='tdtask'>"
       texthtml += "<div class='task";
-      if (a.selected) {
+      if (selected.scribe == a) {
         texthtml += " position";
         linksfromNames = a.linksfromNames;
         linkstoNames = a.linkstoNames;
@@ -308,7 +308,7 @@ let render = () => {
         texthtml += '<div class="tag text">' + a.target.name + '</div>'
       }
 
-      if (a.selected) {
+      if (selected.scribe == a) {
         texthtml += "<div id='opnslistcont'>"
         texthtml += renderopns(a);
         texthtml += "</div>"
@@ -336,7 +336,7 @@ let render = () => {
 
       texthtml += "</tr></tbody></table>"
       tasks.append(texthtml);
-      if (a.selected) {
+      if (selected.scribe == a) {
         $('input[name="radioprior"][value=' + a.priority + ']').prop('checked', true);
       }
       // }
@@ -398,6 +398,9 @@ let render = () => {
       scrollPosition = $('.position').offset().top + $('.position').height() / 2;
       scrollPosition -= mouse.y;
       $(window).scrollTop(scrollPosition);
+      names = names.filter(function (name) {
+        return name !== selected.scribe.name;
+      });
       names.sort(function (a, b) {
         return a.length > b.length;
       });

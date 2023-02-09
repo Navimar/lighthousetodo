@@ -125,8 +125,11 @@ let onMidnight = () => {
 }
 
 let onPlusWeek = () => {
-    let d = moment($('#date').val()).add(7, 'day');
+    let a = moment($('#date').val() + 'T' + $('#time').val()).add(1, 'day');
+    let b = moment($('#time').val(), 'hh:mm').add(7, 'day');
+    let d = a > b ? a : b
     $('#date').val(d.format('YYYY-MM-DD'));
+    $('#time').val(d.format('HH:mm'));
 }
 
 let onPluslast = (timediff) => {
@@ -215,8 +218,7 @@ $(document).on('click', '.savetask', function () {
     select(focusfisrt());
     send();
     render();
-    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
-    $(window).scrollTop(scrollPosition);
+    scrolltoFocused()
 });
 
 $(document).on('click', '.stomp', function () {
@@ -225,21 +227,16 @@ $(document).on('click', '.stomp', function () {
     select(focusfisrt());
     send();
     render();
-    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
-    $(window).scrollTop(scrollPosition);
+    scrolltoFocused()
 });
 
 $(document).on('click', '.squeezeout', function () {
-    // onSelect('');
-    // const d = new Date();
-    // g_time = d.getTime();
     squeezeout();
     save();
     select(focusfisrt());
     send();
     render();
-    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
-    $(window).scrollTop(scrollPosition);
+    scrolltoFocused()
 });
 $(document).on('click', '.divetask', function () {
     let val = $(this).attr('value');
@@ -296,18 +293,8 @@ $(document).on('click', '#plushour', function () {
 $(document).on('click', '#plusnow', function () {
     onNow();
 });
-$(document).on('click', '#morning', function () {
-    onMorning();
-});
-$(document).on('click', '#evening', function () {
-    onEvening();
-});
 $(document).on('click', '.hourbutton', function (e) {
     onHour($(this).val());
-});
-
-$(document).on('click', '#midnight', function () {
-    onMidnight();
 });
 $(document).on('click', '#plus15', function () {
     onPlus15();
@@ -320,7 +307,8 @@ $(document).on('click', '#pluslast', function () {
 $(document).on('click', '#plusweek', function () {
     onPlusWeek();
 });
-$(document).on('click', '#scrollTopButton', function () {
+
+let scrolltoFocused = () => {
     if (selected.scribe && selected.scribe.focused)
         scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
     else
@@ -328,6 +316,10 @@ $(document).on('click', '#scrollTopButton', function () {
     if ($(window).scrollTop() == scrollPosition)
         scrollPosition = 0;
     $(window).scrollTop(scrollPosition);
+}
+
+$(document).on('click', '#scrollTopButton', function () {
+    scrolltoFocused()
 });
 
 $(document).on('click', '#increment', function () {

@@ -226,15 +226,15 @@ let save = () => {
 
     let tags = [];
     $.each(inptags.split(/\n/), function (i, tgname) {
-      if (tgname != "") {
-        tgname = tgname.trim();
+      tgname = tgname.trim();
+      if (tgname != "" && tgname != name) {
         tags.push(tgname);
       }
     });
     let opns = [];
     $.each(inpopns.split(/\n/), function (i, opname) {
-      if (opname != "") {
-        opname = opname.trim();
+      opname = opname.trim();
+      if (opname != "" && opname != name) {
         opns.push(opname);
       }
     });
@@ -348,22 +348,21 @@ let note_by_name = (name) => {
 }
 
 let select = (text) => {
+  let same = false
+  if (text == selected.text)
+    same = true
   selected.text = false;
   selected.i = -1;
   selected.scribe = false;
-  for (let i in data.tasks) {
-    if (data.tasks[i].selected && data.tasks[i].name.toLowerCase() == text.toLowerCase())
-      data.tasks[i].selected = false
-    else {
-      data.tasks[i].selected = (data.tasks[i].name.toLowerCase() == text.toLowerCase())
-      if (data.tasks[i].selected) {
+  if (!same)
+    for (let i in data.tasks) {
+      if (data.tasks[i].name.toLowerCase() == text.toLowerCase()) {
         selected.scribe = data.tasks[i];
         selected.text = text;
         selected.i = i;
       }
     }
-  }
-};
+}
 
 let focusfisrt = () => {
   let ok = true;
@@ -387,8 +386,13 @@ let focusfisrt = () => {
 }
 
 let deletescribe = (text) => {
+  let ancestors = [];
   for (let a in data.tasks) {
     if (data.tasks[a].name == text) {
+      let hero = data.tasks[a];
+      findancestors.ancestors = [];
+      findancestors(hero);
+      ancestors = [... new Set(findancestors.ancestors)]
       data.tasks.splice(a, 1);
     }
     for (let t in data.tasks[a].linksfromNames) {
@@ -415,6 +419,9 @@ let deletescribe = (text) => {
       data.tasks[a].ready = false;
   }
 
+  for (let a of ancestors) {
+    findtarget(a)
+  }
   sortdata();
   focusfisrt();
 };
