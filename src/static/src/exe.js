@@ -215,10 +215,16 @@ $(document).on('click', '.newtask', function () {
 });
 $(document).on('click', '.savetask', function () {
     save();
-    select(focusfisrt());
+    let focusname = focusfisrt()
+    if (selected.text != focusname)
+        select(focusname);
     send();
     render();
-    scrolltoFocused()
+    if (selected.scribe && selected.scribe.focused)
+        scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
+    else
+        scrollPosition = parseInt($('.focused').position().top) - $(window).height() / 2 + $('.focused').height() / 2;
+    $(window).scrollTop(scrollPosition);
 });
 
 $(document).on('click', '.stomp', function () {
