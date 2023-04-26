@@ -230,7 +230,9 @@ $(document).on('click', '.savetask', function () {
 $(document).on('click', '.stomp', function () {
     $('#dip').val(+$('#dip').val() + 1);
     save();
-    select(focusfisrt());
+    let focusname = focusfisrt()
+    if (selected.text != focusname)
+        select(focusname);
     send();
     render();
     scrolltoFocused()

@@ -42,6 +42,7 @@
     margin: 0;
     padding: 0;
     border-spacing: 0;
+    text-decoration: none;
 }
 
 body {
@@ -919,6 +920,7 @@ font-size: 19pt; */
 }
 
 .dipheader {
+    width: 0;
     text-align: left;
     background: none;
 }

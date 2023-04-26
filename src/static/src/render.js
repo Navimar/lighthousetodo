@@ -34,7 +34,7 @@ let render = () => {
     tasks.html("");
     let names = [];
 
-    tasks.append("<div id=" + moment().format('YYYY-MM-DD') + " class='header date'> " + moment().format('dddd DD MMMM') + "</div>");
+    tasks.append("<div id=" + moment().format('YYYY-MM-DD') + " class='header date'> " + moment().format('dddd DD MMMM') + nextmonthbutton(moment().format()) + "</div>");
     tasks.append('<div class="calendarplace">' + moment().format() + '</div>');
     for (let a of data.tasks) {
       // if ((data.tasks.indexOf(a) <= parseInt(selected.i) + 5 && data.tasks.indexOf(a) >= parseInt(selected.i) - 5) || selected.i == -1) {
@@ -75,9 +75,9 @@ let render = () => {
         today = moment(a.date);
         texthtml += ("<div id=" + today.format('YYYY-MM-DD') + " class='header date'> ");
         if (moment().isSame(today, 'year'))
-          texthtml += today.format('dddd DD MMMM') + "</div>";
+          texthtml += prevmonthbutton(today.format()) + today.format('dddd DD MMMM') + nextmonthbutton(today.format()) + "</div>";
         else
-          texthtml += today.format('dddd DD MMMM YYYY') + "</div>";
+          texthtml += prevmonthbutton(today.format()) + today.format('dddd DD MMMM YYYY') + nextmonthbutton(today.format()) + "</div>";
         texthtml += '<div class="calendarplace">' + today.format() + '</div>'
         lastdip = a.dip - 1
         // Calendar3(today);
@@ -88,8 +88,8 @@ let render = () => {
       }
 
       let diphead = a.target ? a.target.dip : a.dip
-      if (diphead > lastdip + 1 && !nondisplay)
-        texthtml += ("<button value='" + (lastdip + 1) + "' class='timebutton slapbutton'>Схлопнуть " + (lastdip + 1) + "</button>");
+      // if (diphead > lastdip + 1 && !nondisplay)
+      //   texthtml += ("<button value='" + (lastdip + 1) + "' class='timebutton slapbutton'>Схлопнуть " + (lastdip + 1) + "</button>");
       if (diphead > lastdip && !nondisplay) {
         texthtml += ("<div class='header dipheader date '><span>" + (diphead) + "</span></div>");
         lastdip = diphead
@@ -344,7 +344,7 @@ let render = () => {
     const calendars = document.getElementsByClassName("calendarplace");
     // console.log(calendars)
     for (let cal of calendars) {
-      // console.log(cal.textContent)
+      // console.log('textContent', cal.textContent)
       cal.innerHTML = Calendar3(moment(cal.textContent))
     }
     if (searchresultisempty)
@@ -693,3 +693,28 @@ let renderopns = (a, level) => {
 }
 
 
+let nextmonthbutton = (date) => {
+  return '&nbsp;<a class="calbut header" href="#' + 'calendar-' + moment(date).set('date', 1).add(1, 'month').format('YYYY-MM-DD') + '-' + moment(date).set('date', 1).add(1, 'month').format('YYYY-MM-DD') + '">' + '&gt;&gt;&gt;' + '</a>'
+}
+
+let prevmonthbutton = (date) => {
+
+  function compareMonth(date1, date2) {
+    if (date1.isSame(date2, 'month') || date1.isAfter(date2, 'month')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  let a = moment(date).subtract(1, 'month')
+  let b = moment()
+  console.log(a, b)
+  if (compareMonth(a, b)) {
+    if (a.set('date', 1).isBefore(b))
+      a.set('date', b.date())
+    return '<a class="calbut header" href="#' + 'calendar-' + a.format('YYYY-MM-DD') + '-' + a.format('YYYY-MM-DD') + '">' + '&lt;&lt;&lt;' + '</a>&nbsp;'
+  }
+  else
+    return ''
+}
