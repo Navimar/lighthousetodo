@@ -5,7 +5,39 @@ let g_avgtime = 0;
 let g_max = 0;
 let g_timecn = 0;
 
+let defineVisibility = (a, searchquerry) => {
+  let nondisplay = false;
+  if (searchquerry != '') {
+    nondisplay = true;
+    if (a.name.toLowerCase().replace(/ё/g, "е").includes(searchquerry.toLowerCase().replace(/ё/g, "е"))) {
+      nondisplay = false;
+      searchresultisempty = false;
+    }
+    a.linksfromNames.forEach((val) => {
+      if (val.toLowerCase().replace(/ё/g, "е").includes(searchquerry.toLowerCase().replace(/ё/g, "е"))) {
+        nondisplay = false;
+        searchresultisempty = false;
+      }
+    });
+    if (selected.scribe == a)
+      nondisplay = false;
+  } else {
+    nondisplay = true
+    if (moment(selected.day).isSame(moment(a.date), 'day')
+      || (moment().isSame(moment(selected.day), 'day')
+        && moment(selected.day).isAfter(moment(a.date), 'day')))
+      nondisplay = false
+    searchresultisempty = false;
+    if (a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false && moment(selected.day + moment().format('HH:mm')).isBefore(moment(e.date + e.time))) && !a.vip && selected.scribe != a)
+      nondisplay = true
+    if (a.ready && a.linksto && a.linksto.length > 0 && selected.scribe != a)
+      nondisplay = true
+  }
+  return nondisplay
+}
+
 let render = () => {
+  // console.log(selected)
   let tasks = $('#tasks');
   let texthtml = "";
   planeddays = new Map();
@@ -14,6 +46,8 @@ let render = () => {
     texthtml = '<div id="telegramlogin"><script async src="https://telegram.org/js/telegram-widget.js?18" data-telegram-login="' + botname + '" data-size="large" data-onauth="onTelegramAuth(user)"></script></div>';
     tasks.append(texthtml);
   } else {
+    g_start = 0
+    let end = false
     let searchquerry = $('.t1').val();
     let linksfromNames = [];
     let linkstoNames = [];
@@ -34,8 +68,18 @@ let render = () => {
     tasks.html("");
     let names = [];
 
-    tasks.append("<div id=" + moment().format('YYYY-MM-DD') + " class='header date'> " + moment().format('dddd DD MMMM') + nextmonthbutton(moment().format()) + "</div>");
-    tasks.append('<div class="calendarplace">' + moment().format() + '</div>');
+    let md = moment(selected.day)
+    if (searchquerry == '') {
+
+      let calheadtext
+      if (moment().isSame(selected.day, 'year'))
+        calheadtext = prevmonthbutton(md.format()) + md.format('dddd DD MMMM') + nextmonthbutton(md.format()) + "</div>"
+      else
+        calheadtext = prevmonthbutton(md.format()) + md.format('dddd DD MMMM YYYY') + nextmonthbutton(md.format()) + "</div>"
+      tasks.append("<div id='" + md.format('YYYY-MM-DD') + "' class='header date'> " + calheadtext);
+
+      tasks.append('<div class="calendarplace">' + moment(selected.day).format() + '</div>');
+    }
     for (let a of data.tasks) {
       // if ((data.tasks.indexOf(a) <= parseInt(selected.i) + 5 && data.tasks.indexOf(a) >= parseInt(selected.i) - 5) || selected.i == -1) {
       // if (true) {
@@ -51,48 +95,44 @@ let render = () => {
           planeddays.set(moment(a.date).format('YYYY-MM-DD'), [a.priority]);
       }
 
-      let nondisplay = false;
-      if (searchquerry.toLowerCase !== '') {
-        nondisplay = true;
-        if (a.name.toLowerCase().replace(/ё/g, "е").includes(searchquerry.toLowerCase().replace(/ё/g, "е"))) {
-          nondisplay = false;
-          searchresultisempty = false;
-        }
-        a.linksfromNames.forEach((val) => {
-          if (val.toLowerCase().replace(/ё/g, "е").includes(searchquerry.toLowerCase().replace(/ё/g, "е"))) {
-            nondisplay = false;
-            searchresultisempty = false;
-          }
-        });
-        if (selected.scribe == a)
-          nondisplay = false;
-      } else {
-        searchresultisempty = false;
-      }
+
+      nondisplay = defineVisibility(a, searchquerry)
+      if (nondisplay && !end)
+        g_start++
+      else
+        end = true
+
+      // console.log('nondisplay', nondisplay)
       names.push(a.name);
       texthtml = "";
-      if (nondisplay == false && moment(a.date).format() != today.format() && moment().diff(moment(a.date)) <= 0) {
-        today = moment(a.date);
-        texthtml += ("<div id=" + today.format('YYYY-MM-DD') + " class='header date'> ");
-        if (moment().isSame(today, 'year'))
-          texthtml += prevmonthbutton(today.format()) + today.format('dddd DD MMMM') + nextmonthbutton(today.format()) + "</div>";
-        else
-          texthtml += prevmonthbutton(today.format()) + today.format('dddd DD MMMM YYYY') + nextmonthbutton(today.format()) + "</div>";
-        texthtml += '<div class="calendarplace">' + today.format() + '</div>'
-        lastdip = a.dip - 1
-        // Calendar3(today);
-      }
-      if (!a.vip && a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !blocked && !nondisplay) {
-        texthtml += ("<div class='header date'>ФИНИСФЕРА</div>");
-        blocked = true;
-      }
+      // if (nondisplay == false
+      //   && moment(a.date).format() != today.format()
+      //   && moment().diff(moment(a.date)) <= 0
+      // ) {
+      //   today = moment(a.date);
+      //   texthtml += ("<div id=" + today.format('YYYY-MM-DD') + " class='header date'> ");
+      //   if (moment().isSame(today, 'year'))
+      //     texthtml += prevmonthbutton(today.format()) + today.format('dddd DD MMMM') + nextmonthbutton(today.format()) + "</div>";
+      //   else
+      //     texthtml += prevmonthbutton(today.format()) + today.format('dddd DD MMMM YYYY') + nextmonthbutton(today.format()) + "</div>";
+      //   texthtml += '<div class="calendarplace">' + today.format() + '</div>'
+      //   lastdip = a.dip - 1
+      //   // Calendar3(today);
+      // }
 
-      let diphead = a.target ? a.target.dip : a.dip
+
+      // if (!a.vip && a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !blocked && !nondisplay) {
+      //   texthtml += ("<div class='header date'>ФИНИСФЕРА</div>");
+      //   blocked = true;
+      // }
+
+      // let diphead = a.target ? a.target.dip : a.dip
       // if (diphead > lastdip + 1 && !nondisplay)
       //   texthtml += ("<button value='" + (lastdip + 1) + "' class='timebutton slapbutton'>Схлопнуть " + (lastdip + 1) + "</button>");
-      if (diphead > lastdip && !nondisplay) {
+      diphead = data.tasks.indexOf(a)
+      if (!nondisplay) {
         texthtml += ("<div class='header dipheader date '><span>" + (diphead) + "</span></div>");
-        lastdip = diphead
+
       }
       texthtml += "<table class='"
       if (nondisplay)
@@ -241,6 +281,7 @@ let render = () => {
             texthtml += ("<div class='tag time past'>ВЧЕРА</div>&nbsp;&nbsp;");
           else if (moment(a.date + "T" + a.time).isBefore(moment(), 'day'))
             texthtml += ("<div class='tag time past'>ДАВНО</div>&nbsp;&nbsp;");
+
         if (a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !a.vip)
           if (a.linkstoNames.length > 0)
             texthtml += ("<div class='tag time'>ВЕТВЬ</div>&nbsp;&nbsp;");
@@ -347,8 +388,11 @@ let render = () => {
       // console.log('textContent', cal.textContent)
       cal.innerHTML = Calendar3(moment(cal.textContent))
     }
+
+
     if (searchresultisempty)
-      tasks.append('<div id="searchresultisempty">Ничего не найдено, измените поисковый запрос</div><br><button class="clearsearch mainbutton">Очистить строку поиска</button>');
+      // tasks.append('<div id="searchresultisempty">Ничего не найдено, измените поисковый запрос</div><br><button class="clearsearch mainbutton">Очистить строку поиска</button>');
+      tasks.append('<button class="clearsearch mainbutton">Очистить строку поиска</button>');
 
     for (let t of linksfromNames) {
       tagtext += t + "\n";
@@ -709,7 +753,7 @@ let prevmonthbutton = (date) => {
 
   let a = moment(date).subtract(1, 'month')
   let b = moment()
-  console.log(a, b)
+  // console.log(a, b)
   if (compareMonth(a, b)) {
     if (a.set('date', 1).isBefore(b))
       a.set('date', b.date())

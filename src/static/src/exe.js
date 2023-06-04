@@ -165,17 +165,26 @@ $('.t1').bind('input propertychange', function () {
 $(document).on('click', '.calbut', function (event) {
     event.preventDefault();
     let date = $(this).attr('href')
+
     date = date.substring(date.length - 10)
-    if ($($(this).attr('href')).offset())
-        $(window).scrollTop($($(this).attr('href')).offset().top - mouse.y + 6);
-    else if (moment().isBefore(date, 'day')) {
-        newwish('новая запись ' + date, false, false, false, date,);
-        save();
-        select('новая запись ' + date);
-        send();
-        render();
-        $('#inputtext').select();
-    }
+    // if ($($(this).attr('href')).offset())
+    //     $(window).scrollTop($($(this).attr('href')).offset().top - mouse.y + 6);
+    // else if (moment().isBefore(date, 'day')) {
+    //     newwish('новая запись ' + date, false, false, false, date,);
+    //     save();
+
+    // let datename = 'новая запись ' + date
+    // if (!select(datename)) {
+    //     newwish(datename, false, false, false, date,);
+    //     send();
+    //     select(datename);
+    // }
+    if (moment().isAfter(date, 'day'))
+        date = moment().format('YYYY-MM-DD')
+    selected.day = date
+    render(date);
+    $('#inputtext').select();
+    // }
 
 });
 $(document).on('click', '.text', function () {
@@ -215,16 +224,16 @@ $(document).on('click', '.newtask', function () {
 });
 $(document).on('click', '.savetask', function () {
     save();
-    let focusname = focusfisrt()
-    if (selected.text != focusname)
-        select(focusname);
+    // let focusname = focusfisrt()
+    // if (selected.text != focusname)
+    //     select(focusname);
     send();
     render();
-    if (selected.scribe && selected.scribe.focused)
-        scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
-    else
-        scrollPosition = parseInt($('.focused').position().top) - $(window).height() / 2 + $('.focused').height() / 2;
-    $(window).scrollTop(scrollPosition);
+    // if (selected.scribe && selected.scribe.focused)
+    //     scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
+    // else
+    //     scrollPosition = parseInt($('.focused').position().top) - $(window).height() / 2 + $('.focused').height() / 2;
+    // $(window).scrollTop(scrollPosition);
 });
 
 $(document).on('click', '.stomp', function () {
