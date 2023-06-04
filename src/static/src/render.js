@@ -231,18 +231,7 @@ let render = () => {
 
         texthtml += "<div class='textareacontainer'>";
         texthtml += "<div class='header'>Управление</div>"
-        texthtml += "<div class='mainbuttonblock'>"
-        texthtml += "<button value='" + a.name + "' class='mainbutton task squeezeout' >" +
-          "Вытеснить" +
-          "</button>";
-        texthtml += "</div>";
 
-        texthtml += "<div class='mainbuttonblock'>"
-        texthtml += "<button value='" + a.name + "' class='mainbutton task stomp' >" +
-          "Притоптать" +
-          "</button>";
-        texthtml += "</div>";
-        texthtml += "</div>";
         texthtml += "<div class='textareacontainer'>";
 
         texthtml += "<div class='mainbuttonblock'>"
@@ -252,6 +241,12 @@ let render = () => {
         texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<label class='mainbutton  delcheck'>Удалить <input  class=\"checkdelete \" type=\"checkbox\"></label>";
         texthtml += "</div>"
+
+        texthtml += "<div class='mainbuttonblock'>"
+        texthtml += "<button value='" + a.name + "' class='mainbutton task rise' >" +
+          "Поднять" +
+          "</button>";
+        texthtml += "</div>";
 
         texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<button value='" + a.name + "' class='mainbutton task savetask' >" +

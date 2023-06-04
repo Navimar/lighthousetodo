@@ -224,16 +224,16 @@ $(document).on('click', '.newtask', function () {
 });
 $(document).on('click', '.savetask', function () {
     save();
-    // let focusname = focusfisrt()
-    // if (selected.text != focusname)
-    //     select(focusname);
+    let focusname = focusfisrt()
+    if (selected.text != focusname)
+        select(focusname);
     send();
     render();
-    // if (selected.scribe && selected.scribe.focused)
-    //     scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
-    // else
-    //     scrollPosition = parseInt($('.focused').position().top) - $(window).height() / 2 + $('.focused').height() / 2;
-    // $(window).scrollTop(scrollPosition);
+    if (selected.scribe && selected.scribe.focused)
+        scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
+    else
+        scrollPosition = parseInt($('.focused').position().top) - $(window).height() / 2 + $('.focused').height() / 2;
+    $(window).scrollTop(scrollPosition);
 });
 
 $(document).on('click', '.stomp', function () {
@@ -242,6 +242,15 @@ $(document).on('click', '.stomp', function () {
     let focusname = focusfisrt()
     if (selected.text != focusname)
         select(focusname);
+    send();
+    render();
+    scrolltoFocused()
+});
+
+$(document).on('click', '.rise', function () {
+    console.log('rise', selected.i)
+    moveToStart(data.tasks, selected.i)
+    focusfisrt()
     send();
     render();
     scrolltoFocused()

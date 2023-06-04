@@ -337,6 +337,7 @@ let save = () => {
       findtarget(a)
     }
     sortdata();
+    focusfisrt();
   }
   cn = 0;
 };
@@ -364,23 +365,14 @@ let select = (text) => {
     for (let i in data.tasks) {
       if (data.tasks[i].name.toLowerCase() == text.toLowerCase()) {
 
-        // let element = data.tasks.splice(i, 1)[0]; // выбираем элемент с индексом 3
-        // // Удалить задачу с текущей позиции
-        // data.tasks.splice(i, 1);
-        // // Вставить задачу на новую позицию
-        // data.tasks.splice(g_start, 0, element);
-        // let newindex = data.tasks.indexOf(element)
+        selected.scribe = data.tasks[i];
 
-        moveToStart(data.tasks, i)
-        let newindex = 0
-        selected.scribe = data.tasks[newindex];
-
-        let date = data.tasks[newindex].date;
+        let date = data.tasks[i].date;
         if (moment().isAfter(date, 'day'))
           date = moment().format('YYYY-MM-DD')
         selected.day = date
         selected.text = text;
-        selected.i = 0;
+        selected.i = i;
         success = true
       }
     }
