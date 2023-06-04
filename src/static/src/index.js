@@ -2,9 +2,10 @@ const socket = io();
 let data = {};
 let user;
 let foucusstimer = 0;
-let selected = { i: - 1 };
+let selected = { i: - 1, day: moment().format('YYYY-MM-DD') };
 let searchlock = false;
 data.timestamp = 0;
+let g_start = 0
 let cn = 0
 
 
@@ -109,7 +110,8 @@ let newwish = (name, dip, linksfromNames, linkstoNames, date, note,) => {
     dip: dip || 1,
     ready: false,
     time: clock().h + ":" + clock().m,
-    date: date || clock().year + "-" + clock().month + "-" + clock().d,
+    date: date || selected.day,
+    // clock().year + "-" + clock().month + "-" + clock().d,
     target: {
       dip: dip || 1,
       name
@@ -348,20 +350,40 @@ let note_by_name = (name) => {
 }
 
 let select = (text) => {
+  let success = false
   let same = false
-  if (text == selected.text)
+  if (text == selected.text) {
     same = true
+    success = true
+  }
   selected.text = false;
   selected.i = -1;
   selected.scribe = false;
+
   if (!same)
     for (let i in data.tasks) {
       if (data.tasks[i].name.toLowerCase() == text.toLowerCase()) {
-        selected.scribe = data.tasks[i];
+        let element = data.tasks.splice(i, 1)[0]; // выбираем элемент с индексом 3
+
+        // Удалить задачу с текущей позиции
+        data.tasks.splice(i, 1);
+
+        // Вставить задачу на новую позицию
+        data.tasks.splice(g_start, 0, element);
+        let newindex = data.tasks.indexOf(element)
+        selected.scribe = data.tasks[newindex];
+        let date = data.tasks[newindex].date;
+        if (moment().isAfter(date, 'day'))
+          date = moment().format('YYYY-MM-DD')
+        selected.day = date
         selected.text = text;
-        selected.i = i;
+        selected.i = 0;
+        success = true
       }
     }
+  sortdata();
+  focusfisrt();
+  return success
 }
 
 let focusfisrt = () => {
