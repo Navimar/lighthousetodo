@@ -37,7 +37,7 @@ let defineVisibility = (a, searchquerry) => {
 }
 
 let render = () => {
-  console.log(selected)
+  // console.log(selected)
   let tasks = $('#tasks');
   let texthtml = "";
   planeddays = new Map();

@@ -165,7 +165,6 @@ $('.t1').bind('input propertychange', function () {
 $(document).on('click', '.calbut', function (event) {
     event.preventDefault();
     let date = $(this).attr('href')
-    console.log('calbut', date)
 
     date = date.substring(date.length - 10)
     // if ($($(this).attr('href')).offset())

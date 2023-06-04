@@ -102,3 +102,11 @@ function convertNumToText(num) {
         }
     }
 }
+
+function moveToStart(arr, index) {
+    if (index > -1) {
+        let item = arr.splice(index, 1)[0];  // Удаляем элемент по индексу и сохраняем его
+        arr.unshift(item);                   // Добавляем элемент в начало массива
+    }
+    return arr;
+}
