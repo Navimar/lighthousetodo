@@ -177,7 +177,7 @@ let findancestors = (a) => {
 
 let squeezeout = () => {
   for (let a of data.tasks) {
-    if (!a.selected && a.dip >= selected.scribe.dip) {
+    if (a != selected.scribe && a.dip >= selected.scribe.dip) {
       a.dip++;
     }
   }

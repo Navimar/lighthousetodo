@@ -246,6 +246,18 @@ $(document).on('click', '.squeezeout', function () {
     render();
     scrolltoFocused()
 });
+
+$(document).on('click', '.rise', function () {
+    $('#dip').val(1);
+    save();
+    squeezeout();
+    save();
+    select(focusfisrt());
+    send();
+    render();
+    scrolltoFocused()
+});
+
 $(document).on('click', '.divetask', function () {
     let val = $(this).attr('value');
     if (val != $('.t1').val()) {

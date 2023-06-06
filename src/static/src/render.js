@@ -202,9 +202,16 @@ let render = () => {
           "Притоптать" +
           "</button>";
         texthtml += "</div>";
+
+        texthtml += "<div class='mainbuttonblock'>"
+        texthtml += "<button value='" + a.name + "' class='mainbutton task rise' >" +
+          "Вверх" +
+          "</button>";
+        texthtml += "</div>";
+
+
         texthtml += "</div>";
         texthtml += "<div class='textareacontainer'>";
-
         texthtml += "<div class='mainbuttonblock'>"
         texthtml += "<label value='" + a.name + "' class='mainbutton divetask' >Нырок <input  class='checkdive' type=\"checkbox\"></label>";
         texthtml += "</div>"
@@ -709,7 +716,6 @@ let prevmonthbutton = (date) => {
 
   let a = moment(date).subtract(1, 'month')
   let b = moment()
-  console.log(a, b)
   if (compareMonth(a, b)) {
     if (a.set('date', 1).isBefore(b))
       a.set('date', b.date())
