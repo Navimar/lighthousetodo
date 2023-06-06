@@ -327,11 +327,11 @@ let save = () => {
       newwish(txt, dip, [name], [],);
     });
     makelinks(hero);
-
     findancestors.ancestors = [];
     findancestors(hero);
     let ancestors = [... new Set(findancestors.ancestors)]
     for (let a of ancestors) {
+      makelinks(a);
       findtarget(a)
     }
     sortdata();
@@ -395,28 +395,30 @@ let deletescribe = (text) => {
       ancestors = [... new Set(findancestors.ancestors)]
       data.tasks.splice(a, 1);
     }
-    for (let t in data.tasks[a].linksfromNames) {
-      if (data.tasks[a].linksfromNames[t] == text) {
-        data.tasks[a].linksfromNames.splice(t, 1);
+    else {
+      for (let t in data.tasks[a].linksfromNames) {
+        if (data.tasks[a].linksfromNames[t] == text) {
+          data.tasks[a].linksfromNames.splice(t, 1);
+        }
       }
-    }
-    for (let t in data.tasks[a].linksfrom) {
-      if (data.tasks[a].linksfrom[t].name == text) {
-        data.tasks[a].linksfrom.splice(t, 1);
+      for (let t in data.tasks[a].linksfrom) {
+        if (data.tasks[a].linksfrom[t].name == text) {
+          data.tasks[a].linksfrom.splice(t, 1);
+        }
       }
-    }
-    for (let t in data.tasks[a].linkstoNames) {
-      if (data.tasks[a].linkstoNames[t] == text) {
-        data.tasks[a].linkstoNames.splice(t, 1);
+      for (let t in data.tasks[a].linkstoNames) {
+        if (data.tasks[a].linkstoNames[t] == text) {
+          data.tasks[a].linkstoNames.splice(t, 1);
+        }
       }
-    }
-    for (let t in data.tasks[a].linksto) {
-      if (data.tasks[a].linksto[t].name == text) {
-        data.tasks[a].linksto.splice(t, 1);
+      for (let t in data.tasks[a].linksto) {
+        if (data.tasks[a].linksto[t].name == text) {
+          data.tasks[a].linksto.splice(t, 1);
+        }
       }
+      if (data.tasks[a].linkstoNames.length == 0)
+        data.tasks[a].ready = false;
     }
-    if (data.tasks[a].linkstoNames.length == 0)
-      data.tasks[a].ready = false;
   }
 
   for (let a of ancestors) {

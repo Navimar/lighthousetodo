@@ -125,7 +125,7 @@ let onMidnight = () => {
 }
 
 let onPlusWeek = () => {
-    let a = moment($('#date').val() + 'T' + $('#time').val()).add(1, 'day');
+    let a = moment($('#date').val() + 'T' + $('#time').val()).add(7, 'day');
     let b = moment($('#time').val(), 'hh:mm').add(7, 'day');
     let d = a > b ? a : b
     $('#date').val(d.format('YYYY-MM-DD'));
