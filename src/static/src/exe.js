@@ -238,6 +238,22 @@ $(document).on('click', '.stomp', function () {
     scrolltoFocused()
 });
 
+$(document).on('click', '.drown', function () {
+    let dipmax = 0
+    for (let a of data.tasks) {
+        if (a.dip > dipmax)
+            dipmax = a.dip
+    }
+    $('#dip').val(dipmax + 1);
+    save();
+    let focusname = focusfisrt()
+    if (selected.text != focusname)
+        select(focusname);
+    send();
+    render();
+    scrolltoFocused()
+});
+
 $(document).on('click', '.squeezeout', function () {
     squeezeout();
     save();

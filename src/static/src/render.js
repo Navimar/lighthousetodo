@@ -191,9 +191,16 @@ let render = () => {
 
         texthtml += "<div class='textareacontainer'>";
         texthtml += "<div class='header'>Управление</div>"
+
+        // texthtml += "<div class='mainbuttonblock'>"
+        // texthtml += "<button value='" + a.name + "' class='mainbutton task squeezeout' >" +
+        //   "Вытеснить" +
+        //   "</button>";
+        // texthtml += "</div>";
+
         texthtml += "<div class='mainbuttonblock'>"
-        texthtml += "<button value='" + a.name + "' class='mainbutton task squeezeout' >" +
-          "Вытеснить" +
+        texthtml += "<button value='" + a.name + "' class='mainbutton task drown' >" +
+          "Притопить" +
           "</button>";
         texthtml += "</div>";
 
