@@ -284,7 +284,10 @@ let save = () => {
         a.situational = situational;
         a.time = time;
         a.date = date;
-        a.dip = dip;
+        if (moment(a.date + "T" + a.time).isAfter(moment()))
+          a.dip = 1;
+        else
+          a.dip = dip;
       }
       for (let t in a.linksfromNames) {
         if (a.linksfromNames[t].toLowerCase() == selected.text.toLowerCase()) {
