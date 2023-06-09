@@ -177,9 +177,9 @@ let findancestors = (a) => {
 
 let squeezeout = () => {
   for (let a of data.tasks) {
-    if (a != selected.scribe && a.dip >= selected.scribe.dip) {
-      a.dip++;
-    }
+    if (a != selected.scribe && a.dip >= selected.scribe.dip)
+      if (moment(a.date + "T" + a.time).isSameOrBefore(moment()))
+        a.dip++;
   }
   for (let a of data.tasks) {
     findtarget(a)
