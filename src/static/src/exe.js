@@ -264,7 +264,10 @@ $(document).on('click', '.squeezeout', function () {
 });
 
 $(document).on('click', '.rise', function () {
-    $('#dip').val(1);
+    if ($('#dip').val() > 5)
+        $('#dip').val(5);
+    else
+        $('#dip').val(1);
     save();
     squeezeout();
     save();

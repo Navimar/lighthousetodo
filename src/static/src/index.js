@@ -284,8 +284,8 @@ let save = () => {
         a.situational = situational;
         a.time = time;
         a.date = date;
-        if (moment(a.date + "T" + a.time).isAfter(moment()))
-          a.dip = 1;
+        if (moment(a.date + "T" + a.time).isAfter(moment()) && a.dip > 5)
+          a.dip = 5;
         else
           a.dip = dip;
       }
