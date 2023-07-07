@@ -1,5 +1,5 @@
-let sortdata = () => {
-  data.tasks.sort((a, b) => {
+let sortdata = (arr = data.tasks) => {
+  arr.sort((a, b) => {
 
     if (!a.ready && b.ready)
       return -1;

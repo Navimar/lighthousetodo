@@ -134,7 +134,7 @@ td.plate {
 }
 
 .list {
-    font-size: 13.5pt;
+    /* font-size: 13.5pt; */
     max-width: 40em;
     margin: auto;
     text-align: left;
@@ -201,6 +201,7 @@ option:checked {
 }
 
 .opn {
+    cursor: pointer;
     font-size: 10.8pt;
     text-align: left;
     background: none;
@@ -370,7 +371,7 @@ option.fifth {
 
 .delete {}
 
-button {
+button, label {
     background: none;
     background-color: none;
     font-size: 11pt;
@@ -470,7 +471,7 @@ button {
 }
 
 .autocomplete-items div {
-    padding: 10px;
+    padding: 6px;
     cursor: pointer;
     background-color: #fff;
     border-bottom: 1px solid #d4d4d4;
@@ -947,4 +948,14 @@ font-size: 19pt; */
 .dipbutton {
     min-width: 4pt;
     width: 10%;
+}
+
+.radio-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.radio-group label {
+    flex-grow: 1;
+    text-align: center;
 }

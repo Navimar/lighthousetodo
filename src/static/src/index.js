@@ -106,7 +106,7 @@ let newwish = (name, dip, linksfromNames, linkstoNames, date, note,) => {
     note: note || '',
     linksfromNames: linksfromNames || [],
     linkstoNames: linkstoNames || [],
-    dip: dip || 1,
+    dip: dip || 5,
     ready: false,
     time: clock().h + ":" + clock().m,
     date: date || clock().year + "-" + clock().month + "-" + clock().d,
@@ -155,6 +155,7 @@ let findtarget = (a, level) => {
       if (parseInt(child.dip) <= parseInt(target.dip)
         && moment().isSameOrAfter(moment(child.date + "T" + child.time), 'day')
         && !child.situational
+        && !child.ready
       ) {
         target = child
       }
@@ -168,10 +169,14 @@ let findtarget = (a, level) => {
 }
 
 
-let findancestors = (a) => {
+let findancestors = (a, depth = 0, maxDepth = 12) => {
+  if (depth > maxDepth) {
+    return;
+  }
+
   findancestors.ancestors.push(a);
   for (let t = 0; t < a.linksfromNames.length; t++) {
-    findancestors(note_by_name(a.linksfromNames[t]))
+    findancestors(note_by_name(a.linksfromNames[t]), depth + 1, maxDepth);
   }
 }
 

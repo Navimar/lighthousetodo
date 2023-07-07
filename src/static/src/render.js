@@ -159,14 +159,36 @@ let render = () => {
 
         texthtml += "<button class=\"timebutton \" id=\"plushour\">+1 час<\/button>";
         texthtml += "<button class=\"timebutton\" id=\"plus15\">+15 м<\/button>";
-        texthtml += "<button class=\"timebutton hourbutton\" value = '00' >00:00<\/button>";
-        texthtml += "<button class=\"timebutton hourbutton\" value = '03' >03:00<\/button>";
-        texthtml += "<button class=\"timebutton hourbutton\" value = '06' >06:00<\/button>";
-        texthtml += "<button class=\"timebutton hourbutton\" value = '09' >09:00<\/button>";
-        texthtml += "<button class=\"timebutton hourbutton\" value = '12' >12:00<\/button>";
-        texthtml += "<button class=\"timebutton hourbutton\" value = '15' >15:00<\/button>";
-        texthtml += "<button class=\"timebutton hourbutton\" value = '18' >18:00<\/button>";
-        texthtml += "<button class=\"timebutton hourbutton\" value = '21' >21:00<\/button>";
+
+        // texthtml += "<button class=\"timebutton hourbutton\" value = '00' >00:00<\/button>";
+        // texthtml += "<button class=\"timebutton hourbutton\" value = '03' >03:00<\/button>";
+        // texthtml += "<button class=\"timebutton hourbutton\" value = '06' >06:00<\/button>";
+
+        // texthtml += "<button class=\"timebutton hourbutton\" value = '09' >09:00<\/button>";
+        // texthtml += "<button class=\"timebutton hourbutton\" value = '12' >12:00<\/button>";
+        // texthtml += "<button class=\"timebutton hourbutton\" value = '15' >15:00<\/button>";
+        // texthtml += "<button class=\"timebutton hourbutton\" value = '18' >18:00<\/button>";
+        // texthtml += "<button class=\"timebutton hourbutton\" value = '21' >21:00<\/button>";
+        texthtml += `
+        <div class="radio-group">
+        <label class="timebutton " for="option1">
+            <input type="radio" id="option1" name="radiotime" value="1">0-4
+            </label><label class="timebutton "  for="option2">
+            <input type="radio" id="option2" name="radiotime" value="2">5-9
+        </label><label class="timebutton "  for="option3">
+            <input type="radio" id="option3" name="radiotime" value="3">10-14
+        </label><label class="timebutton "  for="option4">
+            <input type="radio" id="option4" name="radiotime" value="4">15-19
+        </label><label class="timebutton " for="option5">
+            <input type="radio" id="option5" name="radiotime" value="5">20-23
+        </label></div>
+`;
+        texthtml += "<button id ='timebutton1' class=\"timebutton hourbutton\" value = '09' >09:00<\/button>";
+        texthtml += "<button id ='timebutton2' class=\"timebutton hourbutton\" value = '12' >12:00<\/button>";
+        texthtml += "<button id ='timebutton3' class=\"timebutton hourbutton\" value = '15' >15:00<\/button>";
+        texthtml += "<button id ='timebutton4' class=\"timebutton hourbutton\" value = '18' >18:00<\/button>";
+        texthtml += "<button id ='timebutton5' class=\"timebutton hourbutton\" value = '21' >21:00<\/button>";
+
         texthtml += "</div>";
 
         //управляющие кнопки
@@ -293,10 +315,6 @@ let render = () => {
       }
       texthtml += "'>";
       texthtml += rendertags(a);
-
-
-
-
       texthtml += "<div class='text";
       texthtml += "'>";
       texthtml += a.name;
@@ -396,6 +414,44 @@ let render = () => {
       $('.checkdelete ').prop('checked', false);
     });
 
+    document.querySelectorAll('input[name="radiotime"]').forEach(function (radio) {
+      // Добавляем обработчик события изменения
+      radio.addEventListener('change', function () {
+
+        // Определяем выбранное время
+        let timeRange = this.value;
+
+        // Изменяем текст и значение кнопок в соответствии с выбранным временем
+        for (let i = 0; i <= 4; i++) {
+          // Находим кнопку по id
+          let button = document.getElementById('timebutton' + (i + 1));
+          let timeValue, timeText;
+
+          // В зависимости от выбранного времени меняем текст и значение кнопки
+          switch (timeRange) {
+            case '1':
+              timeValue = timeText = (i).toString().padStart(2, '0');
+              break;
+            case '2':
+              timeValue = timeText = (i + 5).toString().padStart(2, '0'); // для диапазона 9 - 13
+              break;
+            case '3':
+              timeValue = timeText = (i + 10).toString().padStart(2, '0'); // для диапазона 14 - 18
+              break;
+            case '4':
+              timeValue = timeText = (i + 15).toString().padStart(2, '0'); // для диапазона 19 - 23
+              break;
+            case '5':
+              timeValue = timeText = (i + 19).toString().padStart(2, '0'); // для диапазона 0 - 3
+              break;
+          }
+
+          // Устанавливаем текст и значение кнопки
+          button.textContent = timeText + ':00';
+          button.value = timeValue;
+        }
+      });
+    });
     // console.log(rank);
     // // $('#profit').val(rank);
     // console.log($('#profit').val());
@@ -677,14 +733,16 @@ let renderopns = (a, level) => {
     level = 0;
   let texthtml = "<div class='opnslist'>";
 
-  a.linksto.sort((aa, bb) => {
-    if (aa.dip < bb.dip) { return -1; }
-    if (aa.dip > bb.dip) { return 1; }
-    return 0;
-  });
+  // a.linksto.sort((aa, bb) => {
+  //   if (aa.dip < bb.dip) { return -1; }
+  //   if (aa.dip > bb.dip) { return 1; }
+  //   return 0;
+  // });
+
+  sortdata(a.linksto)
 
   for (let t = 0; t < a.linksto.length; t++) {
-    texthtml += "<span class='bul tag'>" + a.linksto[t].dip + "</span><span class='bul tag ";
+    texthtml += "<span class='bul tag ";
     texthtml += "'>";
     for (let i = 0; i < level; i++)
       texthtml += "&nbsp;&nbsp;"
@@ -693,10 +751,12 @@ let renderopns = (a, level) => {
     else
       texthtml += "•";
     texthtml += "</span>";
-    texthtml += "<button class='opn";
+    texthtml += "<span class='opn";
     texthtml += "'>";
     texthtml += a.linksto[t].name;
-    texthtml += "</button>";
+    texthtml += "</span>";
+    texthtml += "<span class='bul tag'>" + a.linksto[t].dip + "</span>"
+
     if (level == 5)
       texthtml += "<span class='arr'>⇒...</span>";
     if (level < 5)
