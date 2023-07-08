@@ -94,6 +94,7 @@ table.selected tr.task {
 } */
 
 .search {
+    z-index: 1;
     position: sticky;
     left: 50%;
     top: 0;
@@ -779,6 +780,7 @@ label.readylabel {
 }
 
 .date {
+    z-index: 1;
     background: var(--background-table);
     text-align: center;
     text-transform: uppercase;
@@ -956,4 +958,8 @@ font-size: 19pt; */
 .radio-group label {
     flex-grow: 1;
     text-align: center;
+}
+
+.empty {
+    height: 170pt;
 }

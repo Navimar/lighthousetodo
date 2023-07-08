@@ -81,8 +81,10 @@ let render = () => {
         // }
         // if ((a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !a.vip && selected.scribe != a))
         //   nondisplay = true
-        // if (a.ready && selected.scribe != a)
-        //   nondisplay = true
+        if (a.ready && selected.scribe != a)
+          nondisplay = true
+        if (selected.scribe != a && !a.vip && a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false))
+          nondisplay = true
 
       }
 
@@ -94,6 +96,8 @@ let render = () => {
 
       // делаем дополнительный календарь если дата другая
       if (nondisplay == false && (!today || (moment(a.date).format() != today.format() && moment().diff(moment(a.date)) <= 0))) {
+        if (today)
+          texthtml += '<div class="empty"></div>'
         today = moment(a.date);
         if (today.isBefore(moment(), 'day'))
           today = moment()
@@ -110,6 +114,7 @@ let render = () => {
         texthtml += ("<div class='header date'>ФИНИСФЕРА</div>");
         blocked = true;
       }
+
 
       let diphead = a.target ? a.target.dip : a.dip
       // if (diphead > lastdip + 1 && !nondisplay)
