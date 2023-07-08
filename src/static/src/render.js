@@ -71,18 +71,18 @@ let render = () => {
         searchresultisempty = false;
 
         // проверяем что дата дела равна выделенному дню
-        nondisplay = true
-        if (
-          moment(a.date).isSame(selected.date, 'day')
-          ||
-          (moment().isSameOrAfter(a.date, 'day') && moment().isSameOrAfter(selected.date, 'day'))
-        ) {
-          nondisplay = false
-        }
-        if ((a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !a.vip && selected.scribe != a))
-          nondisplay = true
-        if (a.ready && selected.scribe != a)
-          nondisplay = true
+        // nondisplay = true
+        // if (
+        //   moment(a.date).isSame(selected.date, 'day')
+        //   ||
+        //   (moment().isSameOrAfter(a.date, 'day') && moment().isSameOrAfter(selected.date, 'day'))
+        // ) {
+        //   nondisplay = false
+        // }
+        // if ((a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !a.vip && selected.scribe != a))
+        //   nondisplay = true
+        // if (a.ready && selected.scribe != a)
+        //   nondisplay = true
 
       }
 
