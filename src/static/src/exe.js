@@ -165,10 +165,15 @@ $('.t1').bind('input propertychange', function () {
 $(document).on('click', '.calbut', function (event) {
     event.preventDefault();
     let date = $(this).attr('href')
+    let planed = $(this).hasClass('planed');
     date = date.substring(date.length - 10)
-    if ($($(this).attr('href')).offset())
-        $(window).scrollTop($($(this).attr('href')).offset().top - mouse.y + 6);
-    else if (moment().isBefore(date, 'day')) {
+    selected.date = date
+    // if ($($(this).attr('href')).offset()) {
+    //     $(window).scrollTop($($(this).attr('href')).offset().top - mouse.y + 6);
+    // }
+    // else if (moment().isBefore(date, 'day')) {
+
+    if (!planed && moment().isBefore(date, 'day')) {
         newwish('новая запись ' + date, false, false, false, date,);
         save();
         select('новая запись ' + date);
@@ -176,7 +181,8 @@ $(document).on('click', '.calbut', function (event) {
         render();
         $('#inputtext').select();
     }
-
+    console.log(selected)
+    render();
 });
 $(document).on('click', '.text', function () {
     if (!searchlock)

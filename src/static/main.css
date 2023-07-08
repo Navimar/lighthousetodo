@@ -89,13 +89,12 @@ table.selected tr.task {
     border-radius: 0 0 0.5em 0.5em;
 }
 
-#tasks {
+/* #tasks {
     padding-top: 27px;
-}
+} */
 
 .search {
-    font-size: 13.5pt;
-    position: fixed;
+    position: sticky;
     left: 50%;
     top: 0;
     max-width: 40em;
@@ -430,7 +429,7 @@ button, label {
 }
 
 .bottom {
-    padding-top: 90px;
+    padding-top: 900px;
     padding-left: 15px;
     padding-right: 15px;
     padding-bottom: 90px;
@@ -440,10 +439,9 @@ button, label {
 }
 
 .bottom a {
+    text-decoration: underline;
     color: var(--gray);
 }
-
-
 
 .autocomplete {
     width: 100%;
@@ -473,8 +471,8 @@ button, label {
 .autocomplete-items div {
     padding: 6px;
     cursor: pointer;
-    background-color: #fff;
-    border-bottom: 1px solid #d4d4d4;
+    background-color: var(--background-button);
+    border-bottom: 1px solid var(--background-area);
 }
 
 .autocomplete-items div:hover {

@@ -368,6 +368,7 @@ let select = (text) => {
         selected.scribe = data.tasks[i];
         selected.text = text;
         selected.i = i;
+        selected.date = selected.scribe.date
       }
     }
 }
