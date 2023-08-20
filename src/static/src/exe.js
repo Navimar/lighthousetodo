@@ -162,6 +162,8 @@ $('.t1').bind('input propertychange', function () {
     render();
     $(window).scrollTop(0);
 });
+
+
 $(document).on('click', '.calbut', function (event) {
     event.preventDefault();
     let date = $(this).attr('href')
@@ -180,18 +182,14 @@ $(document).on('click', '.calbut', function (event) {
         $('#inputtext').select();
     }
 });
+
 $(document).on('click', '.text', function () {
     if (!searchlock)
         $('.t1').val('');
     onSelect($(this).text());
 });
-// $(document).on('click', '.focushead', function () {
-//     focusnext();
-//     render();
-// });
-// $(document).on('click', '.tag', function () {
-//     onTag($(this).text());
-// });
+
+
 $(document).on('click', '.slapbutton', function () {
     for (let a of data.tasks) {
         if (a.dip > parseInt($(this).val()))
@@ -266,12 +264,14 @@ $(document).on('click', '.squeezeout', function () {
 });
 
 $(document).on('click', '.rise', function () {
-    if ($('#dip').val() > 5)
-        $('#dip').val(5);
-    else
-        $('#dip').val(1);
-    save();
-    squeezeout();
+    event('rise', note_by_name($(this).val()))
+
+    // if ($('#dip').val() > 5)
+    //     $('#dip').val(5);
+    // else
+    //     $('#dip').val(1);
+    // save();
+    // squeezeout();
     save();
     select(focusfisrt());
     send();

@@ -62,9 +62,9 @@ function inputSocket() {
     if (!data.timestamp || moment(data.timestamp) < moment(msg.timestamp)) {
       data = msg;
       console.log("loaded");
+      makelinks();
       oldversions();
       focusfisrt();
-      makelinks();
       render();
       $('#status').removeClass("red").html('online');
     } else
@@ -116,33 +116,26 @@ let newwish = (name, dip, linksfromNames, linkstoNames, date, note,) => {
     },
   });
   makelinks(data.tasks[0]);
+  list.toHead(data.tasks[0])
 }
 
 let makelinks = (task) => {
-  if (!task)
-    for (let task of data.tasks) {
-      task.linksto = [];
-      for (let t = 0; t < task.linkstoNames.length; t++) {
-        let scribe = note_by_name(task.linkstoNames[t])
-        if (scribe) task.linksto.push(scribe)
-      }
-      task.linksfrom = [];
-      for (let t = 0; t < task.linksfromNames.length; t++) {
-        let scribe = note_by_name(task.linksfromNames[t])
-        if (scribe) task.linksfrom.push(scribe)
-      }
+  let tasksToProcess = task ? [task] : data.tasks;
+
+  for (let currentTask of tasksToProcess) {
+    currentTask.linksto = [];
+    for (let t = 0; t < currentTask.linkstoNames.length; t++) {
+      let scribe = note_by_name(currentTask.linkstoNames[t])
+      if (scribe) currentTask.linksto.push(scribe)
     }
-  else {
-    task.linksto = [];
-    for (let t = 0; t < task.linkstoNames.length; t++) {
-      let scribe = note_by_name(task.linkstoNames[t])
-      if (scribe) task.linksto.push(scribe)
+
+    currentTask.linksfrom = [];
+    for (let t = 0; t < currentTask.linksfromNames.length; t++) {
+      let scribe = note_by_name(currentTask.linksfromNames[t])
+      if (scribe) currentTask.linksfrom.push(scribe)
     }
-    task.linksfrom = [];
-    for (let t = 0; t < task.linksfromNames.length; t++) {
-      let scribe = note_by_name(task.linksfromNames[t])
-      if (scribe) task.linksfrom.push(scribe)
-    }
+    currentTask.next = currentTask.next != null ? note_by_name(currentTask.nextName) : null;
+    currentTask.prev = currentTask.prev != null ? note_by_name(currentTask.prevName) : null;
   }
 }
 
@@ -277,6 +270,7 @@ let save = () => {
       }
       if (selected.scribe == a && inptval) {
         hero = a;
+        list.toDate(hero)
         a.name = name;
         a.note = note;
         a.linksfromNames = tags;
@@ -359,6 +353,7 @@ let select = (text) => {
   let same = false
   if (text == selected.text)
     same = true
+  selected.old = selected.scribe
   selected.text = false;
   selected.i = -1;
   selected.scribe = false;
@@ -374,6 +369,7 @@ let select = (text) => {
 }
 
 let focusfisrt = () => {
+  // return
   let ok = true;
   let z = false
   let hero = false;
@@ -385,12 +381,13 @@ let focusfisrt = () => {
     if (!isFuture(data.tasks[a].date, data.tasks[a].time) && ok) {
       ok = false;
       data.tasks[a].focused = true
-      // console.log(data.tasks[a])
+      console.log('focusfisrt', data.tasks[a])
       hero = data.tasks[a].name;
       if (z != a)
         foucusstimer = 0;
     }
   }
+  data.listHead.focused = true
   return hero;
 }
 
@@ -399,6 +396,7 @@ let deletescribe = (text) => {
   for (let a in data.tasks) {
     if (data.tasks[a].name == text) {
       let hero = data.tasks[a];
+      list.kick(hero);
       findancestors.ancestors = [];
       findancestors(hero);
       ancestors = [... new Set(findancestors.ancestors)]
@@ -441,7 +439,7 @@ let send = () => {
   let sentdata = {
     user: user,
     timestamp: moment(),
-    tasks: data.tasks.map(({ linksto, linksfrom, ...rest }) => rest),
+    tasks: data.tasks.map(({ linksto, linksfrom, next, prev, ...rest }) => rest),
   }
   socket.emit('save', sentdata);
 }

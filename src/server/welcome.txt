@@ -1,1 +1,47 @@
-{"tasks":[{"name":"Добро Пожаловать в Маяк. Это уникальная система управления делами!","note":"","ready":false,"time":"10:37","date":"2022-11-06","ppd":0,"focused":true,"dip":0,"linkstoNames":[],"linksfromNames":[],"vip":false,"target":{"name":"Добро Пожаловать в Маяк. Это уникальная система управления делами!","dip":0},"selected":false,"blocks":[]},{"name":"У записи помимо названия может быть текст. Начните редактировать \"название\", чтобы увидеть его.","note":"\nТекст заметки. Он может быть довольно длинным.","ready":false,"time":"10:40","date":"2022-11-06","ppd":0,"dip":1,"linkstoNames":[],"linksfromNames":[],"vip":false,"target":{"name":"У записи помимо названия может быть текст. Начните редактировать \"название\", чтобы увидеть его.","dip":1},"selected":false,"blocks":[]},{"name":"У записей есть приоритет. Записи сортируются согласно приоритету! От меньшего к большему.","note":"","ready":false,"time":"10:40","date":"2022-11-06","ppd":0,"dip":2,"linkstoNames":[],"linksfromNames":[],"vip":false,"target":{"name":"У записей есть приоритет. Записи сортируются согласно приоритету! От меньшего к большему.","dip":2},"selected":false,"blocks":[]},{"name":"Нажмите \"удалить\", затем \"сохранить\", чтобы удалить запись!","note":"","ready":false,"time":"10:39","date":"2022-11-06","ppd":0,"focused":false,"dip":3,"linkstoNames":[],"linksfromNames":[],"vip":false,"target":{"name":"Нажмите \"удалить\", затем \"сохранить\", чтобы удалить запись!","dip":3},"selected":false,"blocks":[]},{"name":"Запись \"включить принтер\" может блокировать задачу \"распечатать документы. Удалите эту запись и увидите другую!","note":"","ready":false,"time":"10:42","date":"2022-11-06","ppd":0,"dip":11,"linkstoNames":["Теперь, когда принтер включен, можете распечатать документы!!"],"linksfromNames":[],"target":{"name":"Теперь, когда принтер включен, можете распечатать документы!!","dip":4},"vip":false,"selected":false,"blocks":[]},{"name":"приоритет задачи зависит от приоритета задачи которую она блокирует","note":"","linksfromNames":[],"linkstoNames":["очень приоритетная задача"],"dip":10,"ready":false,"time":"16:19","date":"2023-01-22","target":{"name":"очень приоритетная задача","dip":5},"vip":false,"selected":false,"blocks":[]},{"name":"Нажмите зеленый плюс в углу, чтобы сделать новую запись!","note":"","ready":false,"time":"10:54","date":"2022-11-06","ppd":0,"focused":false,"dip":6,"linkstoNames":[],"linksfromNames":[],"vip":false,"target":{"name":"Нажмите зеленый плюс в углу, чтобы сделать новую запись!","dip":6},"selected":false,"blocks":[]},{"name":"Теперь, когда принтер включен, можете распечатать документы!!","note":"","ready":false,"time":"10:43","date":"2022-11-06","ppd":0,"dip":4,"linkstoNames":[],"linksfromNames":["Запись \"включить принтер\" может блокировать задачу \"распечатать документы. Удалите эту запись и увидите другую!"],"vip":false,"target":{"name":"Теперь, когда принтер включен, можете распечатать документы!!","dip":4},"selected":false,"blocks":[]},{"name":"очень приоритетная задача","note":"","linksfromNames":["приоритет задачи зависит от приоритета задачи которую она блокирует"],"linkstoNames":[],"dip":5,"ready":false,"time":"16:20","date":"2023-01-22","target":{"name":"очень приоритетная задача","dip":5},"vip":false,"selected":false,"blocks":[]}],"timestamp":"2023-01-22T12:40:27.066Z"}
+{
+    "tasks": [
+        {
+            "name": "Задача 1",
+            "note": "Заметка к задаче 1",
+            "ready": false,
+            "time": "00:00",
+            "date": "2023-01-01",
+            "ppd": 0,
+            "focused": true,
+            "dip": 0,
+            "linkstoNames": [],
+            "linksfromNames": [],
+            "vip": false,
+            "target": {
+                "name": "Цель для задачи 1",
+                "dip": 0
+            },
+            "selected": false,
+            "blocks": [],
+            "nextName": "Задача 2",
+            "prevName": null
+        },
+        {
+            "name": "Задача 2",
+            "note": "Заметка к задаче 2",
+            "ready": false,
+            "time": "00:00",
+            "date": "2023-01-01",
+            "ppd": 0,
+            "focused": true,
+            "dip": 1,
+            "linkstoNames": [],
+            "linksfromNames": [],
+            "vip": false,
+            "target": {
+                "name": "Цель для задачи 2",
+                "dip": 1
+            },
+            "selected": false,
+            "blocks": [],
+            "nextName": null,
+            "prevName": "Задача 1"
+        }
+    ],
+    "timestamp": "2023-01-01T00:00:00.000Z"
+}

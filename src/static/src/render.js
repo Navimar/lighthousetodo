@@ -6,6 +6,7 @@ let g_max = 0;
 let g_timecn = 0;
 
 let render = () => {
+
   let tasks = $('#tasks');
   let texthtml = "";
   planeddays = new Map();
@@ -36,7 +37,14 @@ let render = () => {
 
     // tasks.append("<div id=" + moment().format('YYYY-MM-DD') + " class='header date'> " + moment().format('dddd DD MMMM') + nextmonthbutton(moment().format()) + "</div>");
     // tasks.append('<div class="calendarplace">' + moment().format() + '</div>');
-    for (let a of data.tasks) {
+
+    //основной цикл
+    // for (let a of data.tasks) {
+
+    currentScribe = data.listHead;
+
+    while (currentScribe !== null) {
+      let a = currentScribe
 
       //планируем дни
       if (moment().isSameOrBefore(a.date, 'day')) {
@@ -81,11 +89,12 @@ let render = () => {
         // }
         // if ((a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !a.vip && selected.scribe != a))
         //   nondisplay = true
+
+
         if (a.ready && selected.scribe != a)
           nondisplay = true
         if (selected.scribe != a && !a.vip && a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false))
           nondisplay = true
-
       }
 
       //формируем массив для подсказок
@@ -110,11 +119,10 @@ let render = () => {
         lastdip = a.dip - 1
         // Calendar3(today);
       }
-      if (!a.vip && a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !blocked && !nondisplay) {
-        texthtml += ("<div class='header date'>ФИНИСФЕРА</div>");
-        blocked = true;
-      }
-
+      // if (!a.vip && a.linksfrom.length > 0 && a.linksfrom.some(e => e.ready === false) && !blocked && !nondisplay) {
+      //   texthtml += ("<div class='header date'>ФИНИСФЕРА</div>");
+      //   blocked = true;
+      // }
 
       let diphead = a.target ? a.target.dip : a.dip
       // if (diphead > lastdip + 1 && !nondisplay)
@@ -126,8 +134,8 @@ let render = () => {
       // сама запись
       if (!nondisplay) {
         texthtml += "<table class='"
-        if (nondisplay)
-          texthtml += " nondisplay"
+        // if (nondisplay)
+        //   texthtml += " nondisplay"
         if (selected.scribe == a)
           texthtml += " selected";
         if (a.focused)
@@ -199,19 +207,19 @@ let render = () => {
           // texthtml += "<button class=\"timebutton hourbutton\" value = '18' >18:00<\/button>";
           // texthtml += "<button class=\"timebutton hourbutton\" value = '21' >21:00<\/button>";
           texthtml += `
-        <div class="radio-group">
-        <label class="timebutton " for="option1">
-            <input type="radio" id="option1" name="radiotime" value="1">0-4
-            </label><label class="timebutton "  for="option2">
-            <input type="radio" id="option2" name="radiotime" value="2">5-9
-        </label><label class="timebutton "  for="option3">
-            <input type="radio" id="option3" name="radiotime" value="3">10-14
-        </label><label class="timebutton "  for="option4">
-            <input type="radio" id="option4" name="radiotime" value="4">15-19
-        </label><label class="timebutton " for="option5">
-            <input type="radio" id="option5" name="radiotime" value="5">20-23
-        </label></div>
-`;
+            <div class="radio-group">
+            <label class="timebutton " for="option1">
+                <input type="radio" id="option1" name="radiotime" value="1">🌟
+                </label><label class="timebutton "  for="option2">
+                <input type="radio" id="option2" name="radiotime" value="2">🐓
+            </label><label class="timebutton "  for="option3">
+                <input type="radio" id="option3" name="radiotime" value="3">🌞
+            </label><label class="timebutton "  for="option4">
+                <input type="radio" id="option4" name="radiotime" value="4">🌆
+            </label><label class="timebutton " for="option5">
+                <input type="radio" id="option5" name="radiotime" value="5">🌙
+            </label></div>
+    `;
           texthtml += "<button id ='timebutton1' class=\"timebutton hourbutton\" value = '09' >09:00<\/button>";
           texthtml += "<button id ='timebutton2' class=\"timebutton hourbutton\" value = '12' >12:00<\/button>";
           texthtml += "<button id ='timebutton3' class=\"timebutton hourbutton\" value = '15' >15:00<\/button>";
@@ -328,6 +336,10 @@ let render = () => {
 
         texthtml += "<td class='tdtask'>"
         texthtml += "<div class='task";
+        if (!selected.scribe && selected.old == a) {
+          texthtml += " position";
+        }
+
         if (selected.scribe == a) {
           texthtml += " position";
           linksfromNames = a.linksfromNames;
@@ -402,7 +414,9 @@ let render = () => {
         $('input[name="radioprior"][value=' + a.priority + ']').prop('checked', true);
       }
       // }
+      currentScribe = a.next
     }
+
     const calendars = document.getElementsByClassName("calendarplace");
     // console.log(calendars)
     for (let cal of calendars) {
@@ -487,7 +501,18 @@ let render = () => {
     // console.log($('#profit').val());
     // console.log($('#inputtags').val());
 
+    let position = $('.position')
+    if (position.length == 0)
+      position = $('.focused')
+    console.log(position, 'position')
+    if (position.length > 0) {
+      scrollPosition = position.offset().top + position.height() / 2;
+      scrollPosition -= mouse.y;
+    }
+    $(window).scrollTop(scrollPosition);
+
     if (selected.i != -1) {
+      // console.log('selected', selected, names)
       $('#inputtags').val(tagtext);
       $('#inputopns').val(opntext);
       $('#inputtext').val(text + '\n' + note);
@@ -495,9 +520,6 @@ let render = () => {
       $('#date').val(date);
       $('#dip').val(dip);
       $('.delete').val(text);
-      scrollPosition = $('.position').offset().top + $('.position').height() / 2;
-      scrollPosition -= mouse.y;
-      $(window).scrollTop(scrollPosition);
       names = names.filter(function (name) {
         return name !== selected.scribe.name;
       });

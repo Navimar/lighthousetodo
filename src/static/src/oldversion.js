@@ -1,5 +1,14 @@
 let oldversions = () => {
-    for (let a of data.tasks) {
+    for (let i = 0; i < data.tasks.length; i++) {
+        data.listHead = data.listHead ? data.listHead : data.tasks[0]
+        data.listTail = data.listTail ? data.listTail : data.tasks[data.tasks.length - 1]
+
+        let a = data.tasks[i];
+        a.next = a.next ? a.next : (data.tasks[i + 1] ? data.tasks[i + 1] : null)
+        a.nextName = a.next !== null ? a.next.name : null;
+        a.prev = a.prev ? a.prev : (data.tasks[i - 1] ? data.tasks[i - 1] : null);
+        a.prevName = a.prev !== null ? a.prev.name : null;
+
         a.dip = a.dip ? a.dip : (a.rank ? a.rank : 0)
         delete a.rank
         a.linkstoNames = a.linkstoNames ? a.linkstoNames : (a.opns ? a.opns : [])

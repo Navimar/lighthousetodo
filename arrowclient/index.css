@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background-main: #ffffff;
+    --background-area: #e0e0e0;
+    --background-button: white;
+    --background-image: url("img/back.jpeg");
+    --color-main: #000000;
+    --color-contrast: black;
+  }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-main: #000000;
+    --background-area: #333;
+    --background-button: lightgray;
+    --background-image: url("img/backdark.jpeg");
+    --color-main: #ffffff;
+    --color-contrast: black;
+  }
+}
+
+* {
+  font-family: "IBM Plex Sans", sans-serif;
+}
+
+.bgimg {
+  background-image: var(--background-image);
+}
+
+.plusimg {
+  background-image: url("img/plus.png");
+  background-position: center;
+  background-size: 100% auto;
+}
+
+.checkmark::after {
+  content: "";
+  display: none;
+  left: 1px;
+  top: -1px;
+  width: 2px;
+  height: 6px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+input {
+  font-family: "Noto Sans Mono", monospace;
+}
+/* Show the checkmark when checked */
+input:checked + .checkmark {
+  background-color: #2196f3;
+}
+
+input:checked + .checkmark::after {
+  display: block;
+}
+
+.notomono {
+  font-family: "Noto Sans Mono", monospace;
+}

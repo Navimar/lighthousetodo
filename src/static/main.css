@@ -96,11 +96,10 @@ table.selected tr.task {
 .search {
     z-index: 1;
     position: sticky;
-    left: 50%;
     top: 0;
     max-width: 40em;
     width: 100%;
-    transform: translateX(-50%);
+    margin: auto;
 }
 
 #clearsearchbutton {
@@ -167,6 +166,7 @@ option:checked {
 }
 
 #scrollTopButton {
+    z-index: 100;
     position: fixed;
     bottom: 15px;
     left: 15px;
@@ -392,7 +392,7 @@ button, label {
     border-radius: 0;
     display: inline-block;
     vertical-align: bottom;
-    /* border-left: 4px solid var(--background-button-bright); */
+    /* border-left: 4px solid var(--background-area); */
 }
 
 .priorbutton {
@@ -430,7 +430,7 @@ button, label {
 }
 
 .bottom {
-    padding-top: 900px;
+    padding-top: 170pt;
     padding-left: 15px;
     padding-right: 15px;
     padding-bottom: 90px;
