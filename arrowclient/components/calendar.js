@@ -1,8 +1,8 @@
 import { html, reactive, watch } from "@arrow-js/core";
 import dayjs from 'dayjs';
 
-import { currentTime, selectedDate, data } from '/reactive.js';
-import { saveTask, addScribe } from '/logic/exe.js'
+import { currentTime, selectedDate, data } from '/logic/reactive.js';
+import { saveTask, makevisible, sort } from '/logic/exe.js'
 
 
 let today = () => {
@@ -30,7 +30,8 @@ function prevYear() {
 }
 
 function clickOnCaldendarDay(date) {
-  saveTask();
+  saveTask('clickOnCaldendarDay');
+  data.selected = false;
   // let date = e.target.innerText;
   let clickedDate = dayjs(selectedDate.date).set('date', date);
 
@@ -40,6 +41,8 @@ function clickOnCaldendarDay(date) {
   } else {
     selectedDate.date = clickedDate.format('YYYY-MM-DD'); // Устанавливаем выбранный день
   }
+  makevisible()
+  sort()
 }
 
 export default () => {
@@ -60,7 +63,7 @@ export default () => {
     const isToday = dayjs().isSame(date, 'day');
     const isSelectedDate = dayjs(selectedDate.date).isSame(date, 'day');
     const today = isToday ? 'text-white bg-old dark:bg-darkold' : ''
-    const focused = isSelectedDate ? 'dark:border-mygray border-darkgray ' : 'border-transparent';
+    const focused = isSelectedDate ? 'dark:border-mygray border-mygray ' : 'border-transparent';
 
     const calendarDot = () => {
       if (!isToday && data.calendarSet[date.format("YYYY-MM-DD")])

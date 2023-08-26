@@ -11,4 +11,4 @@ config.js
 *.icloud
 d111ocker-coe.yaml
 .gitignore
-Dockerfile
+arrowclient/dist/

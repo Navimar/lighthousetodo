@@ -13,8 +13,8 @@ module.exports = {
         'nearwhite': '#f5f5f5',
         'lightgray': '#eee',
         'mygray': '#a9a9a9',
-        'darkgray': '#777',
-        'nearblack': '#333',
+        'darkgray': '#555',
+        'nearblack': '#222',
       },
       spacing: {
         '40rem': '40rem',

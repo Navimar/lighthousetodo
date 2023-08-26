@@ -1,19 +1,19 @@
 import { html, reactive, watch } from "@arrow-js/core";
-import { adjustDate, selectTask } from '/components/manipulate.js'
+import { selectTask } from '/logic/manipulate.js'
 import { clickPos } from '/logic/util.js';
-import { addScribe } from "../logic/exe";
+import { addScribe } from "/logic/exe";
 
 export default (task) => {
     return html`
     <div class=" flex gap-2 text-sm  empty:hidden">${task.fromNamesReady.map((from) => {
         return html`<div 
     @click="${(e) => {
-                addScribe(from)
+                addScribe(from, [], [task.name])
                 selectTask(from);
                 clickPos(e);
                 e.stopPropagation()
             }}" 
-    class="text-darkgray rounded-lg px-2">${from}<div>`
+    class="text-mygray  m-0.5 inline-block rounded-lg px-2 bg-transparent ">${from}<div>`
     })}${task.fromNames.map((from) => {
         return html`<div 
         @click="${(e) => {

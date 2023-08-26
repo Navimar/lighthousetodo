@@ -1,15 +1,19 @@
 import css from './css.js';
 import renderCalendar from './components/calendar.js'
+import { authentication, authenticationOnLoad } from './components/authentication.js'
+import renderAutocomplete from './components/autocomplete.js'
 import timeSlider from './components/timeslider.js'
 import fromLine from './components/fromline.js'
-import { adjustDate, selectTask } from '/components/manipulate.js'
+import online from './components/online.js'
+import search from './components/search.js'
+import dateInput from './components/dateinput.js'
+import { clearSearch, selectTask } from '/logic/manipulate.js'
 import { saveTask, addScribe } from './logic/exe.js'
-import { clickPos, mouseX, mouseY } from '/logic/util.js';
+import { loadData, sendData, inputSocket } from '/logic/socket.js'
+import { safeSetLocalStorageItem, safeJSONParse, getLocalStorageItem, getCurrentLine, clickPos, mouseX, mouseY } from '/logic/util.js';
+import { autocomplete, searchstring, currentTime, selectedDate, data } from './logic/reactive.js';
 
-
-import { currentTime, selectedDate, data } from './reactive.js';
-
-import { html, reactive, watch } from "@arrow-js/core";
+import { html, watch } from "@arrow-js/core";
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru'; // Импорт русской локали
 import localizedFormat from 'dayjs/plugin/localizedFormat'; // Плагин для локализованного форматирования
@@ -20,13 +24,7 @@ dayjs.extend(customParseFormat);
 dayjs.extend(localizedFormat);
 dayjs.locale('ru');
 
-const updateTimeSlider = (event) => {
-  const time = event.target.value;
-  const dayjsTime = dayjs(time, 'HH:mm');
-  const totalMinutes = dayjsTime.hour() * 60 + dayjsTime.minute();
-  const slider = document.getElementById('timeSlider');
-  slider.value = totalMinutes;
-}
+// let filteredTasks;
 
 function updateCurrentTimeMarker() {
   const time = dayjs();
@@ -57,6 +55,7 @@ const app = document.getElementById("App");
 const newscribetext = "новая запись";
 
 let plusbutton = () => {
+  clearSearch()
   saveTask('plusbutton')
   if (!addScribe(newscribetext)) {
     selectTask(newscribetext)
@@ -75,13 +74,15 @@ const timeinputclass = (task) => {
     return "dark:bg-darkold bg-old dark:border-darkold border-old text-white"
   if (task.type == 'meeting')
     return "bg-transparent dark:text-darkold text-old  dark:border-darkold border-old"
+  if (task.type == 'deadline')
+    return "dark:border-black  border-darkgray bg-transparent text-darkgray dark:text-mygray"
   if (task.type == 'frame' && isInPast)
-    return "dark:border-black text-white bg-mygray "
+    return "dark:border-black text-white bg-mygray dark:bg-darkgray "
   if (task.type == 'frame')
-    return " dark:border-black border-darkgray bg-transparent text-darkgray "
+    return " dark:border-black border-darkgray bg-transparent text-darkgray dark:text-mygray"
   if (isInPast)
     return "hidden"
-  return "text-mygray bg-transparent"
+  return "text-mygray bg-transparent dark:text-darkgray"
 }
 
 
@@ -118,7 +119,12 @@ let sinkTask = (task) => {
     data.tasks.push(task); // Добавляем объект обратно в конец массива
   }
   saveTask('sink');
-
+  data.selected = false
+  // Promise.resolve().then(() => {
+  //   console.log('sink', filteredTasks)
+  //   data.selected = filteredTasks[0]
+  //   console.log('sink', filteredTasks)
+  // });
 }
 
 
@@ -141,7 +147,7 @@ let checked = (task, type) => {
 }
 
 let radio = (task) => html`
-<div class="grid grid-cols-3 gap-3 w-full">
+<div class="grid grid-cols-4 gap-3 w-full">
   <div>
     <input type="radio" id="meeting" name="typeradio" value="meeting" class="hidden peer" ${checked(task, 'meeting')} />
     <label
@@ -158,7 +164,17 @@ let radio = (task) => html`
       for="frame"
       class="${css.radio}"
     >
-      Рамка
+      Распорядок
+    </label>
+  </div>
+
+  <div>
+    <input type="radio" id="deadline" name="typeradio" value="deadline" class="hidden peer" ${checked(task, 'deadline')}/>
+    <label
+      for="deadline"
+      class="${css.radio}"
+    >
+     Срок
     </label>
   </div>
 
@@ -174,7 +190,6 @@ let radio = (task) => html`
 </div>
 `
 
-
 let getTaskTime = (task) => {
   let now = dayjs();
   let taskDate = dayjs(`${task.date}T${task.time}`, 'YYYY-MM-DDTHH:mm');
@@ -187,20 +202,38 @@ let getTaskTime = (task) => {
     return "вчера";
   } else {
     // Если задача сегодня или в будущем
+    if (task.type == 'deadline')
+      return dayjs(task.date).format("DD.MM")
     return task.time;
   }
 }
 
-let dateInput = (task) => {
-  return html` <div class="">
-            <input id="timeInput" value ="${task.time}" type="time" class="dark:bg-black bg-white dark:border-black text-center h-7 " @input="${(e) => updateTimeSlider(e)}">
-            <input id="dateInput" value ="${task.date}" class="dark:bg-black bg-white dark:border-black text-center h-7 " type="date" id="task-date" name="task-date">
-            <button class="${css.button}" @click="${() => adjustDate(0)}">Сегодня</button>
-            <button class="${css.button}" @click="${() => adjustDate(1)}">+1 день</button>
-            <button class="${css.button}" @click="${() => adjustDate(7)}">+1 неделя</button>
-          </div>`
-}
+function handleInput(e) {
+  const currentLineText = getCurrentLine().toLowerCase(); // Преобразование к нижнему регистру
 
+  autocomplete.list = [];
+  autocomplete.line = currentLineText
+  autocomplete.div = e.target.id
+  console.log(e, e.target.id)
+
+  // Если строка пустая, вернуть пустой массив
+  if (!currentLineText) {
+    return;
+  }
+  console.log(currentLineText)
+
+  // Искать совпадения в data.tasks на основе поля name
+  const matches = data.tasks
+    .filter(taskItem => taskItem.name.toLowerCase().includes(currentLineText)) // Преобразование к нижнему регистру
+    .sort((a, b) => a.name.length - b.name.length)
+    .slice(0, 15);  // Ограничиваем список до 15 элементов
+
+  // Обновлять autocomplete.list с найденными именами совпадений
+  autocomplete.list = matches.map(match => {
+    const highlightedName = match.name.replace(new RegExp(currentLineText, 'ig'), match => `<strong>${match}</strong>`); // Добавлен флаг 'i' для поиска без учета регистра
+    return highlightedName;
+  });
+}
 
 let renderTask = (task, index) => {
   let firstclass = index == 0 ? "border-box border-b-02rem  border-old dark:border-darkold" : 0
@@ -213,43 +246,70 @@ let renderTask = (task, index) => {
           <button class="${css.button}" @click="${() => sinkTask(task)}">Притопить</button>
              <label class="${css.button}" for="deleteCheckbox" >
               <input class=" w-3.5 h-3.5 shadow-none dark:accent-darkold rounded-lg appearance-none dark:checked:bg-darkold mx-2 border-2 border-old dark:border-darkold checked:bg-old accent-old" type="checkbox" id="deleteCheckbox" />
-               Удалить
+               Готово
            </label>
           <button class="${css.button}" @click="${saveButton}">Сохранить</button>
           </div>
           ${radio(task)}
           ${timeSlider(task)}
           ${dateInput(task)}
+          <div class="flex relative gap-4">
            <div
             id="fromEdit"
-            class="w-full auto-expand whitespace-pre-wrap bg-nearwhite dark:bg-nearblack  focus:outline-none"
+            class="w-1/2 h-8 overflow-hidden whitespace-pre-wrap bg-nearwhite dark:bg-nearblack  focus:outline-none"
             contenteditable="true"
             role="textbox"
             aria-multiline="true"
+            tabindex="0"
+            @click="${(e) => {
+        if (!e.currentTarget.classList.contains('h-auto')) {
+          e.currentTarget.classList.add('h-auto');
+          e.currentTarget.classList.remove('h-8');
+        }
+      }}"
+            @input="${(e) => handleInput(e)}"
           >${task.fromNames.map((from) => { return html`${from}\n` })}${task.fromNamesReady.map((from) => { return html`${from}\n` })}</div>
+        ${() => renderAutocomplete('fromEdit')}
+          <div
+            id="toEdit"
+            class="w-1/2 h-8 overflow-hidden whitespace-pre-wrap bg-nearwhite dark:bg-nearblack  focus:outline-none"
+            contenteditable="true"
+            role="textbox"
+            aria-multiline="true"
+            tabindex="0"
+            @click="${(e) => {
+        if (!e.currentTarget.classList.contains('h-auto')) {
+          e.currentTarget.classList.add('h-auto');
+          e.currentTarget.classList.remove('h-8');
+        }
+      }}"
+            @input="${(e) => handleInput(e)}"
+          >${task.toNames.map((from) => { return html`${from}\n` })}${task.toNamesReady.map((from) => { return html`${from}\n` })}</div>
+          ${() => renderAutocomplete('toEdit')}
+          </div>
                   ${fromLine(task)}
         <div
             id="edit"
-            class="w-full auto-expand whitespace-pre-wrap focus:outline-none"
+            class="w-full whitespace-pre-wrap focus:outline-none"
             contenteditable="true"
             role="textbox"
             aria-multiline="true"
           >${task.name}\n${task.note}</div>
-          <div class=" flex gap-2 text-sm  empty:hidden">${task.toNamesReady.map((from) => {
-      return html`<div 
+          <div class="text-sm  empty:hidden">${task.toNamesReady.map((from) => {
+        return html`<div 
     @click="${(e) => {
-          e.stopPropagation()
-        }}" 
-    class="text-darkgray rounded-lg px-2">${from}<div>`
-    })}${task.toNames.map((from) => {
-      return html`<div 
+            e.stopPropagation()
+          }}" 
+    class="text-darkgray dark:text-mygray rounded-lg px-2">${from}<div>`
+      })}${task.toNames.map((from) => {
+        return html`<div 
         @click="${(e) => {
-          selectTask(from);
-          clickPos(e);
-          e.stopPropagation()
-        }}" 
-            class="text-white rounded-lg px-2 bg-mygray dark:bg-darkgray">${from}<div>`
-    })}</div>
+            selectTask(from);
+            clickPos(e);
+            e.stopPropagation()
+          }}" 
+        class="text-white  dark:text-lightgray  inline-block m-0.5 rounded-lg px-2 bg-mygray dark:bg-nearblack">${from}<div>`
+      })}</div>
           </div></div>`;
   else
     // Нередактируемый
@@ -259,15 +319,15 @@ let renderTask = (task, index) => {
         >
         ${fromLine(task)}
         <div class="flex gap-3">
-  <div  class="${timeinputclass(task)} text-center p-0.5 px-1  notomono " >${getTaskTime(task)}</div>
-        <div class="w-full pt-0.5 ">${() => task.name} ${() => { if (task.note && task.note.length > 0) return "+ 📝"; }}</div>
+  <div  class="${timeinputclass(task)} text-center p-0.5 px-1 uppercase whitespace-nowrap notomono " >${getTaskTime(task)}</div>
+        <div class="w-full my-auto ">${() => task.name} ${() => { if (task.note && task.note.length > 0) return "+ 📝"; }}</div>
         </div>
-        <div class=" flex gap-2 text-sm  empty:hidden">${task.toNamesReady.map((from) => {
+        <div class=" text-sm  empty:hidden">${task.toNamesReady.map((from) => {
       return html`<div 
     @click="${(e) => {
           e.stopPropagation()
         }}" 
-    class="text-darkgray rounded-lg px-2">${from}<div>`
+    class="text-darkgray dark:text-mygray m-0.5 inline-block rounded-lg px-2">${from}<div>`
     })}${task.toNames.map((from) => {
       return html`<div 
         @click="${(e) => {
@@ -275,65 +335,75 @@ let renderTask = (task, index) => {
           clickPos(e);
           e.stopPropagation()
         }}" 
-            class="text-white rounded-lg px-2 bg-mygray dark:bg-darkgray">${from}<div>`
+            class="text-white dark:text-lightgray m-0.5 inline-block rounded-lg px-2 bg-mygray dark:bg-nearblack">${from}<div>`
     })}</div>
         </div>`;
 }
 
 let renderTasks = () => {
-  console.log('renderTasks', data.tasks)
-  let todayTasks = data.tasks.filter(task => {
-    if (selectedDate.date === currentTime.date) {
-      return dayjs(task.date).isBefore(dayjs(selectedDate.date).add(1, 'day')) || task.date == selectedDate || !task.date
-    } else {
-      return dayjs(task.date).isSame(dayjs(selectedDate.date)) || !task.date;
+  if (searchstring.text) {
+    let filteredTasks = data.tasks.slice()
+    // Filter tasks by matching with the search input
+    filteredTasks = data.tasks.filter(task => task.name && task.name.toLowerCase().includes(searchstring.text.toLocaleLowerCase()));
+    if (filteredTasks.length === 0) {
+      return html`<div class=" notomono flex flex-col gap-3 bg-nearwhite dark:bg-black p-3 rounded-lg overflow dark:text-white italic">Ничего не найдено...</div>`
     }
-  });
-  if (todayTasks[0] && dayjs(todayTasks[0].time, "HH:mm").isAfter(dayjs())) {
-    let swapedtasks = todayTasks.slice();
+    return filteredTasks.map(renderTask)
+  }
 
-    // Найти индекс первого элемента, удовлетворяющего условию
-    let index = data.tasks.findIndex(task => dayjs(task.time + ' ' + task.date, "HH:mm YYYY-MM-DD").isSameOrBefore(dayjs()));
+  if (data.visibletasks[0] && dayjs(data.visibletasks[0].time, "HH:mm").isAfter(dayjs())) {
+    let swapedtasks = data.visibletasks.slice();
+    // Find the index of the first task that's due or overdue based on the current time
+    let index = swapedtasks.findIndex(task => dayjs(task.time + ' ' + task.date, "HH:mm YYYY-MM-DD").isSameOrBefore(dayjs()));
 
     if (index != -1) {
-      // Удалить элемент из массива и добавить его в начало
+      // Move the due or overdue task to the start of the list
       let [task] = swapedtasks.splice(index, 1);
       swapedtasks.unshift(task);
     }
-    console.log('swaped')
-    return swapedtasks.map(renderTask)
-  } else
-    return todayTasks.map(renderTask)
+    console.log('render swapedtasks', swapedtasks)
+    return swapedtasks.map(renderTask);
+  }
+  console.log('render', data.visibletasks)
+  return data.visibletasks.map(renderTask);
 }
+
 
 const render = html`
   <div class="bgimg bg-nearwhite dark:bg-black fixed w-full h-full -z-10 bg-cover" ></div>
-  <input placeholder="Поиск..." class="z-50 rounded-lg p-2 left-1/2 -translate-x-1/2 max-w-full  w-40rem fixed top-0 bg-nearwhite dark:bg-black dark:text-white"></input>
-  <div class="flex flex-col gap-6 pb-80 max-w-full w-40rem m-auto">
-    <input placeholder="Заглушка" class=" rounded-lg p-2 w-40rem -z-[1] bg-transparent "></input>
+  <div class="flex flex-col gap-4 pb-80 max-w-full w-40rem m-auto">
+    ${() => search()}
     ${() => renderCalendar(dayjs())}
     <div class="dark:text-white bg-nearwhite dark:bg-black p-3">${() => currentTime.timerStarted} <button class="notomono w-1/6 ${css.button}" @click="${() => { currentTime.timerStarted = currentTime.clock }}">► ${() => currentTime.timer}</button></div>
     ${() => renderTasks()}
   </div>
-    <div class="flex pointer-events-none justify-end text-lg w-full max-w-5xl fixed bottom-0 left-1/2 -translate-x-1/2">
-      <button @click="${plusbutton}" class="pointer-events-auto rounded-full plusimg text-5xl w-20 h-20 m-5 bg-old dark:bg-darkold"></button>
+  <div class="flex pointer-events-none justify-end text-lg w-full max-w-5xl fixed bottom-0 left-1/2 -translate-x-1/2">
+    <button @click="${plusbutton}" class="pointer-events-auto rounded-full plusimg text-5xl w-20 h-20 m-5 bg-old dark:bg-darkold"></button>
   </div>
+  ${() => online()}
 `;
 
 window.addEventListener("load", function () {
-  let dt = JSON.parse(localStorage.getItem('data'))
-  data.tasks = dt ? dt : data.tasks
-  currentTime.timerStarted = JSON.parse(localStorage.getItem('timer'));
-  data.calendarSet = JSON.parse(localStorage.getItem('calendarSet')) || {}
+  authenticationOnLoad();
+  inputSocket();
+
+  loadData();
+  currentTime.timerStarted = getLocalStorageItem('timer') || "00:00"
+  // data.calendarSet = safeJSONParse(getLocalStorageItem('calendarSet'), {})
+  // data.timestamp = getLocalStorageItem('timestamp');
+
   updateCurrentTimeMarker();
   watch(() => {
-    localStorage.setItem('timer', JSON.stringify(currentTime.timerStarted));
+    safeSetLocalStorageItem('timer', currentTime.timerStarted);
   })
   watch(() => {
-    localStorage.setItem('calendarSet', JSON.stringify(data.calendarSet));
+    safeSetLocalStorageItem('calendarSet', JSON.stringify(data.calendarSet));
   })
   watch(() => {
-    localStorage.setItem('data', JSON.stringify(data.tasks));
+    data.tasks;
+    sendData();
+    safeSetLocalStorageItem('data', JSON.stringify(data.tasks));
+    safeSetLocalStorageItem('timestamp', dayjs().format())
   })
   watch(() => {
     data.selected;
@@ -362,4 +432,3 @@ window.addEventListener("load", function () {
   })
   render(app);
 });
-

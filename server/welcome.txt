@@ -1,0 +1,1 @@
+{"tasks":[{"name":"name1","note":"note1","type":"window","time":"00:00","date":"1900-10-01","fromNames":[],"toNames":[],"fromNamesReady":[],"toNamesReady":[]},{"name":"name2","note":"note2","error":true,"type":"window","time":"00:00","date":"1900-10-01","fromNames":[],"toNames":[],"fromNamesReady":[],"toNamesReady":[]}],"version":1}

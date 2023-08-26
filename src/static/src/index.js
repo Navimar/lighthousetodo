@@ -7,7 +7,6 @@ let searchlock = false;
 data.timestamp = 0;
 let cn = 0
 
-
 function onTelegramAuth(data) {
   user = data;
   console.log('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
