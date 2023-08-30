@@ -27,6 +27,7 @@ export const autocomplete = reactive({
 export const user = reactive({
 
 });
+
 export const status = reactive({
     online: false
 });

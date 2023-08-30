@@ -1,7 +1,6 @@
 import { currentTime, searchstring, selectedDate, data } from '/logic/reactive.js';
 import { isNameTaken } from '/logic/util.js';
 
-
 import dayjs from 'dayjs';
 
 let addScribe = (name, fromNames = [], toNames = []) => {
@@ -104,6 +103,10 @@ export const sort = () => {
     let datetimeA = dayjs(`${a.date}T${a.time}`, 'YYYY-MM-DDTHH:mm');
     let datetimeB = dayjs(`${b.date}T${b.time}`, 'YYYY-MM-DDTHH:mm');
 
+    // Приоритет пазе над всеми
+    if (!a.pause && b.pause) return 1
+    if (a.pause && !b.pause) return -1
+
     // Приоритет встречам и рамкам перед окнами
     if ((a.type == "meeting" || a.type == "frame") && (b.type == "window" || b.type == "deadline")) return -1;
     if ((a.type == "window" || a.type == "deadline") && (b.type == "meeting" || b.type == "frame")) return 1;
@@ -148,13 +151,14 @@ let saveTask = (m) => {
   const eDiv = document.getElementById("edit")
 
   if (eDiv) {
-
+    // if (edit)
     // найти имя и заметку
     const lines = eDiv.innerText.trim().split("\n");
     let name = lines[0];
     const note = lines.slice(1).join("\n");
 
     // если выделено готово, то удалить запись
+    let deleteCheckbox = document.getElementById('deleteCheckbox')
     if (deleteCheckbox && deleteCheckbox.checked)
       return deleteScribe(name);
 
@@ -262,6 +266,12 @@ let saveTask = (m) => {
     data.selected.date = dateInput
     data.calendarSet[data.selected.date] = data.calendarSet[data.selected.date] ? data.calendarSet[data.selected.date] + 1 : 1;
 
+    // устанавливаем паузу
+    let pauseCheckbox = document.getElementById('pauseCheckbox')
+    if (pauseCheckbox && pauseCheckbox.checked)
+      data.selected.pause = true
+    else
+      data.selected.pause = false
     //создаем новые записи
     newScribesFromNames.forEach((txt) => {
       addScribe(txt, [], [name],);

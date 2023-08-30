@@ -21,6 +21,7 @@ function selectTask(identifier) {
     sort();
 }
 
+
 export let clearSearch = () => {
     const inputElement = document.getElementById('searchinput');
     inputElement.value = '';

@@ -14,7 +14,7 @@ function complete(e, divId) {
   }
 
   // Получить текущий текст из div и разделить его на строки
-  const lines = divElement.innerText.split('\n');
+  const lines = divElement.innerText.trim().split('\n');
 
   // Найти индекс строки, которую нужно заменить
   const lineIndex = lines.indexOf(autocomplete.line);
