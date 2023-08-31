@@ -31,46 +31,52 @@ function handleInput(e) {
   });
 }
 
-export default (task) => html`
-<div class="flex relative gap-4">
-  <div
-    id="fromEdit"
-    class="flex flex-col gap-2 w-1/2 h-8 overflow-hidden  bg-nearwhite dark:bg-nearblack  focus:outline-none"
-    contenteditable="true"
-    role="textbox"
-    aria-multiline="true"
-    tabindex="0"
-    @click="${(e) => {
-    if (!e.currentTarget.classList.contains('h-auto')) {
-      e.currentTarget.classList.add('h-auto');
-      e.currentTarget.classList.remove('h-8');
-    }
-  }}"
-    @input="${(e) => handleInput(e)}"
-  >
-    ${task.fromNames.map((from) => html`<div>${from}</div>`)}
-    ${task.fromNamesReady.map((from) => html`<div>${from}</div>`)}
-  </div>
-  ${() => renderAutocomplete('fromEdit')}
+function handleDivClick(e) {
+  const divElement = e.currentTarget;
 
-  <div
-    id="toEdit"
-    class="flex flex-col gap-2 w-1/2 h-8 overflow-hidden bg-nearwhite dark:bg-nearblack  focus:outline-none"
-    contenteditable="true"
-    role="textbox"
-    aria-multiline="true"
-    tabindex="0"
-    @click="${(e) => {
-    if (!e.currentTarget.classList.contains('h-auto')) {
-      e.currentTarget.classList.add('h-auto');
-      e.currentTarget.classList.remove('h-8');
-    }
-  }}"
-    @input="${(e) => handleInput(e)}"
-  >
-    ${task.toNames.map((to) => html`<div>${to}</div>`)}
-    ${task.toNamesReady.map((to) => html`<div>${to}</div>`)}
+  if (!divElement.classList.contains('h-auto')) {
+    divElement.classList.add('h-auto');
+    divElement.classList.remove('h-8');
+  }
+
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.selectNodeContents(divElement);
+  range.collapse(false);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+export default (task) => html`
+  <div class="flex relative gap-4">
+    <div
+      id="fromEdit"
+      class="flex flex-col gap-2 text-sm w-1/2 h-8 overflow-hidden bg-nearwhite dark:bg-nearblack focus:outline-none"
+      contenteditable="true"
+      role="textbox"
+      aria-multiline="true"
+      tabindex="0"
+      @click="${handleDivClick}"
+      @input="${handleInput}"
+    >
+      ${task.fromNames.map((from) => html`<div>${from}</div>`)}
+      ${task.fromNamesReady.map((from) => html`<div>${from}</div>`)}
+    </div>
+    ${() => renderAutocomplete('fromEdit')}
+
+    <div
+      id="toEdit"
+      class="flex flex-col gap-2 text-sm w-1/2 h-8 overflow-hidden bg-nearwhite dark:bg-nearblack focus:outline-none"
+      contenteditable="true"
+      role="textbox"
+      aria-multiline="true"
+      tabindex="0"
+      @click="${handleDivClick}"
+      @input="${handleInput}"
+    >
+      ${task.toNames.map((to) => html`<div>${to}</div>`)}
+      ${task.toNamesReady.map((to) => html`<div>${to}</div>`)}
+    </div>
+    ${() => renderAutocomplete('toEdit')}
   </div>
-  ${() => renderAutocomplete('toEdit')}
-</div>
 `;

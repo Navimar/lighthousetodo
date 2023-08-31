@@ -13,7 +13,8 @@ import { clearSearch, selectTask } from '/logic/manipulate.js'
 import { saveTask, addScribe } from './logic/exe.js'
 import { loadData, sendData, inputSocket } from '/logic/socket.js'
 import { safeSetLocalStorageItem, safeJSONParse, getLocalStorageItem, clickPos, mouseX, mouseY } from '/logic/util.js';
-import { autocomplete, searchstring, currentTime, selectedDate, data } from './logic/reactive.js';
+import { autocomplete, searchstring, currentTime, selectedDate, data, user } from './logic/reactive.js';
+
 
 import { html, watch } from "@arrow-js/core";
 import dayjs from 'dayjs';
@@ -64,7 +65,6 @@ let plusbutton = () => {
     data.selected = data.tasks[0];
 }
 
-
 const timeinputclass = (task) => {
   let taskDate = dayjs(`${task.date}T${task.time}`, 'YYYY-MM-DDTHH:mm');
 
@@ -105,10 +105,6 @@ const errorclass = (task) => {
   //   return ''
   return ''
 }
-
-
-
-
 
 
 let getTaskTime = (task) => {
@@ -226,6 +222,7 @@ let renderTasks = () => {
 
 
 const render = html`
+  ${() => authentication()}
   <div class="bgimg bg-nearwhite dark:bg-black fixed w-full h-full -z-10 bg-cover" ></div>
   <div class="flex flex-col gap-4 pb-80 max-w-full w-40rem m-auto">
     ${() => search()}
@@ -250,7 +247,6 @@ window.addEventListener("load", function () {
   authenticationOnLoad();
   inputSocket();
 
-  loadData();
   currentTime.timerStarted = getLocalStorageItem('timer') || "00:00"
   // data.calendarSet = safeJSONParse(getLocalStorageItem('calendarSet'), {})
   // data.timestamp = getLocalStorageItem('timestamp');

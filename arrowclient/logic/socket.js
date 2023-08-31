@@ -16,9 +16,6 @@ export function inputSocket() {
     });
     socket.on('update', function (msg) {
         console.log("update", msg);
-        // if (data.timestamp) console.log('timestamp', dayjs(data.timestamp).format(), dayjs(msg.timestamp).format());
-        // if (!data.timestamp || dayjs(data.timestamp).isBefore(dayjs(msg.timestamp))) {
-        console.log('update msg', msg)
 
         if (data.version < msg.version) {
             data.tasks = msg.tasks;
@@ -30,12 +27,12 @@ export function inputSocket() {
     });
 
     socket.on('err', (val) => {
-        console.log(val);
+        console.log('ошибка на сервере', val);
     });
 }
 
 export let loadData = () => {
-    console.log('loaddata')
+    console.log('loaddata', user)
     socket.emit('load', user);
 }
 

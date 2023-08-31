@@ -1,11 +1,33 @@
 
 import crypto from 'crypto';
 import * as fs from 'fs';
-
+import admin from 'firebase-admin';
 import config from '../config.js';
-import { addUser, getUser } from './user.js'
+import { addUser, getUser } from './user.js';
+import serviceAccount from '../firebase.config.js';
+
+async function verifyToken(idToken) {
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        return decodedToken.uid;
+    } catch (error) {
+        // Обработка ошибок
+        console.error('Error verifying token:', error);
+        // В зависимости от вашего сценария использования вы можете выбросить ошибку или вернуть что-либо:
+        throw error;
+        // или
+        // return null;
+    }
+}
 
 export let inputSocket = (io) => {
+    console.log(admin)
+    console.log(admin.credential)
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: 'https://adastratodo.firebaseio.com'
+    });
+
     let n = 0;
 
     io.on('connection', function (socket) {
@@ -16,51 +38,68 @@ export let inputSocket = (io) => {
             console.log('disconnect');
         });
 
-        socket.on('save', function (msg) {
-            // if (msg.user.hash && user.check(msg.user)) {
-            console.log('save user', msg.user)
-            addUser(msg.user.name, socket);
+        socket.on('save', async function (msg) {
+            if (msg.user.idToken) {
+                const userId = await verifyToken(msg.user.idToken);
+                if (userId) {
+                    console.log('save user', msg.user)
+                    addUser(userId, socket);
 
-            let sockets = getUser(msg.user.name)
-            sockets.forEach(s => {
-                if (s != socket) {
-                    console.log(s.id, socket.id);
-                    s.emit('update', msg);
+                    let sockets = getUser(userId)
+                    sockets.forEach(s => {
+                        if (s != socket) {
+                            console.log(s.id, socket.id);
+                            s.emit('update', msg);
+                        } else {
+                            console.log('mysocket', socket.id)
+                        }
+                    });
+
+                    // let dir = sha256(sha256.x2(msg.id + salt));
+                    let dir = path(userId);
+                    if (!fs.existsSync('../data/' + dir)) {
+                        console.log('folder created');
+                        fs.mkdirSync('../data/' + dir);
+                    }
+
+                    // fs.createReadStream('../data/' + dir + '/data.txt').pipe(fs.createWriteStream('..data/' + dir + '/old' + n + '.txt'));
+                    fs.writeFileSync('../data/' + dir + '/data.txt', JSON.stringify({ tasks: msg.tasks, version: msg.version }), function (err) {
+                        return console.log(err);
+                    });
+                    fs.writeFileSync('../data/' + dir + '/data' + n + '.txt', JSON.stringify({ tasks: msg.tasks, version: msg.version }), function (err) {
+                        return console.log(err);
+                    });
+                    n++;
+                    if (n > 30) { n = 0 }
                 } else {
-                    console.log('mysocket', socket.id)
+                    console.log("Invalid token or not authenticated", msg);
+                    socket.emit('err', 'Invalid token or not authenticated')
                 }
-            });
-
-            // let dir = sha256(sha256.x2(msg.id + salt));
-            let dir = path(msg.user.name);
-            if (!fs.existsSync('../data/' + dir)) {
-                console.log('folder created');
-                fs.mkdirSync('../data/' + dir);
+            } else {
+                console.log(msg, 'Не найден токен при загрузке');
+                socket.emit('err', 'Не найден токен при загрузке');
+                socket.emit('err', msg);
             }
 
-            // fs.createReadStream('../data/' + dir + '/data.txt').pipe(fs.createWriteStream('..data/' + dir + '/old' + n + '.txt'));
-            fs.writeFileSync('../data/' + dir + '/data.txt', JSON.stringify({ tasks: msg.tasks, version: msg.version }), function (err) {
-                return console.log(err);
-            });
-            fs.writeFileSync('../data/' + dir + '/data' + n + '.txt', JSON.stringify({ tasks: msg.tasks, version: msg.version }), function (err) {
-                return console.log(err);
-            });
-            n++;
-            if (n > 30) { n = 0 }
-            // }
-            // else console.log(msg, 'login error on save');
-
         });
-        socket.on('load', function (msg) {
-            // if (userdata && userdata.hash && user.check(userdata)) {
-            addUser(msg.name, socket);
-            console.log(msg, 'load')
-            let data = load(msg.name)
-            socket.emit('update', JSON.parse(data));
-            // } else {
-            //     console.log(userdata, 'login error on load');
-            //     socket.emit('err', 'Скорее всего вышла новая версия и вам нужно перезайти в приложение! Если эта табличка появляется вновь и вновь, значит что-то сломалось, сообщите мне об этом как можно скорее.');
-            // }
+        socket.on('load', async function (msg) {
+            if (msg.idToken) {
+                const userId = await verifyToken(msg.idToken);
+                if (userId) {
+                    addUser(msg.name, socket);
+                    console.log(msg, 'load')
+                    let data = load(msg.name)
+                    socket.emit('update', JSON.parse(data));
+                } else {
+                    console.log(msg, 'login error on load');
+                    socket.emit('err', 'Скорее всего вышла новая версия и вам нужно перезайти в приложение! Если эта табличка появляется вновь и вновь, значит что-то сломалось, сообщите мне об этом как можно скорее.');
+                }
+            }
+            else {
+                console.log(msg, 'Не найден токен при сохранении');
+                socket.emit('err', 'Не найден токен при сохранении');
+                socket.emit('err', msg);
+            }
         });
     });
 

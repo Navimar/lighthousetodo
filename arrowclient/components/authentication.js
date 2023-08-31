@@ -1,27 +1,30 @@
 import { html, reactive, watch } from "@arrow-js/core";
+import { initializeApp } from "firebase/app";
+import { GoogleAuthProvider, signInWithPopup, getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { loadData } from '/logic/socket.js'
 
 import css from '/css.js';
 import { user, data } from '/logic/reactive.js';
-import { findGetParameter } from "/logic/util";
+import firebaseConfig from '/firebase.config.js'
 
 export let authentication = () => {
-  return
-  if (user.name) {
+  if (user && user.name && user.idToken) {
+    console.log('logged in as', user)
     return html`
-        <div class="fixed">
+        <div class="bg-white p-1 text-sm bottom-0 left-0 fixed">
         ${() => user.name}
 <button class="${css.button}"  @click="${() => logout()}">Выйти</button>
 </div>
 `}
   else return html`
     <div class="fixed z-50 bg-white w-full h-full">
-<div class="m-auto flex flex-col gap-3 w-1/4 bg-nearwhite " >
-
+<div class="m-auto flex flex-col gap-3 w-1/4 bg-nearwhite" >
+ <button class="${css.button} m-3" @click="${() => signInWithGoogle()}">Войти через Google</button>
     <form class="flex-col bg-mygray flex m-3" id="registerForm" @submit="${(e) => { e.preventDefault(); register(); }}">
-    <input class="p-1" type="text" id="regUsername" placeholder="Username" required />
-    <input class="p-1" type="password" id="regPassword" placeholder="Password" required />
-    <input class="${css.button}" type="submit" value="Регистрация" />
-</form>
+      <input class="p-1" type="text" id="regUsername" placeholder="Username" required />
+      <input class="p-1" type="password" id="regPassword" placeholder="Password" required />
+      <input class="${css.button}" type="submit" value="Регистрация" />
+    </form>
 
 <form class="flex-col flex bg-mygray m-3" id="loginForm" @submit="${(e) => { e.preventDefault(); login(); }}">
     <input class="p-1" type="text" id="loginUsername" placeholder="Username" required />
@@ -32,7 +35,49 @@ export let authentication = () => {
 `
 
 }
-export let authenticationOnLoad = () => {
-  let name = findGetParameter('user') || 'testuser'
-  user.name = name
+export const authenticationOnLoad = () => {
+  // user.name = "firebase"
+  // return
+  const firebaseapp = initializeApp(firebaseConfig);
+
+  const auth = getAuth();
+  auth.languageCode = 'ru';
+
+  // Слушаем изменения состояния аутентификации:
+  onAuthStateChanged(auth, (firebaseUser) => {
+    if (firebaseUser) {
+      user.name = firebaseUser.uid || "Unknown User";
+      auth.currentUser.getIdToken(true).then(function (idToken) {
+        user.idToken = idToken
+        loadData();
+      }).catch(function (error) {
+        alert('idToken', error)
+      });
+    } else {
+      user.name = null;
+    }
+  });
+}
+
+export let signInWithGoogle = async () => {
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const firebaseUser = result.user;
+    user.name = firebaseUser.uid || "Unknown User";
+  } catch (error) {
+    alert("Error during Google authentication:", error);
+  }
+}
+
+// Функция для выхода из аккаунта:
+export let logout = async () => {
+  const auth = getAuth();
+  try {
+    await signOut(auth);
+    user.name = null;
+  } catch (error) {
+    alert("Error during sign out:", error);
+  }
 }
