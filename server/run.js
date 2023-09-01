@@ -39,8 +39,8 @@ export let inputSocket = (io) => {
         });
 
         socket.on('save', async function (msg) {
-            if (msg.user.idToken) {
-                const userId = await verifyToken(msg.user.idToken);
+            if (msg.user.token) {
+                const userId = await verifyToken(msg.user.token);
                 if (userId) {
                     console.log('save user', msg.user)
                     addUser(userId, socket);
@@ -83,8 +83,8 @@ export let inputSocket = (io) => {
 
         });
         socket.on('load', async function (msg) {
-            if (msg.idToken) {
-                const userId = await verifyToken(msg.idToken);
+            if (msg.token) {
+                const userId = await verifyToken(msg.token);
                 if (userId) {
                     addUser(msg.name, socket);
                     console.log(msg, 'load')

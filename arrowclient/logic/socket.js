@@ -1,13 +1,27 @@
-import dayjs from 'dayjs';
+
+
+import { auth } from '/components/authentication.js'
 import { status, data, user } from '/logic/reactive.js';
 
 import { io } from "socket.io-client";
 import { makevisible, sort } from './exe';
 const socket = io()
+
 let version = 0
+
+async function getToken() {
+    if (auth.currentUser)
+        try {
+            return await auth.currentUser.getIdToken(true);
+        } catch (error) {
+            console.error("Error getting token:", error);
+            throw error;
+        }
+}
+
+
 export function inputSocket() {
     socket.on('connect', function () {
-        console.log('inputSocket connected');
         status.online = true
     });
     socket.on('disconnect', function () {
@@ -31,18 +45,31 @@ export function inputSocket() {
     });
 }
 
-export let loadData = () => {
-    console.log('loaddata', user)
-    socket.emit('load', user);
+export const loadData = async () => {
+    console.log('loaddata', user);
+    if (auth.currentUser)
+        try {
+            const token = await getToken('ld'); // Получение нового токена
+            user.token = token; // Добавляем токен к данным пользователя
+            socket.emit('load', user);
+        } catch (error) {
+            console.error("Error loading data with token:", error);
+        }
 }
 
-export let sendData = () => {
+export const sendData = async () => {
     let sentdata = {
         user: user,
         version: ++version,
         tasks: data.tasks
-    }
-    console.log('sendData', sentdata)
-
-    socket.emit('save', sentdata);
+    };
+    if (auth.currentUser)
+        try {
+            const token = await getToken('sd'); // Получение нового токена
+            sentdata.user.token = token; // Добавляем токен к данным, которые отправляем
+            console.log('sendData', sentdata);
+            socket.emit('save', sentdata);
+        } catch (error) {
+            console.error("Error sending data with token:", error);
+        }
 }

@@ -6,12 +6,13 @@ import { loadData } from '/logic/socket.js'
 import css from '/css.js';
 import { user, data } from '/logic/reactive.js';
 import firebaseConfig from '/firebase.config.js'
+initializeApp(firebaseConfig);
 
 export let authentication = () => {
-  if (user && user.name && user.idToken) {
+  if (user && user.name) {
     console.log('logged in as', user)
     return html`
-        <div class="bg-white p-1 text-sm bottom-0 left-0 fixed">
+        <div class="bg-white dark:bg-black dark:text-white p-1 text-sm bottom-0 left-0 fixed">
         ${() => user.name}
 <button class="${css.button}"  @click="${() => logout()}">Выйти</button>
 </div>
@@ -35,24 +36,18 @@ export let authentication = () => {
 `
 
 }
+export const auth = getAuth();
+
 export const authenticationOnLoad = () => {
   // user.name = "firebase"
   // return
-  const firebaseapp = initializeApp(firebaseConfig);
-
-  const auth = getAuth();
   auth.languageCode = 'ru';
 
   // Слушаем изменения состояния аутентификации:
   onAuthStateChanged(auth, (firebaseUser) => {
     if (firebaseUser) {
       user.name = firebaseUser.uid || "Unknown User";
-      auth.currentUser.getIdToken(true).then(function (idToken) {
-        user.idToken = idToken
-        loadData();
-      }).catch(function (error) {
-        alert('idToken', error)
-      });
+      loadData();
     } else {
       user.name = null;
     }
@@ -61,7 +56,6 @@ export const authenticationOnLoad = () => {
 
 export let signInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
-  const auth = getAuth();
   try {
     const result = await signInWithPopup(auth, provider);
     const firebaseUser = result.user;
@@ -73,7 +67,6 @@ export let signInWithGoogle = async () => {
 
 // Функция для выхода из аккаунта:
 export let logout = async () => {
-  const auth = getAuth();
   try {
     await signOut(auth);
     user.name = null;

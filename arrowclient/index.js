@@ -15,7 +15,6 @@ import { loadData, sendData, inputSocket } from '/logic/socket.js'
 import { safeSetLocalStorageItem, safeJSONParse, getLocalStorageItem, clickPos, mouseX, mouseY } from '/logic/util.js';
 import { autocomplete, searchstring, currentTime, selectedDate, data, user } from './logic/reactive.js';
 
-
 import { html, watch } from "@arrow-js/core";
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru'; // Импорт русской локали
@@ -50,9 +49,7 @@ function updateCurrentTimeMarker() {
   setTimeout(updateCurrentTimeMarker, 1000);
 }
 
-
 const app = document.getElementById("App");
-
 const newscribetext = "новая запись";
 
 let plusbutton = () => {
@@ -260,9 +257,12 @@ window.addEventListener("load", function () {
   })
   watch(() => {
     data.tasks;
-    sendData();
-    safeSetLocalStorageItem('data', JSON.stringify(data.tasks));
-    safeSetLocalStorageItem('timestamp', dayjs().format())
+    if (user) {
+      console.log(user, 'before sd')
+      sendData();
+      safeSetLocalStorageItem('data', JSON.stringify(data.tasks));
+      safeSetLocalStorageItem('timestamp', dayjs().format());
+    }
   })
   watch(() => {
     data.selected;

@@ -29,7 +29,7 @@ export const user = reactive({
 });
 
 export const status = reactive({
-    online: false
+    online: true
 });
 export const data = reactive({
     calendarSet: {},
