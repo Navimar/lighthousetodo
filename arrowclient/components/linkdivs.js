@@ -1,50 +1,51 @@
-import { html } from "@arrow-js/core";
-import { getCurrentLine } from '/logic/util.js'
-import { autocomplete, data } from '/logic/reactive.js'
+import { html } from "@arrow-js/core"
+import { getCurrentLine } from "/logic/util.js"
+import { autocomplete, data } from "/logic/reactive.js"
 
-import renderAutocomplete from '/components/autocomplete.js'
+import renderAutocomplete from "/components/autocomplete.js"
 
 function handleInput(e) {
-  const currentLineText = getCurrentLine().toLowerCase(); // Преобразование к нижнему регистру
+  const currentLineText = getCurrentLine().toLowerCase() // Преобразование к нижнему регистру
 
-  autocomplete.list = [];
+  autocomplete.list = []
   autocomplete.line = currentLineText
   autocomplete.div = e.target.id
   console.log(e, e.target.id)
 
   // Если строка пустая, вернуть пустой массив
   if (!currentLineText) {
-    return;
+    return
   }
-  console.log(currentLineText)
 
   // Искать совпадения в data.tasks на основе поля name
   const matches = data.tasks
-    .filter(taskItem => taskItem.name.toLowerCase().includes(currentLineText)) // Преобразование к нижнему регистру
+    .filter((taskItem) => taskItem.name.toLowerCase().includes(currentLineText)) // Преобразование к нижнему регистру
     .sort((a, b) => a.name.length - b.name.length)
-    .slice(0, 15);  // Ограничиваем список до 15 элементов
+    .slice(0, 15) // Ограничиваем список до 15 элементов
 
   // Обновлять autocomplete.list с найденными именами совпадений
-  autocomplete.list = matches.map(match => {
-    const highlightedName = match.name.replace(new RegExp(currentLineText, 'ig'), match => `<strong>${match}</strong>`); // Добавлен флаг 'i' для поиска без учета регистра
-    return highlightedName;
-  });
+  autocomplete.list = matches.map((match) => {
+    const highlightedName = match.name.replace(
+      new RegExp(currentLineText, "ig"),
+      (match) => `<strong>${match}</strong>`,
+    ) // Добавлен флаг 'i' для поиска без учета регистра
+    return highlightedName
+  })
 }
 
 function handleDivClick(e) {
-  const divElement = e.currentTarget;
+  const divElement = e.currentTarget
 
-  if (!divElement.classList.contains('h-auto')) {
-    divElement.classList.add('h-auto');
-    divElement.classList.remove('h-8');
+  if (!divElement.classList.contains("h-auto")) {
+    divElement.classList.add("h-auto")
+    divElement.classList.remove("h-8")
+    const range = document.createRange()
+    const sel = window.getSelection()
+    range.selectNodeContents(divElement)
+    range.collapse(false)
+    sel.removeAllRanges()
+    sel.addRange(range)
   }
-
-  const range = document.createRange();
-  const sel = window.getSelection();
-  range.selectNodeContents(divElement);
-  range.collapse(false);
-  sel.removeAllRanges();
-  sel.addRange(range);
 }
 
 export default (task) => html`
@@ -57,12 +58,11 @@ export default (task) => html`
       aria-multiline="true"
       tabindex="0"
       @click="${handleDivClick}"
-      @input="${handleInput}"
-    >
-      ${task.fromNames.map((from) => html`<div>${from}</div>`)}
-      ${task.fromNamesReady.map((from) => html`<div>${from}</div>`)}
+      @input="${handleInput}">
+      ${task.fromNames?.map((from) => html`<div>${from}</div>`)}
+      ${task.fromNamesReady?.map((from) => html`<div>${from}</div>`)}
     </div>
-    ${() => renderAutocomplete('fromEdit')}
+    ${() => renderAutocomplete("fromEdit")}
 
     <div
       id="toEdit"
@@ -72,11 +72,10 @@ export default (task) => html`
       aria-multiline="true"
       tabindex="0"
       @click="${handleDivClick}"
-      @input="${handleInput}"
-    >
-      ${task.toNames.map((to) => html`<div>${to}</div>`)}
-      ${task.toNamesReady.map((to) => html`<div>${to}</div>`)}
+      @input="${handleInput}">
+      ${task.toNames?.map((to) => html`<div>${to}</div>`)}
+      ${task.toNamesReady?.map((to) => html`<div>${to}</div>`)}
     </div>
-    ${() => renderAutocomplete('toEdit')}
+    ${() => renderAutocomplete("toEdit")}
   </div>
-`;
+`

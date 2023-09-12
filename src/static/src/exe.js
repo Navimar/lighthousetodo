@@ -1,373 +1,383 @@
 let onSelect = (txt) => {
-    if (debug) {
-        const d = new Date();
-        g_time = d.getTime();
-    }
-    save();
-    focusfisrt()
-    select(txt);
-    send();
-    render();
+	if (debug) {
+		const d = new Date();
+		g_time = d.getTime();
+	}
+	save();
+	focusfisrt();
+	select(txt);
+	send();
+	render();
 };
 
 let onTag = (txt) => {
-    if (debug) {
-        const d = new Date();
-        g_time = d.getTime();
-    }
-    save();
-    focusfisrt()
-    select(txt);
-    send();
-    render();
-}
+	if (debug) {
+		const d = new Date();
+		g_time = d.getTime();
+	}
+	save();
+	focusfisrt();
+	select(txt);
+	send();
+	render();
+};
 
 let onOpn = (txt) => {
-    if (debug) {
-        const d = new Date();
-        g_time = d.getTime();
-    }
-    save();
-    focusfisrt()
-    select(txt);
-    send();
-    render();
-}
+	if (debug) {
+		const d = new Date();
+		g_time = d.getTime();
+	}
+	save();
+	focusfisrt();
+	select(txt);
+	send();
+	render();
+};
 
 let onNew = () => {
-    let name = 'Новая запись'
-    save();
-    if (uniqueName(name) == name)
-        newwish();
-    select(name);
-    send();
-    render();
-    $('#inputtext').select();
-}
+	let name = "Новая запись";
+	save();
+	if (uniqueName(name) == name) newwish();
+	select(name);
+	send();
+	render();
+	$("#inputtext").select();
+};
 
 let onDel = (txt) => {
-    const d = new Date();
-    g_time = d.getTime();
-    deletescribe(txt);
-    select(focusfisrt());
-    send();
-    render();
-}
+	const d = new Date();
+	g_time = d.getTime();
+	deletescribe(txt);
+	select(focusfisrt());
+	send();
+	render();
+};
 
 let onFocus = (text) => {
-    // focuss(text)
-}
+	// focuss(text)
+};
 
 let onToday = () => {
-    let d = moment();
-    $('#date').val(d.format('YYYY-MM-DD'));
-}
+	let d = moment();
+	$("#date").val(d.format("YYYY-MM-DD"));
+};
 
 let onPlusday = () => {
-    let a = moment($('#date').val() + 'T' + $('#time').val()).add(1, 'day');
-    let b = moment($('#time').val(), 'hh:mm').add(1, 'day');
-    let d = a > b ? a : b
-    $('#date').val(d.format('YYYY-MM-DD'));
-    $('#time').val(d.format('HH:mm'));
-}
+	let a = moment($("#date").val() + "T" + $("#time").val()).add(1, "day");
+	let b = moment($("#time").val(), "hh:mm").add(1, "day");
+	let d = a > b ? a : b;
+	$("#date").val(d.format("YYYY-MM-DD"));
+	$("#time").val(d.format("HH:mm"));
+};
 
 let onTomorrow = () => {
-    onToday();
-    onPlusday();
-}
+	onToday();
+	onPlusday();
+};
 
 let onPlusHour = () => {
-    let a = moment($('#date').val() + 'T' + $('#time').val()).add(1, 'hour');
-    let b = moment().add(1, 'hour');
-    let d = a > b ? a : b
-    $('#date').val(d.format('YYYY-MM-DD'));
-    $('#time').val(d.format('HH:mm'));
-}
+	let a = moment($("#date").val() + "T" + $("#time").val()).add(1, "hour");
+	let b = moment().add(1, "hour");
+	let d = a > b ? a : b;
+	$("#date").val(d.format("YYYY-MM-DD"));
+	$("#time").val(d.format("HH:mm"));
+};
 
 let onNow = () => {
-    let d = moment();
-    $('#date').val(d.format('YYYY-MM-DD'));
-    $('#time').val(d.format('HH:mm'));
-}
+	let d = moment();
+	$("#date").val(d.format("YYYY-MM-DD"));
+	$("#time").val(d.format("HH:mm"));
+};
 let onPlus15 = () => {
-    let a = moment($('#date').val() + 'T' + $('#time').val()).add(15, 'minute');
-    let b = moment().add(15, 'minute');
-    let d = a > b ? a : b
-    $('#date').val(d.format('YYYY-MM-DD'));
-    $('#time').val(d.format('HH:mm'));
-}
+	let a = moment($("#date").val() + "T" + $("#time").val()).add(15, "minute");
+	let b = moment().add(15, "minute");
+	let d = a > b ? a : b;
+	$("#date").val(d.format("YYYY-MM-DD"));
+	$("#time").val(d.format("HH:mm"));
+};
 let onMorning = () => {
-    let a = moment($('#date').val() + 'T' + $('#time').val());
-    let b = moment();
-    let d = a > b ? a : b;
-    $('#date').val(d.format('YYYY-MM-DD'));
-    $('#time').val(d.format('09:00'));
-}
+	let a = moment($("#date").val() + "T" + $("#time").val());
+	let b = moment();
+	let d = a > b ? a : b;
+	$("#date").val(d.format("YYYY-MM-DD"));
+	$("#time").val(d.format("09:00"));
+};
 
 let onHour = (hour) => {
-    let a = moment($('#date').val() + 'T' + $('#time').val());
-    let b = moment();
-    let d = a > b ? a : b;
-    $('#date').val(d.format('YYYY-MM-DD'));
-    $('#time').val(d.format(hour + ':00'));
-}
+	let a = moment($("#date").val() + "T" + $("#time").val());
+	let b = moment();
+	let d = a > b ? a : b;
+	$("#date").val(d.format("YYYY-MM-DD"));
+	$("#time").val(d.format(hour + ":00"));
+};
 let onEvening = () => {
-    let a = moment($('#date').val() + 'T' + $('#time').val());
-    let b = moment();
-    let d = a > b ? a : b;
-    $('#date').val(d.format('YYYY-MM-DD'));
-    $('#time').val(d.format('18:00'));
-}
+	let a = moment($("#date").val() + "T" + $("#time").val());
+	let b = moment();
+	let d = a > b ? a : b;
+	$("#date").val(d.format("YYYY-MM-DD"));
+	$("#time").val(d.format("18:00"));
+};
 let onMidnight = () => {
-    let d = moment($('#date').val() + 'T00:00');
-    $('#date').val(d.format('YYYY-MM-DD'));
-    $('#time').val(d.format('HH:mm'));
-}
+	let d = moment($("#date").val() + "T00:00");
+	$("#date").val(d.format("YYYY-MM-DD"));
+	$("#time").val(d.format("HH:mm"));
+};
 
 let onPlusWeek = () => {
-    let a = moment($('#date').val() + 'T' + $('#time').val()).add(7, 'day');
-    let b = moment($('#time').val(), 'hh:mm').add(7, 'day');
-    let d = a > b ? a : b
-    $('#date').val(d.format('YYYY-MM-DD'));
-    $('#time').val(d.format('HH:mm'));
-}
+	let a = moment($("#date").val() + "T" + $("#time").val()).add(7, "day");
+	let b = moment($("#time").val(), "hh:mm").add(7, "day");
+	let d = a > b ? a : b;
+	$("#date").val(d.format("YYYY-MM-DD"));
+	$("#time").val(d.format("HH:mm"));
+};
 
 let onPluslast = (timediff) => {
-    let d = moment($('#date').val() + 'T' + $('#time').val()).add(timediff, 'ms');
-    $('#date').val(d.format('YYYY-MM-DD'));
-    $('#time').val(d.format('HH:mm'));
-}
+	let d = moment($("#date").val() + "T" + $("#time").val()).add(
+		timediff,
+		"ms",
+	);
+	$("#date").val(d.format("YYYY-MM-DD"));
+	$("#time").val(d.format("HH:mm"));
+};
 
 let mouse = {
-    x: 0,
-    y: 0
-}
+	x: 0,
+	y: 0,
+};
 
 $(document).on("mousemove", function (event) {
-    mouse.x = event.pageX;
-    mouse.y = event.pageY;
-    mouse.y -= $(window).scrollTop();
-    // console.log(mouse.x + " " + mouse.y);
+	mouse.x = event.pageX;
+	mouse.y = event.pageY;
+	mouse.y -= $(window).scrollTop();
+	// console.log(mouse.x + " " + mouse.y);
 });
 
 let scrollPosition = 0;
 
-$(document).on('change', '.dateinp', function (event) {
-    $('.checkboxready').prop("checked", false);
+$(document).on("change", ".dateinp", function (event) {
+	$(".checkboxready").prop("checked", false);
 });
-$('.t1').bind('input propertychange', function () {
-    select('');
-    searchlock = false;
-    $('#clearsearchbutton').text('╳')
-    render();
-    $(window).scrollTop(0);
-});
-
-
-$(document).on('click', '.calbut', function (event) {
-    event.preventDefault();
-    let date = $(this).attr('href')
-    let planed = $(this).hasClass('planed');
-    date = date.substring(date.length - 10)
-    selected.date = date
-    if ($($(this).attr('href')).offset()) {
-        $(window).scrollTop($($(this).attr('href')).offset().top - mouse.y + 6);
-    }
-    if (!planed && moment().isBefore(date, 'day')) {
-        newwish('новая запись ' + date, false, false, false, date,);
-        save();
-        select('новая запись ' + date);
-        send();
-        render();
-        $('#inputtext').select();
-    }
+$(".t1").bind("input propertychange", function () {
+	select("");
+	searchlock = false;
+	$("#clearsearchbutton").text("╳");
+	render();
+	$(window).scrollTop(0);
 });
 
-$(document).on('click', '.text', function () {
-    if (!searchlock)
-        $('.t1').val('');
-    onSelect($(this).text());
+$(document).on("click", ".calbut", function (event) {
+	event.preventDefault();
+	let date = $(this).attr("href");
+	let planed = $(this).hasClass("planed");
+	date = date.substring(date.length - 10);
+	selected.date = date;
+	if ($($(this).attr("href")).offset()) {
+		$(window).scrollTop($($(this).attr("href")).offset().top - mouse.y + 6);
+	}
+	if (!planed && moment().isBefore(date, "day")) {
+		newwish("новая запись " + date, false, false, false, date);
+		save();
+		select("новая запись " + date);
+		send();
+		render();
+		$("#inputtext").select();
+	}
 });
 
-
-$(document).on('click', '.slapbutton', function () {
-    for (let a of data.tasks) {
-        if (a.dip > parseInt($(this).val()))
-            a.dip--
-    }
-    for (let a of data.tasks) {
-        findtarget(a)
-    }
-    save();
-    select(focusfisrt());
-    send();
-    render();
-    scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
-    $(window).scrollTop(scrollPosition);
+$(document).on("click", ".text", function () {
+	if (!searchlock) $(".t1").val("");
+	onSelect($(this).text());
 });
 
-$(document).on('click', '.opn', function () {
-    onOpn($(this).text());
-});
-$(document).on('click', '.newtask', function () {
-    onNew();
-    $('.inputtext:first').val('').select();
-});
-$(document).on('click', '.savetask', function () {
-    save();
-    let focusname = focusfisrt()
-    if (selected.text != focusname)
-        select(focusname);
-    send();
-    render();
-    if (selected.scribe && selected.scribe.focused)
-        scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
-    else
-        scrollPosition = parseInt($('.focused').position().top) - $(window).height() / 2 + $('.focused').height() / 2;
-    $(window).scrollTop(scrollPosition);
+$(document).on("click", ".slapbutton", function () {
+	for (let a of data.tasks) {
+		if (a.dip > parseInt($(this).val())) a.dip--;
+	}
+	for (let a of data.tasks) {
+		findtarget(a);
+	}
+	save();
+	select(focusfisrt());
+	send();
+	render();
+	scrollPosition = parseInt(
+		$(".focused").position().top -
+			$(window).height() * 0.9 +
+			$(".selected").height(),
+	);
+	$(window).scrollTop(scrollPosition);
 });
 
-$(document).on('click', '.stomp', function () {
-    $('#dip').val(+$('#dip').val() + 1);
-    save();
-    let focusname = focusfisrt()
-    if (selected.text != focusname)
-        select(focusname);
-    send();
-    render();
-    scrolltoFocused()
+$(document).on("click", ".opn", function () {
+	onOpn($(this).text());
+});
+$(document).on("click", ".newtask", function () {
+	onNew();
+	$(".inputtext:first").val("").select();
+});
+$(document).on("click", ".savetask", function () {
+	save();
+	let focusname = focusfisrt();
+	if (selected.text != focusname) select(focusname);
+	send();
+	render();
+	if (selected.scribe && selected.scribe.focused)
+		scrollPosition = parseInt(
+			$(".focused").position().top -
+				$(window).height() * 0.9 +
+				$(".selected").height(),
+		);
+	else
+		scrollPosition =
+			parseInt($(".focused").position().top) -
+			$(window).height() / 2 +
+			$(".focused").height() / 2;
+	$(window).scrollTop(scrollPosition);
 });
 
-$(document).on('click', '.drown', function () {
-    let dipmax = 0
-    for (let a of data.tasks) {
-        if (a.dip > dipmax)
-            dipmax = a.dip
-    }
-    $('#dip').val(dipmax + 1);
-    save();
-    let focusname = focusfisrt()
-    if (selected.text != focusname)
-        select(focusname);
-    send();
-    render();
-    scrolltoFocused()
+$(document).on("click", ".stomp", function () {
+	$("#dip").val(+$("#dip").val() + 1);
+	save();
+	let focusname = focusfisrt();
+	if (selected.text != focusname) select(focusname);
+	send();
+	render();
+	scrolltoFocused();
 });
 
-$(document).on('click', '.squeezeout', function () {
-    squeezeout();
-    save();
-    select(focusfisrt());
-    send();
-    render();
-    scrolltoFocused()
+$(document).on("click", ".drown", function () {
+	let dipmax = 0;
+	for (let a of data.tasks) {
+		if (a.dip > dipmax) dipmax = a.dip;
+	}
+	$("#dip").val(dipmax + 1);
+	save();
+	let focusname = focusfisrt();
+	if (selected.text != focusname) select(focusname);
+	send();
+	render();
+	scrolltoFocused();
 });
 
-$(document).on('click', '.rise', function () {
-    event('rise', note_by_name($(this).val()))
-
-    // if ($('#dip').val() > 5)
-    //     $('#dip').val(5);
-    // else
-    //     $('#dip').val(1);
-    // save();
-    // squeezeout();
-    save();
-    select(focusfisrt());
-    send();
-    render();
-    scrolltoFocused()
+$(document).on("click", ".squeezeout", function () {
+	squeezeout();
+	save();
+	select(focusfisrt());
+	send();
+	render();
+	scrolltoFocused();
 });
 
-$(document).on('click', '.divetask', function () {
-    let val = $(this).attr('value');
-    if (val != $('.t1').val()) {
-        $('.t1').val(val);
-        searchlock = true;
-        $('#clearsearchbutton').text('🔒')
-        render();
-    } else {
-        $('.t1').val('');
-        searchlock = false;
-        $('#clearsearchbutton').text('╳')
-        onSelect('');
-    }
+$(document).on("click", ".rise", function () {
+	event("rise", note_by_name($(this).val()));
+
+	// if ($('#dip').val() > 5)
+	//     $('#dip').val(5);
+	// else
+	//     $('#dip').val(1);
+	// save();
+	// squeezeout();
+	save();
+	select(focusfisrt());
+	send();
+	render();
+	scrolltoFocused();
 });
 
-$(document).on('click', '.clearsearch', function () {
-    $('.t1').val('');
-    searchlock = false;
-    $('#clearsearchbutton').text('╳')
-    render();
+$(document).on("click", ".divetask", function () {
+	let val = $(this).attr("value");
+	if (val != $(".t1").val()) {
+		$(".t1").val(val);
+		searchlock = true;
+		$("#clearsearchbutton").text("🔒");
+		render();
+	} else {
+		$(".t1").val("");
+		searchlock = false;
+		$("#clearsearchbutton").text("╳");
+		onSelect("");
+	}
 });
 
-$(document).on('click', '.timebutton', function () {
-    $('.checkboxready').prop("checked", false);
-    let clear = () => {
-        $('.timebutton').removeClass('justClicked')
-        $('.timebutton').removeClass('justClicked2')
-    }
-    if ($(this).hasClass('justClicked')) {
-        clear();
-        $(this).addClass('justClicked2');
-    } else {
-        clear();
-        $(this).addClass('justClicked');
-    }
-    // alert('!!!');
-});
-$(document).on('click', '.delete', function () {
-    onDel($(this).attr('value'));
-});
-$(document).on('click', '#plustoday', function () {
-    onToday();
-});
-$(document).on('click', '#tomorrow', function () {
-    onTomorrow();
-});
-$(document).on('click', '#plusday', function () {
-    onPlusday();
-});
-$(document).on('click', '#plushour', function () {
-    onPlusHour();
-});
-$(document).on('click', '#plusnow', function () {
-    onNow();
-});
-$(document).on('click', '.hourbutton', function (e) {
-    onHour($(this).val());
-});
-$(document).on('click', '#plus15', function () {
-    onPlus15();
-});
-$(document).on('click', '#pluslast', function () {
-    // console.log($(this).attr('value'));
-    onPluslast($(this).attr('value'));
+$(document).on("click", ".clearsearch", function () {
+	$(".t1").val("");
+	searchlock = false;
+	$("#clearsearchbutton").text("╳");
+	render();
 });
 
-$(document).on('click', '#plusweek', function () {
-    onPlusWeek();
+$(document).on("click", ".timebutton", function () {
+	$(".checkboxready").prop("checked", false);
+	let clear = () => {
+		$(".timebutton").removeClass("justClicked");
+		$(".timebutton").removeClass("justClicked2");
+	};
+	if ($(this).hasClass("justClicked")) {
+		clear();
+		$(this).addClass("justClicked2");
+	} else {
+		clear();
+		$(this).addClass("justClicked");
+	}
+	// alert('!!!');
+});
+$(document).on("click", ".delete", function () {
+	onDel($(this).attr("value"));
+});
+$(document).on("click", "#plustoday", function () {
+	onToday();
+});
+$(document).on("click", "#tomorrow", function () {
+	onTomorrow();
+});
+$(document).on("click", "#plusday", function () {
+	onPlusday();
+});
+$(document).on("click", "#plushour", function () {
+	onPlusHour();
+});
+$(document).on("click", "#plusnow", function () {
+	onNow();
+});
+$(document).on("click", ".hourbutton", function (e) {
+	onHour($(this).val());
+});
+$(document).on("click", "#plus15", function () {
+	onPlus15();
+});
+$(document).on("click", "#pluslast", function () {
+	// console.log($(this).attr('value'));
+	onPluslast($(this).attr("value"));
+});
+
+$(document).on("click", "#plusweek", function () {
+	onPlusWeek();
 });
 
 let scrolltoFocused = () => {
-    if (selected.scribe && selected.scribe.focused)
-        scrollPosition = parseInt($('.focused').position().top - $(window).height() * 0.9 + $('.selected').height());
-    else
-        scrollPosition = parseInt($('.focused').position().top) - $(window).height() / 2 + $('.focused').height() / 2;
-    if ($(window).scrollTop() == scrollPosition)
-        scrollPosition = 0;
-    $(window).scrollTop(scrollPosition);
-}
+	if (selected.scribe && selected.scribe.focused)
+		scrollPosition = parseInt(
+			$(".focused").position().top -
+				$(window).height() * 0.9 +
+				$(".selected").height(),
+		);
+	else
+		scrollPosition =
+			parseInt($(".focused").position().top) -
+			$(window).height() / 2 +
+			$(".focused").height() / 2;
+	if ($(window).scrollTop() == scrollPosition) scrollPosition = 0;
+	$(window).scrollTop(scrollPosition);
+};
 
-$(document).on('click', '#scrollTopButton', function () {
-    scrolltoFocused()
+$(document).on("click", "#scrollTopButton", function () {
+	scrolltoFocused();
 });
 
-$(document).on('click', '#increment', function () {
-    $('#dip').val(+$('#dip').val() + 1);
+$(document).on("click", "#increment", function () {
+	$("#dip").val(+$("#dip").val() + 1);
 });
-$(document).on('click', '#decrement', function () {
-    let val = +$('#dip').val()
-    if (val > 1)
-        $('#dip').val(val - 1);
+$(document).on("click", "#decrement", function () {
+	let val = +$("#dip").val();
+	if (val > 1) $("#dip").val(val - 1);
 });
