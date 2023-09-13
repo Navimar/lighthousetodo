@@ -2,6 +2,7 @@
   "tabWidth": 2,
   "useTabs": false,
   "semi": false,
-  "bracketSameLine":true,
-    "htmlWhitespaceSensitivity": "strict"
+  "bracketSameLine": true,
+  "htmlWhitespaceSensitivity": "strict",
+  "printWidth": 120
 }

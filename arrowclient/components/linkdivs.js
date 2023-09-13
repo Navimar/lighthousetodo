@@ -10,7 +10,6 @@ function handleInput(e) {
   autocomplete.list = []
   autocomplete.line = currentLineText
   autocomplete.div = e.target.id
-  console.log(e, e.target.id)
 
   // Если строка пустая, вернуть пустой массив
   if (!currentLineText) {
