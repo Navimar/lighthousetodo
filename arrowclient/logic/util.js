@@ -1,8 +1,23 @@
 import { data } from "/logic/reactive.js"
 
-const isNameTaken = (name) => {
-  return data.tasks.some((task) => task.name === name) || name.trim() == ""
+const nameCache = {}
+
+export const getObjectByName = (name) => {
+  if (nameCache[name]) {
+    return nameCache[name]
+  }
+
+  const foundTask = data.tasks.find((task) => task.name === name)
+
+  if (foundTask) {
+    nameCache[name] = foundTask
+    return foundTask
+  }
+
+  return null
 }
+
+export const isNameTaken = getObjectByName
 
 let mouseX
 let mouseY
@@ -59,4 +74,4 @@ export function findGetParameter(name, url) {
   if (!results[2]) return ""
   return decodeURIComponent(results[2].replace(/\+/g, " "))
 }
-export { getCurrentLine, isNameTaken, clickPos, mouseX, mouseY }
+export { getCurrentLine, clickPos, mouseX, mouseY }

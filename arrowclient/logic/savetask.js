@@ -2,6 +2,7 @@ import sort from "/logic/sort.js"
 import { data } from "/logic/reactive.js"
 import { isNameTaken } from "/logic/util.js"
 import { makevisible } from "/logic/exe.js"
+import addScribe from "/logic/addscribe"
 
 export default (m) => {
   //понять откуда вызвано сохрание

@@ -93,7 +93,6 @@ window.addEventListener("load", function () {
   watch(() => {
     data.tasks
     if (user) {
-      console.log(user, "before sd")
       sendData()
       safeSetLocalStorageItem("data", JSON.stringify(data.tasks))
       safeSetLocalStorageItem("timestamp", dayjs().format())
@@ -114,6 +113,15 @@ window.addEventListener("load", function () {
         const rect = div.getBoundingClientRect()
         const scrollPosition = rect.top + window.scrollY + rect.height / 2 - mouseY
         window.scroll(0, scrollPosition)
+      }
+    })
+  })
+  watch(() => {
+    currentTime.clock
+
+    data.tasks.forEach((task) => {
+      if (task.ready === true && task.time === currentTime.clock) {
+        task.ready = false
       }
     })
   })

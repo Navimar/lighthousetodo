@@ -20,13 +20,12 @@ export default (task) =>
       style="left:${currentTime.slider}px"
       class="relative top-7 h-0 z-40 text-xs w-0 flex flex-col items-center dark:text-darkold text-old text-center">
       <span class="font-bold">|</span>
-      <span
-        class="notomono font-bold rounded-lg px-2 bg-lightgray dark:bg-darkold dark:text-lightgray block"
+      <span class="notomono font-bold rounded-lg px-2 bg-lightgray dark:bg-darkold dark:text-lightgray block"
         >${() => currentTime.clock}</span
       >
     </div>
 
-    <div class="w-full px-2 ">
+    <div class="w-full px-2.5 ">
       <input
         id="timeSlider"
         value="${() => {
@@ -40,8 +39,7 @@ export default (task) =>
         class="slider bg-mygray outline-none drop-shadow-none shadow-none h-1 rounded-full w-full appearance-none cursor-pointer "
         @input="${(e) => updateSliderLabel(e)}" />
     </div>
-    <div
-      class="w-full  px-3.5 flex justify-between text-xs dark:text-white text-mygray">
+    <div class="w-full pl-[1.055rem] pr-[0.955rem]  flex justify-between text-xs dark:text-white text-mygray">
       <div class="flex flex-col items-center">
         <span>|</span>
       </div>
@@ -118,8 +116,7 @@ export default (task) =>
         <span>|</span>
       </div>
     </div>
-    <div
-      class="w-full flex justify-between text-xs dark:text-white text-darkgray">
+    <div class="w-full flex justify-between text-xs dark:text-white text-darkgray pr-[0.17rem]">
       <div class="flex flex-col items-center">
         <span class="notomono">00:00</span>
       </div>

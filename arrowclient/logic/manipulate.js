@@ -4,7 +4,7 @@ import saveTask from "/logic/savetask.js"
 
 import sort from "/logic/sort.js"
 
-function selectTask(identifier) {
+export function selectTask(identifier) {
   clearSearch()
   let taskToSelect = null
 
@@ -29,5 +29,3 @@ export let clearSearch = () => {
   inputElement.value = ""
   searchstring.text = ""
 }
-
-export { selectTask }

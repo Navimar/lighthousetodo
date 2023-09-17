@@ -1,45 +1,8 @@
 import { currentTime, selectedDate, data } from "/logic/reactive.js"
-import { isNameTaken } from "/logic/util.js"
+import { getObjectByName } from "/logic/util.js"
 import sort from "/logic/sort.js"
 
 import dayjs from "dayjs"
-
-export let addScribe = (name, fromNames = [], toNames = []) => {
-  // Дополнение fromNames именем из data.tasks, если toNamesReady равен name
-  data.tasks.forEach((task) => {
-    if (task.toNamesReady?.includes(name)) {
-      fromNames.push(task.name)
-    }
-    if (task.fromNamesReady?.includes(name)) {
-      toNames.push(task.name)
-    }
-  })
-
-  // Удаление дубликатов (если они возникли)
-  fromNames = [...new Set(fromNames)]
-  toNames = [...new Set(toNames)]
-
-  if (isNameTaken(name)) return false
-
-  data.tasks.unshift({
-    name,
-    note: "",
-    time: dayjs().format("HH:mm"),
-    date: selectedDate.date,
-    type: "window",
-    fromNames: fromNames,
-    toNames: toNames,
-    fromNamesReady: [],
-    toNamesReady: [],
-  })
-
-  data.calendarSet[data.selected.date] = data.calendarSet[data.selected.date]
-    ? data.calendarSet[data.selected.date] + 1
-    : 1
-
-  makevisible()
-  return name
-}
 
 let deleteScribe = (name) => {
   data.calendarSet[data.selected.date]--
@@ -79,6 +42,24 @@ let deleteScribe = (name) => {
 
 export const makevisible = () => {
   console.log("makevisible", data)
+
+  const areAllFromNamesReady = (names) => {
+    if (!names || names.length === 0) return true
+
+    for (let name of names) {
+      const obj = getObjectByName(name)
+
+      // if (!obj) throw new Error(`In areAllFromNamesReady object not found for name: ${name}`)
+      if (!obj) {
+        console.log("???", name)
+        return false
+      }
+      if (!obj.ready) return false
+    }
+
+    return true
+  }
+
   data.visibletasks = data.tasks.filter((task) => {
     if (task === data.selected) {
       return true
@@ -88,7 +69,8 @@ export const makevisible = () => {
       selectedDate.date === currentTime.date
         ? dayjs(task.date).isBefore(dayjs(selectedDate.date).add(1, "day")) || task.date == selectedDate || !task.date
         : dayjs(task.date).isSame(dayjs(selectedDate.date)) || !task.date
-    return isCurrentOrFutureTask && (!task.fromNames?.length || task.type === "meeting")
+
+    return isCurrentOrFutureTask && (areAllFromNamesReady(task.fromNames) || task.type === "meeting") && !task.ready
   })
 
   // Сортировка visibletasks на основе свойства hidden
