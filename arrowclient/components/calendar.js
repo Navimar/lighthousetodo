@@ -1,8 +1,8 @@
 import { html, reactive, watch } from "@arrow-js/core"
 import dayjs from "dayjs"
 
-import { currentTime, selectedDate, data } from "/logic/reactive.js"
-import {  makevisible } from "/logic/exe.js"
+import { selectedDate, data } from "/logic/reactive.js"
+import { makevisible } from "/logic/exe.js"
 import saveTask from "/logic/savetask.js"
 import sort from "/logic/sort.js"
 

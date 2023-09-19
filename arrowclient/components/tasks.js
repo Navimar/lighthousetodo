@@ -84,7 +84,7 @@ let renderTask = (task, index) => {
         )}">
         ${() => fromLine(task)}
         <div class="flex gap-3">
-          <div class="${timeinputclass(task)}"> ${getTaskTime(task)} </div>
+          ${() => timeDiv(task)}
           <div class="w-full my-auto ">
             ${() => task.name}
             ${() => {
@@ -97,48 +97,60 @@ let renderTask = (task, index) => {
     `
 }
 
-let getTaskTime = (task) => {
-  let now = dayjs()
-  let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
-
-  if (taskDate.isBefore(now.startOf("day").subtract(1, "day"))) {
-    // Если задача была два дня назад или раньше
-    return "давно"
-  } else if (taskDate.isBefore(now.startOf("day"))) {
-    // Если задача была вчера
-    return "вчера"
-  } else {
-    // Если задача сегодня или в будущем
-    if (task.type == "deadline") return dayjs(task.date).format("DD.MM")
-    return task.time
-  }
-}
-
-const timeinputclass = (task) => {
+const timeDiv = (task) => {
   let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
   let gc = " text-center  px-1 uppercase whitespace-nowrap notomono"
   let isInPast = dayjs().isAfter(taskDate)
-  if (task.type == "meeting" && task.pause) return "h-fit border-2 border-red-500"
-  if (task.type == "meeting" && isInPast)
-    return "h-fit dark:bg-darkold bg-old dark:border-darkold border-old text-white" + gc
-  if (task.type == "meeting")
-    return "h-fit bg-transparent dark:text-darkold text-old  dark:border-darkold border-old" + gc
-  if (task.type == "deadline" && task.pause)
-    return "h-fit border-old border-2 text-white bg-mygray dark:bg-darkgray" + gc
-  if (task.type == "deadline" && isInPast) return "h-fit dark:border-black text-white bg-mygray dark:bg-darkgray" + gc
-  if (task.type == "deadline")
-    return "h-fit dark:border-black border-darkgray bg-transparent text-darkgray dark:text-mygray" + gc
-  if (task.type == "frame" && task.pause)
-    return "h-fit  dark:border-darkold text-white bg-mygray dark:bg-darkgray border-2 border-old" + gc
-  if (task.type == "frame" && isInPast)
-    return "h-fit dark:border-black text-white bg-mygray dark:bg-darkgray border-2 border-mygray" + gc
-  if (task.type == "frame")
-    return (
-      "h-fit dark:border-black border-darkgray bg-transparent text-darkgray border-2 border-transparent dark:text-mygray" +
-      gc
-    )
-  if (isInPast) return "hidden"
-  return "h-fit text-mygray bg-transparent dark:text-darkgray" + gc
+
+  let getTaskTime = () => {
+    let now = dayjs()
+    let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
+
+    if (task.type == "deadline") return dayjs(task.date).format("DD.MM")
+    return task.time
+  }
+
+  let getTaskDay = () => {
+    let now = dayjs()
+    let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
+
+    if (taskDate.isBefore(now.startOf("day").subtract(1, "day"))) {
+      // Если задача была два дня назад или раньше
+      return "давно"
+    } else if (taskDate.isBefore(now.startOf("day"))) {
+      // Если задача была вчера
+      return "вчера"
+    } else {
+      return ""
+    }
+  }
+
+  const timeClass = () => {
+    if (task.type == "meeting" && task.pause) return "h-fit border-2 border-red-500"
+    if (task.type == "meeting" && isInPast)
+      return "h-fit dark:bg-darkold bg-old dark:border-darkold border-old text-white" + gc
+    if (task.type == "meeting")
+      return "h-fit bg-transparent dark:text-darkold text-old  dark:border-darkold border-old" + gc
+    if (task.type == "deadline" && task.pause)
+      return "h-fit border-old border-2 text-white bg-mygray dark:bg-darkgray" + gc
+    if (task.type == "deadline" && isInPast) return "h-fit dark:border-black text-white bg-mygray dark:bg-darkgray" + gc
+    if (task.type == "deadline")
+      return "h-fit dark:border-black border-darkgray bg-transparent text-darkgray dark:text-mygray" + gc
+    if (task.type == "frame" && task.pause)
+      return "h-fit  dark:border-darkold text-white bg-mygray dark:bg-darkgray border-2 border-old" + gc
+    if (task.type == "frame" && isInPast)
+      return "h-fit dark:border-black text-white bg-mygray dark:bg-darkgray border-2 border-mygray" + gc
+    if (task.type == "frame")
+      return (
+        "h-fit dark:border-black border-darkgray bg-transparent text-darkgray border-2 border-transparent dark:text-mygray" +
+        gc
+      )
+    if (isInPast) return "hidden"
+    return "h-fit text-mygray bg-transparent dark:text-darkgray" + gc
+  }
+
+  return html`<div class="empty:hidden ${timeClass()}">${getTaskDay()}</div
+    ><div class="empty:hidden ${timeClass()}">${getTaskTime()}</div>`
 }
 
 const errorclass = (task) => {

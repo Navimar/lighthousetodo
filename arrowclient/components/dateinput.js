@@ -11,24 +11,38 @@ const updateTimeSlider = (event) => {
   slider.value = totalMinutes
 }
 
-function adjustDateTime(daysToAdd, min) {
+function adjustDate(daysToAdd) {
+  const dateInput = document.getElementById("dateInput")
+
+  // Получаем текущую дату из инпута
+  const currentInputDate = dayjs(dateInput.value, "YYYY-MM-DD")
+
+  // Добавляем указанные дни
+  const newDate = currentInputDate.add(daysToAdd, "day")
+
+  if (newDate.isBefore(dayjs().startOf("day"))) {
+    // Если получившаяся дата в прошлом, добавляем дни к текущей дате
+    const adjustedDate = dayjs().add(daysToAdd, "day")
+    dateInput.value = adjustedDate.format("YYYY-MM-DD")
+  } else {
+    // Иначе, устанавливаем вычисленную дату
+    dateInput.value = newDate.format("YYYY-MM-DD")
+  }
+}
+
+function adjustTime(min) {
   const dateInput = document.getElementById("dateInput")
   const timeInput = document.getElementById("timeInput")
 
-  // Получаем текущее значение даты и времени из инпутов
-  const currentInputDateTime = dayjs(
-    `${dateInput.value} ${timeInput.value}`,
-    "YYYY-MM-DD HH:mm",
-  )
+  // Получаем текущую дату и время из инпутов
+  const currentInputDateTime = dayjs(`${dateInput.value} ${timeInput.value}`, "YYYY-MM-DD HH:mm")
 
-  // Добавляем указанные дни и минуты
-  const newDateTime = currentInputDateTime
-    .add(daysToAdd, "day")
-    .add(min, "minute")
+  // Добавляем указанные минуты
+  const newDateTime = currentInputDateTime.add(min, "minute")
 
   if (newDateTime.isBefore(dayjs())) {
-    // Если получившееся время в прошлом, добавляем дни и минуты к текущему времени
-    const adjustedDateTime = dayjs().add(daysToAdd, "day").add(min, "minute")
+    // Если получившееся время в прошлом, добавляем минуты к текущему времени
+    const adjustedDateTime = dayjs().add(min, "minute")
     dateInput.value = adjustedDateTime.format("YYYY-MM-DD")
     timeInput.value = adjustedDateTime.format("HH:mm")
   } else {
@@ -56,29 +70,21 @@ export default (task) => {
       id="timeInput"
       value="${task.time}"
       type="time"
-      class="dark:bg-black bg-white my-auto dark:border-black text-center h-7 "
+      class="shrink-0 dark:bg-black bg-white my-auto dark:border-black text-center h-7 "
       @input="${(e) => updateTimeSlider(e)}" />
     <input
       id="dateInput"
       value="${task.date}"
-      class="dark:bg-black bg-white dark:border-black my-auto text-center h-7 "
+      class="shrink-0 dark:bg-black bg-white dark:border-black my-auto text-center h-7 "
       type="date"
       id="task-date"
       name="task-date" />
-    <button class="${css.button}" @click="${() => setTodayDate()}">
-      Сегодня
-    </button>
-    <button class="${css.button}" @click="${() => adjustDateTime(1, 0)}">
-      +День
-    </button>
-    <button class="${css.button}" @click="${() => adjustDateTime(7, 0)}">
-      +Неделя
-    </button>
-    <button class="${css.button}" @click="${() => adjustDateTime(0, 15)}">
-      +15мин
-    </button>
-    <button class="${css.button}" @click="${() => adjustDateTime(0, 60)}">
-      +Час
-    </button>
-  </div>`
+    <div class="flex justify-between w-full">
+      <button class="${css.button}" @click="${() => setTodayDate()}"> Сегодня </button>
+      <button class="${css.button}" @click="${() => adjustDate(1)}">+День</button>
+      <button class="${css.button}" @click="${() => adjustDate(7)}">+Неделя</button>
+      <button class="${css.button}" @click="${() => adjustTime(15)}">+15мин</button>
+      <button class="${css.button}" @click="${() => adjustTime(60)}">+Час</button>
+    </div></div
+  >`
 }

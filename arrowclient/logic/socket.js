@@ -32,6 +32,7 @@ export function inputSocket() {
 
     if (data.version < msg.version) {
       data.tasks = msg.tasks ? msg.tasks : data.tasks
+      data.calendarSet = msg.calendarSet ? msg.calendarSet : data.calendarSet
       version = msg.version ? msg.version : version
       makevisible()
       sort()
@@ -61,6 +62,7 @@ export const sendData = async () => {
     user: user,
     version: ++version,
     tasks: data.tasks,
+    calendarSet: data.calendarSet,
   }
   if (auth.currentUser)
     try {

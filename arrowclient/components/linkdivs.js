@@ -19,7 +19,14 @@ function handleInput(e) {
   // Искать совпадения в data.tasks на основе поля name
   const matches = data.tasks
     .filter((taskItem) => taskItem.name.toLowerCase().includes(currentLineText)) // Преобразование к нижнему регистру
-    .sort((a, b) => a.name.length - b.name.length)
+    .sort((a, b) => {
+      // Основная сортировка на основе длины toNames
+      const difference = (b.toNames?.length || 0) - (a.toNames?.length || 0)
+      if (difference !== 0) return difference
+
+      // Дополнительная сортировка на основе длины name, если длины toNames одинаковы
+      return a.name.length - b.name.length
+    })
     .slice(0, 15) // Ограничиваем список до 15 элементов
 
   // Обновлять autocomplete.list с найденными именами совпадений
@@ -59,7 +66,6 @@ export default (task) => html`
       @click="${handleDivClick}"
       @input="${handleInput}">
       ${task.fromNames?.map((from) => html`<div>${from}</div>`)}
-      ${task.fromNamesReady?.map((from) => html`<div>${from}</div>`)}
     </div>
     ${() => renderAutocomplete("fromEdit")}
 
@@ -73,7 +79,6 @@ export default (task) => html`
       @click="${handleDivClick}"
       @input="${handleInput}">
       ${task.toNames?.map((to) => html`<div>${to}</div>`)}
-      ${task.toNamesReady?.map((to) => html`<div>${to}</div>`)}
     </div>
     ${() => renderAutocomplete("toEdit")}
   </div>

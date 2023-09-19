@@ -1,5 +1,3 @@
-import css from "./css.js"
-
 import { authentication, authenticationOnLoad } from "./components/authentication.js"
 import renderCalendar from "./components/calendar.js"
 import online from "./components/online.js"
@@ -9,7 +7,7 @@ import { renderTasks } from "./components/tasks.js"
 import { loadData, sendData, inputSocket } from "/logic/socket.js"
 import { newscribetext } from "./logic/const.js"
 import { safeSetLocalStorageItem, getLocalStorageItem, mouseY } from "/logic/util.js"
-import { currentTime, data, user } from "./logic/reactive.js"
+import { currentTime, selectedDate, data, user } from "./logic/reactive.js"
 
 import { html, watch } from "@arrow-js/core"
 import dayjs from "dayjs"
@@ -17,6 +15,7 @@ import "dayjs/locale/ru" // Импорт русской локали
 import localizedFormat from "dayjs/plugin/localizedFormat" // Плагин для локализованного форматирования
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
+import { riseTask } from "./logic/manipulate.js"
 dayjs.extend(isSameOrBefore)
 dayjs.extend(customParseFormat)
 dayjs.extend(localizedFormat)
@@ -32,39 +31,53 @@ function updateCurrentTimeMarker() {
     const sliderWidth = slider.offsetWidth - 16
     currentTime.slider = (totalMinutes / 1440) * sliderWidth + 16
   }
-  currentTime.clock = time.format("HH:mm")
+
+  let newTime = time.format("HH:mm")
+  if (currentTime.clock !== newTime) {
+    data.tasks.forEach((task) => {
+      if (task.time === currentTime.clock && task.date === currentTime.date) {
+        riseTask(task)
+        if (task.ready === true) task.ready = false
+      }
+    })
+    currentTime.clock = newTime
+  }
+
   currentTime.date = time.format("YYYY-MM-DD")
-  // console.log('currentTime.timerStarted', currentTime.timerStarted)
+
+  // Update selectedDate.date if it's in the past
+  if (dayjs(selectedDate.date).isBefore(currentTime.date)) {
+    selectedDate.date = currentTime.date
+  }
+
   if (currentTime.timerStarted) {
     const diffInMinutes = Math.abs(time.diff(dayjs(currentTime.timerStarted, "HH:mm"), "minute"))
-    // console.log('diffInMinutes', diffInMinutes)
-    const hours = ((diffInMinutes % (24 * 60)) / 60) | 0 // Остаток минут после деления на 24 часа преобразуем в часы
+    const hours = ((diffInMinutes % (24 * 60)) / 60) | 0
     const minutes = diffInMinutes % 60
     currentTime.timer =
       hours.toLocaleString("en-US", { minimumIntegerDigits: 2 }) +
       ":" +
       minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })
-    // console.log('currentTime.timer', currentTime.timer, minutes)
   }
+
   setTimeout(updateCurrentTimeMarker, 1000)
 }
 
+//  <div class="dark:text-white bg-nearwhite dark:bg-black p-3">
+//       ${() => currentTime.timerStarted}
+//       <button
+//         class="notomono w-1/6 ${css.button}"
+//         @click="${() => {
+//           currentTime.timerStarted = currentTime.clock
+//         }}">
+//         ► ${() => currentTime.timer}
+//       </button>
+//     </div>
 const render = html`
   ${() => authentication()}
   <div class="bgimg bg-nearwhite dark:bg-black fixed w-full h-full -z-10 bg-cover"></div>
   <div class="flex flex-col gap-4 pb-80 max-w-full w-40rem m-auto">
-    ${() => search()} ${() => renderCalendar(dayjs())}
-    <div class="dark:text-white bg-nearwhite dark:bg-black p-3">
-      ${() => currentTime.timerStarted}
-      <button
-        class="notomono w-1/6 ${css.button}"
-        @click="${() => {
-          currentTime.timerStarted = currentTime.clock
-        }}">
-        ► ${() => currentTime.timer}
-      </button>
-    </div>
-    ${() => renderTasks()}
+    ${() => search()} ${() => renderCalendar(dayjs())} ${() => renderTasks()}
   </div>
   ${plusbutton} ${() => online()}
 `
@@ -113,15 +126,6 @@ window.addEventListener("load", function () {
         const rect = div.getBoundingClientRect()
         const scrollPosition = rect.top + window.scrollY + rect.height / 2 - mouseY
         window.scroll(0, scrollPosition)
-      }
-    })
-  })
-  watch(() => {
-    currentTime.clock
-
-    data.tasks.forEach((task) => {
-      if (task.ready === true && task.time === currentTime.clock) {
-        task.ready = false
       }
     })
   })
