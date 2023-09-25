@@ -1,9 +1,16 @@
 import { data } from "/logic/reactive.js"
 
+import dayjs from "dayjs"
+
 const nameCache = {}
 
+export const getDayjsDateFromTask = (task) => {
+  if (!task) return dayjs()
+  return dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
+}
+
 export const getObjectByName = (name) => {
-  if (nameCache[name]) {
+  if (nameCache[name]?.name === name) {
     return nameCache[name]
   }
 
@@ -14,6 +21,7 @@ export const getObjectByName = (name) => {
     return foundTask
   }
 
+  console.log(`объект ${name} не найден`)
   return null
 }
 

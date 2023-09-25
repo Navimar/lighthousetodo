@@ -6,12 +6,13 @@ import { getObjectByName } from "/logic/util"
 import sort from "/logic/sort.js"
 
 export function selectTask(identifier) {
+  console.log("select", identifier)
   clearSearch()
   let taskToSelect = null
 
   // Если идентификатор - это строка, ищем задачу по имени
   if (typeof identifier === "string") {
-    taskToSelect = data.tasks.find((task) => task.name === identifier)
+    taskToSelect = getObjectByName(identifier)
   } else {
     taskToSelect = identifier
   }
@@ -53,6 +54,7 @@ export let riseTask = (task, visited = new Set(), depth = 0) => {
     })
   }
 
-  saveTask("rise")
+  // saveTask("rise")
+  sort()
   // window.scrollTo(0, 0)
 }

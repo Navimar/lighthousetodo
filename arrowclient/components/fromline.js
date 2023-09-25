@@ -9,7 +9,7 @@ export default (task) => {
 
   task.fromNames?.forEach((name) => {
     const obj = getObjectByName(name)
-    if (obj.ready) {
+    if (!obj || obj.ready) {
       readyNames.push(name)
     } else {
       notReadyNames.push(name)
@@ -17,26 +17,28 @@ export default (task) => {
   })
 
   return html`<div class="flex gap-2 text-sm empty:hidden"
-    >${readyNames.map((from) => {
-      return html`<div
-        @click="${(e) => {
-          selectTask(from)
-          clickPos(e)
-          e.stopPropagation()
-        }}"
-        class="text-mygray m-0.5 inline-block rounded-lg px-2 bg-transparent ">
-        ${from}
-      </div>`
-    })}${notReadyNames.map((from) => {
-      return html`<div
-        @click="${(e) => {
-          selectTask(from)
-          clickPos(e)
-          e.stopPropagation()
-        }}"
-        class="text-white rounded-lg px-2 bg-mygray dark:bg-darkgray">
-        ${from}
-      </div>`
-    })}</div
+    >${() =>
+      readyNames.map((from) => {
+        return html`<div
+          @click="${(e) => {
+            selectTask(from)
+            clickPos(e)
+            e.stopPropagation()
+          }}"
+          class="text-mygray m-0.5 inline-block rounded-lg px-2 bg-transparent ">
+          ${() => from}
+        </div>`
+      })}${() =>
+      notReadyNames.map((from) => {
+        return html`<div
+          @click="${(e) => {
+            selectTask(from)
+            clickPos(e)
+            e.stopPropagation()
+          }}"
+          class="text-white rounded-lg px-2 bg-mygray dark:bg-darkgray">
+          ${() => from}
+        </div>`
+      })}</div
   >`
 }

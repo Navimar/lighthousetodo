@@ -30,14 +30,10 @@ function complete(e, divId) {
 }
 
 export default (divId) => {
-  if (
-    autocomplete.list &&
-    autocomplete.div == divId &&
-    autocomplete.list.length > 0
-  )
+  if (autocomplete.list && autocomplete.div == divId && autocomplete.list.length > 0)
     return html`
       <div id="autocomplete-list" class="w-1/2 absolute z-10 top-full ">
-        <div class=" border rounded shadow-md bg-white dark:bg-black">
+        <div class=" border border-mygray dark:border-nearblack rounded shadow-md bg-white dark:bg-black">
           ${autocomplete.list.map((e) => {
             return html`
               <div

@@ -3,6 +3,8 @@ import admin from "firebase-admin"
 import config from "../config.js"
 import { addUser, getUser } from "./user.js"
 import serviceAccount from "../firebase.config.js"
+import syncTasks from "../united/syncTasks.js"
+import { v4 as uuidv4 } from "uuid"
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -31,47 +33,44 @@ export let inputSocket = (io) => {
 
     socket.on("save", async function (msg) {
       try {
-        if (msg.user.token) {
+        if (msg?.user?.token) {
           const userId = await verifyToken(msg.user.token)
           if (userId) {
-            // console.log('save user', msg.user);
             addUser(userId, socket)
 
             let dir = path(userId)
             const userRef = database.ref("data/" + dir)
 
-            // Получаем текущую версию на сервере
             const snapshot = await userRef.once("value")
             const serverData = snapshot.val()
 
-            // Сравниваем версии
-            console.log("ver", msg.version, serverData.version)
-            if (serverData && msg.version < serverData.version) {
-              // Если версия клиента устарела, отправляем ему актуальные данные
-              socket.emit("update", serverData)
+            let updatedTasks
+            if (serverData) {
+              // Используем syncTasks для синхронизации задач
+              updatedTasks = syncTasks(serverData.tasks, msg.tasks)
             } else {
-              let sockets = getUser(userId)
-              sockets.forEach((s) => {
-                if (s != socket) {
-                  console.log(s.id, socket.id)
-                  s.emit("update", msg)
-                } else {
-                  console.log("mysocket", socket.id)
-                }
-              })
-              await userRef.set({
-                tasks: msg.tasks,
-                calendarSet: msg.calendarSet,
-                version: msg.version,
-              })
+              updatedTasks = msg.tasks
             }
+
+            // Записываем обновленные данные в базу
+            await userRef.set({
+              tasks: updatedTasks,
+              calendarSet: msg.calendarSet,
+            })
+
+            let sockets = getUser(userId)
+            sockets.forEach((s) => {
+              if (s !== socket) {
+                s.emit("update", msg)
+              }
+            })
           } else {
             console.log("Invalid token or not authenticated", msg)
             socket.emit("err", "Invalid token or not authenticated")
           }
         } else {
-          console.log(msg, "Не найден токен при загрузке")
-          socket.emit("err", "Не найден токен при загрузке")
+          console.log(msg, "Токен не найден при загрузке")
+          socket.emit("err", "Токен не найден при загрузке")
         }
       } catch (error) {
         console.error("Error in 'save' handler:", error)
@@ -79,43 +78,21 @@ export let inputSocket = (io) => {
       }
     })
 
-    // socket.on('save', async function (msg) {
-    //     if (msg.user.token) {
-    //         const userId = await verifyToken(msg.user.token);
-    //         if (userId) {
-    //             console.log('save user', msg.user)
-    //             addUser(userId, socket);
-
-    //             let sockets = getUser(userId)
-    //             sockets.forEach(s => {
-    //                 if (s != socket) {
-    //                     console.log(s.id, socket.id);
-    //                     s.emit('update', msg);
-    //                 } else {
-    //                     console.log('mysocket', socket.id)
-    //                 }
-    //             });
-
-    //             let dir = path(userId);
-    //             const userRef = database.ref('data/' + dir);
-    //             userRef.set({ tasks: msg.tasks, version: msg.version });
-
-    //         } else {
-    //             console.log("Invalid token or not authenticated", msg);
-    //             socket.emit('err', 'Invalid token or not authenticated')
-    //         }
-    //     } else {
-    //         console.log(msg, 'Не найден токен при загрузке');
-    //         socket.emit('err', 'Не найден токен при загрузке');
-    //     }
-    // });
-
     socket.on("load", async function (msg) {
       if (msg.token) {
         const userId = await verifyToken(msg.token)
         if (userId) {
           console.log(msg, "load")
           let data = await load(userId)
+
+          // вот тут всем таск из data.tasks у которых нет id нужно присвоить id = uuidv4();
+          data.tasks = data.tasks.map((task) => {
+            if (!task.id) {
+              task.id = uuidv4()
+            }
+            return task
+          })
+
           socket.emit("update", data)
         } else {
           console.log(msg, "login error on load")

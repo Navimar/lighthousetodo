@@ -6,6 +6,7 @@ import dateInput from "/components/dateinput.js"
 import radio from "/components/priorityRadio.js"
 import linkDivs from "/components/linkdivs.js"
 import controlButtons from "/components/controlButtons.js"
+import taskPlate from "/components/taskplate.js"
 import { selectTask } from "/logic/manipulate.js"
 import { clickPos } from "/logic/util.js"
 
@@ -51,8 +52,9 @@ export let renderTasks = () => {
 }
 
 let renderTask = (task, index) => {
-  let firstclass = index == 0 ? "border-box border-b-02rem  border-old dark:border-darkold" : ""
-  if (task.ready) firstclass += " border-4 border-green-500"
+  let firstclass
+  if (task.ready) firstclass += "border-box border-b-02rem border-green-500 dark:border-green-900"
+  else firstclass = index == 0 ? "border-box border-b-02rem border-old dark:border-darkold " : ""
   if (data.selected.name == task.name)
     // Редактируемый
     return html` <div
@@ -73,84 +75,26 @@ let renderTask = (task, index) => {
     </div>`
   // Нередактируемый
   else
-    return html`
-      <div
-        @click="${(e) => {
-          selectTask(task)
-          clickPos(e)
-        }}"
-        class="${firstclass} flex flex-col gap-3 bg-nearwhite dark:bg-black p-3 rounded-lg overflow dark:text-white ${errorclass(
-          task,
-        )}">
-        ${() => fromLine(task)}
-        <div class="flex gap-3">
-          ${() => timeDiv(task)}
-          <div class="w-full my-auto ">
-            ${() => task.name}
-            ${() => {
-              if (task.note && task.note.length > 0) return "+ 📝"
-            }}
-          </div>
+    return html` <div
+      @click="${(e) => {
+        selectTask(task)
+        clickPos(e)
+      }}"
+      class="${firstclass} flex flex-col gap-3 break-words bg-nearwhite dark:bg-black p-3 rounded-lg overflow dark:text-white ${errorclass(
+        task,
+      )}">
+      ${() => fromLine(task)}
+      <div class="flex gap-3">
+        ${() => taskPlate(task)}
+        <div class="w-full my-auto ">
+          ${() => task.name}
+          ${() => {
+            if (task.note && task.note.length > 0) return "+ 📝"
+          }}
         </div>
-        ${() => toLine(task)}
       </div>
-    `
-}
-
-const timeDiv = (task) => {
-  let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
-  let gc = " text-center  px-1 uppercase whitespace-nowrap notomono"
-  let isInPast = dayjs().isAfter(taskDate)
-
-  let getTaskTime = () => {
-    let now = dayjs()
-    let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
-
-    if (task.type == "deadline") return dayjs(task.date).format("DD.MM")
-    return task.time
-  }
-
-  let getTaskDay = () => {
-    let now = dayjs()
-    let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
-
-    if (taskDate.isBefore(now.startOf("day").subtract(1, "day"))) {
-      // Если задача была два дня назад или раньше
-      return "давно"
-    } else if (taskDate.isBefore(now.startOf("day"))) {
-      // Если задача была вчера
-      return "вчера"
-    } else {
-      return ""
-    }
-  }
-
-  const timeClass = () => {
-    if (task.type == "meeting" && task.pause) return "h-fit border-2 border-red-500"
-    if (task.type == "meeting" && isInPast)
-      return "h-fit dark:bg-darkold bg-old dark:border-darkold border-old text-white" + gc
-    if (task.type == "meeting")
-      return "h-fit bg-transparent dark:text-darkold text-old  dark:border-darkold border-old" + gc
-    if (task.type == "deadline" && task.pause)
-      return "h-fit border-old border-2 text-white bg-mygray dark:bg-darkgray" + gc
-    if (task.type == "deadline" && isInPast) return "h-fit dark:border-black text-white bg-mygray dark:bg-darkgray" + gc
-    if (task.type == "deadline")
-      return "h-fit dark:border-black border-darkgray bg-transparent text-darkgray dark:text-mygray" + gc
-    if (task.type == "frame" && task.pause)
-      return "h-fit  dark:border-darkold text-white bg-mygray dark:bg-darkgray border-2 border-old" + gc
-    if (task.type == "frame" && isInPast)
-      return "h-fit dark:border-black text-white bg-mygray dark:bg-darkgray border-2 border-mygray" + gc
-    if (task.type == "frame")
-      return (
-        "h-fit dark:border-black border-darkgray bg-transparent text-darkgray border-2 border-transparent dark:text-mygray" +
-        gc
-      )
-    if (isInPast) return "hidden"
-    return "h-fit text-mygray bg-transparent dark:text-darkgray" + gc
-  }
-
-  return html`<div class="empty:hidden ${timeClass()}">${getTaskDay()}</div
-    ><div class="empty:hidden ${timeClass()}">${getTaskTime()}</div>`
+      ${() => toLine(task)}
+    </div>`
 }
 
 const errorclass = (task) => {

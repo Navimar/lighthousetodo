@@ -1,6 +1,7 @@
 import { auth } from "/components/authentication.js"
 import { status, data, user } from "/logic/reactive.js"
 import sort from "/logic/sort.js"
+import syncTasks from "../../united/syncTasks"
 
 import { io } from "socket.io-client"
 import { makevisible } from "./exe"
@@ -29,15 +30,25 @@ export function inputSocket() {
   })
   socket.on("update", function (msg) {
     console.log("update", msg)
+    // Если их нет, инициализируйте как пустые массивы или соответствующие значения.
+    if (msg) {
+      // Синхронизация задач
+      data.tasks = syncTasks(data.tasks, msg.tasks)
 
-    if (data.version < msg.version) {
-      data.tasks = msg.tasks ? msg.tasks : data.tasks
+      // Синхронизация календаря, если нужно
       data.calendarSet = msg.calendarSet ? msg.calendarSet : data.calendarSet
-      version = msg.version ? msg.version : version
+
+      // Синхронизация версии, если нужно
+      if (msg.version) {
+        data.version = msg.version
+      }
+
       makevisible()
       sort()
       console.log("loaded")
-    } else console.log("local data is younger", version, msg.version)
+    } else {
+      console.log("No incoming data")
+    }
   })
 
   socket.on("err", (val) => {
@@ -60,7 +71,6 @@ export const loadData = async () => {
 export const sendData = async () => {
   let sentdata = {
     user: user,
-    version: ++version,
     tasks: data.tasks,
     calendarSet: data.calendarSet,
   }

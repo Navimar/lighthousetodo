@@ -2,15 +2,47 @@ import { html } from "@arrow-js/core"
 import { currentTime } from "/logic/reactive.js"
 import dayjs from "dayjs"
 
+// function updateSliderLabel(e) {
+//   let value = e.target.value
+//   const time = dayjs().startOf("day").add(value, "minutes")
+//   const formattedTime = time.format("HH:mm")
+//   document.querySelector("#timeInput").value = formattedTime
+
+//   if (dayjs(document.querySelector("#dateInput").value).isBefore(dayjs())) {
+//     document.querySelector("#dateInput").value = dayjs().format("YYYY-MM-DD")
+//   }
+// }
+
 function updateSliderLabel(e) {
   let value = e.target.value
+  const currentTime = dayjs()
   const time = dayjs().startOf("day").add(value, "minutes")
   const formattedTime = time.format("HH:mm")
+
+  // Устанавливаем выбранное время
   document.querySelector("#timeInput").value = formattedTime
 
-  if (dayjs(document.querySelector("#dateInput").value).isBefore(dayjs())) {
-    document.querySelector("#dateInput").value = dayjs().format("YYYY-MM-DD")
+  // Получаем текущую и выбранную даты
+  const currentDate = dayjs().format("YYYY-MM-DD")
+  const selectedDate = document.querySelector("#dateInput").value
+
+  // Устанавливаем дату и время на выбранную дату с новым временем
+  let selectedDateTime = dayjs(`${selectedDate} ${formattedTime}`)
+
+  // Проверяем, находится ли выбранное дата+время в прошлом
+  if (selectedDateTime.isBefore(currentTime)) {
+    // Если выбранное время в прошлом, проверяем, в прошлом ли оно и сегодня
+    let selectedTodayDateTime = dayjs(`${currentDate} ${formattedTime}`)
+    if (selectedTodayDateTime.isBefore(currentTime)) {
+      // Если выбранное время сегодня также в прошлом, устанавливаем дату на завтра
+      const tomorrow = currentTime.add(1, "day").format("YYYY-MM-DD")
+      document.querySelector("#dateInput").value = tomorrow
+    } else {
+      // В противном случае устанавливаем сегодняшнюю дату
+      document.querySelector("#dateInput").value = currentDate
+    }
   }
+  // Если выбранное время в будущем, не меняем дату
 }
 
 export default (task) =>

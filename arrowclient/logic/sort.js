@@ -18,6 +18,7 @@ const getMaxPriorityType = (task, depth = 0, visited = new Set()) => {
 
   task.toNames?.forEach((name) => {
     const childTask = getObjectByName(name)
+    if (!childTask) return
     if (childTask.ready) return // Пропускаем задачи с ready === true
 
     const childType = getMaxPriorityType(childTask, depth + 1, visited)
@@ -28,6 +29,19 @@ const getMaxPriorityType = (task, depth = 0, visited = new Set()) => {
   })
 
   return maxPriorityType
+}
+const getMaxTimestampFromNames = (task) => {
+  let maxTimestamp = 0
+
+  task.fromNames?.forEach((name) => {
+    const task = getObjectByName(name)
+
+    if (task?.timestamp > maxTimestamp) {
+      maxTimestamp = task.timestamp
+    }
+  })
+
+  return maxTimestamp
 }
 
 export default () => {
@@ -54,10 +68,6 @@ export default () => {
     )
       return 1
 
-    // Приоритет сроку над окном
-    if (aPriorityType == "deadline" && bPriorityType == "window") return -1
-    if (bPriorityType == "deadline" && aPriorityType == "window") return 1
-
     // Если обе встречи или рамки, сравниваем datetime
     if (
       (aPriorityType == "meeting" || aPriorityType == "frame") &&
@@ -67,7 +77,10 @@ export default () => {
     }
 
     // Если обе задачи окна
-    if (aPriorityType == "window" && bPriorityType == "window") {
+    if (
+      (aPriorityType == "window" || aPriorityType == "deadline") &&
+      (bPriorityType == "window" || bPriorityType == "deadline")
+    ) {
       let now = dayjs()
 
       let aIsFuture = datetimeA.isAfter(now)
@@ -79,8 +92,17 @@ export default () => {
 
       // Если обе задачи в будущем, сравниваем их по времени
       if (aIsFuture && bIsFuture) return datetimeA.isAfter(datetimeB) ? 1 : -1
-    }
 
+      // Приоритет сроку над окном
+      if (aPriorityType == "deadline" && bPriorityType == "window") return -1
+      if (bPriorityType == "deadline" && aPriorityType == "window") return 1
+
+      // Сортировка по таймстампу предков о_О
+      const maxTimestampA = getMaxTimestampFromNames(a)
+      const maxTimestampB = getMaxTimestampFromNames(b)
+
+      return maxTimestampA > maxTimestampB ? -1 : 1
+    }
     return 0
   })
 }

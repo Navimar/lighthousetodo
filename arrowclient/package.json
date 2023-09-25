@@ -15,7 +15,8 @@
 		"gun": "^0.2020.1239",
 		"postcss-cli": "^10.1.0",
 		"socket.io": "^4.7.2",
-		"socket.io-client": "^4.7.2"
+		"socket.io-client": "^4.7.2",
+		"uuid": "^9.0.1"
 	},
 	"devDependencies": {
 		"autoprefixer": "^10.4.15",

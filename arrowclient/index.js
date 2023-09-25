@@ -7,7 +7,7 @@ import { renderTasks } from "./components/tasks.js"
 import { loadData, sendData, inputSocket } from "/logic/socket.js"
 import { newscribetext } from "./logic/const.js"
 import { safeSetLocalStorageItem, getLocalStorageItem, mouseY } from "/logic/util.js"
-import { currentTime, selectedDate, data, user } from "./logic/reactive.js"
+import { currentTime, selectedDate, data, user } from "/logic/reactive.js"
 
 import { html, watch } from "@arrow-js/core"
 import dayjs from "dayjs"
@@ -36,7 +36,7 @@ function updateCurrentTimeMarker() {
   if (currentTime.clock !== newTime) {
     data.tasks.forEach((task) => {
       if (task.time === currentTime.clock && task.date === currentTime.date) {
-        riseTask(task)
+        // riseTask(task)
         if (task.ready === true) task.ready = false
       }
     })
@@ -60,6 +60,11 @@ function updateCurrentTimeMarker() {
       minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })
   }
 
+  for (let date in data.calendarSet) {
+    if (dayjs(date, "YYYY-MM-DD").isBefore(currentTime.date)) {
+      delete data.calendarSet[date]
+    }
+  }
   setTimeout(updateCurrentTimeMarker, 1000)
 }
 
@@ -103,14 +108,14 @@ window.addEventListener("load", function () {
   watch(() => {
     safeSetLocalStorageItem("calendarSet", JSON.stringify(data.calendarSet))
   })
-  watch(() => {
-    data.tasks
-    if (user) {
-      sendData()
-      safeSetLocalStorageItem("data", JSON.stringify(data.tasks))
-      safeSetLocalStorageItem("timestamp", dayjs().format())
-    }
-  })
+  // watch(() => {
+  //   data.tasks
+  //   if (user) {
+  //     sendData()
+  //     safeSetLocalStorageItem("data", JSON.stringify(data.tasks))
+  //     safeSetLocalStorageItem("timestamp", dayjs().format())
+  //   }
+  // })
   watch(() => {
     data.selected
     data.tasks

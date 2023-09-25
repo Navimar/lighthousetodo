@@ -10,6 +10,7 @@
 		"firebase-admin": "^11.10.1",
 		"gun": "^0.2020.1239",
 		"socket.io": "^4.4.1",
+		"uuid": "^9.0.1",
 		"vite": "^4.4.7"
 	},
 	"devDependencies": {

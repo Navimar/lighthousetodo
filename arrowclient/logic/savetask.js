@@ -3,6 +3,8 @@ import { data } from "/logic/reactive.js"
 import { isNameTaken } from "/logic/util.js"
 import { makevisible } from "/logic/exe.js"
 import addScribe from "/logic/addscribe"
+import dayjs from "dayjs"
+import { sendData } from "/logic/socket"
 
 export default (m) => {
   //понять откуда вызвано сохрание
@@ -40,17 +42,9 @@ export default (m) => {
       ),
     ]
 
-    // создаем массив фром и ту исключая реади
-    let fromEditLinesWOR = fromEditLines.filter((name) => !data.selected.fromNamesReady?.includes(name))
-    let toEditLinesWOR = toEditLines.filter((name) => !data.selected.toNamesReady?.includes(name))
-
-    // создаем массив фром  реади
-    let fromEditLinesReady = fromEditLines.filter((name) => data.selected.fromNamesReady?.includes(name))
-    let toEditLinesReady = toEditLines.filter((name) => data.selected.toNamesReady?.includes(name))
-
     // создаем массив задач для создания из новых ссылок
-    let newScribesFromNames = fromEditLinesWOR.slice()
-    let newScribesToNames = toEditLinesWOR.slice()
+    let newScribesFromNames = fromEditLines.slice()
+    let newScribesToNames = toEditLines.slice()
 
     // добаываем дату и время из инпутов
     const timeInput = document.getElementById("timeInput").value
@@ -91,11 +85,6 @@ export default (m) => {
         if (theTask.name.toLowerCase() === fromEditLines[index].toLowerCase()) {
           newScribesFromNames.splice(index, 1)
           if (theTask.toNames && theTask.toNames.indexOf(name) === -1) {
-            //удаляем из реади
-            if (theTask.toNamesReady && theTask.toNamesReady.indexOf(name) !== -1) {
-              const index = theTask.toNamesReady.indexOf(name)
-              theTask.toNamesReady.splice(index, 1)
-            }
             //дописываем в ссылки
             theTask.toNames.push(name)
           }
@@ -106,11 +95,6 @@ export default (m) => {
         if (theTask.name.toLowerCase() === toEditLines[index].toLowerCase()) {
           newScribesToNames.splice(index, 1)
           if (theTask.fromNames && theTask.fromNames.indexOf(name) === -1) {
-            //удаляем из реади
-            if (theTask.fromNamesReady && theTask.fromNamesReady.indexOf(name) !== -1) {
-              const index = theTask.fromNamesReady.indexOf(name)
-              theTask.fromNamesReady.splice(index, 1)
-            }
             //дописываем в ссылки
             theTask.fromNames.push(name)
           }
@@ -118,17 +102,18 @@ export default (m) => {
       }
     }
 
+    //ставим временную метку
+    data.selected.timestamp = dayjs().valueOf()
+    console.log("timestamp", data.selected.timestamp)
+
     //сохраняем новые значение
     data.selected.name = name
     data.selected.note = note
 
     if (choosenradio) data.selected.type = choosenradio
 
-    data.selected.fromNames = fromEditLinesWOR
-    data.selected.fromNamesReady = fromEditLinesReady
-
-    data.selected.toNames = toEditLinesWOR
-    data.selected.toNamesReady = toEditLinesReady
+    data.selected.fromNames = fromEditLines
+    data.selected.toNames = toEditLines
 
     data.selected.time = timeInput
 
@@ -160,6 +145,7 @@ export default (m) => {
 
     makevisible()
     sort()
+    sendData()
     return true
   }
 }

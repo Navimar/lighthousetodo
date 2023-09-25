@@ -2,6 +2,7 @@ import { data, selectedDate } from "/logic/reactive.js"
 import { isNameTaken } from "/logic/util"
 import { makevisible } from "/logic/exe.js"
 
+import { v4 as uuidv4 } from "uuid"
 import dayjs from "dayjs"
 
 export default (name, fromNames = [], toNames = []) => {
@@ -19,9 +20,12 @@ export default (name, fromNames = [], toNames = []) => {
   fromNames = [...new Set(fromNames)]
   toNames = [...new Set(toNames)]
 
-  if (isNameTaken(name)) return false
+  if (isNameTaken(name)) {
+    return false
+  }
 
   data.tasks.unshift({
+    id: uuidv4(),
     name,
     note: "",
     time: dayjs().format("HH:mm"),
@@ -32,6 +36,8 @@ export default (name, fromNames = [], toNames = []) => {
     fromNamesReady: [],
     toNamesReady: [],
   })
+
+  console.log("newtask", data.tasks[0])
 
   data.calendarSet[data.selected.date] = data.calendarSet[data.selected.date]
     ? data.calendarSet[data.selected.date] + 1

@@ -12,6 +12,9 @@ const updateTimeSlider = (event) => {
 }
 
 function adjustDate(daysToAdd) {
+  let pc = document.getElementById("pauseCheckbox")
+  if (pc) pc.checked = false
+
   const dateInput = document.getElementById("dateInput")
 
   // Получаем текущую дату из инпута
@@ -20,7 +23,7 @@ function adjustDate(daysToAdd) {
   // Добавляем указанные дни
   const newDate = currentInputDate.add(daysToAdd, "day")
 
-  if (newDate.isBefore(dayjs().startOf("day"))) {
+  if (newDate.isBefore(dayjs())) {
     // Если получившаяся дата в прошлом, добавляем дни к текущей дате
     const adjustedDate = dayjs().add(daysToAdd, "day")
     dateInput.value = adjustedDate.format("YYYY-MM-DD")
