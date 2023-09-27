@@ -58,12 +58,13 @@ export default (task) =>
         </label>`
       else return html` <button class="${css.button}" @click="${() => sinkTask(task)}"> Притопить </button>`
     }}
-    <label class="${css.button}" for="readyCheckbox">
+    <label
+      class="p-1 text-black bg-lightgray border-white dark:border-black dark:bg-mygray rounded-0 text-center inline-block border-b-02rem active:border-b-old dark:active:border-b-darkold cursor-pointer whitespace-nowrap"
+      for="readyCheckbox">
       <input
-        class=" w-3.5 h-3.5 shadow-none dark:accent-darkold rounded-lg appearance-none dark:checked:bg-darkold mx-2 border-2 border-old dark:border-darkold checked:bg-old accent-old"
+        class="w-3.5 h-3.5 shadow-none dark:accent-darkold rounded-lg appearance-none dark:checked:bg-darkold mx-2 border-2 border-old dark:border-darkold checked:bg-old accent-old"
         type="checkbox"
-        id="readyCheckbox"
-        ${checkedReady(task)} />
+        id="readyCheckbox" />
       Готово
     </label>
     <button class="${css.button}" @click="${saveButton}">Сохранить</button>

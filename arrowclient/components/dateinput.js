@@ -71,7 +71,7 @@ function setTodayDate() {
 }
 
 export default (task) => {
-  return html` <div class="flex gap-3">
+  return html` <div class="flex flex-wrap gap-3">
     <input
       id="timeInput"
       value="${task.time}"
@@ -85,7 +85,7 @@ export default (task) => {
       type="date"
       id="task-date"
       name="task-date" />
-    <div class="flex justify-between w-full">
+    <div class="flex justify-between gap-3">
       <button class="${css.button}" @click="${() => setTodayDate()}"> Сегодня </button>
       <button class="${css.button}" @click="${() => adjustDate(1)}">+День</button>
       <button class="${css.button}" @click="${() => adjustDate(7)}">+Неделя</button>
