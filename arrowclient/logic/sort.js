@@ -1,13 +1,7 @@
 import { data } from "/logic/reactive.js"
 import dayjs from "dayjs"
-import { getObjectByName } from "../logic/util"
-
-const PRIORITY = {
-  meeting: 1,
-  frame: 2,
-  deadline: 3,
-  window: 4,
-}
+import { getObjectByName } from "/logic/util"
+import { PRIORITY } from "/logic/const"
 
 const getMaxPriorityType = (task, depth = 0, visited = new Set()) => {
   if (depth >= 7 || visited.has(task.name)) return task.type

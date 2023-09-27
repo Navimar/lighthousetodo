@@ -129,12 +129,7 @@ export default (m) => {
     data.selected.toNames = toEditLines
 
     data.selected.time = timeInput
-
-    data.calendarSet[data.selected.date]--
     data.selected.date = dateInput
-    data.calendarSet[data.selected.date] = data.calendarSet[data.selected.date]
-      ? data.calendarSet[data.selected.date] + 1
-      : 1
 
     // устанавливаем паузу
     let pauseCheckbox = document.getElementById("pauseCheckbox")
@@ -150,12 +145,10 @@ export default (m) => {
     newScribesFromNames.forEach((txt) => {
       let newTask = addScribe(txt, [], [name])
       changedTasks.push(newTask.id)
-      console.log("6 changedTasks", changedTasks)
     })
     newScribesToNames.forEach((txt) => {
       let newTask = addScribe(txt, [name], [])
       changedTasks.push(newTask.id)
-      console.log("7 changedTasks", changedTasks)
     })
 
     // data.selected = false

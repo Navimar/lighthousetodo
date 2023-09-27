@@ -55,7 +55,7 @@ export let inputSocket = (io) => {
             // Записываем обновленные данные в базу
             await userRef.set({
               tasks: updatedTasks,
-              calendarSet: msg.calendarSet,
+              // calendarSet: msg.calendarSet,
             })
 
             let sockets = getUser(userId)

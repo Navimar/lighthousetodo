@@ -65,10 +65,6 @@ export default (name, fromNames = [], toNames = []) => {
 
   console.log("newtask", data.tasks[0])
 
-  data.calendarSet[data.selected.date] = data.calendarSet[data.selected.date]
-    ? data.calendarSet[data.selected.date] + 1
-    : 1
-
   makevisible()
   return newTask
 }

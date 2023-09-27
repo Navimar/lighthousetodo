@@ -1,5 +1,5 @@
 import { html } from "@arrow-js/core"
-import { newscribetext } from "/logic/const.js"
+import { NEWSCRIBETEXT } from "/logic/const.js"
 import { clearSearch, selectTask } from "/logic/manipulate.js"
 import saveTask from "/logic/savetask.js"
 import addScribe from "/logic/addscribe"
@@ -8,8 +8,8 @@ import { data } from "/logic/reactive.js"
 let plusbutton = () => {
   clearSearch()
   saveTask("plusbutton")
-  if (!addScribe(newscribetext)) {
-    selectTask(newscribetext)
+  if (!addScribe(NEWSCRIBETEXT)) {
+    selectTask(NEWSCRIBETEXT)
   } else data.selected = data.tasks[0]
 }
 

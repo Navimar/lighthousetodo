@@ -1,8 +1,10 @@
 import { currentTime, selectedDate, data } from "/logic/reactive.js"
 import { getObjectByName } from "/logic/util.js"
-import sort from "/logic/sort.js"
-
+import { PRIORITY } from "/logic/const"
 import dayjs from "dayjs"
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
+
+dayjs.extend(isSameOrAfter)
 
 // let deleteScribe = (name) => {
 //   data.calendarSet[data.selected.date]--
@@ -40,22 +42,57 @@ import dayjs from "dayjs"
 //   return true
 // }
 
+// export const makevisible = () => {
+//   const areAllFromNamesReady = (names) => {
+//     if (!names || names.length === 0) return true
+
+//     for (let name of names) {
+//       const obj = getObjectByName(name)
+
+//       if (!obj?.ready) return false
+//     }
+
+//     return true
+//   }
+
+//   data.visibletasks = data.tasks.filter((task) => {
+//     if (task === data.selected) {
+//       return true
+//     }
+
+//     const isCurrentOrFutureTask =
+//       selectedDate.date === currentTime.date
+//         ? dayjs(task.date).isBefore(dayjs(selectedDate.date).add(1, "day")) || task.date == selectedDate || !task.date
+//         : dayjs(task.date).isSame(dayjs(selectedDate.date)) || !task.date
+
+//     return isCurrentOrFutureTask && (areAllFromNamesReady(task.fromNames) || task.type === "meeting") && !task.ready
+//   })
+//   console.log("data.visibletasks in make visibel", data.visibletasks[0])
+// }
+
 export const makevisible = () => {
   const areAllFromNamesReady = (names) => {
     if (!names || names.length === 0) return true
 
     for (let name of names) {
-      const obj = getObjectByName(name)
+      const task = getObjectByName(name)
 
-      if (!obj?.ready) return false
+      if (!task?.ready) return false
     }
 
     return true
   }
 
-  data.visibletasks = data.tasks.filter((task) => {
+  const highestPriorityPerDate = {}
+  const today = dayjs() // текущая дата
+
+  data.visibletasks = []
+
+  for (let task of data.tasks) {
+    // Если задача является выбранной, добавляем её в видимые задачи
     if (task === data.selected) {
-      return true
+      data.visibletasks.push(task)
+      continue // переходим к следующей итерации цикла
     }
 
     const isCurrentOrFutureTask =
@@ -63,7 +100,17 @@ export const makevisible = () => {
         ? dayjs(task.date).isBefore(dayjs(selectedDate.date).add(1, "day")) || task.date == selectedDate || !task.date
         : dayjs(task.date).isSame(dayjs(selectedDate.date)) || !task.date
 
-    return isCurrentOrFutureTask && (areAllFromNamesReady(task.fromNames) || task.type === "meeting") && !task.ready
-  })
-  console.log("data.visibletasks in make visibel", data.visibletasks[0])
+    if (isCurrentOrFutureTask && (areAllFromNamesReady(task.fromNames) || task.type === "meeting") && !task.ready) {
+      data.visibletasks.push(task)
+    }
+
+    // Обновляем highestPriorityPerDate только для текущих и будущих дат
+    if (task.date && !task.ready && dayjs(task.date).isSameOrAfter(today)) {
+      if (!highestPriorityPerDate[task.date] || PRIORITY[task.type] < PRIORITY[highestPriorityPerDate[task.date]]) {
+        highestPriorityPerDate[task.date] = task.type
+      }
+    }
+  }
+
+  Object.assign(data.calendarSet, highestPriorityPerDate)
 }

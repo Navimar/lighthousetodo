@@ -5,7 +5,7 @@ import search from "./components/search.js"
 import plusbutton from "./components/plusbutton.js"
 import { renderTasks } from "./components/tasks.js"
 import { loadData, sendData, inputSocket } from "/logic/socket.js"
-import { newscribetext } from "./logic/const.js"
+import { NEWSCRIBETEXT } from "./logic/const.js"
 import { safeSetLocalStorageItem, getLocalStorageItem, mouseY } from "/logic/util.js"
 import { currentTime, selectedDate, data, user } from "/logic/reactive.js"
 
@@ -60,11 +60,11 @@ function updateCurrentTimeMarker() {
       minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })
   }
 
-  for (let date in data.calendarSet) {
-    if (dayjs(date, "YYYY-MM-DD").isBefore(currentTime.date)) {
-      delete data.calendarSet[date]
-    }
-  }
+  // for (let date in data.calendarSet) {
+  //   if (dayjs(date, "YYYY-MM-DD").isBefore(currentTime.date)) {
+  //     delete data.calendarSet[date]
+  //   }
+  // }
   setTimeout(updateCurrentTimeMarker, 1000)
 }
 
@@ -106,7 +106,7 @@ window.addEventListener("load", function () {
     safeSetLocalStorageItem("timer", currentTime.timerStarted)
   })
   watch(() => {
-    safeSetLocalStorageItem("calendarSet", JSON.stringify(data.calendarSet))
+    // safeSetLocalStorageItem("calendarSet", JSON.stringify(data.calendarSet))
   })
   // watch(() => {
   //   data.tasks
@@ -125,7 +125,7 @@ window.addEventListener("load", function () {
         const range = document.createRange()
         const sel = window.getSelection()
         range.selectNodeContents(div)
-        if (!data.selected.name.startsWith(newscribetext)) range.collapse()
+        if (!data.selected.name.startsWith(NEWSCRIBETEXT)) range.collapse()
         sel.removeAllRanges()
         sel.addRange(range)
         const rect = div.getBoundingClientRect()

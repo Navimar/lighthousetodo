@@ -37,12 +37,12 @@ export function inputSocket() {
       data.tasks = syncTasks(data.tasks, msg.tasks)
 
       // Синхронизация календаря, если нужно
-      data.calendarSet = msg.calendarSet ? msg.calendarSet : data.calendarSet
+      // data.calendarSet = msg.calendarSet ? msg.calendarSet : data.calendarSet
 
       // Синхронизация версии, если нужно
-      if (msg.version) {
-        data.version = msg.version
-      }
+      // if (msg.version) {
+      //   data.version = msg.version
+      // }
 
       makevisible()
       sort()
@@ -73,7 +73,7 @@ export const sendData = async (changedTasks) => {
   let sentdata = {
     user: user,
     tasks: changedTasks.map((id) => getObjectById(id)), // Отправляем только задачи, которые были изменены
-    calendarSet: data.calendarSet,
+    // calendarSet: data.calendarSet,
   }
 
   if (auth.currentUser)

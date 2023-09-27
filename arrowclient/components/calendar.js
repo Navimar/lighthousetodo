@@ -65,19 +65,49 @@ export default () => {
     const isToday = dayjs().isSame(date, "day")
     const isSelectedDate = dayjs(selectedDate.date).isSame(date, "day")
     const today = isToday ? "text-white bg-old dark:bg-darkold" : ""
+    // const today = isToday ? " border-old dark:border-darkold" : ""
     const focused = isSelectedDate ? "dark:border-mygray border-mygray " : "border-transparent"
 
+    // const calendarDot = () => {
+    //   const formattedDate = date.format("YYYY-MM-DD")
+    //   const taskType = data.calendarSet[formattedDate]
+
+    //   const taskTypeToCSS = {
+    //     meeting: "text-old bg-lightgray dark:bg-nearblack",
+    //     frame: "bg-lightgray dark:bg-nearblack",
+    //     deadline: "text-mygray bg-lightgray dark:bg-nearblack",
+    //     window: "bg-lightgray dark:bg-nearblack",
+    //   }
+
+    //   if (taskType) {
+    //     return taskTypeToCSS[taskType] || "bg-yellow-100 dark:bg-black" // Возвращает специфический стиль для типа или стиль по умолчанию
+    //   }
+
+    //   return "bg-nearwhite dark:bg-black"
+    // }
+
     const calendarDot = () => {
-      if (!isToday && data.calendarSet[date.format("YYYY-MM-DD")]) return "bg-lightgray dark:bg-nearblack"
-      return "bg-nearwhite dark:bg-black"
+      const formattedDate = date.format("YYYY-MM-DD")
+      const taskType = data.calendarSet[formattedDate]
+
+      const taskTypeToCSS = {
+        meeting: "text-old dark:text-darkold",
+        frame: "text-lightgray",
+        deadline: "text-mygray",
+        window: "text-lightgray",
+      }
+
+      if (taskType) {
+        return html`<span class="absolute ${taskTypeToCSS[taskType]}">&nbsp;●</span>`
+      } else return ""
     }
 
     if (date)
       return html`<td
         @click="${() => clickOnCaldendarDay(date.date())}"
         class="border-2 border-lightgray dark:border-nearblack text-center p-0 ">
-        <div class="notomono leading-6 w-full h-full border-2 ${focused} ${calendarDot()} ${today}">
-          ${date.date()}
+        <div class="notomono leading-6 w-full h-full border-2 ${focused} ${today}">
+          ${date.date()}${calendarDot()}
         </div>
       </td>`
     else return html`<td class="leading-3 text-center p-0">&nbsp;</td>`
