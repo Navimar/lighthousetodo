@@ -34,6 +34,9 @@ function adjustDate(daysToAdd) {
 }
 
 function adjustTime(min) {
+  let pc = document.getElementById("pauseCheckbox")
+  if (pc) pc.checked = false
+
   const dateInput = document.getElementById("dateInput")
   const timeInput = document.getElementById("timeInput")
 

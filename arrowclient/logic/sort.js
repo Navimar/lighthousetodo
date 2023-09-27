@@ -105,4 +105,20 @@ export default () => {
     }
     return 0
   })
+
+  if (
+    data.visibletasks[0] &&
+    (dayjs(data.visibletasks[0].time, "HH:mm").isAfter(dayjs()) || data.visibletasks[0].pause)
+  ) {
+    // Find the index of the first task that's due or overdue based on the current time
+    let index = data.visibletasks.findIndex(
+      (task) => dayjs(task.time + " " + task.date, "HH:mm YYYY-MM-DD").isSameOrBefore(dayjs()) && !task.pause,
+    )
+
+    if (index != -1) {
+      // Move the due or overdue task to the start of the list
+      let [task] = data.visibletasks.splice(index, 1)
+      data.visibletasks.unshift(task)
+    }
+  }
 }

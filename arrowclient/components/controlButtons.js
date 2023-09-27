@@ -3,6 +3,8 @@ import css from "../css.js"
 import { data } from "/logic/reactive.js"
 import saveTask from "/logic/saveTask.js"
 import { riseTask } from "/logic/manipulate.js"
+import { makevisible } from "/logic/exe.js"
+import sort from "/logic/sort.js"
 
 let checkedPause = (task) => {
   if (task.pause) return "checked"
@@ -18,7 +20,13 @@ let checkedReady = (task) => {
 let saveButton = () => {
   saveTask("sv")
   data.selected = false
-  window.scrollTo(0, 0)
+
+  makevisible()
+
+  sort()
+  // data.visibletasks = []
+  data.selected = data.visibletasks[0]
+  // window.scrollTo(0, 0)
 }
 
 let sinkTask = (task) => {
@@ -30,11 +38,9 @@ let sinkTask = (task) => {
   }
   saveTask("sink")
   data.selected = false
-  // Promise.resolve().then(() => {
-  //   console.log('sink', filteredTasks)
-  //   data.selected = filteredTasks[0]
-  //   console.log('sink', filteredTasks)
-  // });
+  makevisible()
+  sort()
+  data.selected = data.visibletasks[0]
 }
 
 export default (task) =>

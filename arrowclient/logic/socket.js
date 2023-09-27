@@ -2,9 +2,10 @@ import { auth } from "/components/authentication.js"
 import { status, data, user } from "/logic/reactive.js"
 import sort from "/logic/sort.js"
 import syncTasks from "../../united/syncTasks"
+import { getObjectById } from "/logic/util"
 
 import { io } from "socket.io-client"
-import { makevisible } from "./exe"
+import { makevisible } from "/logic/exe"
 
 const socket = io()
 
@@ -68,16 +69,17 @@ export const loadData = async () => {
     }
 }
 
-export const sendData = async () => {
+export const sendData = async (changedTasks) => {
   let sentdata = {
     user: user,
-    tasks: data.tasks,
+    tasks: changedTasks.map((id) => getObjectById(id)), // Отправляем только задачи, которые были изменены
     calendarSet: data.calendarSet,
   }
+
   if (auth.currentUser)
     try {
-      const token = await getToken("sd") // Получение нового токена
-      sentdata.user.token = token // Добавляем токен к данным, которые отправляем
+      const token = await getToken("sd")
+      sentdata.user.token = token
       console.log("sendData", sentdata)
       socket.emit("save", sentdata)
     } catch (error) {

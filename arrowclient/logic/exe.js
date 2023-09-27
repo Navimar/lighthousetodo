@@ -65,13 +65,5 @@ export const makevisible = () => {
 
     return isCurrentOrFutureTask && (areAllFromNamesReady(task.fromNames) || task.type === "meeting") && !task.ready
   })
-
-  // // Сортировка visibletasks на основе свойства hidden
-  // data.visibletasks.sort((a, b) => b.hidden - a.hidden)
-
-  // // Обновление свойства hidden для всех задач
-  // const visibleTaskSet = new Set(data.visibletasks)
-  // data.tasks.forEach((task) => (task.hidden = !visibleTaskSet.has(task)))
-
-  // console.log("makevisible  data.visibletasks", data.visibletasks)
+  console.log("data.visibletasks in make visibel", data.visibletasks[0])
 }

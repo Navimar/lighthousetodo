@@ -3,10 +3,27 @@ import { data } from "/logic/reactive.js"
 import dayjs from "dayjs"
 
 const nameCache = {}
+const idCache = {}
 
 export const getDayjsDateFromTask = (task) => {
   if (!task) return dayjs()
   return dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
+}
+
+export const getObjectById = (id) => {
+  // Проверяем, есть ли задача с таким id в кэше
+  if (idCache[id]?.id === id) {
+    return idCache[id]
+  }
+
+  // Ищем задачу в массиве data.tasks
+  const foundTask = data.tasks.find((task) => task.id === id)
+
+  // Если задача найдена, добавляем её в кэш и возвращаем
+  if (foundTask) {
+    idCache[id] = foundTask
+    return foundTask
+  }
 }
 
 export const getObjectByName = (name) => {

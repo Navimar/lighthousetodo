@@ -1,12 +1,14 @@
 import sort from "/logic/sort.js"
 import { data } from "/logic/reactive.js"
 import { isNameTaken } from "/logic/util.js"
+import { clearSearch } from "/logic/manipulate"
 import { makevisible } from "/logic/exe.js"
 import addScribe from "/logic/addscribe"
 import dayjs from "dayjs"
 import { sendData } from "/logic/socket"
 
 export default (m) => {
+  let changedTasks = []
   //понять откуда вызвано сохрание
   console.log("saveTask", m)
   //если нет выделенных то выйти
@@ -65,18 +67,25 @@ export default (m) => {
       name = data.selected.name
       data.selected.error = true
     }
+    //провереяем что имя не пусто
+    if (name === "") {
+      name = data.selected.name
+      data.selected.error = true
+    }
 
     for (let theTask of data.tasks) {
       // ищем и удаляем все ссылки на старое имя
       for (let fni in theTask.fromNames) {
         if (theTask.fromNames[fni] && theTask.fromNames[fni].toLowerCase() == data.selected.name.toLowerCase()) {
           theTask.fromNames.splice(fni, 1)
+          changedTasks.push(theTask.id)
         }
       }
 
       for (let tni in theTask.toNames) {
         if (theTask.toNames[tni] && theTask.toNames[tni].toLowerCase() == data.selected.name.toLowerCase()) {
           theTask.toNames.splice(tni, 1)
+          changedTasks.push(theTask.id)
         }
       }
 
@@ -87,6 +96,7 @@ export default (m) => {
           if (theTask.toNames && theTask.toNames.indexOf(name) === -1) {
             //дописываем в ссылки
             theTask.toNames.push(name)
+            changedTasks.push(theTask.id)
           }
         }
       }
@@ -97,10 +107,13 @@ export default (m) => {
           if (theTask.fromNames && theTask.fromNames.indexOf(name) === -1) {
             //дописываем в ссылки
             theTask.fromNames.push(name)
+            changedTasks.push(theTask.id)
           }
         }
       }
     }
+
+    changedTasks.push(data.selected.id)
 
     //ставим временную метку
     data.selected.timestamp = dayjs().valueOf()
@@ -135,17 +148,28 @@ export default (m) => {
 
     //создаем новые записи
     newScribesFromNames.forEach((txt) => {
-      addScribe(txt, [], [name])
+      let newTask = addScribe(txt, [], [name])
+      changedTasks.push(newTask.id)
+      console.log("6 changedTasks", changedTasks)
     })
     newScribesToNames.forEach((txt) => {
-      addScribe(txt, [name], [])
+      let newTask = addScribe(txt, [name], [])
+      changedTasks.push(newTask.id)
+      console.log("7 changedTasks", changedTasks)
     })
 
-    data.selected = false
+    // data.selected = false
 
-    makevisible()
-    sort()
-    sendData()
+    // makevisible()
+    // sort()
+    changedTasks = [...new Set(changedTasks)]
+
+    // Отправляем массив
+    sendData(changedTasks)
+
+    // Опустошаем строку поиска
+    clearSearch()
+
     return true
   }
 }

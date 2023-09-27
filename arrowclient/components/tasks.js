@@ -12,8 +12,10 @@ import { clickPos } from "/logic/util.js"
 
 import dayjs from "dayjs"
 import { html } from "@arrow-js/core"
+let firststicky = true
 
 export let renderTasks = () => {
+  firststicky = true
   if (searchstring.text) {
     let filteredTasks = data.tasks.slice()
     // Filter tasks by matching with the search input
@@ -28,33 +30,16 @@ export let renderTasks = () => {
     }
     return filteredTasks.map(renderTask)
   }
-
-  if (
-    data.visibletasks[0] &&
-    (dayjs(data.visibletasks[0].time, "HH:mm").isAfter(dayjs()) || data.visibletasks[0].pause)
-  ) {
-    let swapedtasks = data.visibletasks.slice()
-    // Find the index of the first task that's due or overdue based on the current time
-    let index = swapedtasks.findIndex(
-      (task) => dayjs(task.time + " " + task.date, "HH:mm YYYY-MM-DD").isSameOrBefore(dayjs()) && !task.pause,
-    )
-
-    if (index != -1) {
-      // Move the due or overdue task to the start of the list
-      let [task] = swapedtasks.splice(index, 1)
-      swapedtasks.unshift(task)
-    }
-    console.log("render swapedtasks", swapedtasks)
-    return swapedtasks.map(renderTask)
-  }
-  console.log("render", data.visibletasks)
   return data.visibletasks.map(renderTask)
 }
-
 let renderTask = (task, index) => {
   let firstclass
   if (task.ready) firstclass += "border-box border-b-02rem border-green-500 dark:border-green-900"
   else firstclass = index == 0 ? "border-box border-b-02rem border-old dark:border-darkold " : ""
+  if (task.type == "meeting" && firststicky) {
+    firstclass += "sticky bottom-0"
+    firststicky = false
+  }
   if (data.selected.name == task.name)
     // Редактируемый
     return html` <div
