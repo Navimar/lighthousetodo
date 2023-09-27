@@ -14,6 +14,14 @@
     --background-image: url("img/backdark.jpeg");
   }
 }
+html {
+  font-size: 16px;
+}
+@media (max-width: 640px) {
+  html {
+    font-size: 24px; /* Увеличиваем базовый размер шрифта для мобильных устройств */
+  }
+}
 
 * {
   font-family: "IBM Plex Sans", sans-serif;
