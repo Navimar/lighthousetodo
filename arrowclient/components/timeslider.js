@@ -1,5 +1,5 @@
 import { html } from "@arrow-js/core"
-import { currentTime } from "/logic/reactive.js"
+import { currentTime } from "~/logic/reactive.js"
 import dayjs from "dayjs"
 
 function updateSliderLabel(e) {

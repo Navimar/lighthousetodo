@@ -1,11 +1,11 @@
 import { html, reactive, watch } from "@arrow-js/core"
 import { initializeApp } from "firebase/app"
 import { GoogleAuthProvider, signInWithPopup, getAuth, onAuthStateChanged, signOut } from "firebase/auth"
-import { loadData } from "/logic/socket.js"
+import { loadData } from "~/logic/socket.js"
 
 import css from "/css.js"
-import { user, data } from "/logic/reactive.js"
-import firebaseConfig from "/firebase.config.js"
+import { user, data } from "~/logic/reactive.js"
+import firebaseConfig from "~/firebase.config.js"
 initializeApp(firebaseConfig)
 
 export let authentication = () => {

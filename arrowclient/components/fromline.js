@@ -1,7 +1,7 @@
 import { html } from "@arrow-js/core"
 import { selectTask } from "/logic/manipulate.js"
-import { clickPos } from "/logic/util.js"
-import { getObjectByName } from "../logic/util"
+import { clickPos } from "~/logic/util.js"
+import { getObjectByName } from "~/logic/util"
 
 export default (task) => {
   const readyNames = []

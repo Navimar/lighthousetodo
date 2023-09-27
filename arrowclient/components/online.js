@@ -1,5 +1,5 @@
 import { html } from "@arrow-js/core"
-import { status } from "/logic/reactive.js"
+import { status } from "~/logic/reactive.js"
 
 export default () => {
   if (status.online) return

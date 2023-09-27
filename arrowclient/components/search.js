@@ -1,6 +1,6 @@
-import { searchstring } from "/logic/reactive.js";
+import { searchstring } from "~/logic/reactive.js";
 import { html } from "@arrow-js/core";
-import { clearSearch } from "/logic/manipulate.js";
+import { clearSearch } from "~/logic/manipulate.js";
 
 export default () => {
 	return html`

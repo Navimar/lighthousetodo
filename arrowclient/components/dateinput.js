@@ -1,7 +1,7 @@
 import { html } from "@arrow-js/core"
 import dayjs from "dayjs"
 
-import css from "../css.js"
+import css from "~/css.js"
 
 const updateTimeSlider = (event) => {
   const time = event.target.value

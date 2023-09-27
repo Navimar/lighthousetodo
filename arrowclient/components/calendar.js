@@ -1,10 +1,10 @@
 import { html, reactive, watch } from "@arrow-js/core"
 import dayjs from "dayjs"
 
-import { selectedDate, data } from "/logic/reactive.js"
-import { makevisible } from "/logic/exe.js"
-import saveTask from "/logic/savetask.js"
-import sort from "/logic/sort.js"
+import { selectedDate, data } from "~/logic/reactive.js"
+import { makevisible } from "~/logic/exe.js"
+import saveTask from "~/logic/savetask.js"
+import sort from "~/logic/sort.js"
 
 let today = () => {
   selectedDate.date = dayjs().format("YYYY-MM-DD")

@@ -1,6 +1,6 @@
 import { html } from "@arrow-js/core"
 
-import { autocomplete } from "/logic/reactive.js"
+import { autocomplete } from "~/logic/reactive.js"
 
 function complete(e, divId) {
   // Получить элемент по его ID

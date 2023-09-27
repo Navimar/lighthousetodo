@@ -1,5 +1,5 @@
 import { html } from "@arrow-js/core";
-import css from "../css.js";
+import css from "~/css.js";
 
 let checked = (task, type) => {
 	if (task.type == type) return "checked";

@@ -1,10 +1,10 @@
 import { html } from "@arrow-js/core"
-import css from "../css.js"
-import { data } from "/logic/reactive.js"
-import saveTask from "/logic/saveTask.js"
-import { riseTask } from "/logic/manipulate.js"
-import { makevisible } from "/logic/exe.js"
-import sort from "/logic/sort.js"
+import css from "~/css.js"
+import { data } from "~/logic/reactive.js"
+import saveTask from "~/logic/saveTask.js"
+import { riseTask } from "~/logic/manipulate.js"
+import { makevisible } from "~/logic/exe.js"
+import sort from "~/logic/sort.js"
 
 let checkedPause = (task) => {
   if (task.pause) return "checked"
