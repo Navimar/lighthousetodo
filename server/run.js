@@ -85,15 +85,16 @@ export let inputSocket = (io) => {
           console.log(msg, "load")
           let data = await load(userId)
 
-          // вот тут всем таск из data.tasks у которых нет id нужно присвоить id = uuidv4();
-          data.tasks = data.tasks.map((task) => {
-            if (!task.id) {
-              task.id = uuidv4()
-            }
-            return task
-          })
-
-          socket.emit("update", data)
+          if (data) {
+            // вот тут всем таск из data.tasks у которых нет id нужно присвоить id = uuidv4();
+            data.tasks = data.tasks.map((task) => {
+              if (!task.id) {
+                task.id = uuidv4()
+              }
+              return task
+            })
+            socket.emit("update", data)
+          } else console.log(msg, userId, "не получилось загрузить данные из базы")
         } else {
           console.log(msg, "login error on load")
           socket.emit("err", "Скорее всего вышла новая версия и вам нужно перезайти в приложение!")
