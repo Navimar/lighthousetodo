@@ -3,6 +3,7 @@ import { html } from "@arrow-js/core"
 import { autocomplete } from "~/logic/reactive.js"
 
 function complete(e, divId) {
+  console.log("complete", divId)
   // Получить элемент по его ID
   const divElement = document.getElementById(divId)
 
@@ -22,6 +23,7 @@ function complete(e, divId) {
     // Замена строки
     lines[lineIndex] = e.currentTarget.innerText
   } else return
+  console.log("autocomplete.line", autocomplete.line)
 
   // Объединить строки, обернув каждую из них в <div> и установить обратно в div
   divElement.innerHTML = lines.map((line) => `<div>${line}</div>`).join("")
@@ -49,7 +51,7 @@ export default (divId) => {
   else return ""
 }
 
-let handleEvent = (event) => {
+document.addEventListener("click", function (event) {
   const autocompleteElem = document.querySelector("#autocomplete-list")
 
   if (!autocompleteElem) return
@@ -66,6 +68,4 @@ let handleEvent = (event) => {
 
   // клик был за пределами элемента .autocomplete-list
   autocomplete.list = []
-}
-document.addEventListener("mousedown", handleEvent)
-document.addEventListener("touchstart", handleEvent)
+})
