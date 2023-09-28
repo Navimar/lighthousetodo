@@ -28,6 +28,7 @@ export default (name, fromNames = [], toNames = []) => {
   if (existingTask) {
     // Обновление полей существующей задачи
     existingTask.ready = false
+    existingTask.type = "window"
     existingTask.name = name
     existingTask.note = ""
     existingTask.time = dayjs().format("HH:mm")

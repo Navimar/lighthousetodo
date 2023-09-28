@@ -82,6 +82,7 @@ export let inputSocket = (io) => {
       if (msg.token) {
         const userId = await verifyToken(msg.token)
         if (userId) {
+          addUser(userId, socket)
           console.log(msg, "load")
           let data = await load(userId)
 

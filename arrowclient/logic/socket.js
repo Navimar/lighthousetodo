@@ -30,23 +30,13 @@ export function inputSocket() {
     status.online = false
   })
   socket.on("update", function (msg) {
-    console.log("update", msg)
     // Если их нет, инициализируйте как пустые массивы или соответствующие значения.
     if (msg) {
       // Синхронизация задач
       data.tasks = syncTasks(data.tasks, msg.tasks)
 
-      // Синхронизация календаря, если нужно
-      // data.calendarSet = msg.calendarSet ? msg.calendarSet : data.calendarSet
-
-      // Синхронизация версии, если нужно
-      // if (msg.version) {
-      //   data.version = msg.version
-      // }
-
       makevisible()
       sort()
-      console.log("loaded")
     } else {
       console.log("No incoming data")
     }
