@@ -32,7 +32,7 @@ function complete(e, divId) {
 export default (divId) => {
   if (autocomplete.list && autocomplete.div == divId && autocomplete.list.length > 0)
     return html`
-      <div id="autocomplete-list" class="w-1/2 absolute z-10 top-full ">
+      <div id="autocomplete-list" class="w-full sm:w-1/2 absolute z-10 top-full ">
         <div class=" border border-mygray dark:border-nearblack rounded shadow-md bg-white dark:bg-black">
           ${autocomplete.list.map((e) => {
             return html`
@@ -49,7 +49,7 @@ export default (divId) => {
   else return ""
 }
 
-document.addEventListener("mousedown", function (event) {
+document.addEventListener("click", function (event) {
   const autocompleteElem = document.querySelector("#autocomplete-list")
 
   if (!autocompleteElem) return
