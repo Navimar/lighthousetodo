@@ -18,7 +18,8 @@ function complete(e, divId) {
   const lines = divElement.innerText.trim().split("\n")
   console.log("autocomplete.line", autocomplete.line)
   // Найти индекс строки, которую нужно заменить
-  const lineIndex = lines.indexOf(autocomplete.line)
+  const lowerCaseLines = lines.map((line) => line.toLowerCase())
+  const lineIndex = lowerCaseLines.indexOf(autocomplete.line.toLowerCase())
 
   if (lineIndex !== -1) {
     // Замена строки
