@@ -79,10 +79,9 @@ function updateCurrentTimeMarker() {
 //       </button>
 //     </div>
 const render = html`
-  ${() => authentication()}
   <div class="bgimg bg-nearwhite dark:bg-black fixed w-full h-full -z-10 bg-cover"></div>
   <div class="flex flex-col gap-4 pb-80 max-w-full w-40rem m-auto">
-    ${() => search()} ${() => renderCalendar(dayjs())} ${() => renderTasks()}
+    ${() => search()} ${() => authentication()} ${() => renderCalendar(dayjs())} ${() => renderTasks()}
   </div>
   ${plusbutton} ${() => online()}
 `

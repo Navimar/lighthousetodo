@@ -56,7 +56,7 @@ export default (task) =>
             ${checkedPause(task)} />
           Ожидание
         </label>`
-      else return html` <button class="${css.button}" @click="${() => sinkTask(task)}"> Притопить </button>`
+      else return html` <button class="${css.button}" @click="${() => sinkTask(task)}">Потом</button>`
     }}
     <label
       class="p-1 text-black bg-lightgray border-white dark:border-black dark:bg-mygray rounded-0 text-center inline-block border-b-02rem active:border-b-old dark:active:border-b-darkold cursor-pointer whitespace-nowrap"
@@ -67,5 +67,5 @@ export default (task) =>
         id="readyCheckbox" />
       Готово
     </label>
-    <button class="${css.button}" @click="${saveButton}">Сохранить</button>
+    <button id="savebutton" class="${css.button}" @click="${saveButton}">Сохранить</button>
   </div>`

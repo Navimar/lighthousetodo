@@ -12,14 +12,15 @@ export let authentication = () => {
   if (user && user.name) {
     console.log("logged in as", user)
     return html`
-      <div class="bg-white dark:bg-black dark:text-white p-1 text-sm bottom-0 left-0 fixed">
-        ${() => user.name}
-        <button class="${css.button}" @click="${() => logout()}"> Выйти </button>
+      <div class="flex bg-nearwhite notomono dark:bg-black dark:text-white p-2 text-sm ">
+        <div class="self-center">👤 <strong class="select-text">${() => user.name}</strong></div>
+        <button class="ml-auto ${css.button}" @click="${() => logout()}"> Выйти </button>
       </div>
     `
   } else
     return html`
-      <div class="  fixed z-50 bgimg bg-white dark:bg-black w-full flex justify-center items-center h-screen">
+      <div
+        class="fixed z-50 bgimg bg-white dark:bg-black w-full flex justify-center items-center h-screen top-0 left-0">
         <div class="m-auto p-auto flex flex-col gap-3 bg-nearwhite dark:bg-black w-3/4 sm:w-1/3 ">
           <button class="${css.button} m-3" @click="${() => signInWithGoogle()}"> Войти через Google </button>
         </div>
