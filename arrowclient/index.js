@@ -88,6 +88,10 @@ const render = html`
 `
 
 window.addEventListener("load", function () {
+  document.addEventListener("gesturestart", function (e) {
+    e.preventDefault()
+  })
+
   window.addEventListener("paste", function (e) {
     e.preventDefault()
     let text = e.clipboardData.getData("text/plain")
