@@ -24,6 +24,7 @@ async function getToken() {
 export function inputSocket() {
   socket.on("connect", function () {
     status.online = true
+    loadData()
   })
   socket.on("disconnect", function () {
     console.log("DISCONNECT!!!")
@@ -37,6 +38,7 @@ export function inputSocket() {
 
       makevisible()
       sort()
+      // console.log(socket.id, "update", msg)
     } else {
       console.log("No incoming data")
     }
