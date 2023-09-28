@@ -15,15 +15,17 @@ function complete(e, divId) {
 
   // Получить текущий текст из div и разделить его на строки
   const lines = divElement.innerText.trim().split("\n")
-
+  console.log("autocomplete.line", autocomplete.line)
   // Найти индекс строки, которую нужно заменить
   const lineIndex = lines.indexOf(autocomplete.line)
 
   if (lineIndex !== -1) {
     // Замена строки
     lines[lineIndex] = e.currentTarget.innerText
-  } else return
-  console.log("autocomplete.line", autocomplete.line)
+  } else {
+    console.log(lineIndex, "lineindex error")
+    return
+  }
 
   // Объединить строки, обернув каждую из них в <div> и установить обратно в div
   divElement.innerHTML = lines.map((line) => `<div>${line}</div>`).join("")
