@@ -49,7 +49,7 @@ export default (divId) => {
   else return ""
 }
 
-document.addEventListener("click", function (event) {
+let handleEvent = (event) => {
   const autocompleteElem = document.querySelector("#autocomplete-list")
 
   if (!autocompleteElem) return
@@ -66,4 +66,6 @@ document.addEventListener("click", function (event) {
 
   // клик был за пределами элемента .autocomplete-list
   autocomplete.list = []
-})
+}
+document.addEventListener("mousedown", handleEvent)
+document.addEventListener("touchstart", handleEvent)
