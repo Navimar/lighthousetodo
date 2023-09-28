@@ -12,63 +12,64 @@ export let authentication = () => {
   if (user && user.name) {
     console.log("logged in as", user)
     return html`
-      <div class="bg-white  dark:bg-black dark:text-white p-1 text-sm bottom-0 left-0 fixed">
+      <div class="bg-white dark:bg-black dark:text-white p-1 text-sm bottom-0 left-0 fixed">
         ${() => user.name}
         <button class="${css.button}" @click="${() => logout()}"> Выйти </button>
       </div>
     `
   } else
     return html`
-      <div class="fixed z-50 bgimg bg-white dark:bg-black w-full h-full">
-        <div class="m-auto flex flex-col gap-3 w-1/4 bg-nearwhite dark:bg-black lg:w-1/4 md:w-1/2 sm:w-3/4 xs:w-full">
+      <div class="  fixed z-50 bgimg bg-white dark:bg-black w-full flex justify-center items-center h-screen">
+        <div class="m-auto p-auto flex flex-col gap-3 bg-nearwhite dark:bg-black w-3/4 sm:w-1/3 ">
           <button class="${css.button} m-3" @click="${() => signInWithGoogle()}"> Войти через Google </button>
-          <form
-            class="flex-col bg-mygray flex m-3"
-            id="registerForm"
-            @submit="${(e) => {
-              e.preventDefault()
-              register()
-            }}">
-            <input
-              class="bg-white dark:bg-nearblack  p-1"
-              type="text"
-              id="regUsername"
-              placeholder="Username"
-              required />
-            <input
-              class="bg-white dark:bg-nearblack p-1"
-              type="password"
-              id="regPassword"
-              placeholder="Password"
-              required />
-            <input class="${css.button}" type="submit" value="Регистрация" />
-          </form>
-
-          <form
-            class="flex-col flex bg-mygray m-3"
-            id="loginForm"
-            @submit="${(e) => {
-              e.preventDefault()
-              login()
-            }}">
-            <input
-              class="bg-white dark:bg-nearblack p-1"
-              type="text"
-              id="loginUsername"
-              placeholder="Username"
-              required />
-            <input
-              class="bg-white dark:bg-nearblack p-1"
-              type="password"
-              id="loginPassword"
-              placeholder="Password"
-              required />
-            <input class="${css.button}" type="submit" value="Вход" />
-          </form>
         </div>
       </div>
     `
 }
+
+//  <form
+//             class="flex-col bg-mygray flex m-3"
+//             id="registerForm"
+//             @submit="${(e) => {
+//             e.preventDefault()
+//             register()
+//           }}">
+//             <input
+//               class="bg-white dark:bg-nearblack  p-1"
+//               type="text"
+//               id="regUsername"
+//               placeholder="Username"
+//               required />
+//             <input
+//               class="bg-white dark:bg-nearblack p-1"
+//               type="password"
+//               id="regPassword"
+//               placeholder="Password"
+//               required />
+//             <input class="${css.button}" type="submit" value="Регистрация" />
+//           </form>
+
+//           <form
+//             class="flex-col flex bg-mygray m-3"
+//             id="loginForm"
+//             @submit="${(e) => {
+//             e.preventDefault()
+//             login()
+//           }}">
+//             <input
+//               class="bg-white dark:bg-nearblack p-1"
+//               type="text"
+//               id="loginUsername"
+//               placeholder="Username"
+//               required />
+//             <input
+//               class="bg-white dark:bg-nearblack p-1"
+//               type="password"
+//               id="loginPassword"
+//               placeholder="Password"
+//               required />
+//             <input class="${css.button}" type="submit" value="Вход" />
+//           </form>
 export const auth = getAuth()
 
 export const authenticationOnLoad = () => {

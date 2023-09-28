@@ -48,7 +48,7 @@ export default (task) =>
     <button class="${css.button}" @click="${() => riseTask(task)}"> Поднять </button>
     ${() => {
       if (task.type == "frame" || task.type == "meeting" || task.type == "deadline")
-        return html`<label class="${css.button}" for="pauseCheckbox">
+        return html`<label class="${css.button} whitespace-nowrap" for="pauseCheckbox">
           <input
             class=" w-3.5 h-3.5 shadow-none dark:accent-darkold rounded-lg appearance-none dark:checked:bg-darkold mx-2 border-2 border-old dark:border-darkold checked:bg-old accent-old"
             type="checkbox"
