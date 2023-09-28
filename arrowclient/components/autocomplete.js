@@ -6,6 +6,7 @@ function complete(e, divId) {
   console.log("complete", divId)
   // Получить элемент по его ID
   const divElement = document.getElementById(divId)
+  console.log("divElement", divElement)
 
   // Если div не найден, выходим из функции
   if (!divElement) {
