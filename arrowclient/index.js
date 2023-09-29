@@ -95,11 +95,8 @@ window.addEventListener("load", function () {
   function preventScrollAboveTop() {
     if (window.scrollY <= 0) {
       document.documentElement.style.position = "fixed"
-      document.documentElement.style.top = `-${window.scrollY}px`
-    } else {
-      document.documentElement.style.position = ""
-      document.documentElement.style.top = ""
-    }
+      window.scrollTo(0, 1) // Маленькая прокрутка вниз, чтобы убедиться, что пользователь остается ниже верхнего края
+    } else document.documentElement.style.position = ""
   }
 
   window.addEventListener("scroll", preventScrollAboveTop)
