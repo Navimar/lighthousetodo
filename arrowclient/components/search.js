@@ -4,7 +4,8 @@ import { clearSearch } from "~/logic/manipulate.js"
 
 export default () => {
   return html`
-<div class="z-[40] max-w-full m-auto w-40rem sticky top-0">
+<div class="h-11 max-w-full m-auto w-40rem">
+<div class="z-[40] max-w-full m-auto w-40rem fixed top-0">
   ${() => crossbutton()}
     <input 
       id="searchinput" 

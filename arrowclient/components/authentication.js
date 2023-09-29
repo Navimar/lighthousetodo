@@ -2,6 +2,7 @@ import { html, reactive, watch } from "@arrow-js/core"
 import { initializeApp } from "firebase/app"
 import { GoogleAuthProvider, signInWithPopup, getAuth, onAuthStateChanged, signOut } from "firebase/auth"
 import { loadData } from "~/logic/socket.js"
+import { searchstring } from "~/logic/reactive.js"
 
 import css from "/css.js"
 import { user, data } from "~/logic/reactive.js"
@@ -11,12 +12,14 @@ initializeApp(firebaseConfig)
 export let authentication = () => {
   if (user && user.name) {
     console.log("logged in as", user)
-    return html`
-      <div class="flex bg-nearwhite notomono dark:bg-black dark:text-white p-2 text-sm ">
-        <div class="self-center">👤 <strong class="select-text">${() => user.name}</strong></div>
-        <button class="ml-auto ${css.button}" @click="${() => logout()}"> Выйти </button>
-      </div>
-    `
+    if (searchstring.text === "")
+      return html`
+        <div class="flex bg-nearwhite notomono dark:bg-black dark:text-white p-2 text-sm ">
+          <div class="self-center">👤 <strong class="select-text">${() => user.name}</strong></div>
+          <button class="ml-auto ${css.button}" @click="${() => logout()}"> Выйти </button>
+        </div>
+      `
+    else return ""
   } else
     return html`
       <div

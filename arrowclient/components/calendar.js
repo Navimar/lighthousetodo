@@ -4,6 +4,7 @@ import dayjs from "dayjs"
 import { selectedDate, data } from "~/logic/reactive.js"
 import { makevisible } from "~/logic/exe.js"
 import saveTask from "~/logic/savetask.js"
+import { searchstring } from "~/logic/reactive.js"
 import sort from "~/logic/sort.js"
 
 let today = () => {
@@ -127,27 +128,28 @@ export default () => {
   for (let i = 0; i < month.length; i += 7) {
     weeks.push(month.slice(i, i + 7))
   }
-
-  return html`
-    <div class="notomono w-full text-center p-3 bg-nearwhite dark:text-white dark:bg-black">
-      <div class="pb-3 text-base">${renderCalendarControls}</div>
-      <table class="text-base w-full">
-        <tr>
-          <td class="text-center pb-1 notomono">Пн</td>
-          <td class="text-center pb-1 notomono">Вт</td>
-          <td class="text-center pb-1 notomono">Ср</td>
-          <td class="text-center pb-1 notomono">Чт</td>
-          <td class="text-center pb-1 notomono">Пт</td>
-          <td class="text-center pb-1 notomono">Сб</td>
-          <td class="text-center pb-1 notomono">Вс</td>
-        </tr>
-        <tr> ${() => weeks[0].map(week)} </tr>
-        <tr> ${() => weeks[1].map(week)} </tr>
-        <tr> ${() => weeks[2].map(week)} </tr>
-        <tr> ${() => weeks[3].map(week)} </tr>
-        <tr> ${() => weeks[4].map(week)} </tr>
-        ${weeks[5] ? html`<tr> ${() => weeks[5].map(week)} </tr>` : ""}
-      </table>
-    </div>
-  `
+  if (searchstring.text === "")
+    return html`
+      <div class="notomono w-full text-center p-3 bg-nearwhite dark:text-white dark:bg-black">
+        <div class="pb-3 text-base">${renderCalendarControls}</div>
+        <table class="text-base w-full">
+          <tr>
+            <td class="text-center pb-1 notomono">Пн</td>
+            <td class="text-center pb-1 notomono">Вт</td>
+            <td class="text-center pb-1 notomono">Ср</td>
+            <td class="text-center pb-1 notomono">Чт</td>
+            <td class="text-center pb-1 notomono">Пт</td>
+            <td class="text-center pb-1 notomono">Сб</td>
+            <td class="text-center pb-1 notomono">Вс</td>
+          </tr>
+          <tr> ${() => weeks[0].map(week)} </tr>
+          <tr> ${() => weeks[1].map(week)} </tr>
+          <tr> ${() => weeks[2].map(week)} </tr>
+          <tr> ${() => weeks[3].map(week)} </tr>
+          <tr> ${() => weeks[4].map(week)} </tr>
+          ${weeks[5] ? html`<tr> ${() => weeks[5].map(week)} </tr>` : ""}
+        </table>
+      </div>
+    `
+  else return ""
 }
