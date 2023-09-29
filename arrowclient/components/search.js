@@ -13,6 +13,7 @@ export default () => {
       @input="${(e) => {
         searchstring.text = e.target.value
       }}"
+      @focus="&{()=>{ preventScroll: true}}"
     >
     </input>
   </div>
