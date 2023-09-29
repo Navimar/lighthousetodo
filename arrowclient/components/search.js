@@ -4,13 +4,13 @@ import { clearSearch } from "~/logic/manipulate.js"
 
 export default () => {
   return html`
-<div class="h-11 max-w-full m-auto w-40rem">
-<div class="z-[40] max-w-full m-auto w-40rem fixed top-0">
+<div class="m-auto max-w-full w-40rem h-11 mb-6">
+<div class="z-[40] max-w-full w-40rem px-3 fixed top-0 ">
   ${() => crossbutton()}
     <input 
       id="searchinput" 
       placeholder="Поиск..."
-      class="box-border h-11 rounded-lg p-2 block w-full top-0 bg-nearwhite dark:bg-black dark:text-white focus:outline-none"
+      class="box-border h-11 rounded-lg p-2 block w-full top-0 bg-nearwhite dark:bg-nearblack dark:text-white focus:outline-none"
       @input="${(e) => {
         window.scrollTo(0, 0)
         searchstring.text = e.target.value
@@ -18,6 +18,7 @@ export default () => {
     >
     </input>
   </div>
+</div>
   `
 }
 

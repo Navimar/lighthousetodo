@@ -16,7 +16,7 @@ module.exports = {
         lightgray: "#eee",
         mygray: "#a9a9a9",
         darkgray: "#555",
-        nearblack: "#222",
+        nearblack: "#151515",
       },
       spacing: {
         "40rem": "40rem",

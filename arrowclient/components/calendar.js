@@ -130,7 +130,7 @@ export default () => {
   }
   if (searchstring.text === "")
     return html`
-      <div class="notomono w-full text-center p-3 bg-nearwhite dark:text-white dark:bg-black">
+      <div class="notomono w-full text-center p-3 bg-nearwhite dark:text-white dark:bg-nearblack">
         <div class="pb-3 text-base">${renderCalendarControls}</div>
         <table class="text-base w-full">
           <tr>

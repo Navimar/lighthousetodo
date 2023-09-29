@@ -44,14 +44,14 @@ let renderTask = (task, index) => {
     // Редактируемый
     return html` <div
       id="selectedtask"
-      class="${firstclass} z-[45] flex min-h-screen flex-col gap-3 bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white ${errorclass(
+      class="${firstclass} -mx-3 z-[45] flex min-h-screen flex-col gap-3 bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white ${errorclass(
         task,
       )}">
       ${controlButtons(task)} ${radio(task)} ${timeSlider(task)} ${dateInput(task)} ${linkDivs(task)}
       ${() => fromLine(task)}
       <div
         id="edit"
-        class="w-full min-h-full whitespace-pre-wrap focus:outline-none"
+        class="w-full ml-3 min-h-full whitespace-pre-wrap focus:outline-none"
         contenteditable="true"
         role="textbox"
         aria-multiline="true"
@@ -66,7 +66,7 @@ let renderTask = (task, index) => {
         selectTask(task)
         clickPos(e)
       }}"
-      class="${firstclass} flex flex-col gap-3 break-words bg-nearwhite dark:bg-black p-3 rounded-lg overflow dark:text-white ${errorclass(
+      class="${firstclass} flex flex-col gap-3 break-words bg-nearwhite dark:bg-nearblack p-3 rounded-lg overflow dark:text-white ${errorclass(
         task,
       )}">
       ${() => fromLine(task)}

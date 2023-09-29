@@ -14,7 +14,7 @@ export let authentication = () => {
     console.log("logged in as", user)
     if (searchstring.text === "")
       return html`
-        <div class="flex bg-nearwhite notomono dark:bg-black dark:text-white p-2 text-sm ">
+        <div class="flex bg-nearwhite notomono dark:bg-nearblack dark:text-white p-2 text-sm ">
           <div class="self-center">👤 <strong class="select-text">${() => user.name}</strong></div>
           <button class="ml-auto ${css.button}" @click="${() => logout()}"> Выйти </button>
         </div>
