@@ -4,15 +4,17 @@ import { clearSearch } from "~/logic/manipulate.js"
 
 export default () => {
   return html`
-<div class="z-[40] max-w-full m-auto w-40rem fixed top-0">
+<div class="z-[40] max-w-full m-auto w-40rem sticky top-0">
   ${() => crossbutton()}
     <input 
       id="searchinput" 
       placeholder="Поиск..."
-      class="box-border h-11 rounded-lg p-2 block w-full sticky top-0 bg-nearwhite dark:bg-black dark:text-white focus:outline-none"
+      class="box-border h-11 rounded-lg p-2 block w-full top-0 bg-nearwhite dark:bg-black dark:text-white focus:outline-none"
       @input="${(e) => {
         searchstring.text = e.target.value
       }}"
+      @touchstart="${(e) => e.preventDefault()}"
+      @touchend="${(e) => e.target.focus()}"
     >
     </input>
   </div>
