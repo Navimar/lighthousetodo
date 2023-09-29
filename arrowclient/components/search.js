@@ -11,9 +11,9 @@ export default () => {
       placeholder="Поиск..."
       class="box-border h-11 rounded-lg p-2 block w-full top-0 bg-nearwhite dark:bg-black dark:text-white focus:outline-none"
       @input="${(e) => {
+        window.scrollTo(0, 0)
         searchstring.text = e.target.value
       }}"
-      @focus="${() => window.scrollTo(0, 100)}"
     >
     </input>
   </div>
