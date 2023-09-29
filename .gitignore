@@ -13,3 +13,5 @@ d111ocker-coe.yaml
 .gitignore
 arrowclient/dist/
 firebase.config.js
+digitalocean/digitalocean.pub
+digitalocean/digitalocean
