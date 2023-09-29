@@ -92,6 +92,14 @@ window.addEventListener("load", function () {
     document.execCommand("insertText", false, text)
   })
 
+  function preventScrollAboveTop() {
+    if (window.scrollY <= 0) {
+      window.scrollTo(0, 1) // Маленькая прокрутка вниз, чтобы убедиться, что пользователь остается ниже верхнего края
+    }
+  }
+
+  window.addEventListener("scroll", preventScrollAboveTop)
+
   authenticationOnLoad()
   inputSocket()
 
