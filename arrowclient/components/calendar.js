@@ -146,6 +146,7 @@ export default () => {
         <tr> ${() => weeks[2].map(week)} </tr>
         <tr> ${() => weeks[3].map(week)} </tr>
         <tr> ${() => weeks[4].map(week)} </tr>
+        ${weeks[5] ? html`<tr> ${() => weeks[5].map(week)} </tr>` : ""}
       </table>
     </div>
   `
