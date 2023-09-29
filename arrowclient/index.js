@@ -94,8 +94,8 @@ window.addEventListener("load", function () {
 
   function preventScrollAboveTop() {
     if (window.scrollY < 0) {
+      window.scrollTo(0, 0) // Маленькая прокрутка вниз, чтобы убедиться, что пользователь остается ниже верхнего края
       document.documentElement.style.overflowY = "hidden"
-      window.scrollTo(0, 1) // Маленькая прокрутка вниз, чтобы убедиться, что пользователь остается ниже верхнего края
     } else document.documentElement.style.overflowY = ""
   }
 
