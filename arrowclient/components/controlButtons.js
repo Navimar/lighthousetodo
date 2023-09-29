@@ -45,7 +45,14 @@ let sinkTask = (task) => {
 
 export default (task) =>
   html` <div class="grid grid-cols-4 gap-3">
-    <button class="${css.button}" @click="${() => riseTask(task)}"> Поднять </button>
+    <button
+      class="${css.button}"
+      @click="${
+        () => (data.selected = false)
+        // () => riseTask(task))
+      }">
+      Выход
+    </button>
     ${() => {
       if (task.type == "frame" || task.type == "meeting" || task.type == "deadline")
         return html`<label class="${css.button} whitespace-nowrap" for="pauseCheckbox">
