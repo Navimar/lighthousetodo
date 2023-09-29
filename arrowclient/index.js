@@ -92,10 +92,8 @@ window.addEventListener("load", function () {
     document.execCommand("insertText", false, text)
   })
 
-  let isScrollLocked = false
-
   function preventScrollAboveTop() {
-    if (window.scrollY <= 0 && !isScrollLocked) {
+    if (window.scrollY < 0) {
       // Прокрутить страницу к верху
       window.scrollTo(0, 0)
 
@@ -105,13 +103,11 @@ window.addEventListener("load", function () {
       document.documentElement.style.width = "100%"
 
       isScrollLocked = true
-    } else if (window.scrollY > 0 && isScrollLocked) {
+    } else if (window.scrollY >= 0) {
       // Сбросить стили при прокрутке вниз
       document.documentElement.style.overflow = ""
       document.documentElement.style.position = ""
       document.documentElement.style.width = ""
-
-      isScrollLocked = false
     }
   }
   window.addEventListener("scroll", preventScrollAboveTop)
