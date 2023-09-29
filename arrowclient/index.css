@@ -14,13 +14,6 @@
     --background-image: url("img/backdark.jpeg");
   }
 }
-body,
-html {
-  margin: 0;
-  overflow: auto;
-  height: 100%;
-  -webkit-overflow-scrolling: touch;
-}
 
 * {
   font-family: "IBM Plex Sans", sans-serif;
