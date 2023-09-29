@@ -14,10 +14,10 @@ export default () => {
         searchstring.text = e.target.value
       }}"
       @touchstart="${(e) => {
-        e.preventDefault()
-        // e.target.focus({
-        //   preventScroll: true,
-        // })
+        // e.preventDefault()
+        e.target.focus({
+          preventScroll: true,
+        })
       }}"
     >
     </input>
