@@ -43,14 +43,15 @@ let renderTask = (task, index) => {
   if (data.selected.name == task.name)
     // Редактируемый
     return html` <div
-      class="${firstclass} z-[45] sm:relative fixed h-screen sm:h-auto flex flex-col gap-3 bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white ${errorclass(
+      id="selectedtask"
+      class="${firstclass} z-[45] flex min-h-screen flex-col gap-3 bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white ${errorclass(
         task,
       )}">
       ${controlButtons(task)} ${radio(task)} ${timeSlider(task)} ${dateInput(task)} ${linkDivs(task)}
       ${() => fromLine(task)}
       <div
         id="edit"
-        class="w-full whitespace-pre-wrap focus:outline-none"
+        class="w-full min-h-full whitespace-pre-wrap focus:outline-none"
         contenteditable="true"
         role="textbox"
         aria-multiline="true"

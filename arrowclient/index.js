@@ -118,18 +118,19 @@ window.addEventListener("load", function () {
     data.selected
     data.tasks
     Promise.resolve().then(() => {
-      let div = document.getElementById("edit")
-      if (div) {
-        const range = document.createRange()
-        const sel = window.getSelection()
-        range.selectNodeContents(div)
-        if (!data.selected.name.startsWith(NEWSCRIBETEXT)) range.collapse()
-        sel.removeAllRanges()
-        sel.addRange(range)
-        const rect = div.getBoundingClientRect()
-        const scrollPosition = rect.top + window.scrollY + rect.height / 2 - mouseY
-        window.scroll(0, scrollPosition)
-      }
+      let div = document.getElementById("selectedtask")
+      if (div) div.scrollIntoView(true)
+      // if (div) {
+      //   const range = document.createRange()
+      //   const sel = window.getSelection()
+      //   range.selectNodeContents(div)
+      //   if (!data.selected.name.startsWith(NEWSCRIBETEXT)) range.collapse()
+      //   sel.removeAllRanges()
+      //   sel.addRange(range)
+      //   const rect = div.getBoundingClientRect()
+      //   const scrollPosition = rect.top + window.scrollY + rect.height / 2 - mouseY
+      //   window.scroll(0, scrollPosition)
+      // }
     })
   })
   watch(() => {
