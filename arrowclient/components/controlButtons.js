@@ -51,7 +51,7 @@ export default (task) =>
         () => (data.selected = false)
         // () => riseTask(task))
       }">
-      Выход
+      Закрыть
     </button>
     ${() => {
       if (task.type == "frame" || task.type == "meeting" || task.type == "deadline")

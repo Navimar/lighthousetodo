@@ -43,7 +43,7 @@ let renderTask = (task, index) => {
   if (data.selected.name == task.name)
     // Редактируемый
     return html` <div
-      class="${firstclass} fixed w-screen h-screen left-0 z-[45] flex flex-col gap-3 bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white ${errorclass(
+      class="${firstclass} z-[45] sm:relative fixed h-screen sm:h-auto flex flex-col gap-3 bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white ${errorclass(
         task,
       )}">
       ${controlButtons(task)} ${radio(task)} ${timeSlider(task)} ${dateInput(task)} ${linkDivs(task)}
