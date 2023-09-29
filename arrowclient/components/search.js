@@ -15,9 +15,9 @@ export default () => {
       }}"
       @touchstart="${(e) => {
         e.preventDefault()
-        e.target.focus({
-          preventScroll: true,
-        })
+        // e.target.focus({
+        //   preventScroll: true,
+        // })
       }}"
     >
     </input>
