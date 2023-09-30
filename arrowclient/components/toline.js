@@ -52,7 +52,7 @@ export default (task) => {
             clickPos(e)
             e.stopPropagation()
           }}"
-          class=" text-neutral-200 dark:text-white m-0.5 inline-block align-middle rounded-lg px-2 bg-white dark:bg-black">
+          class=" text-black dark:text-white m-0.5 inline-block align-middle rounded-lg px-2 bg-white dark:bg-black">
           <!-- Можете изменить стили для будущих задач -->
           <div class="flex  h-full items-center gap-2"
             >${() => taskplate(getObjectByName(to), "text-xs")}<div class="">${() => to}</div></div
@@ -66,7 +66,7 @@ export default (task) => {
             clickPos(e)
             e.stopPropagation()
           }}"
-          class="text-neutral-800 dark:text-neutral-400 m-0.5 inline-block rounded-lg px-2">
+          class="text-neutral-600 dark:text-neutral-400 m-0.5 inline-block rounded-lg px-2">
           ${to}</div
         >`
       })}</div
