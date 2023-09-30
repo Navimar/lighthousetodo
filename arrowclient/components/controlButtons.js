@@ -57,7 +57,7 @@ export default (task) =>
       if (task.type == "frame" || task.type == "meeting" || task.type == "deadline")
         return html`<label class="${css.button} whitespace-nowrap" for="pauseCheckbox">
           <input
-            class=" w-3.5 h-3.5 shadow-none dark:accent-darkold rounded-lg appearance-none dark:checked:bg-darkold mx-2 border-2 border-old dark:border-darkold checked:bg-old accent-old"
+            class=" w-3.5 h-3.5 shadow-none dark:accent-accent-dark rounded-lg appearance-none dark:checked:bg-accent-dark mx-2 border-2 border-accent dark:border-accent-dark checked:bg-accent accent-accent"
             type="checkbox"
             id="pauseCheckbox"
             ${checkedPause(task)} />
@@ -65,11 +65,9 @@ export default (task) =>
         </label>`
       else return html` <button class="${css.button}" @click="${() => sinkTask(task)}">Потом</button>`
     }}
-    <label
-      class="p-1 text-black bg-lightgray border-white dark:border-black dark:bg-mygray rounded-0 text-center inline-block border-b-02rem active:border-b-old dark:active:border-b-darkold cursor-pointer whitespace-nowrap"
-      for="readyCheckbox">
+    <label class="${css.button} whitespace-nowrap" for="readyCheckbox">
       <input
-        class="w-3.5 h-3.5 shadow-none dark:accent-darkold rounded-lg appearance-none dark:checked:bg-darkold mx-2 border-2 border-old dark:border-darkold checked:bg-old accent-old"
+        class="w-3.5 h-3.5 shadow-none rounded-lg appearance-none dark:checked:bg-accent-dark mx-2 border-2 border-accent dark:border-accent-dark checked:bg-accent accent-accent"
         type="checkbox"
         id="readyCheckbox" />
       Готово

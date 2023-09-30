@@ -8,7 +8,8 @@ import { loadData, sendData, inputSocket } from "/logic/socket.js"
 import { NEWSCRIBETEXT } from "./logic/const.js"
 import { safeSetLocalStorageItem, getLocalStorageItem, mouseY } from "/logic/util.js"
 import { currentTime, selectedDate, data, user } from "/logic/reactive.js"
-
+import { makevisible } from "~/logic/exe.js"
+import sort from "~/logic/sort.js"
 import { html, watch } from "@arrow-js/core"
 import dayjs from "dayjs"
 import "dayjs/locale/ru" // Импорт русской локали
@@ -48,6 +49,8 @@ function updateCurrentTimeMarker() {
   // Update selectedDate.date if it's in the past
   if (dayjs(selectedDate.date).isBefore(currentTime.date)) {
     selectedDate.date = currentTime.date
+    makevisible()
+    sort()
   }
 
   if (currentTime.timerStarted) {
@@ -68,7 +71,7 @@ function updateCurrentTimeMarker() {
   setTimeout(updateCurrentTimeMarker, 1000)
 }
 
-//  <div class="dark:text-white bg-nearwhite dark:bg-black p-3">
+//  <div class="dark:text-white bg-near dark:bg-black p-3">
 //       ${() => currentTime.timerStarted}
 //       <button
 //         class="notomono w-1/6 ${css.button}"
@@ -119,19 +122,20 @@ window.addEventListener("load", function () {
     data.selected
     data.tasks
     Promise.resolve().then(() => {
-      let div = document.getElementById("selectedtask")
-      if (div) div.scrollIntoView(true)
-      // if (div) {
-      //   const range = document.createRange()
-      //   const sel = window.getSelection()
-      //   range.selectNodeContents(div)
-      //   if (!data.selected.name.startsWith(NEWSCRIBETEXT)) range.collapse()
-      //   sel.removeAllRanges()
-      //   sel.addRange(range)
-      //   const rect = div.getBoundingClientRect()
-      //   const scrollPosition = rect.top + window.scrollY + rect.height / 2 - mouseY
-      //   window.scroll(0, scrollPosition)
-      // }
+      let editdiv = document.getElementById("edit")
+      if (editdiv) {
+        const range = document.createRange()
+        const sel = window.getSelection()
+        range.selectNodeContents(editdiv)
+        if (!data.selected.name.startsWith(NEWSCRIBETEXT)) range.collapse()
+        sel.removeAllRanges()
+        sel.addRange(range)
+        //   const rect = div.getBoundingClientRect()
+        //   const scrollPosition = rect.top + window.scrollY + rect.height / 2 - mouseY
+        //   window.scroll(0, scrollPosition)
+      }
+      let selectedtaskdiv = document.getElementById("selectedtask")
+      if (selectedtaskdiv) selectedtaskdiv.scrollIntoView(true)
     })
   })
   watch(() => {

@@ -58,7 +58,7 @@ export default (task) => html`
   <div class="flex relative gap-4">
     <div
       id="fromEdit"
-      class="flex flex-col gap-2 text-sm w-1/2 h-8 overflow-hidden bg-nearwhite dark:bg-nearblack focus:outline-none"
+      class="flex flex-col gap-2 text-sm w-1/2 h-8 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
       contenteditable="true"
       role="textbox"
       aria-multiline="true"
@@ -71,7 +71,7 @@ export default (task) => html`
 
     <div
       id="toEdit"
-      class="flex flex-col gap-2 text-sm w-1/2 h-8 overflow-hidden bg-nearwhite dark:bg-nearblack focus:outline-none"
+      class="flex flex-col gap-2 text-sm w-1/2 h-8 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
       contenteditable="true"
       role="textbox"
       aria-multiline="true"

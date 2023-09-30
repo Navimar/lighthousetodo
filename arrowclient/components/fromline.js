@@ -25,7 +25,7 @@ export default (task) => {
             clickPos(e)
             e.stopPropagation()
           }}"
-          class="text-mygray m-0.5 inline-block rounded-lg px-2 bg-transparent ">
+          class="text-neutral-800 dark:text-neutral-400 m-0.5 inline-block rounded-lg px-2">
           ${() => from}
         </div>`
       })}${() =>
@@ -36,7 +36,7 @@ export default (task) => {
             clickPos(e)
             e.stopPropagation()
           }}"
-          class="text-white rounded-lg px-2 bg-mygray dark:bg-darkgray">
+          class=" text-white dark:text-white m-0.5 inline-block align-middle rounded-lg px-2 bg-neutral-400 dark:bg-neutral-700">
           ${() => from}
         </div>`
       })}</div

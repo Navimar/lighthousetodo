@@ -37,6 +37,7 @@ export default (name, fromNames = [], toNames = []) => {
     existingTask.toNames = toNames
     existingTask.fromNamesReady = [] // Очистите или обновите, если необходимо
     existingTask.toNamesReady = [] // Очистите или обновите, если необходимо
+    existingTask.timestamp = dayjs().valueOf()
 
     const index = data.tasks.indexOf(existingTask)
     if (index > -1) {
@@ -61,11 +62,10 @@ export default (name, fromNames = [], toNames = []) => {
     toNames: toNames,
     fromNamesReady: [],
     toNamesReady: [],
+    timestamp: dayjs().valueOf(),
   }
   data.tasks.unshift(newTask)
 
   console.log("newtask", data.tasks[0])
-
-  makevisible()
   return newTask
 }

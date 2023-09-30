@@ -1,6 +1,8 @@
 export default {
-	button: "p-1 text-black bg-lightgray border-white dark:border-black  dark:bg-mygray rounded-0 text-center inline-block border-b-02rem active:border-b-old dark:active:border-b-darkold  cursor-pointer",
-	lightbutton:
-		"p-1 text-black border-white dark:border-black rounded-0 text-center inline-block border-b-02rem active:border-b-old dark:active:border-b-darkold cursor-pointer",
-	radio: "w-full p-1 text-black border-white dark:border-black border-b-02rem  bg-lightgray dark:bg-mygray text-center  block cursor-pointer peer-checked:border-old peer-checked:bg-lightgray dark:peer-checked:bg-mygray dark:peer-checked:border-darkold active:border-b-old dark:active:border-b-darkold active:peer-checked:border-b-old dark:active:peer-checked:border-b-darkold",
-};
+  button:
+    "p-1 text-black dark:text-neutral-100 bg-neutral-150 dark:bg-neutral-700 border-white dark:border-black  dark:bg-neutral-700  rounded-0 text-center inline-block border-b-02rem active:border-b-accent dark:active:border-b-accent-dark  cursor-pointer",
+  lightbutton:
+    "p-1 text-black dark:text-neutral-100 border-white dark:border-black rounded-0 text-center inline-block border-b-02rem active:border-b-accent dark:active:border-b-accent-dark cursor-pointer",
+  radio:
+    "w-full p-1 text-black dark:text-neutral-100 border-white dark:border-black border-b-02rem  bg-neutral-150 dark:bg-neutral-700 dark:bg-neutral-700  text-center  block cursor-pointer peer-checked:border-accent peer-checked:bg-neutral-150 dark:peer-checked:bg-neutral-700  dark:peer-checked:border-accent-dark active:border-b-accent dark:active:border-b-accent-dark active:peer-checked:border-b-accent dark:active:peer-checked:border-b-accent-dark",
+}

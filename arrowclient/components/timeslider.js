@@ -39,7 +39,7 @@ export default (task) =>
     <div
       id="currentTimeMarker"
       style="left:${currentTime.slider}px"
-      class="relative top-7 h-0 z-40 text-xs w-0 flex flex-col items-center dark:text-darkold text-old text-center">
+      class="relative top-7 h-0 z-40 text-xs w-0 flex flex-col items-center dark:text-accent-dark text-accent text-center">
       <span class="font-bold">|</span>
       <span
         @click="${() => {
@@ -48,7 +48,7 @@ export default (task) =>
           slider.value = currentTimeInMinutes
           updateSliderLabel({ target: slider }) // Optional: to update other elements if needed
         }}"
-        class="notomono font-bold rounded-lg px-2 bg-lightgray dark:bg-darkold dark:text-lightgray block"
+        class="text-accent notomono font-bold rounded-lg px-2 bg-neutral-150 dark:bg-accent-dark dark:text-white block"
         >${() => currentTime.clock}</span
       >
     </div>
@@ -64,7 +64,7 @@ export default (task) =>
         min="0"
         max="1439"
         step="15"
-        class="slider bg-mygray outline-none drop-shadow-none shadow-none h-1 rounded-full w-full appearance-none cursor-pointer "
+        class="slider bg-neutral-400 dark:bg-neutral-400 outline-none drop-shadow-none shadow-none h-1 rounded-full w-full appearance-none cursor-pointer "
         @input="${(e) => updateSliderLabel(e)}" />
     </div>
     <div class="w-full pl-[1.055rem] pr-[0.955rem]  flex justify-between text-xs dark:text-white text-mygray">
@@ -144,7 +144,7 @@ export default (task) =>
         <span>|</span>
       </div>
     </div>
-    <div class="w-full flex justify-between text-xs dark:text-white text-darkgray pr-[0.17rem]">
+    <div class="w-full flex justify-between text-xs dark:text-white text-bright-dark pr-[0.17rem]">
       <div class="flex flex-col items-center">
         <span class="notomono">00:00</span>
       </div>

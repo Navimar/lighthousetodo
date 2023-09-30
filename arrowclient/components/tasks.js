@@ -24,7 +24,7 @@ export let renderTasks = () => {
     )
     if (filteredTasks.length === 0) {
       return html`<div
-        class=" notomono flex flex-col gap-3 bg-nearwhite dark:bg-black p-3 rounded-lg overflow dark:text-white italic">
+        class=" notomono flex flex-col gap-3 bg-near dark:bg-black p-3 rounded-lg overflow dark:text-white italic">
         Ничего не найдено...
       </div>`
     }
@@ -34,10 +34,11 @@ export let renderTasks = () => {
 }
 let renderTask = (task, index) => {
   let firstclass
+  let sticky = ""
   if (task.ready) firstclass += "border-box border-b-02rem border-green-500 dark:border-green-900"
-  else firstclass = index == 0 ? "border-box border-b-02rem border-old dark:border-darkold " : ""
+  else firstclass = index == 0 ? "border-box border-b-02rem border-accent dark:border-accent-dark " : ""
   if (task.type == "meeting" && firststicky) {
-    firstclass += "sticky bottom-0"
+    sticky = "sticky bottom-0"
     firststicky = false
   }
   if (data.selected.name == task.name)
@@ -48,17 +49,19 @@ let renderTask = (task, index) => {
         task,
       )}">
       ${controlButtons(task)} ${radio(task)} ${timeSlider(task)} ${dateInput(task)} ${linkDivs(task)}
-      ${() => fromLine(task)}
-      <div
-        id="edit"
-        class="w-full ml-3 min-h-full whitespace-pre-wrap focus:outline-none"
-        contenteditable="true"
-        role="textbox"
-        aria-multiline="true"
-        >${task.name}${"\n" + task.note}</div
-      >
-      ${() => toLine(task)}
-    </div>`
+      <div class="flex flex-col gap-3 ml-3"
+        >${() => fromLine(task)}
+        <div
+          id="edit"
+          class="w-full min-h-full whitespace-pre-wrap focus:outline-none"
+          contenteditable="true"
+          role="textbox"
+          aria-multiline="true"
+          >${task.name}${"\n" + task.note}</div
+        >
+        ${() => toLine(task)}
+      </div></div
+    >`
   // Нередактируемый
   else
     return html` <div
@@ -66,7 +69,7 @@ let renderTask = (task, index) => {
         selectTask(task)
         clickPos(e)
       }}"
-      class="${firstclass} flex flex-col gap-3 break-words bg-nearwhite dark:bg-nearblack p-3 rounded-lg overflow dark:text-white ${errorclass(
+      class="${sticky} ${firstclass} flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg overflow dark:text-white ${errorclass(
         task,
       )}">
       ${() => fromLine(task)}
@@ -86,7 +89,7 @@ let renderTask = (task, index) => {
 const errorclass = (task) => {
   // // console.log(data.selected.name != task.name, task.error)
   // if (data.selected.name != task.name && task.error) {
-  //   return 'bg-old dark:bg-darkold'
+  //   return 'bg-accent dark:bg-accent-dark'
   // }
   // else {
   //   task.error = false;

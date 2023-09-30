@@ -62,16 +62,15 @@ export default (m) => {
       }
     }
 
-    //провереяем что имя не занято
-    if (isNameTaken(name)) {
-      name = data.selected.name
-      data.selected.error = true
-    }
-    //провереяем что имя не пусто
+    //провереяем что имя не пусто и не занято
     if (name === "") {
       name = data.selected.name
-      data.selected.error = true
     }
+    if (name != data.selected.name)
+      while (isNameTaken(name) && name.length < 1000) {
+        name += "!"
+      }
+    console.log("savetask name", name)
 
     for (let theTask of data.tasks) {
       // ищем и удаляем все ссылки на старое имя

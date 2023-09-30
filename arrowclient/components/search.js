@@ -10,7 +10,7 @@ export default () => {
     <input 
       id="searchinput" 
       placeholder="Поиск..."
-      class="box-border h-11 rounded-lg p-2 block w-full top-0 bg-nearwhite dark:bg-nearblack dark:text-white focus:outline-none"
+      class="box-border h-11 rounded-lg p-2 block w-full top-0 bg-neutral-100 dark:bg-neutral-900 dark:text-white focus:outline-none"
       @input="${(e) => {
         window.scrollTo(0, 0)
         searchstring.text = e.target.value

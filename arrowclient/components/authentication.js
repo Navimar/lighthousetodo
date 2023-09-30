@@ -14,7 +14,7 @@ export let authentication = () => {
     console.log("logged in as", user)
     if (searchstring.text === "")
       return html`
-        <div class="flex bg-nearwhite notomono dark:bg-nearblack dark:text-white p-2 text-sm ">
+        <div class="flex bg-neutral-100 notomono dark:bg-neutral-900 dark:text-white p-2 text-sm ">
           <div class="self-center">👤 <strong class="select-text">${() => user.name}</strong></div>
           <button class="ml-auto ${css.button}" @click="${() => logout()}"> Выйти </button>
         </div>
@@ -24,7 +24,7 @@ export let authentication = () => {
     return html`
       <div
         class="fixed z-50 bgimg bg-white dark:bg-black w-full flex justify-center items-center h-screen top-0 left-0">
-        <div class="m-auto p-auto flex flex-col gap-3 bg-nearwhite dark:bg-black w-3/4 sm:w-1/3 ">
+        <div class="m-auto p-auto flex flex-col gap-3 bg-neutral-100 dark:bg-neutral-900 w-3/4 sm:w-1/3 ">
           <button class="${css.button} m-3" @click="${() => signInWithGoogle()}"> Войти через Google </button>
         </div>
       </div>
@@ -39,13 +39,13 @@ export let authentication = () => {
 //             register()
 //           }}">
 //             <input
-//               class="bg-white dark:bg-nearblack  p-1"
+//               class="bg-white dark:bg-near-dark  p-1"
 //               type="text"
 //               id="regUsername"
 //               placeholder="Username"
 //               required />
 //             <input
-//               class="bg-white dark:bg-nearblack p-1"
+//               class="bg-white dark:bg-near-dark p-1"
 //               type="password"
 //               id="regPassword"
 //               placeholder="Password"
@@ -61,13 +61,13 @@ export let authentication = () => {
 //             login()
 //           }}">
 //             <input
-//               class="bg-white dark:bg-nearblack p-1"
+//               class="bg-white dark:bg-near-dark p-1"
 //               type="text"
 //               id="loginUsername"
 //               placeholder="Username"
 //               required />
 //             <input
-//               class="bg-white dark:bg-nearblack p-1"
+//               class="bg-white dark:bg-near-dark p-1"
 //               type="password"
 //               id="loginPassword"
 //               placeholder="Password"

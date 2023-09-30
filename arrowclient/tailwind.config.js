@@ -10,18 +10,26 @@ module.exports = {
         "02rem": "0.2rem",
       },
       colors: {
-        old: "#d57575",
-        darkold: "#995151",
-        nearwhite: "#f5f5f5",
-        lightgray: "#eee",
-        mygray: "#a9a9a9",
-        darkgray: "#555",
-        nearblack: "#151515",
+        neutral: {
+          150: "#ededed",
+          350: "#bcbcbc",
+        },
+        accent: {
+          DEFAULT: "#d57575",
+          dark: "#ba5454",
+        },
+        compliment: {
+          DEFAULT: "#822E81",
+          dark: "#54BABA",
+        },
       },
       spacing: {
         "40rem": "40rem",
       },
     },
+  },
+  "editor.quickSuggestions": {
+    strings: "on",
   },
   plugins: [],
 }

@@ -39,11 +39,12 @@ export default (divId) => {
   if (autocomplete.list && autocomplete.div == divId && autocomplete.list.length > 0)
     return html`
       <div id="autocomplete-list" class="w-full sm:w-1/2 absolute z-10 top-full ">
-        <div class=" border border-mygray dark:border-nearblack rounded shadow-md bg-white dark:bg-black">
+        <div
+          class=" border border-neutral-400 dark:bg-neutral-800 dark:border-neutral-600 rounded bg-white dark:bg-black">
           ${autocomplete.list.map((e) => {
             return html`
               <div
-                class="cursor-pointer  hover:bg-lightgray dark:hover:bg-nearblack p-2"
+                class="cursor-pointer break-words hover:bg-neutral-200 dark:hover:bg-neutral-600 p-2"
                 @click="${(event) => complete(event, divId)}">
                 ${e}
               </div>

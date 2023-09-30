@@ -14,21 +14,29 @@ let today = () => {
 function nextMonth() {
   const nextMonthDate = dayjs(selectedDate.date).add(1, "month").format("YYYY-MM-DD")
   selectedDate.date = nextMonthDate // обновление вашей реактивной переменной
+  makevisible()
+  sort()
 }
 
 function prevMonth() {
   const prevMonthDate = dayjs(selectedDate.date).subtract(1, "month").format("YYYY-MM-DD")
   selectedDate.date = prevMonthDate
+  makevisible()
+  sort()
 }
 
 function nextYear() {
   const nextYearDate = dayjs(selectedDate.date).add(1, "year").format("YYYY-MM-DD")
   selectedDate.date = nextYearDate
+  makevisible()
+  sort()
 }
 
 function prevYear() {
   const prevYearDate = dayjs(selectedDate.date).subtract(1, "year").format("YYYY-MM-DD")
   selectedDate.date = prevYearDate
+  makevisible()
+  sort()
 }
 
 function clickOnCaldendarDay(date) {
@@ -51,13 +59,13 @@ export default () => {
   let renderCalendarControls = () => {
     return html`
       <div class="flex justify-between gap-4">
-        <button @click="${prevYear}" class="text-darkgray"><<</button>
-        <button @click="${prevMonth}" class="text-darkgray"><</button>
+        <button @click="${prevYear}" class=""><<</button>
+        <button @click="${prevMonth}" class=""><</button>
         <button @click="${today}" class="w-1/2 notomono uppercase">
           ${dayjs(selectedDate.date).format("D MMMM YYYY")}
         </button>
-        <button @click="${nextMonth}" class="text-darkgray">></button>
-        <button @click="${nextYear}" class="text-darkgray">>></button>
+        <button @click="${nextMonth}" class="">></button>
+        <button @click="${nextYear}" class="">>></button>
       </div>
     `
   }
@@ -65,26 +73,26 @@ export default () => {
   let week = (date) => {
     const isToday = dayjs().isSame(date, "day")
     const isSelectedDate = dayjs(selectedDate.date).isSame(date, "day")
-    const today = isToday ? "text-white bg-old dark:bg-darkold" : ""
-    // const today = isToday ? " border-old dark:border-darkold" : ""
-    const focused = isSelectedDate ? "dark:border-mygray border-mygray " : "border-transparent"
+    const today = isToday ? "text-white bg-accent dark:bg-accent-dark" : ""
+    // const today = isToday ? " border-accent dark:border-accent-dark" : ""
+    const focused = isSelectedDate ? "dark:border-neutral-600 border-neutral-400 " : "border-transparent"
 
     // const calendarDot = () => {
     //   const formattedDate = date.format("YYYY-MM-DD")
     //   const taskType = data.calendarSet[formattedDate]
 
     //   const taskTypeToCSS = {
-    //     meeting: "text-old bg-lightgray dark:bg-nearblack",
-    //     frame: "bg-lightgray dark:bg-nearblack",
-    //     deadline: "text-mygray bg-lightgray dark:bg-nearblack",
-    //     window: "bg-lightgray dark:bg-nearblack",
+    //     meeting: "text-old bg-bright dark:bg-near-dark",
+    //     frame: "bg-bright dark:bg-near-dark",
+    //     deadline: "text-mygray bg-bright dark:bg-near-dark",
+    //     window: "bg-bright dark:bg-near-dark",
     //   }
 
     //   if (taskType) {
     //     return taskTypeToCSS[taskType] || "bg-yellow-100 dark:bg-black" // Возвращает специфический стиль для типа или стиль по умолчанию
     //   }
 
-    //   return "bg-nearwhite dark:bg-black"
+    //   return "bg-near dark:bg-black"
     // }
 
     const calendarDot = () => {
@@ -92,10 +100,10 @@ export default () => {
       const taskType = data.calendarSet[formattedDate]
 
       const taskTypeToCSS = {
-        meeting: "text-old dark:text-darkold",
-        frame: "text-lightgray",
-        deadline: "text-mygray",
-        window: "text-lightgray",
+        meeting: "text-accent dark:text-accent-dark",
+        frame: "text-neutral-500",
+        deadline: "text-neutral-500",
+        window: "text-neutral-200",
       }
 
       if (taskType) {
@@ -106,7 +114,7 @@ export default () => {
     if (date)
       return html`<td
         @click="${() => clickOnCaldendarDay(date.date())}"
-        class="border-2 border-lightgray dark:border-nearblack text-center p-0 ">
+        class="border-2 border-bright dark:border-neutral-800 text-center p-0 ">
         <div class="notomono leading-6 w-full h-full border-2 ${focused} ${today}">
           ${date.date()}${calendarDot()}
         </div>
@@ -130,7 +138,7 @@ export default () => {
   }
   if (searchstring.text === "")
     return html`
-      <div class="notomono w-full text-center p-3 bg-nearwhite dark:text-white dark:bg-nearblack">
+      <div class="notomono w-full text-center p-3 dark:text-white bg-neutral-100  dark:bg-neutral-900">
         <div class="pb-3 text-base">${renderCalendarControls}</div>
         <table class="text-base w-full">
           <tr>
