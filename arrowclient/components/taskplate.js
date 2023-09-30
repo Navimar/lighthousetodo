@@ -38,8 +38,8 @@ export default (task, additionalClass = "") => {
     if (task.type == "deadline" && isInPast)
       return "text-white bg-neutral-400 dark:bg-neutral-700 border-transparent" + gc
     if (task.type == "deadline") return "text-neutral-500" + gc
-    if (task.type == "frame" && task.pause) return "text-white bg-neutral-500 dark:bg-neutral-500 border-red-600" + gc
-    if (task.type == "frame" && isInPast) return "text-white bg-neutral-500 dark:bg-neutral-500 border-transparent" + gc
+    if (task.type == "frame" && task.pause) return "text-white bg-neutral-400 dark:bg-neutral-700 border-red-600" + gc
+    if (task.type == "frame" && isInPast) return "text-white bg-neutral-400 dark:bg-neutral-700 border-transparent" + gc
     if (task.type == "frame") return "text-neutral-500 border-neutral-200 dark:border-black" + gc
     if (isInPast) return "hidden" + gc
     return "text-neutral-350 border-transparent" + gc
