@@ -16,7 +16,7 @@ export default (task) => {
     }
   })
 
-  return html`<div class="flex gap-2 text-sm empty:hidden"
+  return html`<div class="text-sm empty:hidden"
     >${() =>
       readyNames.map((from) => {
         return html`<div
