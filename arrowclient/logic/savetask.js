@@ -4,6 +4,7 @@ import { clearSearch } from "/logic/manipulate"
 import addScribe from "/logic/addscribe"
 import dayjs from "dayjs"
 import { sendData } from "/logic/socket"
+import { getObjectByName } from "/logic/util"
 
 export default (m) => {
   let changedTasks = []
@@ -87,22 +88,21 @@ export default (m) => {
       }
 
       //добавляем ссылки на новое имя удаляем из массива новых задач найденные ссылки
-      for (let index in fromEditLines) {
+      for (let index = fromEditLines.length - 1; index >= 0; index--) {
         if (theTask.name.toLowerCase() === fromEditLines[index].toLowerCase()) {
           newScribesFromNames.splice(index, 1)
           if (theTask.toNames && theTask.toNames.indexOf(name) === -1) {
-            //дописываем в ссылки
             theTask.toNames.push(name)
             changedTasks.push(theTask.id)
           }
         }
       }
 
-      for (let index in toEditLines) {
+      // обработка toEditLines
+      for (let index = toEditLines.length - 1; index >= 0; index--) {
         if (theTask.name.toLowerCase() === toEditLines[index].toLowerCase()) {
           newScribesToNames.splice(index, 1)
           if (theTask.fromNames && theTask.fromNames.indexOf(name) === -1) {
-            //дописываем в ссылки
             theTask.fromNames.push(name)
             changedTasks.push(theTask.id)
           }
