@@ -41,7 +41,7 @@ let renderTask = (task, index) => {
     sticky = "sticky bottom-0"
     firststicky = false
   }
-  if (data.selected.name == task.name)
+  if (data.selected && data.selected.name == task.name)
     // Редактируемый
     return html` <div
       id="selectedtask"

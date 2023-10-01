@@ -15,7 +15,7 @@ export default (task) => {
     const obj = getObjectByName(name)
     const taskDate = getDayjsDateFromTask(obj)
 
-    if (!obj) console.log("неизвестный obj в тегах", name)
+    if (!obj) console.error(`неизвестный obj ${name} в тегах ${task.name}`)
     if (!obj || obj.ready) {
       readyNames.push(name)
     } else {
