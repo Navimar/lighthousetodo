@@ -1,8 +1,6 @@
-import sort from "/logic/sort.js"
 import { data } from "/logic/reactive.js"
 import { isNameTaken } from "/logic/util.js"
 import { clearSearch } from "/logic/manipulate"
-import { makevisible } from "/logic/makevisible.js"
 import addScribe from "/logic/addscribe"
 import dayjs from "dayjs"
 import { sendData } from "/logic/socket"
@@ -141,19 +139,17 @@ export default (m) => {
     else data.selected.ready = false
 
     //создаем новые записи
+    console.log("newScribesFromNames", newScribesFromNames)
     newScribesFromNames.forEach((txt) => {
       let newTask = addScribe(txt, [], [name])
       changedTasks.push(newTask.id)
     })
+    console.log("newScribesToNames", newScribesToNames)
     newScribesToNames.forEach((txt) => {
       let newTask = addScribe(txt, [name], [])
       changedTasks.push(newTask.id)
     })
 
-    // data.selected = false
-
-    // makevisible()
-    // sort()
     changedTasks = [...new Set(changedTasks)]
 
     // Отправляем массив

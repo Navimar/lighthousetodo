@@ -50,8 +50,6 @@ export default (name, fromNames = [], toNames = []) => {
     existingTask.date = selectedDate.date
     existingTask.fromNames = fromNames
     existingTask.toNames = toNames
-    existingTask.fromNamesReady = [] // Очистите или обновите, если необходимо
-    existingTask.toNamesReady = [] // Очистите или обновите, если необходимо
     existingTask.timestamp = dayjs().valueOf()
 
     const index = data.tasks.indexOf(existingTask)
@@ -61,8 +59,6 @@ export default (name, fromNames = [], toNames = []) => {
 
     // Добавление существующей задачи в начало массива
     data.tasks.unshift(existingTask)
-
-    makevisible()
     return existingTask
   }
 
