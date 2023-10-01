@@ -11,7 +11,6 @@ initializeApp(firebaseConfig)
 
 export let authentication = () => {
   if (user && user.name) {
-    console.log("logged in as", user)
     if (searchstring.text === "")
       return html`
         <div class="flex bg-neutral-100 notomono dark:bg-neutral-900 dark:text-white p-2 text-sm ">

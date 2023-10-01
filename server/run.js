@@ -3,7 +3,7 @@ import admin from "firebase-admin"
 import config from "../config.js"
 import { addUser, getUser } from "./user.js"
 import serviceAccount from "../firebase.config.js"
-import syncTasks from "../united/syncTasks.js"
+import syncTasks from "../united/synctasks.js"
 import { v4 as uuidv4 } from "uuid"
 
 admin.initializeApp({

@@ -3,7 +3,7 @@ import css from "~/css.js"
 import { data } from "~/logic/reactive.js"
 import saveTask from "~/logic/savetask.js"
 import { riseTask } from "~/logic/manipulate.js"
-import { makevisible } from "~/logic/exe.js"
+import { makevisible } from "~/logic/makevisible.js"
 import sort from "~/logic/sort.js"
 
 let checkedPause = (task) => {

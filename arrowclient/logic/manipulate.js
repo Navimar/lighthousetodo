@@ -1,5 +1,5 @@
 import { searchstring, currentTime, data } from "/logic/reactive.js"
-import { makevisible } from "/logic/exe.js"
+import { makevisible } from "/logic/makevisible.js"
 import saveTask from "/logic/savetask.js"
 import { getObjectByName } from "/logic/util"
 

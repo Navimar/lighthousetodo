@@ -1,6 +1,6 @@
 import { data, selectedDate } from "/logic/reactive.js"
 import { isNameTaken, getObjectByName } from "/logic/util"
-import { makevisible } from "/logic/exe.js"
+import { makevisible } from "/logic/makevisible.js"
 
 import { v4 as uuidv4 } from "uuid"
 import dayjs from "dayjs"
@@ -13,8 +13,23 @@ export default (name, fromNames = [], toNames = []) => {
     return data.tasks.find((task) => {
       if (task.ready) {
         // Проверка, что сама задача "ready"
-        const fromNameObjects = task.fromNames?.map((name) => getObjectByName(name)) || []
-        const toNameObjects = task.toNames?.map((name) => getObjectByName(name)) || []
+        const fromNameObjects =
+          task.fromNames?.map((name) => {
+            const obj = getObjectByName(name)
+            if (!obj) {
+              console.error(`Error in task '${task.name}': Could not find object by name '${name}' for 'fromNames'.`)
+            }
+            return obj
+          }) || []
+
+        const toNameObjects =
+          task.toNames?.map((name) => {
+            const obj = getObjectByName(name)
+            if (!obj) {
+              console.error(`Error in task '${task.name}': Could not find object by name '${name}' for 'toNames'.`)
+            }
+            return obj
+          }) || []
 
         // Проверка, что все задачи в fromNames и toNames также "ready"
         return fromNameObjects.every((obj) => obj?.ready) && toNameObjects.every((obj) => obj?.ready)

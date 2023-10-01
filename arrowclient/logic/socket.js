@@ -1,15 +1,13 @@
 import { auth } from "/components/authentication.js"
 import { status, data, user } from "/logic/reactive.js"
 import sort from "/logic/sort.js"
-import syncTasks from "../../united/syncTasks"
+import syncTasks from "../../united/synctasks"
 import { getObjectById } from "/logic/util"
 
 import { io } from "socket.io-client"
-import { makevisible } from "/logic/exe"
+import { makevisible } from "/logic/makevisible"
 
 const socket = io()
-
-let version = 0
 
 async function getToken() {
   if (auth.currentUser)

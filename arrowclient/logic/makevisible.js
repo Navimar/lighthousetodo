@@ -71,13 +71,14 @@ dayjs.extend(isSameOrAfter)
 // }
 
 export const makevisible = () => {
-  const areAllFromNamesReady = (names) => {
-    if (!names || names.length === 0) return true
+  const areAllFromNamesReady = (task) => {
+    if (!task?.fromNames || task.fromNames.length === 0) return true
 
-    for (let name of names) {
-      const task = getObjectByName(name)
+    for (let name of task.fromNames) {
+      const theTask = getObjectByName(name)
 
-      if (!task?.ready) return false
+      if (!theTask) console.log("in makevisible не найден таск", name, task.name)
+      if (!theTask?.ready) return false
     }
 
     return true
@@ -100,7 +101,7 @@ export const makevisible = () => {
         ? dayjs(task.date).isBefore(dayjs(selectedDate.date).add(1, "day")) || task.date == selectedDate || !task.date
         : dayjs(task.date).isSame(dayjs(selectedDate.date)) || !task.date
 
-    if (isCurrentOrFutureTask && (areAllFromNamesReady(task.fromNames) || task.type === "meeting") && !task.ready) {
+    if (!task.ready && isCurrentOrFutureTask && (areAllFromNamesReady(task) || task.type === "meeting")) {
       data.visibletasks.push(task)
     }
 
