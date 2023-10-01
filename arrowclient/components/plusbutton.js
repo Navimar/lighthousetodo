@@ -8,9 +8,8 @@ import { data } from "~/logic/reactive.js"
 let plusbutton = () => {
   clearSearch()
   saveTask("plusbutton")
-  if (!addScribe(NEWSCRIBETEXT)) {
-    selectTask(NEWSCRIBETEXT)
-  } else data.selected = data.tasks[0]
+  addScribe(NEWSCRIBETEXT)
+  selectTask(NEWSCRIBETEXT)
 }
 
 export default html`<div
