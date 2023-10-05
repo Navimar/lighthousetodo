@@ -66,7 +66,7 @@ export default (task) => {
             clickPos(e)
             e.stopPropagation()
           }}"
-          class="text-neutral-600 dark:text-neutral-400 m-0.5 inline-block rounded-lg px-2">
+          class="text-neutral-400 dark:text-neutral-400 m-0.5 inline-block rounded-lg px-2">
           ${to}</div
         >`
       })}</div

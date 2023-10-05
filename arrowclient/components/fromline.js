@@ -25,7 +25,7 @@ export default (task) => {
             clickPos(e)
             e.stopPropagation()
           }}"
-          class="text-neutral-800 dark:text-neutral-400 m-0.5 inline-block rounded-lg px-2">
+          class="text-neutral-400 dark:text-neutral-400 m-0.5 inline-block rounded-lg px-2">
           ${() => from}
         </div>`
       })}${() =>

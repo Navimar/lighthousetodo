@@ -103,7 +103,7 @@ export default () => {
         meeting: "text-accent dark:text-accent-dark",
         frame: "text-neutral-500",
         deadline: "text-neutral-500",
-        window: "text-neutral-200",
+        window: "text-neutral-200 dark:text-black",
       }
 
       if (taskType) {
