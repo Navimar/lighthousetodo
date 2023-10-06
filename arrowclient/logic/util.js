@@ -1,4 +1,5 @@
-import { data } from "/logic/reactive.js"
+import addscribe from "~/logic/addscribe"
+import data from "~/logic/data.js"
 
 import dayjs from "dayjs"
 
@@ -24,6 +25,7 @@ export const getObjectById = (id) => {
     idCache[id] = foundTask
     return foundTask
   }
+  throw `getObjectById не нашел ${id} `
 }
 
 export const getObjectByName = (name) => {
@@ -32,17 +34,21 @@ export const getObjectByName = (name) => {
   }
 
   const foundTask = data.tasks.find((task) => task.name === name)
-
   if (foundTask) {
     nameCache[name] = foundTask
     return foundTask
+  } else {
+    return addscribe(name)
   }
-
-  console.log(`объект ${name} не найден`)
-  return null
 }
 
-export const isNameTaken = getObjectByName
+export const isNameTaken = (name) => {
+  if (nameCache[name]?.name === name) {
+    return true
+  }
+
+  return !!data.tasks.find((task) => task.name === name)
+}
 
 let mouseX
 let mouseY

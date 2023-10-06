@@ -1,15 +1,9 @@
 import { html } from "@arrow-js/core"
 import { NEWSCRIBETEXT } from "~/logic/const.js"
-import { clearSearch, selectTask } from "~/logic/manipulate.js"
-import saveTask from "~/logic/savetask.js"
-import addScribe from "~/logic/addscribe"
-import { data } from "~/logic/reactive.js"
+import { selectTaskByName } from "~/logic/manipulate.js"
 
 let plusbutton = () => {
-  clearSearch()
-  saveTask("plusbutton")
-  addScribe(NEWSCRIBETEXT)
-  selectTask(NEWSCRIBETEXT)
+  selectTaskByName(NEWSCRIBETEXT)
 }
 
 export default html`<div

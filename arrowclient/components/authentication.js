@@ -5,7 +5,7 @@ import { loadData } from "~/logic/socket.js"
 import { searchstring } from "~/logic/reactive.js"
 
 import css from "/css.js"
-import { user, data } from "~/logic/reactive.js"
+import { user, reData } from "~/logic/reactive.js"
 import firebaseConfig from "~/firebase.config.js"
 initializeApp(firebaseConfig)
 
@@ -108,12 +108,11 @@ export let logout = async () => {
   try {
     await signOut(auth)
     user.name = null
-    data.calendarSet = {}
-    data.selected = false
-    data.version = 0
+    reData.calendarSet = {}
+    selected.id = false
+    reData.version = 0
     data.tasks = []
-    data.deleted = []
-    data.visibletasks = []
+    reData.visibletasks = []
   } catch (error) {
     alert("Error during sign out:", error)
   }

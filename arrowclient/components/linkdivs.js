@@ -1,8 +1,8 @@
 import { html } from "@arrow-js/core"
-import { getCurrentLine } from "~/logic/util.js"
-import { autocomplete, data } from "~/logic/reactive.js"
-
+import { getCurrentLine, getObjectById } from "~/logic/util.js"
+import { autocomplete, reData } from "~/logic/reactive.js"
 import renderAutocomplete from "/components/autocomplete.js"
+import data from "~/logic/data.js"
 
 function handleInput(e) {
   const currentLineText = getCurrentLine().toLowerCase() // Преобразование к нижнему регистру
@@ -21,7 +21,7 @@ function handleInput(e) {
     .filter((taskItem) => taskItem.name.toLowerCase().includes(currentLineText)) // Преобразование к нижнему регистру
     .sort((a, b) => {
       // Основная сортировка на основе длины toNames
-      const difference = (b.toNames?.length || 0) - (a.toNames?.length || 0)
+      const difference = (b.toIds?.length || 0) - (a.toIds?.length || 0)
       if (difference !== 0) return difference
 
       // Дополнительная сортировка на основе длины name, если длины toNames одинаковы
@@ -65,7 +65,7 @@ export default (task) => html`
       tabindex="0"
       @click="${handleDivClick}"
       @input="${handleInput}">
-      ${task.fromNames?.map((from) => html`<div>${from}</div>`)}
+      ${task.fromIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}
     </div>
     ${() => renderAutocomplete("fromEdit")}
 
@@ -78,7 +78,7 @@ export default (task) => html`
       tabindex="0"
       @click="${handleDivClick}"
       @input="${handleInput}">
-      ${task.toNames?.map((to) => html`<div>${to}</div>`)}
+      ${task.toIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}
     </div>
     ${() => renderAutocomplete("toEdit")}
   </div>

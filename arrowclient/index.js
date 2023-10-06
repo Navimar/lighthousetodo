@@ -4,19 +4,18 @@ import online from "./components/online.js"
 import search from "./components/search.js"
 import plusbutton from "./components/plusbutton.js"
 import { renderTasks } from "./components/tasks.js"
-import { loadData, sendData, inputSocket } from "/logic/socket.js"
-import { NEWSCRIBETEXT } from "./logic/const.js"
-import { safeSetLocalStorageItem, getLocalStorageItem, mouseY } from "/logic/util.js"
-import { currentTime, selectedDate, data, user } from "/logic/reactive.js"
-import { makevisible } from "~/logic/makevisible.js"
-import sort from "~/logic/sort.js"
+import { inputSocket } from "~/logic/socket.js"
+import { NEWSCRIBETEXT } from "~/logic/const.js"
+import { safeSetLocalStorageItem, getLocalStorageItem, mouseY } from "~/logic/util.js"
+import { currentTime, reData, selected } from "~/logic/reactive.js"
+import { tick } from "~/logic/tick.js"
 import { html, watch } from "@arrow-js/core"
 import dayjs from "dayjs"
 import "dayjs/locale/ru" // Импорт русской локали
 import localizedFormat from "dayjs/plugin/localizedFormat" // Плагин для локализованного форматирования
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
-import { riseTask } from "./logic/manipulate.js"
+import { getObjectById } from "~/logic/util.js"
 dayjs.extend(isSameOrBefore)
 dayjs.extend(customParseFormat)
 dayjs.extend(localizedFormat)
@@ -24,63 +23,6 @@ dayjs.locale("ru")
 
 const app = document.getElementById("App")
 
-function updateCurrentTimeMarker() {
-  const time = dayjs()
-  const totalMinutes = time.hour() * 60 + time.minute()
-  const slider = document.getElementById("timeSlider")
-  if (slider) {
-    const sliderWidth = slider.offsetWidth - 16
-    currentTime.slider = (totalMinutes / 1440) * sliderWidth + 16
-  }
-
-  let newTime = time.format("HH:mm")
-  if (currentTime.clock !== newTime) {
-    data.tasks.forEach((task) => {
-      if (task.time === currentTime.clock && task.date === currentTime.date) {
-        // riseTask(task)
-        if (task.ready === true) task.ready = false
-      }
-    })
-    currentTime.clock = newTime
-  }
-
-  currentTime.date = time.format("YYYY-MM-DD")
-
-  // Update selectedDate.date if it's in the past
-  if (dayjs(selectedDate.date).isBefore(currentTime.date)) {
-    selectedDate.date = currentTime.date
-    makevisible()
-    sort()
-  }
-
-  if (currentTime.timerStarted) {
-    const diffInMinutes = Math.abs(time.diff(dayjs(currentTime.timerStarted, "HH:mm"), "minute"))
-    const hours = ((diffInMinutes % (24 * 60)) / 60) | 0
-    const minutes = diffInMinutes % 60
-    currentTime.timer =
-      hours.toLocaleString("en-US", { minimumIntegerDigits: 2 }) +
-      ":" +
-      minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })
-  }
-
-  // for (let date in data.calendarSet) {
-  //   if (dayjs(date, "YYYY-MM-DD").isBefore(currentTime.date)) {
-  //     delete data.calendarSet[date]
-  //   }
-  // }
-  setTimeout(updateCurrentTimeMarker, 1000)
-}
-
-//  <div class="dark:text-white bg-near dark:bg-black p-3">
-//       ${() => currentTime.timerStarted}
-//       <button
-//         class="notomono w-1/6 ${css.button}"
-//         @click="${() => {
-//           currentTime.timerStarted = currentTime.clock
-//         }}">
-//         ► ${() => currentTime.timer}
-//       </button>
-//     </div>
 const render = html`
   ${() => search()}
   <div class="flex flex-col gap-6 pb-80 max-w-full w-40rem px-3 m-auto">
@@ -103,36 +45,22 @@ window.addEventListener("load", function () {
   // data.calendarSet = safeJSONParse(getLocalStorageItem('calendarSet'), {})
   // data.timestamp = getLocalStorageItem('timestamp');
 
-  updateCurrentTimeMarker()
+  tick()
   watch(() => {
     safeSetLocalStorageItem("timer", currentTime.timerStarted)
   })
   watch(() => {
-    // safeSetLocalStorageItem("calendarSet", JSON.stringify(data.calendarSet))
-  })
-  // watch(() => {
-  //   data.tasks
-  //   if (user) {
-  //     sendData()
-  //     safeSetLocalStorageItem("data", JSON.stringify(data.tasks))
-  //     safeSetLocalStorageItem("timestamp", dayjs().format())
-  //   }
-  // })
-  watch(() => {
-    data.selected
-    data.tasks
+    selected.id
+    reData.visibletasks
     Promise.resolve().then(() => {
       let editdiv = document.getElementById("edit")
       if (editdiv) {
         const range = document.createRange()
         const sel = window.getSelection()
         range.selectNodeContents(editdiv)
-        if (!data.selected.name.startsWith(NEWSCRIBETEXT)) range.collapse()
+        if (!getObjectById(selected.id).name.startsWith(NEWSCRIBETEXT)) range.collapse()
         sel.removeAllRanges()
         sel.addRange(range)
-        //   const rect = div.getBoundingClientRect()
-        //   const scrollPosition = rect.top + window.scrollY + rect.height / 2 - mouseY
-        //   window.scroll(0, scrollPosition)
       }
       let selectedtaskdiv = document.getElementById("selectedtask")
       if (selectedtaskdiv) selectedtaskdiv.scrollIntoView(true)

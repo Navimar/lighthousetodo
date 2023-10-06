@@ -1,8 +1,7 @@
 import { auth } from "/components/authentication.js"
-import { status, data, user } from "/logic/reactive.js"
-import sort from "/logic/sort.js"
+import { status, user } from "/logic/reactive.js"
 import syncTasks from "../../united/synctasks"
-import { getObjectById } from "/logic/util"
+import data from "~/logic/data.js"
 
 import { io } from "socket.io-client"
 import { makevisible } from "/logic/makevisible"
@@ -35,7 +34,6 @@ export function inputSocket() {
       data.tasks = syncTasks(data.tasks, msg.tasks)
 
       makevisible()
-      sort()
       // console.log(socket.id, "update", msg)
     } else {
       console.log("No incoming data")
@@ -48,7 +46,7 @@ export function inputSocket() {
 }
 
 export const loadData = async () => {
-  console.log("loaddata", user)
+  // console.log("loaddata", user)
   if (auth.currentUser)
     try {
       const token = await getToken("ld") // Получение нового токена
@@ -62,15 +60,13 @@ export const loadData = async () => {
 export const sendData = async (changedTasks) => {
   let sentdata = {
     user: user,
-    tasks: changedTasks.map((id) => getObjectById(id)), // Отправляем только задачи, которые были изменены
-    // calendarSet: data.calendarSet,
+    tasks: changedTasks,
   }
 
   if (auth.currentUser)
     try {
       const token = await getToken("sd")
       sentdata.user.token = token
-      console.log("sendData", sentdata)
       socket.emit("save", sentdata)
     } catch (error) {
       console.error("Error sending data with token:", error)

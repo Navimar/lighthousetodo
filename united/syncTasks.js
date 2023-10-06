@@ -2,13 +2,17 @@ export default (existingTasks = [], incomingTasks = []) => {
   const updatedTasks = [...existingTasks]
 
   for (const incomingTask of incomingTasks) {
-    // Ищем задачу с тем же id или, при отсутствии id, с тем же именем
-    // console.log("incomingTask", incomingTask)
-    const matchingTask = updatedTasks.find((t) => (t.id ? t.id === incomingTask?.id : t.name === incomingTask?.name))
+    // Проверяем наличие ID
+    if (!incomingTask.id) {
+      throw new Error("Incoming task is missing an ID.")
+    }
+
+    // Ищем задачу с тем же id
+    const matchingTask = updatedTasks.find((t) => t.id === incomingTask.id)
 
     // Обновляем задачу, если у нее нет временной метки или если входящая задача новее
     if (!matchingTask?.timestamp || incomingTask.timestamp > matchingTask.timestamp) {
-      const index = updatedTasks.findIndex((t) => (t.id ? t.id === incomingTask?.id : t.name === incomingTask?.name))
+      const index = updatedTasks.findIndex((t) => t.id === incomingTask.id)
       if (index > -1) {
         updatedTasks[index] = incomingTask
       } else {

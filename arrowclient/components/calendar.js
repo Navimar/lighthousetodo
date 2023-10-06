@@ -1,11 +1,10 @@
 import { html, reactive, watch } from "@arrow-js/core"
 import dayjs from "dayjs"
 
-import { selectedDate, data } from "~/logic/reactive.js"
+import { selectedDate, reData, selected } from "~/logic/reactive.js"
 import { makevisible } from "~/logic/makevisible.js"
 import saveTask from "~/logic/savetask.js"
 import { searchstring } from "~/logic/reactive.js"
-import sort from "~/logic/sort.js"
 
 let today = () => {
   selectedDate.date = dayjs().format("YYYY-MM-DD")
@@ -15,33 +14,29 @@ function nextMonth() {
   const nextMonthDate = dayjs(selectedDate.date).add(1, "month").format("YYYY-MM-DD")
   selectedDate.date = nextMonthDate // обновление вашей реактивной переменной
   makevisible()
-  sort()
 }
 
 function prevMonth() {
   const prevMonthDate = dayjs(selectedDate.date).subtract(1, "month").format("YYYY-MM-DD")
   selectedDate.date = prevMonthDate
   makevisible()
-  sort()
 }
 
 function nextYear() {
   const nextYearDate = dayjs(selectedDate.date).add(1, "year").format("YYYY-MM-DD")
   selectedDate.date = nextYearDate
   makevisible()
-  sort()
 }
 
 function prevYear() {
   const prevYearDate = dayjs(selectedDate.date).subtract(1, "year").format("YYYY-MM-DD")
   selectedDate.date = prevYearDate
   makevisible()
-  sort()
 }
 
 function clickOnCaldendarDay(date) {
   saveTask("clickOnCaldendarDay")
-  data.selected = false
+  selected.id = false
   // let date = e.target.innerText;
   let clickedDate = dayjs(selectedDate.date).set("date", date)
 
@@ -52,7 +47,6 @@ function clickOnCaldendarDay(date) {
     selectedDate.date = clickedDate.format("YYYY-MM-DD") // Устанавливаем выбранный день
   }
   makevisible()
-  sort()
 }
 
 export default () => {
@@ -79,7 +73,7 @@ export default () => {
 
     // const calendarDot = () => {
     //   const formattedDate = date.format("YYYY-MM-DD")
-    //   const taskType = data.calendarSet[formattedDate]
+    //   const taskType = reData.calendarSet[formattedDate]
 
     //   const taskTypeToCSS = {
     //     meeting: "text-old bg-bright dark:bg-near-dark",
@@ -97,7 +91,7 @@ export default () => {
 
     const calendarDot = () => {
       const formattedDate = date.format("YYYY-MM-DD")
-      const taskType = data.calendarSet[formattedDate]
+      const taskType = reData.calendarSet[formattedDate]
 
       const taskTypeToCSS = {
         meeting: "text-accent dark:text-accent-dark",

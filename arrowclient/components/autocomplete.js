@@ -3,10 +3,8 @@ import { html } from "@arrow-js/core"
 import { autocomplete } from "~/logic/reactive.js"
 
 function complete(e, divId) {
-  console.log("complete", divId)
   // Получить элемент по его ID
   const divElement = document.getElementById(divId)
-  console.log("divElement", divElement)
 
   // Если div не найден, выходим из функции
   if (!divElement) {
@@ -16,7 +14,6 @@ function complete(e, divId) {
 
   // Получить текущий текст из div и разделить его на строки
   const lines = divElement.innerText.trim().split("\n")
-  console.log("autocomplete.line", autocomplete.line)
   // Найти индекс строки, которую нужно заменить
   const lowerCaseLines = lines.map((line) => line.toLowerCase())
   const lineIndex = lowerCaseLines.indexOf(autocomplete.line.toLowerCase())
@@ -24,10 +21,7 @@ function complete(e, divId) {
   if (lineIndex !== -1) {
     // Замена строки
     lines[lineIndex] = e.currentTarget.innerText
-  } else {
-    console.log(lineIndex, "lineindex error")
-    return
-  }
+  } else return
 
   // Объединить строки, обернув каждую из них в <div> и установить обратно в div
   divElement.innerHTML = lines.map((line) => `<div>${line}</div>`).join("")

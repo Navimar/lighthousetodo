@@ -1,51 +1,41 @@
-import { data } from "/logic/reactive.js"
+import { selected } from "/logic/reactive.js"
 import { isNameTaken } from "/logic/util.js"
 import { clearSearch } from "/logic/manipulate"
-import addScribe from "/logic/addscribe"
+import data from "~/logic/data.js"
 import dayjs from "dayjs"
 import { sendData } from "/logic/socket"
-import { getObjectByName } from "/logic/util"
+import { getObjectByName, getObjectById } from "/logic/util"
 
 export default (m) => {
   let changedTasks = []
   //понять откуда вызвано сохрание
   console.log("saveTask", m)
   //если нет выделенных то выйти
-  if (!data.selected) return false
+  if (!selected.id) return false
 
   //найти див редактирования
   const eDiv = document.getElementById("edit")
 
   if (eDiv) {
-    // if (edit)
+    let thisTask = getObjectById(selected.id)
     // найти имя и заметку
     const lines = eDiv.innerText.trim().split("\n")
     let name = lines[0]
     const note = lines.slice(1).join("\n")
 
     // добываем массив строк из фром и ту
-    const fromEdit = document.getElementById("fromEdit")
-    const fromEditLines = [
-      ...new Set(
-        fromEdit.innerText
-          .trim()
-          .split("\n")
-          .filter((line) => line.trim() !== ""),
-      ),
-    ]
-    const toEdit = document.getElementById("toEdit")
-    const toEditLines = [
-      ...new Set(
-        toEdit.innerText
-          .trim()
-          .split("\n")
-          .filter((line) => line.trim() !== ""),
-      ),
-    ]
+    // добываем массив ID из фром и ту
+    const fromEditIds = fromEdit.innerText
+      .trim()
+      .split("\n")
+      .filter((name) => name.trim() !== "") // Фильтрация пустых строк
+      .map((name) => getObjectByName(name).id) // Используем функцию getObjectByName
 
-    // создаем массив задач для создания из новых ссылок
-    let newScribesFromNames = fromEditLines.slice()
-    let newScribesToNames = toEditLines.slice()
+    const toEditIds = toEdit.innerText
+      .trim()
+      .split("\n")
+      .filter((name) => name.trim() !== "") // Фильтрация пустых строк
+      .map((name) => getObjectByName(name).id)
 
     // добаываем дату и время из инпутов
     const timeInput = document.getElementById("timeInput").value
@@ -63,92 +53,65 @@ export default (m) => {
 
     //провереяем что имя не пусто и не занято
     if (name === "") {
-      name = data.selected.name
+      name = thisTask.name
     }
-    if (name != data.selected.name)
+    if (name != thisTask.name)
       while (isNameTaken(name) && name.length < 1000) {
         name += "!"
       }
-    console.log("savetask name", name)
 
     for (let theTask of data.tasks) {
-      // ищем и удаляем все ссылки на старое имя
-      for (let fni in theTask.fromNames) {
-        if (theTask.fromNames[fni] && theTask.fromNames[fni].toLowerCase() == data.selected.name.toLowerCase()) {
-          theTask.fromNames.splice(fni, 1)
-          changedTasks.push(theTask.id)
-        }
+      // 1. Удаляем связи для тех задач, где они больше не нужны.
+      if (theTask.fromIds?.includes(selected.id) && !fromEditIds.includes(theTask.id)) {
+        theTask.fromIds = theTask.fromIds?.filter((id) => id !== selected.id) || []
+        changedTasks.push(theTask)
       }
 
-      for (let tni in theTask.toNames) {
-        if (theTask.toNames[tni] && theTask.toNames[tni].toLowerCase() == data.selected.name.toLowerCase()) {
-          theTask.toNames.splice(tni, 1)
-          changedTasks.push(theTask.id)
-        }
+      if (theTask.toIds?.includes(selected.id) && !toEditIds.includes(theTask.id)) {
+        theTask.toIds = theTask.toIds?.filter((id) => id !== selected.id) || []
+        changedTasks.push(theTask)
       }
 
-      //добавляем ссылки на новое имя удаляем из массива новых задач найденные ссылки
-      for (let index = fromEditLines.length - 1; index >= 0; index--) {
-        if (theTask.name.toLowerCase() === fromEditLines[index].toLowerCase()) {
-          newScribesFromNames.splice(index, 1)
-          if (theTask.toNames && theTask.toNames.indexOf(name) === -1) {
-            theTask.toNames.push(name)
-            changedTasks.push(theTask.id)
-          }
-        }
+      // 2. Добавляем связи, если они установлены пользователем.
+      if (fromEditIds.includes(theTask.id) && !theTask.toIds?.includes(selected.id)) {
+        if (!theTask.toIds) theTask.toIds = []
+        theTask.toIds.push(selected.id)
+        changedTasks.push(theTask)
       }
 
-      // обработка toEditLines
-      for (let index = toEditLines.length - 1; index >= 0; index--) {
-        if (theTask.name.toLowerCase() === toEditLines[index].toLowerCase()) {
-          newScribesToNames.splice(index, 1)
-          if (theTask.fromNames && theTask.fromNames.indexOf(name) === -1) {
-            theTask.fromNames.push(name)
-            changedTasks.push(theTask.id)
-          }
-        }
+      if (toEditIds.includes(theTask.id) && !theTask.fromIds?.includes(selected.id)) {
+        if (!theTask.fromIds) theTask.fromIds = []
+        theTask.fromIds.push(selected.id)
+        changedTasks.push(theTask)
       }
     }
 
-    changedTasks.push(data.selected.id)
+    changedTasks.push(thisTask)
 
     //ставим временную метку
-    data.selected.timestamp = dayjs().valueOf()
-    console.log("timestamp", data.selected.timestamp)
+    thisTask.timestamp = dayjs().valueOf()
 
     //сохраняем новые значение
-    data.selected.name = name
-    data.selected.note = note
+    thisTask.name = name
+    thisTask.note = note
 
-    if (choosenradio) data.selected.type = choosenradio
+    if (choosenradio) thisTask.type = choosenradio
 
-    data.selected.fromNames = fromEditLines
-    data.selected.toNames = toEditLines
+    thisTask.fromIds = fromEditIds
+    thisTask.toIds = toEditIds
 
-    data.selected.time = timeInput
-    data.selected.date = dateInput
+    thisTask.time = timeInput
+    thisTask.date = dateInput
 
     // устанавливаем паузу
     let pauseCheckbox = document.getElementById("pauseCheckbox")
-    if (pauseCheckbox && pauseCheckbox.checked) data.selected.pause = true
-    else data.selected.pause = false
+    if (pauseCheckbox && pauseCheckbox.checked) thisTask.pause = true
+    else thisTask.pause = false
 
-    // если выделено готово, то удалить запись
+    // если выделено готово, то отметить готово
     let readyCheckbox = document.getElementById("readyCheckbox")
-    if (readyCheckbox && readyCheckbox.checked) data.selected.ready = true
-    else data.selected.ready = false
-
-    //создаем новые записи
-    console.log("newScribesFromNames", newScribesFromNames)
-    newScribesFromNames.forEach((txt) => {
-      let newTask = addScribe(txt, [], [name])
-      changedTasks.push(newTask.id)
-    })
-    console.log("newScribesToNames", newScribesToNames)
-    newScribesToNames.forEach((txt) => {
-      let newTask = addScribe(txt, [name], [])
-      changedTasks.push(newTask.id)
-    })
+    if (readyCheckbox && readyCheckbox.checked) thisTask.ready = true
+    else thisTask.ready = false
 
     changedTasks = [...new Set(changedTasks)]
 

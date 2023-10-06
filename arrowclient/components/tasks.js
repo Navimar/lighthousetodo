@@ -1,16 +1,14 @@
 import timeSlider from "~/components/timeslider.js"
-import fromLine from "~/components/fromline.js"
-import toLine from "~/components/toline.js"
-import { searchstring, data } from "~/logic/reactive.js"
+import tagLine from "~/components/tagline.js"
+import { searchstring, reData, selected } from "~/logic/reactive.js"
 import dateInput from "~/components/dateinput.js"
 import radio from "~/components/priorityRadio.js"
 import linkDivs from "~/components/linkdivs.js"
 import controlButtons from "~/components/controlButtons.js"
 import taskPlate from "~/components/taskplate.js"
-import { selectTask } from "~/logic/manipulate.js"
+import { selectTaskById } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
-
-import dayjs from "dayjs"
+import data from "~/logic/data.js"
 import { html } from "@arrow-js/core"
 let firststicky = true
 
@@ -30,7 +28,7 @@ export let renderTasks = () => {
     }
     return filteredTasks.map(renderTask)
   }
-  return data.visibletasks.map(renderTask)
+  return reData.visibletasks.map(renderTask)
 }
 let renderTask = (task, index) => {
   let firstclass
@@ -41,7 +39,7 @@ let renderTask = (task, index) => {
     sticky = "sticky bottom-0"
     firststicky = false
   }
-  if (data.selected && data.selected.name == task.name)
+  if (selected.id == task.id)
     // Редактируемый
     return html` <div
       id="selectedtask"
@@ -50,7 +48,7 @@ let renderTask = (task, index) => {
       )}">
       ${controlButtons(task)} ${radio(task)} ${timeSlider(task)} ${dateInput(task)} ${linkDivs(task)}
       <div class="flex flex-col gap-3 ml-3"
-        >${() => fromLine(task)}
+        >${() => tagLine(task, "from")}
         <div
           id="edit"
           class="w-full min-h-full whitespace-pre-wrap focus:outline-none"
@@ -59,20 +57,20 @@ let renderTask = (task, index) => {
           aria-multiline="true"
           >${task.name}${"\n" + task.note}</div
         >
-        ${() => toLine(task)}
+        ${() => tagLine(task, "to")}
       </div></div
     >`
   // Нередактируемый
   else
     return html` <div
       @click="${(e) => {
-        selectTask(task)
+        selectTaskById(task.id)
         clickPos(e)
       }}"
       class="${sticky} ${firstclass} flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg overflow dark:text-white ${errorclass(
         task,
       )}">
-      ${() => fromLine(task)}
+      ${() => tagLine(task, "from")}
       <div class="flex gap-3">
         ${() => taskPlate(task)}
         <div class="w-full my-auto ">
@@ -82,13 +80,13 @@ let renderTask = (task, index) => {
           }}
         </div>
       </div>
-      ${() => toLine(task)}
+      ${() => tagLine(task, "to")}
     </div>`
 }
 
 const errorclass = (task) => {
-  // // console.log(data.selected.name != task.name, task.error)
-  // if (data.selected.name != task.name && task.error) {
+  // // console.log(selected.task.name != task.name, task.error)
+  // if (selected.task.name != task.name && task.error) {
   //   return 'bg-accent dark:bg-accent-dark'
   // }
   // else {

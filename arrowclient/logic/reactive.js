@@ -1,4 +1,4 @@
-import { html, reactive, watch } from "@arrow-js/core"
+import { reactive } from "@arrow-js/core"
 import dayjs from "dayjs"
 
 export const currentTime = reactive({
@@ -28,11 +28,12 @@ export const user = reactive({})
 export const status = reactive({
   online: true,
 })
-export const data = reactive({
+export const reData = reactive({
   calendarSet: {},
-  selected: false,
   version: 0,
   tasks: [],
-  deleted: [],
   visibletasks: [],
+})
+export const selected = reactive({
+  id: "",
 })
