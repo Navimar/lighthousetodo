@@ -1,5 +1,7 @@
-import { html } from "@arrow-js/core"
 import { currentTime } from "~/logic/reactive.js"
+import { dateInputPauseButtonHTMLCSS } from "~/logic/manipulate.js"
+
+import { html } from "@arrow-js/core"
 import dayjs from "dayjs"
 
 function updateSliderLabel(e) {
@@ -32,6 +34,7 @@ function updateSliderLabel(e) {
     }
   }
   // Если выбранное время в будущем, не меняем дату
+  dateInputPauseButtonHTMLCSS()
 }
 
 export default (task) =>

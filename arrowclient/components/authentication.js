@@ -2,10 +2,10 @@ import { html, reactive, watch } from "@arrow-js/core"
 import { initializeApp } from "firebase/app"
 import { GoogleAuthProvider, signInWithPopup, getAuth, onAuthStateChanged, signOut } from "firebase/auth"
 import { loadData } from "~/logic/socket.js"
-import { searchstring } from "~/logic/reactive.js"
+import { searchstring, reData, selected, user } from "~/logic/reactive.js"
+import data from "~/logic/data.js"
 
 import css from "/css.js"
-import { user, reData } from "~/logic/reactive.js"
 import firebaseConfig from "~/firebase.config.js"
 initializeApp(firebaseConfig)
 
@@ -110,7 +110,6 @@ export let logout = async () => {
     user.name = null
     reData.calendarSet = {}
     selected.id = false
-    reData.version = 0
     data.tasks = []
     reData.visibletasks = []
   } catch (error) {

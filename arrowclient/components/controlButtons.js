@@ -18,13 +18,15 @@ let checkedReady = (task) => {
 }
 
 let saveButton = () => {
+  let wasPaused = getObjectById(selected.id).pause
   saveTask("sv")
   riseTask(selected.id)
   selected.id = false
   makevisible()
-  // reData.visibletasks = []
-  selected.id = reData.visibletasks[0].id
-  // window.scrollTo(0, 0)
+  if (wasPaused) {
+    let pausedTask = reData.visibletasks.find((task) => task.pause === true)
+    selected.id = pausedTask ? pausedTask.id : reData.visibletasks[0].id
+  } else selected.id = reData.visibletasks[0].id
 }
 let riseTask = (taskId, visited = new Set(), depth = 0) => {
   let task = getObjectById(taskId)

@@ -6,9 +6,11 @@ import plusbutton from "./components/plusbutton.js"
 import { renderTasks } from "./components/tasks.js"
 import { inputSocket } from "~/logic/socket.js"
 import { NEWSCRIBETEXT } from "~/logic/const.js"
+import { updateDateClass } from "~/logic/manipulate.js"
 import { safeSetLocalStorageItem, getLocalStorageItem, mouseY } from "~/logic/util.js"
 import { currentTime, reData, selected } from "~/logic/reactive.js"
 import { tick } from "~/logic/tick.js"
+
 import { html, watch } from "@arrow-js/core"
 import dayjs from "dayjs"
 import "dayjs/locale/ru" // Импорт русской локали
@@ -64,6 +66,7 @@ window.addEventListener("load", function () {
       }
       let selectedtaskdiv = document.getElementById("selectedtask")
       if (selectedtaskdiv) selectedtaskdiv.scrollIntoView(true)
+      updateDateClass()
     })
   })
   watch(() => {

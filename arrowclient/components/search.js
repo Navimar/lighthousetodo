@@ -25,7 +25,7 @@ export default () => {
 let crossbutton = () => {
   let crossbuttoncss = searchstring.text == "" ? "hidden" : ""
   return html` <button
-    class="dark:text-white text-4xl absolute z-[100] right-2 font-extrabold ${crossbuttoncss}"
+    class="dark:text-white text-4xl absolute z-[100] right-5 font-extrabold ${crossbuttoncss}"
     @click="${() => {
       clearSearch()
     }}">

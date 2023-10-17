@@ -2,9 +2,9 @@ import { auth } from "/components/authentication.js"
 import { status, user } from "/logic/reactive.js"
 import syncTasks from "../../united/synctasks"
 import data from "~/logic/data.js"
+import { makevisible } from "~/logic/makevisible"
 
 import { io } from "socket.io-client"
-import { makevisible } from "/logic/makevisible"
 
 const socket = io()
 
@@ -28,16 +28,8 @@ export function inputSocket() {
     status.online = false
   })
   socket.on("update", function (msg) {
-    // Если их нет, инициализируйте как пустые массивы или соответствующие значения.
-    if (msg) {
-      // Синхронизация задач
-      data.tasks = syncTasks(data.tasks, msg.tasks)
-
-      makevisible()
-      // console.log(socket.id, "update", msg)
-    } else {
-      console.log("No incoming data")
-    }
+    data.tasks = syncTasks(data.tasks, msg?.tasks)
+    makevisible()
   })
 
   socket.on("err", (val) => {

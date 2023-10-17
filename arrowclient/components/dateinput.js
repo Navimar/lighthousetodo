@@ -2,6 +2,7 @@ import { html } from "@arrow-js/core"
 import dayjs from "dayjs"
 
 import css from "~/css.js"
+import { dateInputPauseButtonHTMLCSS } from "~/logic/manipulate.js"
 
 const updateTimeSlider = (event) => {
   const time = event.target.value
@@ -12,9 +13,6 @@ const updateTimeSlider = (event) => {
 }
 
 function adjustDate(daysToAdd) {
-  let pc = document.getElementById("pauseCheckbox")
-  if (pc) pc.checked = false
-
   const dateInput = document.getElementById("dateInput")
 
   // Получаем текущую дату из инпута
@@ -31,12 +29,10 @@ function adjustDate(daysToAdd) {
     // Иначе, устанавливаем вычисленную дату
     dateInput.value = newDate.format("YYYY-MM-DD")
   }
+  dateInputPauseButtonHTMLCSS()
 }
 
 function adjustTime(min) {
-  let pc = document.getElementById("pauseCheckbox")
-  if (pc) pc.checked = false
-
   const dateInput = document.getElementById("dateInput")
   const timeInput = document.getElementById("timeInput")
 
@@ -63,11 +59,13 @@ function adjustTime(min) {
   const totalMinutes = dayjsTime.hour() * 60 + dayjsTime.minute()
   const slider = document.getElementById("timeSlider")
   slider.value = totalMinutes
+  dateInputPauseButtonHTMLCSS()
 }
 
 function setTodayDate() {
   const dateInput = document.getElementById("dateInput")
   dateInput.value = dayjs().format("YYYY-MM-DD")
+  dateInputPauseButtonHTMLCSS()
 }
 
 export default (task) => {
@@ -76,15 +74,16 @@ export default (task) => {
       id="timeInput"
       value="${task.time}"
       type="time"
-      class="shrink-0 dark:bg-black bg-white my-auto dark:border-black text-center h-7 "
+      class="shrink-0 dark:bg-black bg-white my-auto dark:border-black text-center  h-10 border-b-02rem border-white dark:border-black "
       @input="${(e) => updateTimeSlider(e)}" />
     <input
       id="dateInput"
       value="${task.date}"
-      class="shrink-0 dark:bg-black bg-white dark:border-black my-auto text-center h-7 "
+      class="shrink-0 dark:bg-black bg-white dark:border-black my-auto text-center h-10 border-b-02rem border-white  dark:border-black"
       type="date"
       id="task-date"
-      name="task-date" />
+      name="task-date"
+      @change="${dateInputPauseButtonHTMLCSS}" />
     <div class="flex justify-between gap-3">
       <button class="${css.button}" @click="${() => setTodayDate()}"> Сегодня </button>
       <button class="${css.button}" @click="${() => adjustDate(1)}">+День</button>
