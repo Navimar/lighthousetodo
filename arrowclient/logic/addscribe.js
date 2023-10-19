@@ -22,6 +22,6 @@ export default (name, fromIds = [], toIds = []) => {
     timestamp: dayjs().valueOf(),
   }
 
-  data.tasks.unshift(newTask)
-  return data.tasks[0]
+  data.tasks.push(newTask)
+  return newTask
 }

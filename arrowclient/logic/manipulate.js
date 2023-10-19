@@ -6,13 +6,15 @@ import { getObjectByName, getObjectById } from "~/logic/util"
 import dayjs from "dayjs"
 
 export function selectTaskByName(identifier) {
-  saveTask("cot")
+  saveTask("selectTaskByName")
+  clearSearch()
   selected.id = getObjectByName(identifier).id
   makevisible()
 }
 
 export function selectTaskById(identifier) {
-  saveTask("cot")
+  saveTask("selectTaskById")
+  clearSearch()
   selected.id = identifier
   makevisible()
 }

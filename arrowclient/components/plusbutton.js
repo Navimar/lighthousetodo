@@ -1,9 +1,8 @@
 import { html } from "@arrow-js/core"
 import { NEWSCRIBETEXT } from "~/logic/const.js"
-import { selectTaskByName, clearSearch } from "~/logic/manipulate.js"
+import { selectTaskByName } from "~/logic/manipulate.js"
 
 let plusbutton = () => {
-  clearSearch()
   selectTaskByName(NEWSCRIBETEXT)
 }
 
