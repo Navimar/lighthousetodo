@@ -32,10 +32,8 @@ function handleInput(e) {
 
   // Обновлять autocomplete.list с найденными именами совпадений
   autocomplete.list = matches.map((match) => {
-    const highlightedName = match.name.replace(
-      new RegExp(currentLineText, "ig"),
-      (match) => `<strong>${match}</strong>`,
-    ) // Добавлен флаг 'i' для поиска без учета регистра
+    const escapedText = currentLineText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    const highlightedName = match.name.replace(new RegExp(escapedText, "ig"), (match) => `<strong>${match}</strong>`)
     return highlightedName
   })
 }
