@@ -1,5 +1,5 @@
 import { selected } from "/logic/reactive.js"
-import { isNameTaken } from "/logic/util.js"
+import { isNameTaken, safeSetLocalStorageItem } from "/logic/util.js"
 import { clearSearch } from "/logic/manipulate"
 import data from "~/logic/data.js"
 import dayjs from "dayjs"
@@ -116,6 +116,7 @@ export default (m) => {
     changedTasks = [...new Set(changedTasks)]
 
     // Отправляем массив
+    safeSetLocalStorageItem("tasks", data.tasks)
     sendData(changedTasks)
 
     // Опустошаем строку поиска

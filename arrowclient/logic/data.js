@@ -1,1 +1,1 @@
-export default { tasks: [] }
+export default { tasks: [], pendingRequests: [] }

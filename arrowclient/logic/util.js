@@ -76,13 +76,6 @@ export function getLocalStorageItem(key) {
   }
 }
 
-export function safeJSONParse(value, defaultValue) {
-  try {
-    return JSON.parse(value)
-  } catch (e) {
-    return defaultValue !== undefined ? defaultValue : undefined
-  }
-}
 export function safeSetLocalStorageItem(key, value) {
   try {
     const serializedValue = JSON.stringify(value)

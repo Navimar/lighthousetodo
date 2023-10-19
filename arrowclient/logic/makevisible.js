@@ -1,6 +1,6 @@
-import { currentTime, selectedDate, reData, selected } from "/logic/reactive.js"
-import { getObjectById } from "/logic/util.js"
-import { PRIORITY } from "/logic/const"
+import { currentTime, selectedDate, reData, selected } from "~/logic/reactive.js"
+import { getObjectById } from "~/logic/util.js"
+import { PRIORITY } from "~/logic/const"
 import data from "~/logic/data.js"
 
 import dayjs from "dayjs"
@@ -165,7 +165,7 @@ const sort = () => {
     if (!a.pause && b.pause) return 1
     if (a.pause && !b.pause) return -1
 
-    // Приоритет встречам и рамкам перед окнами
+    // Приоритет встречам и рамкам перед окнами и срокам
     if (
       (aPriorityType == "meeting" || aPriorityType == "frame") &&
       (bPriorityType == "window" || bPriorityType == "deadline")
@@ -185,6 +185,10 @@ const sort = () => {
       if (!datetimeA.isSame(datetimeB)) return datetimeA.isAfter(datetimeB) ? 1 : -1
     }
 
+    // Приоритет сроку над окном
+    if (aPriorityType == "deadline" && bPriorityType == "window") return -1
+    if (bPriorityType == "deadline" && aPriorityType == "window") return 1
+
     // Если обе задачи окна
     if (
       (aPriorityType == "window" || aPriorityType == "deadline") &&
@@ -201,10 +205,6 @@ const sort = () => {
 
       // Если обе задачи в будущем, сравниваем их по времени
       if (aIsFuture && bIsFuture) return datetimeA.isAfter(datetimeB) ? 1 : -1
-
-      // Приоритет сроку над окном
-      if (aPriorityType == "deadline" && bPriorityType == "window") return -1
-      if (bPriorityType == "deadline" && aPriorityType == "window") return 1
 
       // Сортировка по таймстампу предков о_О
       const maxTimestampA = getMaxTimestampFromIds(a)

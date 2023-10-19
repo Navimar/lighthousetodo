@@ -111,6 +111,7 @@ export let logout = async () => {
     reData.calendarSet = {}
     selected.id = false
     data.tasks = []
+    localStorage.clear()
     reData.visibletasks = []
   } catch (error) {
     alert("Error during sign out:", error)

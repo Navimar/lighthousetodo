@@ -1,6 +1,6 @@
 import { html } from "@arrow-js/core"
 import { getCurrentLine, getObjectById } from "~/logic/util.js"
-import { autocomplete, reData } from "~/logic/reactive.js"
+import { autocomplete } from "~/logic/reactive.js"
 import renderAutocomplete from "/components/autocomplete.js"
 import data from "~/logic/data.js"
 

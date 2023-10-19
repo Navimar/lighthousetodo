@@ -2,14 +2,18 @@ import { authentication, authenticationOnLoad } from "./components/authenticatio
 import renderCalendar from "./components/calendar.js"
 import online from "./components/online.js"
 import search from "./components/search.js"
+import forget from "~/logic/forget.js"
 import plusbutton from "./components/plusbutton.js"
 import { renderTasks } from "./components/tasks.js"
 import { inputSocket } from "~/logic/socket.js"
 import { NEWSCRIBETEXT } from "~/logic/const.js"
 import { updateDateClass } from "~/logic/manipulate.js"
-import { safeSetLocalStorageItem, getLocalStorageItem, mouseY } from "~/logic/util.js"
+import { safeSetLocalStorageItem, getLocalStorageItem } from "~/logic/util.js"
 import { currentTime, reData, selected } from "~/logic/reactive.js"
 import { tick } from "~/logic/tick.js"
+import data from "~/logic/data.js"
+import { getObjectById } from "~/logic/util.js"
+import { makevisible } from "~/logic/makevisible.js"
 
 import { html, watch } from "@arrow-js/core"
 import dayjs from "dayjs"
@@ -17,7 +21,6 @@ import "dayjs/locale/ru" // Импорт русской локали
 import localizedFormat from "dayjs/plugin/localizedFormat" // Плагин для локализованного форматирования
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
-import { getObjectById } from "~/logic/util.js"
 dayjs.extend(isSameOrBefore)
 dayjs.extend(customParseFormat)
 dayjs.extend(localizedFormat)
@@ -41,11 +44,15 @@ window.addEventListener("load", function () {
   })
 
   authenticationOnLoad()
+
+  data.tasks = getLocalStorageItem("tasks") || []
+  forget()
+  data.pendingRequests = getLocalStorageItem("pendingRequests") || []
+  makevisible()
+
   inputSocket()
 
   currentTime.timerStarted = getLocalStorageItem("timer") || "00:00"
-  // data.calendarSet = safeJSONParse(getLocalStorageItem('calendarSet'), {})
-  // data.timestamp = getLocalStorageItem('timestamp');
 
   tick()
   watch(() => {
