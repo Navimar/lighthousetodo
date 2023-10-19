@@ -1,4 +1,5 @@
 import { auth } from "/components/authentication.js"
+import { selected } from "~/logic/reactive.js"
 import { status, user } from "/logic/reactive.js"
 import syncTasks from "../../united/synctasks"
 import data from "~/logic/data.js"
@@ -32,6 +33,7 @@ export function inputSocket() {
   socket.on("update", function (msg) {
     data.tasks = syncTasks(data.tasks, msg?.tasks)
     safeSetLocalStorageItem("tasks", data.tasks)
+    selected.id = false
     makevisible()
   })
 

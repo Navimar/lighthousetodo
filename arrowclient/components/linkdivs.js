@@ -21,7 +21,8 @@ function handleInput(e) {
     .filter((taskItem) => taskItem.name.toLowerCase().includes(currentLineText)) // Преобразование к нижнему регистру
     .sort((a, b) => {
       // Основная сортировка на основе длины toNames
-      const difference = (b.toIds?.length || 0) - (a.toIds?.length || 0)
+      const difference =
+        (b.toIds?.length || 0) + (b.fromIds?.length || 0) - ((a.toIds?.length || 0) + (a.fromIds?.length || 0))
       if (difference !== 0) return difference
 
       // Дополнительная сортировка на основе длины name, если длины toNames одинаковы
