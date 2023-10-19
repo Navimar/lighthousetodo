@@ -28,7 +28,7 @@ function handleInput(e) {
       // Дополнительная сортировка на основе длины name, если длины toNames одинаковы
       return a.name.length - b.name.length
     })
-    .slice(0, 15) // Ограничиваем список до 15 элементов
+    .slice(0, 7) // Ограничиваем список
 
   // Обновлять autocomplete.list с найденными именами совпадений
   autocomplete.list = matches.map((match) => {
