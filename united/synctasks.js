@@ -4,7 +4,7 @@ export default (existingTasks = [], incomingTasks = []) => {
   for (const incomingTask of incomingTasks) {
     // Проверяем наличие ID
     if (!incomingTask.id) {
-      throw new Error("Incoming task is missing an ID.")
+      throw new Error("Incoming task is missing an ID.", incomingTask)
     }
 
     // Ищем задачу с тем же id
