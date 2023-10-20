@@ -30,25 +30,28 @@ function complete(e, divId) {
 }
 
 export default (divId) => {
-  if (autocomplete.list && autocomplete.div == divId && autocomplete.list.length > 0)
+  if (autocomplete.list && autocomplete.div == divId && autocomplete.list.length > 0) {
+    const elements = []
+    for (let i = 0; i < autocomplete.list.length; i++) {
+      const e = autocomplete.list[i]
+      const div = html`
+        <div
+          class="cursor-pointer break-words hover:bg-neutral-200 dark:hover:bg-neutral-600 p-2"
+          @click="${(event) => complete(event, divId)}">
+          ${e}
+        </div>
+      `
+      elements.push(div)
+    }
     return html`
       <div id="autocomplete-list" class="w-full sm:w-1/2 absolute z-10 top-full ">
         <div
           class=" border border-neutral-400 dark:bg-neutral-800 dark:border-neutral-600 rounded bg-white dark:bg-black">
-          ${() =>
-            autocomplete.list.map((e) => {
-              return html`
-                <div
-                  class="cursor-pointer break-words hover:bg-neutral-200 dark:hover:bg-neutral-600 p-2"
-                  @click="${(event) => complete(event, divId)}">
-                  ${e}
-                </div>
-              `
-            })}
+          ${() => elements}
         </div>
       </div>
     `
-  else return ""
+  } else return ""
 }
 
 document.addEventListener("click", function (event) {

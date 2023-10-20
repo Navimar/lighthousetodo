@@ -33,7 +33,7 @@ export default (task, direction) => {
   notReadyFutureTasks.sort((a, b) => a.name.localeCompare(b.name))
   readyTasks.sort((a, b) => a.name.localeCompare(b.name))
 
-  return html`<div class=" text-sm empty:hidden"
+  return html`<div class="text-center text-sm empty:hidden"
     >${() =>
       notReadyTasks.map((task) => {
         return html`<span class="inline-block"
