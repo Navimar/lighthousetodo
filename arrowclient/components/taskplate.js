@@ -45,6 +45,6 @@ export default (task, additionalClass = "") => {
     return "text-neutral-350 border-transparent" + gc
   }
 
-  return html`<div class="empty:hidden ${timeClass()}">${getTaskDay()}</div
-    ><div class="empty:hidden ${timeClass()}">${getTaskTime()}</div>`
+  return html`<div class="text-sm empty:hidden ${timeClass()}">${getTaskDay()}</div
+    ><div class="text-sm empty:hidden ${timeClass()}">${getTaskTime()}</div>`
 }

@@ -72,13 +72,13 @@ let renderTask = (task, index) => {
       )}">
       ${() => tagLine(task, "from")}
       <div class="flex gap-3">
-        ${() => taskPlate(task)}
         <div class="w-full my-auto ">
           ${() => task.name}
           ${() => {
             if (task.note && task.note.length > 0) return "+ 📝"
           }}
         </div>
+        ${() => taskPlate(task)}
       </div>
       ${() => tagLine(task, "to")}
     </div>`
