@@ -9,6 +9,7 @@ import taskPlate from "~/components/taskplate.js"
 import { selectTaskById } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import data from "~/logic/data.js"
+import { sort } from "~/logic/makevisible.js"
 import { html } from "@arrow-js/core"
 let firststicky = true
 
@@ -26,10 +27,12 @@ export let renderTasks = () => {
         Ничего не найдено...
       </div>`
     }
+    sort(filteredTasks)
     return filteredTasks.map(renderTask)
   }
   return reData.visibletasks.map(renderTask)
 }
+
 let renderTask = (task, index) => {
   let firstclass
   let sticky = ""

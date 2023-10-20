@@ -15,7 +15,7 @@ export default (task) => html`
 
     <div>
       <input type="radio" id="frame" name="typeradio" value="frame" class="hidden peer" ${checked(task, "frame")} />
-      <label for="frame" class="${css.radio}"> Распорядок </label>
+      <label for="frame" class="${css.radio}"> Режим </label>
     </div>
 
     <div>

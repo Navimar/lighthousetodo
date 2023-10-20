@@ -83,7 +83,7 @@ export default () => {
       }
 
       if (taskType) {
-        return html`<span class="absolute ${taskTypeToCSS[taskType]}">&nbsp;●</span>`
+        return html`<span class="absolute px-1 ${taskTypeToCSS[taskType]}">●</span>`
       } else return ""
     }
 

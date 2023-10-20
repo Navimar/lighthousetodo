@@ -33,7 +33,6 @@ export function inputSocket() {
   socket.on("update", function (msg) {
     data.tasks = syncTasks(data.tasks, msg?.tasks)
     safeSetLocalStorageItem("tasks", data.tasks)
-    selected.id = false
     makevisible()
   })
 

@@ -87,7 +87,7 @@ export default (task) => {
           name="task-date"
           @change="${dateInputPauseButtonHTMLCSS}" />
       </div>
-      <div class="flex gap-3">
+      <div class="flex flex-wrap gap-3">
         <button class="${css.button}" @click="${() => setTodayDate()}"> Сегодня </button>
         <button class="${css.button}" @click="${() => adjustDate(1)}">+День</button>
         <button class="${css.button}" @click="${() => adjustDate(7)}">+Неделя</button>

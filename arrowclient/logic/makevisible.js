@@ -8,69 +8,6 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
 
 dayjs.extend(isSameOrAfter)
 
-// let deleteScribe = (name) => {
-//   reData.calendarSet[selected.task.date]--
-//   if (reData.calendarSet[selected.task.date] < 0) reData.calendarSet[selected.task.date] = 0
-
-//   let taskIndex = data.tasks.indexOf(data.selected)
-//   if (taskIndex > -1) {
-//     data.tasks.splice(taskIndex, 1)
-//   }
-//   data.deleted.push(data.selected)
-//   console.log("data.deleted:", data.deleted)
-
-//   data.tasks.forEach((task) => {
-//     // Перемещаем из `toNames` в `toNamesReady`
-//     if (task.toNames?.includes(name)) {
-//       task.toNames = task.toNames.filter((taskName) => taskName !== name)
-//       task.toNamesReady = task.toNamesReady || []
-//       if (!task.toNamesReady.includes(name)) {
-//         task.toNamesReady.push(name)
-//       }
-//     }
-
-//     // Перемещаем из `fromNames` в `fromNamesReady`
-//     if (task.fromNames?.includes(name)) {
-//       console.log("before", task.fromNames)
-//       task.fromNames = task.fromNames?.filter((taskName) => taskName !== name)
-//       task.fromNamesReady = task.fromNamesReady || []
-//       if (!task.fromNamesReady.includes(name)) {
-//         task.fromNamesReady.push(name)
-//       }
-//     }
-//   })
-//   makevisible()
-//   return true
-// }
-
-// export const makevisible = () => {
-//   const areAllFromNamesReady = (names) => {
-//     if (!names || names.length === 0) return true
-
-//     for (let name of names) {
-//       const obj = getObjectByName(name)
-
-//       if (!obj?.ready) return false
-//     }
-
-//     return true
-//   }
-
-//   data.visibletasks = data.tasks.filter((task) => {
-//     if (task === data.selected) {
-//       return true
-//     }
-
-//     const isCurrentOrFutureTask =
-//       selectedDate.date === currentTime.date
-//         ? dayjs(task.date).isBefore(dayjs(selectedDate.date).add(1, "day")) || task.date == selectedDate || !task.date
-//         : dayjs(task.date).isSame(dayjs(selectedDate.date)) || !task.date
-
-//     return isCurrentOrFutureTask && (areAllFromNamesReady(task.fromNames) || task.type === "meeting") && !task.ready
-//   })
-//   console.log("data.visibletasks in make visibel", data.visibletasks[0])
-// }
-
 export const makevisible = () => {
   const areAllFromIdsReady = (task) => {
     if (!task?.fromIds || task.fromIds.length === 0) return true
@@ -153,17 +90,21 @@ const getMaxTimestampFromIds = (task) => {
   return maxTimestamp
 }
 
-const sort = () => {
-  reData.visibletasks.sort((a, b) => {
+export const sort = (arrToSort = reData.visibletasks) => {
+  arrToSort.sort((a, b) => {
+    // Дисприоритет готовности
+    if (!a.ready && b.ready) return -1
+    if (a.ready && !b.ready) return 1
+
+    // Дисприоритет паузы
+    if (!a.pause && b.pause) return 1
+    if (a.pause && !b.pause) return -1
+
     let datetimeA = dayjs(`${a.date}T${a.time}`, "YYYY-MM-DDTHH:mm")
     let datetimeB = dayjs(`${b.date}T${b.time}`, "YYYY-MM-DDTHH:mm")
 
     const aPriorityType = getMaxPriorityType(a)
     const bPriorityType = getMaxPriorityType(b)
-
-    // Приоритет паузы над всеми
-    if (!a.pause && b.pause) return 1
-    if (a.pause && !b.pause) return -1
 
     // Приоритет встречам и рамкам перед окнами и срокам
     if (

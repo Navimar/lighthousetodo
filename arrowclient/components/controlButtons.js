@@ -73,26 +73,23 @@ let sinkTask = (task) => {
 }
 
 export default (task) =>
-  html` <div class="grid grid-cols-4 gap-3">
-    <button class="${css.button}" @click="${() => (selected.id = false)}"> Закрыть </button>
+  html`<div class="grid grid-cols-4 gap-3">
+    <button class="${css.button}" @click="${() => (selected.id = false)}">Закрыть</button>
     ${() => {
-      if (task.type == "frame" || task.type == "meeting" || task.type == "deadline")
-        return html`<label class="${css.button} whitespace-nowrap" for="pauseCheckbox">
-          <input
-            class=" w-3.5 h-3.5 shadow-none dark:accent-accent-dark rounded-lg appearance-none dark:checked:bg-accent-dark mx-2 border-2 border-accent dark:border-accent-dark checked:bg-accent accent-accent"
-            type="checkbox"
-            id="pauseCheckbox"
-            ${checkedPause(task)} />
-          Ожидание
-        </label>`
-      else return html` <button class="${css.button}" @click="${() => sinkTask(task)}">Потом</button>`
+      if (task.type == "frame" || task.type == "meeting" || task.type == "deadline") {
+        return html`
+          <div>
+            <input class="sr-only peer" type="checkbox" id="pauseCheckbox" ${checkedPause(task)} />
+            <label class="${css.radio} whitespace-nowrap" for="pauseCheckbox">Ожидание</label>
+          </div>
+        `
+      } else {
+        return html`<button class="${css.button}" @click="${() => sinkTask(task)}">Потом</button>`
+      }
     }}
-    <label class="${css.button} whitespace-nowrap" for="readyCheckbox">
-      <input
-        class="w-3.5 h-3.5 shadow-none rounded-lg appearance-none dark:checked:bg-accent-dark mx-2 border-2 border-accent dark:border-accent-dark checked:bg-accent accent-accent"
-        type="checkbox"
-        id="readyCheckbox" />
-      Готово
-    </label>
+    <div>
+      <input class="appearance-none peer sr-only" type="checkbox" id="readyCheckbox" />
+      <label class="${css.radio} whitespace-nowrap" for="readyCheckbox">Готово</label>
+    </div>
     <button id="savebutton" class="${css.button}" @click="${saveButton}">Сохранить</button>
   </div>`
