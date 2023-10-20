@@ -22,7 +22,7 @@ export let renderTasks = () => {
     )
     if (filteredTasks.length === 0) {
       return html`<div
-        class=" notomono flex flex-col gap-3 bg-near dark:bg-black p-3 rounded-lg overflow dark:text-white italic">
+        class=" fontmono flex flex-col gap-3 bg-near dark:bg-black p-3 rounded-lg overflow dark:text-white italic">
         Ничего не найдено...
       </div>`
     }
@@ -51,14 +51,19 @@ let renderTask = (task, index) => {
         >${() => tagLine(task, "from")}
         <div
           id="edit"
-          class="w-full min-h-full whitespace-pre-wrap focus:outline-none"
+          class="ml-2 pr-5 w-full min-h-full whitespace-pre-wrap focus:outline-none"
           contenteditable="true"
           role="textbox"
           aria-multiline="true"
-          >${task.name}${"\n" + task.note}</div
-        >
-        ${() => tagLine(task, "to")}
-      </div></div
+          ><div
+            >${task.name}</div
+              ><div>${task.note}</div
+              ></div>
+              ${() => tagLine(task, "to")}
+            </div></div
+          ></div
+        ></div
+      ></div
     >`
   // Нередактируемый
   else
@@ -71,7 +76,7 @@ let renderTask = (task, index) => {
         task,
       )}">
       ${() => tagLine(task, "from")}
-      <div class="flex gap-3">
+      <div class="ml-2 flex gap-3">
         <div class="w-full my-auto ">
           ${() => task.name}
           ${() => {

@@ -16,7 +16,7 @@
 }
 
 * {
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 .bgimg {
@@ -41,9 +41,6 @@
   transform: rotate(45deg);
 }
 
-input {
-  font-family: "Noto Sans Mono", monospace;
-}
 /* Show the checkmark when checked */
 input:checked + .checkmark {
   background-color: #2196f3;
@@ -53,11 +50,23 @@ input:checked + .checkmark::after {
   display: block;
 }
 
-.notomono {
-  font-family: "Noto Sans Mono", monospace;
+input {
+  font-family: "Oswald", sans-serif;
+  letter-spacing: 0.1em;
+}
+.fontmono {
+  font-family: "Roboto Mono", monospace;
+}
+.fontaccent {
+  font-family: "Oswald", sans-serif;
+  letter-spacing: 0.1em;
 }
 
 #fromEdit div,
 #toEdit div {
   @apply mx-2;
+}
+
+#edit div:not(:first-child) {
+  @apply text-sm;
 }

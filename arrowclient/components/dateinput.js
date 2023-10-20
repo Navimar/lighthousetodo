@@ -69,27 +69,31 @@ function setTodayDate() {
 }
 
 export default (task) => {
-  return html` <div class="flex flex-wrap gap-3">
-    <input
-      id="timeInput"
-      value="${task.time}"
-      type="time"
-      class="shrink-0 dark:bg-black bg-white my-auto dark:border-black text-center  h-10 border-b-02rem border-white dark:border-black "
-      @input="${(e) => updateTimeSlider(e)}" />
-    <input
-      id="dateInput"
-      value="${task.date}"
-      class="shrink-0 dark:bg-black bg-white dark:border-black my-auto text-center h-10 border-b-02rem border-white  dark:border-black"
-      type="date"
-      id="task-date"
-      name="task-date"
-      @change="${dateInputPauseButtonHTMLCSS}" />
-    <div class="flex justify-between gap-3">
-      <button class="${css.button}" @click="${() => setTodayDate()}"> Сегодня </button>
-      <button class="${css.button}" @click="${() => adjustDate(1)}">+День</button>
-      <button class="${css.button}" @click="${() => adjustDate(7)}">+Неделя</button>
-      <button class="${css.button}" @click="${() => adjustTime(15)}">+15мин</button>
-      <button class="${css.button}" @click="${() => adjustTime(60)}">+Час</button>
-    </div></div
-  >`
+  return html`
+    <div class="flex flex-wrap gap-3 justify-between">
+      <div class="flex gap-3">
+        <input
+          id="timeInput"
+          value="${task.time}"
+          type="time"
+          class="text-base shrink-0 dark:bg-black bg-white my-auto dark:border-black text-center h-10 border-b-02rem border-white dark:border-black "
+          @input="${(e) => updateTimeSlider(e)}" />
+        <input
+          id="dateInput"
+          value="${task.date}"
+          class="text-base shrink-0 dark:bg-black bg-white dark:border-black my-auto text-center h-10 border-b-02rem border-white  dark:border-black"
+          type="date"
+          id="task-date"
+          name="task-date"
+          @change="${dateInputPauseButtonHTMLCSS}" />
+      </div>
+      <div class="flex gap-3">
+        <button class="${css.button}" @click="${() => setTodayDate()}"> Сегодня </button>
+        <button class="${css.button}" @click="${() => adjustDate(1)}">+День</button>
+        <button class="${css.button}" @click="${() => adjustDate(7)}">+Неделя</button>
+        <button class="${css.button}" @click="${() => adjustTime(15)}">+15&nbsp;мин</button>
+        <button class="${css.button}" @click="${() => adjustTime(60)}">+Час</button>
+      </div>
+    </div>
+  `
 }

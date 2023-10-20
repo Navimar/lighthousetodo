@@ -70,7 +70,7 @@ export default (task, direction) => {
             clickPos(e)
             e.stopPropagation()
           }}"
-          class="text-neutral-400 dark:text-neutral-500 m-0.5 inline-block rounded-lg px-2">
+          class="text-neutral-400 dark:text-neutral-500 border-neutral-200 border m-0.5 inline-block rounded-lg px-2">
           ${task.name}</div
         >`
       })}</div

@@ -55,7 +55,7 @@ export default () => {
       <div class="flex justify-between gap-4">
         <button @click="${prevYear}" class=""><<</button>
         <button @click="${prevMonth}" class=""><</button>
-        <button @click="${today}" class="w-1/2 notomono uppercase">
+        <button @click="${today}" class="fontaccent w-1/2 uppercase">
           ${dayjs(selectedDate.date).format("D MMMM YYYY")}
         </button>
         <button @click="${nextMonth}" class="">></button>
@@ -70,24 +70,6 @@ export default () => {
     const today = isToday ? "text-white bg-accent dark:bg-accent-dark" : ""
     // const today = isToday ? " border-accent dark:border-accent-dark" : ""
     const focused = isSelectedDate ? "dark:border-neutral-600 border-neutral-400 " : "border-transparent"
-
-    // const calendarDot = () => {
-    //   const formattedDate = date.format("YYYY-MM-DD")
-    //   const taskType = reData.calendarSet[formattedDate]
-
-    //   const taskTypeToCSS = {
-    //     meeting: "text-old bg-bright dark:bg-near-dark",
-    //     frame: "bg-bright dark:bg-near-dark",
-    //     deadline: "text-mygray bg-bright dark:bg-near-dark",
-    //     window: "bg-bright dark:bg-near-dark",
-    //   }
-
-    //   if (taskType) {
-    //     return taskTypeToCSS[taskType] || "bg-yellow-100 dark:bg-black" // Возвращает специфический стиль для типа или стиль по умолчанию
-    //   }
-
-    //   return "bg-near dark:bg-black"
-    // }
 
     const calendarDot = () => {
       const formattedDate = date.format("YYYY-MM-DD")
@@ -109,7 +91,7 @@ export default () => {
       return html`<td
         @click="${() => clickOnCaldendarDay(date.date())}"
         class="border-2 border-bright dark:border-neutral-800 text-center p-0 ">
-        <div class="notomono leading-6 w-full h-full border-2 ${focused} ${today}">
+        <div class="fontaccent leading-6 w-full h-full border-2 ${focused} ${today}">
           ${date.date()}${calendarDot()}
         </div>
       </td>`
@@ -132,17 +114,17 @@ export default () => {
   }
   if (searchstring.text === "")
     return html`
-      <div class="notomono w-full text-center p-3 dark:text-white bg-neutral-100  dark:bg-neutral-900">
+      <div class="fontaccent w-full text-center p-3 dark:text-white bg-neutral-100  dark:bg-neutral-900">
         <div class="pb-3 text-base">${renderCalendarControls}</div>
         <table class="text-base w-full">
           <tr class="bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-800 border-neutral-200 border-2">
-            <td class="text-center pb-1 notomono">Пн</td>
-            <td class="text-center pb-1 notomono">Вт</td>
-            <td class="text-center pb-1 notomono">Ср</td>
-            <td class="text-center pb-1 notomono">Чт</td>
-            <td class="text-center pb-1 notomono">Пт</td>
-            <td class="text-center pb-1 notomono">Сб</td>
-            <td class="text-center pb-1 notomono">Вс</td>
+            <td class="text-center pb-1 fontaccent">Пн</td>
+            <td class="text-center pb-1 fontaccent">Вт</td>
+            <td class="text-center pb-1 fontaccent">Ср</td>
+            <td class="text-center pb-1 fontaccent">Чт</td>
+            <td class="text-center pb-1 fontaccent">Пт</td>
+            <td class="text-center pb-1 fontaccent">Сб</td>
+            <td class="text-center pb-1 fontaccent">Вс</td>
           </tr>
           <tr> ${() => weeks[0].map(week)} </tr>
           <tr> ${() => weeks[1].map(week)} </tr>

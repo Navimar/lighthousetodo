@@ -13,9 +13,9 @@ export let authentication = () => {
   if (user && user.name) {
     if (searchstring.text === "")
       return html`
-        <div class="flex bg-neutral-100 notomono dark:bg-neutral-900 dark:text-white p-2 text-sm ">
+        <div class="flex bg-neutral-100 fontmono dark:bg-neutral-900 dark:text-white p-2 text-sm ">
           <div class="self-center">👤 <span class="select-text">${() => user.name}</span></div>
-          <button class="ml-auto ${css.button}" @click="${() => logout()}"> Выйти </button>
+          <button class="ml-auto border-b-neutral-100 ${css.button}" @click="${() => logout()}"> Выйти </button>
         </div>
       `
     else return ""

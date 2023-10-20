@@ -51,7 +51,7 @@ export default (task) =>
           slider.value = currentTimeInMinutes
           updateSliderLabel({ target: slider }) // Optional: to update other elements if needed
         }}"
-        class="text-accent notomono font-bold rounded-lg px-2 bg-neutral-150 dark:bg-accent-dark dark:text-white block"
+        class="text-accent fontmono font-bold rounded-lg px-2 bg-neutral-150 dark:bg-accent-dark dark:text-white block"
         >${() => currentTime.clock}</span
       >
     </div>
@@ -147,30 +147,30 @@ export default (task) =>
         <span>|</span>
       </div>
     </div>
-    <div class="w-full flex justify-between text-xs dark:text-white text-bright-dark pr-[0.17rem]">
+    <div class="w-full flex justify-between text-xs dark:text-white text-bright-dark pl-[0.007rem] pr-[0.245rem]">
       <div class="flex flex-col items-center">
-        <span class="notomono">00:00</span>
+        <span class="fontmono">00:00</span>
       </div>
       <div class="flex flex-col items-center">
-        <span class="notomono">03:00</span>
+        <span class="fontmono">03:00</span>
       </div>
       <div class="flex flex-col items-center">
-        <span class="notomono">06:00</span>
+        <span class="fontmono">06:00</span>
       </div>
       <div class="flex flex-col items-center">
-        <span class="notomono">09:00</span>
+        <span class="fontmono">09:00</span>
       </div>
       <div class="flex flex-col items-center">
-        <span class="notomono">12:00</span>
+        <span class="fontmono">12:00</span>
       </div>
       <div class="flex flex-col items-center">
-        <span class="notomono">15:00</span>
+        <span class="fontmono">15:00</span>
       </div>
       <div class="flex flex-col items-center">
-        <span class="notomono">18:00</span>
+        <span class="fontmono">18:00</span>
       </div>
       <div class="flex flex-col items-center">
-        <span class="notomono">21:00</span>
+        <span class="fontmono">21:00</span>
       </div>
       <div class="flex flex-col items-center">
         <span class="w-8"></span>
