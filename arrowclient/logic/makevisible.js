@@ -97,8 +97,8 @@ export const sort = (arrToSort = reData.visibletasks) => {
     if (a.ready && !b.ready) return 1
 
     // Дисприоритет паузы
-    if (!a.pause && b.pause) return 1
-    if (a.pause && !b.pause) return -1
+    if (!a.pause && b.pause) return -1
+    if (a.pause && !b.pause) return 1
 
     let datetimeA = dayjs(`${a.date}T${a.time}`, "YYYY-MM-DDTHH:mm")
     let datetimeB = dayjs(`${b.date}T${b.time}`, "YYYY-MM-DDTHH:mm")
@@ -147,11 +147,12 @@ export const sort = (arrToSort = reData.visibletasks) => {
       // Если обе задачи в будущем, сравниваем их по времени
       if (aIsFuture && bIsFuture) return datetimeA.isAfter(datetimeB) ? 1 : -1
 
-      // Сортировка по таймстампу предков о_О
-      const maxTimestampA = getMaxTimestampFromIds(a)
-      const maxTimestampB = getMaxTimestampFromIds(b)
+      // // Сортировка по таймстампу предков о_О
+      // const maxTimestampA = getMaxTimestampFromIds(a)
+      // const maxTimestampB = getMaxTimestampFromIds(b)
 
-      return maxTimestampA > maxTimestampB ? -1 : 1
+      // return maxTimestampA > maxTimestampB ? -1 : 1
+      return 0
     }
     return 0
   })

@@ -105,7 +105,7 @@ export default (m) => {
 
     // устанавливаем паузу
     let pauseCheckbox = document.getElementById("pauseCheckbox")
-    if (pauseCheckbox && pauseCheckbox.checked) thisTask.pause = true
+    if (pauseCheckbox && pauseCheckbox.checked) thisTask.pause = dayjs().valueOf()
     else thisTask.pause = false
 
     // если выделено готово, то отметить готово

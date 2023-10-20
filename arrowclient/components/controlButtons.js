@@ -11,12 +11,6 @@ let checkedPause = (task) => {
   else return ""
 }
 
-let checkedReady = (task) => {
-  return ""
-  if (task.ready) return "checked"
-  else return ""
-}
-
 let saveButton = () => {
   let wasPaused = getObjectById(selected.id).pause
   saveTask("sv")
@@ -75,18 +69,10 @@ let sinkTask = (task) => {
 export default (task) =>
   html`<div class="grid grid-cols-4 gap-3">
     <button class="${css.button}" @click="${() => (selected.id = false)}">Закрыть</button>
-    ${() => {
-      if (task.type == "frame" || task.type == "meeting" || task.type == "deadline") {
-        return html`
-          <div>
-            <input class="sr-only peer" type="checkbox" id="pauseCheckbox" ${checkedPause(task)} />
-            <label class="${css.radio} whitespace-nowrap" for="pauseCheckbox">Ожидание</label>
-          </div>
-        `
-      } else {
-        return html`<button class="${css.button}" @click="${() => sinkTask(task)}">Потом</button>`
-      }
-    }}
+    <div>
+      <input class="sr-only peer" type="checkbox" id="pauseCheckbox" ${checkedPause(task)} />
+      <label class="${css.radio} whitespace-nowrap" for="pauseCheckbox">Потом</label>
+    </div>
     <div>
       <input class="appearance-none peer sr-only" type="checkbox" id="readyCheckbox" />
       <label class="${css.radio} whitespace-nowrap" for="readyCheckbox">Готово</label>

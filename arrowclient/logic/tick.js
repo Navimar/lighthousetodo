@@ -14,12 +14,24 @@ export let tick = () => {
 
   let newTime = time.format("HH:mm")
   if (currentTime.clock !== newTime) {
+    let needMv = false
     data.tasks.forEach((task) => {
       if (task.time === currentTime.clock && task.date === currentTime.date) {
-        if (task.ready === true) task.ready = false
+        if (task.ready === true) {
+          task.ready = false
+          needMv = true
+        }
+      }
+      if (task.pause) {
+        // Если разница между текущим временем и task.pause больше 5 минут
+        if (dayjs().diff(dayjs(task.pause), "minute") > 5) {
+          needMv = true
+          task.pause = false
+        }
       }
     })
     currentTime.clock = newTime
+    if (needMv) makevisible()
   }
 
   currentTime.date = time.format("YYYY-MM-DD")
@@ -39,6 +51,6 @@ export let tick = () => {
       ":" +
       minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })
   }
-
+  console.log("tick")
   setTimeout(tick, 1000)
 }
