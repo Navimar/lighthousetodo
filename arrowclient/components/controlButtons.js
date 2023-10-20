@@ -12,15 +12,11 @@ let checkedPause = (task) => {
 }
 
 let saveButton = () => {
-  let wasPaused = getObjectById(selected.id).pause
   saveTask("sv")
   riseTask(selected.id)
   selected.id = false
   makevisible()
-  if (wasPaused) {
-    let pausedTask = reData.visibletasks.find((task) => task.pause === true)
-    selected.id = pausedTask ? pausedTask.id : reData.visibletasks[0].id
-  } else selected.id = reData.visibletasks[0].id
+  selected.id = reData.visibletasks[0].id
 }
 let riseTask = (taskId, visited = new Set(), depth = 0) => {
   let task = getObjectById(taskId)
@@ -70,7 +66,16 @@ export default (task) =>
   html`<div class="grid grid-cols-4 gap-3">
     <button class="${css.button}" @click="${() => (selected.id = false)}">Закрыть</button>
     <div>
-      <input class="sr-only peer" type="checkbox" id="pauseCheckbox" ${checkedPause(task)} />
+      <input
+        class="sr-only peer"
+        type="checkbox"
+        id="pauseCheckbox"
+        ${checkedPause(task)}
+        @change="${(e) => {
+          if (e.target.checked) {
+            saveButton()
+          }
+        }}" />
       <label class="${css.radio} whitespace-nowrap" for="pauseCheckbox">Потом</label>
     </div>
     <div>
