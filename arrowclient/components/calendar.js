@@ -113,7 +113,7 @@ export default () => {
           ${date.date()}${calendarDot()}
         </div>
       </td>`
-    else return html`<td class="leading-3 text-center p-0">&nbsp;</td>`
+    else return html`<td class="leading-3 text-center border-bright dark:border-neutral-800 border-2 p-0">&nbsp;</td>`
   }
   const dateObject = dayjs(selectedDate.date)
 
@@ -135,7 +135,7 @@ export default () => {
       <div class="notomono w-full text-center p-3 dark:text-white bg-neutral-100  dark:bg-neutral-900">
         <div class="pb-3 text-base">${renderCalendarControls}</div>
         <table class="text-base w-full">
-          <tr>
+          <tr class="bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-800 border-neutral-200 border-2">
             <td class="text-center pb-1 notomono">Пн</td>
             <td class="text-center pb-1 notomono">Вт</td>
             <td class="text-center pb-1 notomono">Ср</td>

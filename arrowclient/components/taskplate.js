@@ -3,7 +3,6 @@ import dayjs from "dayjs"
 
 export default (task, additionalClass = "") => {
   let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
-  let gc = " h-fit border-2 box-border text-center px-1 uppercase whitespace-nowrap notomono " + additionalClass
   let isInPast = dayjs().isAfter(taskDate)
 
   let getTaskTime = () => {
@@ -30,21 +29,31 @@ export default (task, additionalClass = "") => {
   }
 
   const timeClass = () => {
-    if (task.type == "meeting" && task.pause) return "text-white bg-accent dark:bg-accent-dark border-red-600" + gc
-    if (task.type == "meeting" && isInPast) return "text-white bg-accent dark:bg-accent-dark border-transparent" + gc
-    if (task.type == "meeting") return "text-accent dark:text-accent-dark border-neutral-200 dark:border-black" + gc
+    if (task.type == "meeting" && task.pause)
+      return "text-neutral-700 bg-accent dark:bg-accent-dark border-accent dark:border-accent-dark"
+    if (task.type == "meeting" && isInPast) return "text-neutral-700 bg-accent dark:bg-accent-dark border-transparent"
+    if (task.type == "meeting") return "text-accent dark:text-accent-dark border-neutral-200 dark:border-neutral-700"
     if (task.type == "deadline" && task.pause)
-      return "text-white bg-neutral-400 dark:bg-neutral-700 border-red-600" + gc
+      return "text-neutral-600 dark:text-neutral-350 bg-neutral-200 dark:bg-neutral-700 border-accent dark:border-accent-dark"
     if (task.type == "deadline" && isInPast)
-      return "text-white bg-neutral-400 dark:bg-neutral-700 border-transparent" + gc
-    if (task.type == "deadline") return "text-neutral-500 border-neutral-200 dark:border-black" + gc
-    if (task.type == "frame" && task.pause) return "text-white bg-neutral-400 dark:bg-neutral-700 border-red-600" + gc
-    if (task.type == "frame" && isInPast) return "text-white bg-neutral-400 dark:bg-neutral-700 border-transparent" + gc
-    if (task.type == "frame") return "text-neutral-500 border-neutral-200 dark:border-black" + gc
-    if (isInPast) return "hidden" + gc
-    return "text-neutral-350 border-transparent" + gc
+      return "text-neutral-600 dark:text-neutral-350 bg-neutral-200 dark:bg-neutral-700 border-transparent"
+    if (task.type == "deadline")
+      return "text-neutral-600 dark:text-neutral-350 border-neutral-200 dark:border-neutral-700"
+    if (task.type == "frame" && task.pause)
+      return "text-neutral-600 dark:text-neutral-350 bg-neutral-200 dark:bg-neutral-700 border-accent dark:border-accent-dark"
+    if (task.type == "frame" && isInPast)
+      return "text-neutral-600 dark:text-neutral-350  bg-neutral-200 dark:bg-neutral-700 border-transparent"
+    if (task.type == "frame")
+      return "text-neutral-600 dark:text-neutral-350  border-neutral-200 dark:border-neutral-700 "
+    if (isInPast) return "hidden"
+    return "text-neutral-350 border-transparent"
   }
 
-  return html`<div class="text-sm empty:hidden ${timeClass()}">${getTaskDay()}</div
-    ><div class="text-sm empty:hidden ${timeClass()}">${getTaskTime()}</div>`
+  return html`<div
+      class="h-fit border-2 box-border text-center px-1 uppercase whitespace-nowrap notomono text-sm empty:hidden rounded-sm ${additionalClass} ${timeClass()}"
+      >${getTaskDay()}</div
+    ><div
+      class="h-fit border-2 box-border text-center px-1 uppercase whitespace-nowrap notomono text-sm empty:hidden rounded-sm ${additionalClass} ${timeClass()}"
+      >${getTaskTime()}</div
+    >`
 }
