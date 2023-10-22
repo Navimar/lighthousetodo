@@ -27,7 +27,7 @@ export let renderTasks = () => {
         Ничего не найдено...
       </div>`
     }
-    sort(filteredTasks)
+    // sort(filteredTasks)
     return filteredTasks.map(renderTask)
   }
   return reData.visibletasks.map(renderTask)
