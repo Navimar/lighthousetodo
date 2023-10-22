@@ -148,11 +148,14 @@ export const sort = (arrToSort = reData.visibletasks) => {
       if (aIsFuture && bIsFuture) return datetimeA.isAfter(datetimeB) ? 1 : -1
 
       // // Сортировка по таймстампу предков о_О
-      // const maxTimestampA = getMaxTimestampFromIds(a)
-      // const maxTimestampB = getMaxTimestampFromIds(b)
+      const maxTimestampA = getMaxTimestampFromIds(a)
+      const maxTimestampB = getMaxTimestampFromIds(b)
 
-      // return maxTimestampA > maxTimestampB ? -1 : 1
-      return 0
+      if (maxTimestampA > maxTimestampB) {
+        return -1
+      } else if (maxTimestampA < maxTimestampB) {
+        return 1
+      }
     }
     return 0
   })
