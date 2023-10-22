@@ -57,7 +57,7 @@ export default (task, direction) => {
             clickPos(e)
             e.stopPropagation()
           }}"
-          class=" text-neutral-700 dark:text-neutral-350 m-0.5 inline-block align-middle rounded-lg px-2 bg-white dark:bg-black">
+          class=" text-neutral-700 dark:text-neutral-350 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block align-middle rounded-lg px-2 bg-white dark:bg-black">
           <div class="flex  h-full items-center gap-2"
             >${() => taskplate(task, "text-xs")}<div class="">${() => task.name}</div></div
           ></div
