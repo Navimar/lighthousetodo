@@ -77,9 +77,9 @@ export default () => {
 
       const taskTypeToCSS = {
         meeting: "text-accent dark:text-accent-dark",
-        frame: "text-neutral-500",
-        deadline: "text-neutral-500",
-        window: "text-neutral-200 dark:text-black",
+        frame: "text-neutral-500 dark:text-neutral-350",
+        deadline: "text-neutral-500 dark:text-neutral-350",
+        window: "text-neutral-350 dark:text-neutral-500",
       }
 
       if (taskType) {
