@@ -89,7 +89,7 @@ let renderTask = (task, index) => {
             if (task.note && task.note.length > 0) return "+ 📝"
           }}
         </div>
-        ${() => taskPlate(task)}
+        ${() => taskPlate(task, "p-1")}
       </div>
       ${() => tagLine(task, "to")}
     </div>`

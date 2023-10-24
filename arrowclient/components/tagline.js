@@ -33,10 +33,10 @@ export default (task, direction) => {
   notReadyFutureTasks.sort((a, b) => a.name.localeCompare(b.name))
   readyTasks.sort((a, b) => a.name.localeCompare(b.name))
 
-  return html`<div class="text-sm empty:hidden"
+  return html`<div class="text-sm empty:hidden flex flex-wrap gap-1"
     >${() =>
       notReadyTasks.map((task) => {
-        return html`<span class="inline-block"
+        return html`<span class="inline-block "
           ><div
             @click="${(e) => {
               selectTaskById(task.id)
@@ -44,8 +44,8 @@ export default (task, direction) => {
               e.stopPropagation()
             }}"
             class=" text-neutral-700 dark:text-neutral-350 m-0.5 inline-block align-middle rounded-lg px-2 bg-neutral-200 dark:bg-neutral-800">
-            <div class="flex h-full items-center gap-2"
-              >${() => taskplate(task, "text-xs")}<div class="">${() => task.name}</div></div
+            <div class="flex h-full items-center gap-2 p-1"
+              >${() => taskplate(task, "text-xs p-0")}<div class="">${() => task.name}</div></div
             ></div
           ></span
         >`
@@ -58,8 +58,8 @@ export default (task, direction) => {
             e.stopPropagation()
           }}"
           class=" text-neutral-700 dark:text-neutral-350 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block align-middle rounded-lg px-2 bg-white dark:bg-black">
-          <div class="flex  h-full items-center gap-2"
-            >${() => taskplate(task, "text-xs")}<div class="">${() => task.name}</div></div
+          <div class="flex  h-full items-center gap-2 p-1"
+            >${() => taskplate(task, "text-xs p-0")}<div class="">${() => task.name}</div></div
           ></div
         >`
       })}${() =>

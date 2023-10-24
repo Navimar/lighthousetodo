@@ -51,10 +51,10 @@ export default (task, additionalClass = "") => {
   }
 
   return html`<div
-      class="h-fit border-2 box-border text-center px-1 uppercase whitespace-nowrap fontaccent text-sm empty:hidden rounded-sm ${additionalClass} ${timeClass()}"
+      class="h-fit border-2 box-border text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden rounded-sm ${additionalClass} ${timeClass()}"
       >${getTaskDay()}</div
     ><div
-      class="h-fit border-2 box-border text-center px-1 uppercase whitespace-nowrap fontaccent text-sm empty:hidden rounded-sm ${additionalClass} ${timeClass()}"
+      class="h-fit border-2 box-border text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden rounded-sm ${additionalClass} ${timeClass()}"
       >${getTaskTime()}</div
     >`
 }
