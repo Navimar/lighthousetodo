@@ -36,7 +36,7 @@ export let renderTasks = () => {
 let renderTask = (task, index) => {
   let firstclass
   let sticky = ""
-  if (task.ready) firstclass += "border-box border-b-02rem border-green-500 dark:border-green-900"
+  if (task.ready) firstclass += "border-box border-b-02rem border-compliment dark:border-compliment"
   else firstclass = index == 0 ? "border-box border-b-02rem border-accent dark:border-accent-dark " : ""
   if (task.type == "meeting" && firststicky) {
     sticky = "sticky bottom-0"
