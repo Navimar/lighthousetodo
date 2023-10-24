@@ -76,11 +76,11 @@ export default (task) =>
             saveButton()
           }
         }}" />
-      <label class="${css.radio} whitespace-nowrap" for="pauseCheckbox">Потом</label>
+      <label class="${css.button} whitespace-nowrap" for="pauseCheckbox">Потом</label>
     </div>
     <div>
       <input class="appearance-none peer sr-only" type="checkbox" id="readyCheckbox" />
-      <label class="${css.radio} whitespace-nowrap" for="readyCheckbox">Готово</label>
+      <label class="${css.button} whitespace-nowrap" for="readyCheckbox">Готово</label>
     </div>
     <button id="savebutton" class="${css.button}" @click="${saveButton}">Сохранить</button>
   </div>`

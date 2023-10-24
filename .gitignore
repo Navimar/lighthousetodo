@@ -16,3 +16,4 @@ firebase.config.js
 digitalocean/digitalocean.pub
 digitalocean/digitalocean
 arrowclient/neo4j
+.env

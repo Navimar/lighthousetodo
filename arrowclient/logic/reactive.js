@@ -26,8 +26,9 @@ export const autocomplete = reactive({
 export const user = reactive({})
 
 export const status = reactive({
-  online: true,
+  online: false,
 })
+
 export const reData = reactive({
   calendarSet: {},
   version: 0,

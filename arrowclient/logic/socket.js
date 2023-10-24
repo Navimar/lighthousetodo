@@ -23,8 +23,8 @@ async function getToken() {
 
 export function inputSocket() {
   socket.on("connect", function () {
-    status.online = true
     loadData()
+    status.online = true
   })
   socket.on("disconnect", function () {
     console.log("DISCONNECT!!!")

@@ -15,15 +15,15 @@ module.exports = {
           350: "#bcbcbc",
         },
         accent: {
-          DEFAULT: "#d57575",
-          dark: "#ba5454",
+          DEFAULT: "#d36e70",
+          dark: "#d36e70",
           darker: "#732424",
           light: "#e89292", // Это приближенный светлый оттенок
           lighter: "#f5a7a7", // Еще более светлый оттенок
         },
         compliment: {
-          DEFAULT: "#822E81",
-          dark: "#54BABA",
+          DEFAULT: "#6ED3D1",
+          dark: "#6ED3D1",
           darker: "#247373",
           light: "#92e8e8", // Это приближенный светлый оттенок
           lighter: "#a7f5f5", // Еще более светлый оттенок

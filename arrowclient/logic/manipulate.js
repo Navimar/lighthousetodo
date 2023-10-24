@@ -32,19 +32,30 @@ export function updateDateClass() {
     const inputDate = dayjs(dateInput.value, "YYYY-MM-DD")
 
     if (inputDate.isBefore(currentDate, "day")) {
-      dateInput.classList.remove("bg-compliment-lighter", "dark:bg-compliment-darker", "dark:bg-black", "bg-white")
-      dateInput.classList.add("bg-accent-lighter", "dark:bg-accent-darker")
+      dateInput.classList.remove(
+        "border-compliment",
+        "dark:border-compliment-dark",
+        "dark:border-black",
+        "border-white",
+      )
+      dateInput.classList.add("border-accent", "dark:border-accent-dark")
     } else if (inputDate.isSame(currentDate, "day")) {
       dateInput.classList.remove(
-        "bg-accent-lighter",
-        "dark:bg-accent-darker",
-        "bg-compliment-lighter",
-        "dark:bg-compliment-darker",
+        "border-accent",
+        "dark:border-accent-dark",
+        "border-compliment",
+        "dark:border-compliment-dark",
       )
-      dateInput.classList.add("dark:bg-black", "bg-white")
+      dateInput.classList.add("dark:border-black", "border-white")
     } else {
-      dateInput.classList.remove("bg-accent-lighter", "dark:bg-accent-darker", "dark:bg-black", "bg-white")
-      dateInput.classList.add("bg-compliment-lighter", "dark:bg-compliment-darker")
+      dateInput.classList.remove(
+        "text-white",
+        "border-accent",
+        "dark:border-accent-dark",
+        "dark:border-black",
+        "border-white",
+      )
+      dateInput.classList.add("border-compliment", "dark:border-compliment-dark")
     }
   }
 }

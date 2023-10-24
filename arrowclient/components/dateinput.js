@@ -88,11 +88,11 @@ export default (task) => {
           @change="${dateInputPauseButtonHTMLCSS}" />
       </div>
       <div class="flex flex-wrap gap-3">
-        <button class="${css.button}" @click="${() => setTodayDate()}"> Сегодня </button>
-        <button class="${css.button}" @click="${() => adjustDate(1)}">+День</button>
-        <button class="${css.button}" @click="${() => adjustDate(7)}">+Неделя</button>
-        <button class="${css.button}" @click="${() => adjustTime(15)}">+15&nbsp;мин</button>
-        <button class="${css.button}" @click="${() => adjustTime(60)}">+Час</button>
+        <button class="${css.buttonLight}" @click="${() => setTodayDate()}"> Сегодня </button>
+        <button class="${css.buttonLight}" @click="${() => adjustDate(1)}">+День</button>
+        <button class="${css.buttonLight}" @click="${() => adjustDate(7)}">+Неделя</button>
+        <button class="${css.buttonLight}" @click="${() => adjustTime(15)}">+15&nbsp;мин</button>
+        <button class="${css.buttonLight}" @click="${() => adjustTime(60)}">+Час</button>
       </div>
     </div>
   `

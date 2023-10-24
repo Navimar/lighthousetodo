@@ -46,10 +46,13 @@ let renderTask = (task, index) => {
     // Редактируемый
     return html` <div
       id="selectedtask"
-      class="${firstclass} -mx-3 z-[45] flex min-h-screen flex-col gap-3 bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white ${errorclass(
+      class="${firstclass} -mx-3 z-[45] flex min-h-screen flex-col gap-5 bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white ${errorclass(
         task,
       )}">
-      ${controlButtons(task)} ${radio(task)} ${timeSlider(task)} ${dateInput(task)} ${linkDivs(task)}
+      <div class="flex flex-col gap-3"> ${controlButtons(task)} ${radio(task)}</div> ${dateInput(task)} ${timeSlider(
+        task,
+      )}  
+      ${linkDivs(task)}
       <div class="flex flex-col gap-3 ml-3"
         >${() => tagLine(task, "from")}
         <div

@@ -42,8 +42,8 @@ export default (task) =>
     <div
       id="currentTimeMarker"
       style="left:${currentTime.slider}px"
-      class="relative top-7 h-0 z-40 text-xs w-0 flex flex-col items-center dark:text-accent-dark text-accent text-center">
-      <span class="font-bold">|</span>
+      class="relative top-3 h-0 z-40 text-xs w-0 flex flex-col items-center dark:text-accent-dark text-accent text-center">
+      <span class="font-bold fontmono">ˈ</span>
       <span
         @click="${() => {
           const currentTimeInMinutes = dayjs().hour() * 60 + dayjs().minute()
@@ -51,12 +51,12 @@ export default (task) =>
           slider.value = currentTimeInMinutes
           updateSliderLabel({ target: slider }) // Optional: to update other elements if needed
         }}"
-        class="text-accent fontmono font-bold rounded-lg px-2 bg-neutral-150 dark:bg-accent-dark dark:text-white block"
+        class="text-white fontmono rounded-lg px-2 bg-accent dark:bg-accent-dark block"
         >${() => currentTime.clock}</span
       >
     </div>
 
-    <div class="w-full px-2.5 ">
+    <div class="w-full px-2.5 h-3">
       <input
         id="timeSlider"
         value="${() => {
@@ -67,87 +67,87 @@ export default (task) =>
         min="0"
         max="1439"
         step="15"
-        class="slider bg-neutral-400 dark:bg-neutral-400 outline-none drop-shadow-none shadow-none h-1 rounded-full w-full appearance-none cursor-pointer "
+        class="slider bg-neutral-400 align-top dark:bg-neutral-700 outline-none drop-shadow-none shadow-none h-1 rounded-full w-full appearance-none cursor-pointer "
         @input="${(e) => updateSliderLabel(e)}" />
     </div>
-    <div class="w-full pl-[1.055rem] pr-[0.955rem]  flex justify-between text-xs dark:text-white text-mygray">
-      <div class="flex flex-col items-center">
-        <span>|</span>
+    <div class="w-full fontmono pl-[0.9rem] pr-[0.9rem]  flex justify-between text-xs dark:text-neutral-700 text-black">
+      <div class="fontmono flex flex-col items-center">
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
       <div class="flex flex-col items-center">
-        <span>|</span>
+        <span class="fontmono">ˈ</span>
       </div>
     </div>
-    <div class="w-full flex justify-between text-xs dark:text-white text-bright-dark pl-[0.007rem] pr-[0.245rem]">
+    <div class="w-full flex justify-between text-xs dark:text-neutral-350 pl-[0rem] pr-[0.21rem]">
       <div class="flex flex-col items-center">
         <span class="fontmono">00:00</span>
       </div>

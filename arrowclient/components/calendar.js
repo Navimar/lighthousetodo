@@ -67,8 +67,7 @@ export default () => {
   let week = (date) => {
     const isToday = dayjs().isSame(date, "day")
     const isSelectedDate = dayjs(selectedDate.date).isSame(date, "day")
-    const today = isToday ? "text-white bg-accent dark:bg-accent-dark" : ""
-    // const today = isToday ? " border-accent dark:border-accent-dark" : ""
+    const today = isToday ? "text-white dark:white-back bg-accent dark:bg-accent-dark" : ""
     const focused = isSelectedDate ? "dark:border-neutral-600 border-neutral-400 " : "border-transparent"
 
     const calendarDot = () => {
@@ -82,7 +81,7 @@ export default () => {
         window: "text-neutral-350 dark:text-neutral-500",
       }
 
-      if (taskType) {
+      if (taskType && !isToday) {
         return html`<span class="absolute px-1 ${taskTypeToCSS[taskType]}">●</span>`
       } else return ""
     }

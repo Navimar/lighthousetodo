@@ -5,6 +5,7 @@
 @media (prefers-color-scheme: light) {
   :root {
     --background-image: url("img/back.jpeg");
+    --plus-image: url("img/plus.png");
   }
 }
 
@@ -12,6 +13,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background-image: url("img/backdark.jpeg");
+    --plus-image: url("img/plusdark.png");
   }
 }
 
@@ -24,7 +26,7 @@
 }
 
 .plusimg {
-  background-image: url("img/plus.png");
+  background-image: var(--plus-image);
   background-position: center;
   background-size: 100% auto;
 }
