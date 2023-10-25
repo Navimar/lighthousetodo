@@ -1,4 +1,4 @@
-import { inputSocket } from "./server/send.js"
+import { inputSocket } from "./server/socket.js"
 import config from "./config.js"
 
 import express from "express"
