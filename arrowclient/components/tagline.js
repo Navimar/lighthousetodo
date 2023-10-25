@@ -71,7 +71,7 @@ export default (task, direction) => {
             e.stopPropagation()
           }}"
           class="text-neutral-400 dark:text-neutral-500 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block rounded-lg px-2">
-          ${task.name}</div
+          <div class="p-1">${task.name}</div></div
         >`
       })}</div
   >`

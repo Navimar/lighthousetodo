@@ -1,7 +1,7 @@
 import { html, reactive, watch } from "@arrow-js/core"
 import { initializeApp } from "firebase/app"
 import { GoogleAuthProvider, signInWithPopup, getAuth, onAuthStateChanged, signOut } from "firebase/auth"
-import { loadData } from "~/logic/socket.js"
+import { loadData } from "~/logic/send.js"
 import { searchstring, reData, selected, user } from "~/logic/reactive.js"
 import data from "~/logic/data.js"
 

@@ -1,9 +1,14 @@
 import { makevisible } from "~/logic/makevisible.js"
 import { selectedDate, currentTime, reData } from "~/logic/reactive.js"
 import data from "~/logic/data.js"
+import { socket } from "~/logic/socket.js"
+import { status } from "~/logic/reactive.js"
+
 import dayjs from "dayjs"
 
 export let tick = () => {
+  status.online = socket.connected
+
   const time = dayjs()
   const totalMinutes = time.hour() * 60 + time.minute()
   const slider = document.getElementById("timeSlider")
@@ -51,6 +56,6 @@ export let tick = () => {
       ":" +
       minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })
   }
-  console.log("tick")
+
   setTimeout(tick, 1000)
 }

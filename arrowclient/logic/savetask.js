@@ -3,7 +3,7 @@ import { isNameTaken, safeSetLocalStorageItem } from "/logic/util.js"
 import { clearSearch } from "/logic/manipulate"
 import data from "~/logic/data.js"
 import dayjs from "dayjs"
-import { sendData } from "/logic/socket"
+import { sendData } from "/logic/send.js"
 import { getObjectByName, getObjectById } from "/logic/util"
 
 export default (m) => {
