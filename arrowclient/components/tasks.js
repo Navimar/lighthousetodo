@@ -9,7 +9,6 @@ import taskPlate from "~/components/taskplate.js"
 import { selectTaskById } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import data from "~/logic/data.js"
-import { sort } from "~/logic/makevisible.js"
 import { html } from "@arrow-js/core"
 let firststicky = true
 
@@ -23,9 +22,9 @@ export let renderTasks = () => {
     )
     if (filteredTasks.length === 0) {
       return html`<div
-        class=" fontmono flex flex-col gap-3 bg-near dark:bg-black p-3 rounded-lg overflow dark:text-white italic">
-        Ничего не найдено...
-      </div>`
+        class="fontmono flex flex-col gap-3 bg-near dark:bg-black p-3 rounded-lg overflow dark:text-white italic"
+        >Ничего не найдено...</div
+      >`
     }
     // sort(filteredTasks)
     return filteredTasks.map(renderTask)
@@ -42,67 +41,34 @@ let renderTask = (task, index) => {
     sticky = "sticky bottom-0"
     firststicky = false
   }
-  if (selected.id == task.id)
+  if (selected.id == task.id) {
     // Редактируемый
-    return html` <div
-      id="selectedtask"
-      class="${firstclass} -mx-3 z-[45] flex min-h-screen flex-col gap-5 bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white ${errorclass(
+    return html`<div id="selectedtask" class="${firstclass} -mx-3 z-[45] flex min-h-screen flex-col gap-5 bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white"><div class="flex flex-col gap-3"> ${controlButtons(
+      task,
+    )} ${radio(task)}</div> ${dateInput(task)} ${timeSlider(task)} ${linkDivs(
+      task,
+    )}<div class="flex flex-col gap-3 ml-3">${() =>
+      tagLine(
         task,
-      )}">
-      <div class="flex flex-col gap-3"> ${controlButtons(task)} ${radio(task)}</div> ${dateInput(task)} ${timeSlider(
-        task,
-      )}  
-      ${linkDivs(task)}
-      <div class="flex flex-col gap-3 ml-3"
-        >${() => tagLine(task, "from")}
-        <div
-          id="edit"
-          class="ml-2 pr-5 w-full min-h-full whitespace-pre-wrap focus:outline-none"
-          contenteditable="true"
-          role="textbox"
-          aria-multiline="true"
-          ><div
-            >${task.name}</div
-              ><div>${task.note}</div
-              ></div>
-              ${() => tagLine(task, "to")}
-            </div></div
-          ></div
-        ></div
-      ></div
-    >`
-  // Нередактируемый
-  else
-    return html` <div
+        "from",
+      )}<div id="edit" class="ml-2 pr-5 w-full min-h-full whitespace-pre-wrap focus:outline-none" contenteditable="true" role="textbox" aria-multiline="true">${
+      task.name
+    }<div>${task.note}</div></div>${() => tagLine(task, "to")}</div></div></div>`
+  } else {
+    // Нередактируемый
+    return html`<div
       @click="${(e) => {
         selectTaskById(task.id)
         clickPos(e)
       }}"
-      class="${sticky} ${firstclass} flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg overflow dark:text-white ${errorclass(
-        task,
-      )}">
-      ${() => tagLine(task, "from")}
-      <div class="ml-2 flex gap-3">
-        <div class="w-full my-auto ">
-          ${() => task.name}
-          ${() => {
+      class="${sticky} ${firstclass} flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg overflow dark:text-white"
+      >${task.type !== "meeting" ? () => tagLine(task, "from") : ""}<div class="ml-2 flex gap-3"
+        ><div class="w-full my-auto "
+          >${() => task.name}${() => {
             if (task.note && task.note.length > 0) return "+ 📝"
-          }}
-        </div>
-        ${() => taskPlate(task, "p-1")}
-      </div>
-      ${() => tagLine(task, "to")}
-    </div>`
-}
-
-const errorclass = (task) => {
-  // // console.log(selected.task.name != task.name, task.error)
-  // if (selected.task.name != task.name && task.error) {
-  //   return 'bg-accent dark:bg-accent-dark'
-  // }
-  // else {
-  //   task.error = false;
-  //   // console.log(task, 'taskafterdel')
-  //   return ''
-  return ""
+          }}</div
+        >${() => taskPlate(task, "p-1")}</div
+      >${task.type !== "meeting" ? () => tagLine(task, "to") : ""}</div
+    >`
+  }
 }

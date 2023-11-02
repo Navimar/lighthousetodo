@@ -4,7 +4,7 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --background-image: url("img/back.jpeg");
+    --background-image: url("img/back.jpg");
     --plus-image: url("img/plus.png");
   }
 }
@@ -12,7 +12,7 @@
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-image: url("img/backdark.jpeg");
+    --background-image: url("img/backdark.jpg");
     --plus-image: url("img/plusdark.png");
   }
 }
@@ -56,9 +56,11 @@ input {
   font-family: "Oswald", sans-serif;
   letter-spacing: 0.1em;
 }
+
 .fontmono {
   font-family: "Roboto Mono", monospace;
 }
+
 .fontaccent {
   font-family: "Oswald", sans-serif;
   letter-spacing: 0.1em;
