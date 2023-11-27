@@ -1,8 +1,14 @@
+import serviceAccount from "../firebase.config.js"
 import admin from "firebase-admin"
 import { addUser, getUser } from "./user.js"
-import syncTasks from "../united/synctasks.js"
-import { database, path, load } from "./database.js"
+import { syncTasksWithNeo4j, loadDataFromNeo4j, removeOldTasksFromNeo4j, updateCleanupTimeNeo4j } from "./database.js"
 import removeOldTasksFromFirebase from "./forget.js"
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://adastratodo-default-rtdb.europe-west1.firebasedatabase.app/",
+})
+
 async function verifyToken(idToken) {
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken)
@@ -22,8 +28,6 @@ export let inputSocket = (io) => {
     })
 
     socket.on("save", async (msg) => {
-      console.log("save")
-
       // Если токена нет, сразу отправляем ошибку
       if (!msg?.user?.token) {
         console.log(msg, "Токен не найден при загрузке")
@@ -31,52 +35,46 @@ export let inputSocket = (io) => {
         return
       }
 
+      let userId
       try {
-        const userId = await verifyToken(msg.user.token)
-
-        // Если нет userId, отправляем ошибку
-        if (!userId) {
-          console.log("Invalid token or not authenticated", msg)
-          socket.emit("err", "Invalid token or not authenticated")
-          return
-        }
-
-        addUser(userId, socket)
-
-        const userRef = database.ref("data/" + path(userId))
-        const snapshot = await userRef.once("value")
-        const serverData = snapshot.val()
-
-        // Используем syncTasks для синхронизации задач или задаем задачи напрямую
-        const updatedTasks = serverData ? syncTasks(serverData.tasks, msg.tasks) : msg.tasks
-
-        // Записываем обновленные данные в базу
-        await userRef.set({
-          tasks: updatedTasks,
-          // calendarSet: msg.calendarSet, (если нужно раскомментировать)
-        })
-
-        // Обновляем все сокеты, кроме текущего
-        const sockets = getUser(userId)
-        sockets.forEach((s) => {
-          if (s !== socket) {
-            s.emit("update", msg)
-          }
-        })
-
-        socket.emit("save-confirm", msg.requestId)
+        userId = await verifyToken(msg.user.token)
       } catch (error) {
-        console.error("Error in 'save' handler:", error)
-        socket.emit("err", "Произошла ошибка при сохранении данных.")
+        console.error("Error verifying token:", error)
+        socket.emit("err", "Invalid token or not authenticated")
+        return
       }
+
+      if (!userId) {
+        console.log("Invalid token or not authenticated", msg)
+        socket.emit("err", "Invalid token or not authenticated")
+        return
+      }
+
+      addUser(userId, socket)
+
+      try {
+        // Синхронизация задач с базой данных Neo4j
+        console.log(userId, msg.tasks)
+        await syncTasksWithNeo4j(userId, msg.tasks)
+
+        // Отправка подтверждения обратно через сокет
+        socket.emit("save-confirm", msg.requestId)
+        console.log("save-confirm")
+      } catch (error) {
+        // Обработка ошибок синхронизации задач
+        console.error("Error during task synchronization:", error)
+        socket.emit("err", "Ошибка при синхронизации задач.")
+        return
+      }
+
+      // Обновление других сокетов, если это необходимо
+      const sockets = getUser(userId)
+      sockets.forEach((s) => {
+        if (s !== socket) {
+          s.emit("update", msg)
+        }
+      })
     })
-
-    const ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000 // миллисекунд в день
-
-    const shouldCleanup = (lastCleanupTimestamp) => {
-      const timeSinceLastCleanup = Date.now() - (lastCleanupTimestamp || 0)
-      return timeSinceLastCleanup > ONE_DAY_MILLISECONDS
-    }
 
     socket.on("load", async (msg) => {
       if (!msg.token) {
@@ -95,18 +93,27 @@ export let inputSocket = (io) => {
       addUser(userId, socket)
       console.log(msg, "load")
 
-      const data = await load(userId)
+      const data = await loadDataFromNeo4j(userId)
       if (!data) {
         console.log(msg, userId, "не получилось загрузить данные из базы")
         return
       }
 
-      socket.emit("update", { tasks: data.tasks })
+      socket.emit("update", { tasks: data })
 
-      if (shouldCleanup(data.lastCleanup)) {
-        await removeOldTasksFromFirebase(userId, data)
-        const userRef = database.ref("data/" + path(userId))
-        await userRef.update({ lastCleanup: Date.now() })
+      // Обновление данных о последней очистке и удаление старых задач, если это необходимо
+      const timeSinceLastCleanup = Date.now() - (data.lastCleanup || 0)
+      const DIFFERENCE_MILLISECONDS = 24 * 60 * 60 * 1000
+      // 24 * 60 * 60 * 1000
+
+      if (timeSinceLastCleanup > DIFFERENCE_MILLISECONDS) {
+        try {
+          await removeOldTasksFromNeo4j(userId, data)
+          await updateCleanupTimeNeo4j(userId)
+        } catch (error) {
+          console.error("Ошибка при очистке старых задач или обновлении времени последней очистки:", error)
+          // Обработка ошибок или дальнейшие действия
+        }
       }
     })
   })

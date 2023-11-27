@@ -36,6 +36,7 @@ export default (m) => {
       .split("\n")
       .filter((name) => name.trim() !== "") // Фильтрация пустых строк
       .map((name) => getObjectByName(name).id)
+      .filter((id) => !fromEditIds.includes(id)) // Удаление из toEditIds всех ID, которые уже есть в fromEditIds
 
     // добаываем дату и время из инпутов
     const timeInput = document.getElementById("timeInput").value
