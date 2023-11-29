@@ -30,7 +30,7 @@ export default (task, additionalClass = "") => {
 
   const timeClass = () => {
     if (task.type == "meeting" && task.pause)
-      return "text-neutral-600 bg-accent dark:bg-accent-dark border-accent dark:border-accent-dark"
+      return "text-neutral-350 bg-accent dark:bg-accent-dark border-accent dark:border-accent-dark"
     if (task.type == "meeting" && isInPast)
       return "text-neutral-100 dark:text-neutral-200 bg-accent dark:bg-accent-dark border-transparent"
     if (task.type == "meeting") return "text-accent dark:text-accent-dark border-neutral-200 dark:border-neutral-800"
