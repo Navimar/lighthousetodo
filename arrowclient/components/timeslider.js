@@ -1,4 +1,4 @@
-import { currentTime } from "~/logic/reactive.js"
+import reData from "~/logic/reactive.js"
 import { dateInputPauseButtonHTMLCSS } from "~/logic/manipulate.js"
 
 import { html } from "@arrow-js/core"
@@ -41,7 +41,7 @@ export default (task) =>
   html`<div>
     <div
       id="currentTimeMarker"
-      style="left:${currentTime.slider}px"
+      style="left:${reData.currentTime.slider}px"
       class="relative top-3 h-0 z-40 text-xs w-0 flex flex-col items-center dark:text-accent-dark text-accent text-center">
       <span class="font-bold fontmono">ˈ</span>
       <span
@@ -52,7 +52,7 @@ export default (task) =>
           updateSliderLabel({ target: slider }) // Optional: to update other elements if needed
         }}"
         class="text-white fontmono rounded-lg px-2 bg-accent dark:bg-accent-dark block"
-        >${() => currentTime.clock}</span
+        >${() => reData.currentTime.clock}</span
       >
     </div>
 

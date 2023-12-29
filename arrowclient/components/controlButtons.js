@@ -1,22 +1,26 @@
 import { html } from "@arrow-js/core"
 import css from "~/css.js"
-import { reData, selected } from "~/logic/reactive.js"
+import reData from "~/logic/reactive.js"
 import saveTask from "~/logic/savetask.js"
 import data from "~/logic/data.js"
+import { updateButtons } from "~/logic/manipulate.js"
 import { makevisible } from "~/logic/makevisible.js"
-import { getObjectById } from "../logic/util"
+import { getObjectById, copyToClipboard } from "~/logic/util.js"
 
 let checkedPause = (task) => {
   if (task.pause) return "checked"
   else return ""
 }
-
+let checkedPublic = (task) => {
+  if (task.public) return "checked"
+  else return ""
+}
 let saveButton = () => {
   saveTask("sv")
-  riseTask(selected.id)
-  selected.id = false
+  riseTask(reData.selectedScribe)
+  reData.selectedScribe = false
   makevisible()
-  selected.id = reData.visibletasks[0].id
+  reData.selectedScribe = reData.visibleTasks[0].id
 }
 let riseTask = (taskId, visited = new Set(), depth = 0) => {
   let task = getObjectById(taskId)
@@ -43,44 +47,41 @@ let riseTask = (taskId, visited = new Set(), depth = 0) => {
     })
   }
 }
-let sinkTask = (task) => {
-  const index = data.tasks.findIndex((t) => t.id === task.id)
-  if (index !== -1) {
-    // Создаем глубокую копию объекта
-    const clonedTask = JSON.parse(JSON.stringify(task))
-
-    // Добавляем копию в конец массива
-    data.tasks.push(clonedTask)
-
-    // Удаляем оригинальный объект из его первоначальной позиции
-    data.tasks.splice(index, 1)
+const publicTask = (event, task) => {
+  if (!event.target.checked) {
+    return
   }
-
-  saveTask("sink")
-  selected.id = false
-  makevisible()
-  selected.id = reData.visibletasks[0].id
+  const link = `${window.location.origin}/${task.id}` // Создаем ссылку с использованием window.location.origin
+  copyToClipboard(link) // Копируем ссылку в буфер обмена
 }
-
+{
+  /* <input
+        class="appearance-none peer sr-only"
+        type="checkbox"
+        id="publicCheckbox"
+        ${checkedPublic(task)}
+        @change="${(e) => publicTask(e, task)}" />
+      <label class="${css.button} whitespace-nowrap" for="publicCheckbox">Общая</label> */
+}
 export default (task) =>
   html`<div class="grid grid-cols-4 gap-3">
-    <button class="${css.button}" @click="${() => (selected.id = false)}">Закрыть</button>
+    <button class="${css.button}" @click="${() => (reData.selectedScribe = false)}">Закрыть</button>
+    <button class="${css.button}"></button>
+
     <div>
-      <input
-        class="sr-only peer"
-        type="checkbox"
-        id="pauseCheckbox"
-        ${checkedPause(task)}
-        @change="${(e) => {
-          if (e.target.checked) {
-            saveButton()
-          }
-        }}" />
-      <label class="${css.button} whitespace-nowrap" for="pauseCheckbox">Потом</label>
-    </div>
-    <div>
-      <input class="appearance-none peer sr-only" type="checkbox" id="readyCheckbox" />
+      <input class="appearance-none peer sr-only" type="checkbox" id="readyCheckbox" @change="${updateButtons}" />
       <label class="${css.button} whitespace-nowrap" for="readyCheckbox">Готово</label>
     </div>
-    <button id="savebutton" class="${css.button}" @click="${saveButton}">Сохранить</button>
+    <button style="display:none" id="savebutton" class="${css.button}" @click="${saveButton}">Сохранить</button>
+    <input
+      class="sr-only peer"
+      type="checkbox"
+      id="pauseCheckbox"
+      ${checkedPause(task)}
+      @change="${(e) => {
+        if (e.target.checked) {
+          saveButton()
+        }
+      }}" />
+    <label id="pauseCheckboxLabel" class="${css.button} whitespace-nowrap" for="pauseCheckbox">Потом</label>
   </div>`

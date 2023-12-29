@@ -2,14 +2,14 @@ import { authentication, authenticationOnLoad } from "./components/authenticatio
 import renderCalendar from "./components/calendar.js"
 import online from "./components/online.js"
 import search from "./components/search.js"
-import forget from "~/logic/forget.js"
 import plusbutton from "./components/plusbutton.js"
 import { renderTasks } from "./components/tasks.js"
-import { inputSocket } from "~/logic/send.js"
+import { renderCollabortors } from "./components/collaborators.js"
+import { inputSocket, sendCollaboratorPermisson } from "~/logic/send.js"
 import { NEWSCRIBETEXT } from "~/logic/const.js"
-import { updateDateClass } from "~/logic/manipulate.js"
+import { updateDateClass, updateButtons } from "~/logic/manipulate.js"
 import { safeSetLocalStorageItem, getLocalStorageItem } from "~/logic/util.js"
-import { currentTime, reData, selected } from "~/logic/reactive.js"
+import reData from "~/logic/reactive.js"
 import { tick } from "~/logic/tick.js"
 import data from "~/logic/data.js"
 import { getObjectById } from "~/logic/util.js"
@@ -31,7 +31,7 @@ const app = document.getElementById("App")
 const render = html`
   ${() => search()}
   <div class="flex flex-col gap-6 pb-80 max-w-full w-40rem px-3 m-auto">
-    ${() => authentication()} ${() => renderCalendar(dayjs())} ${() => renderTasks()}
+    ${() => authentication()} ${() => renderCalendar(dayjs())} ${() => renderCollabortors()} ${() => renderTasks()}
   </div>
   ${plusbutton} ${() => online()}
 `
@@ -42,44 +42,44 @@ window.addEventListener("load", function () {
     let text = e.clipboardData.getData("text/plain")
     document.execCommand("insertText", false, text)
   })
-
   authenticationOnLoad()
 
   data.tasks = getLocalStorageItem("tasks") || []
-  forget()
+  // forget()
   data.pendingRequests = getLocalStorageItem("pendingRequests") || []
-  makevisible()
 
+  makevisible()
   inputSocket()
 
-  currentTime.timerStarted = getLocalStorageItem("timer") || "00:00"
+  reData.currentTime.timerStarted = getLocalStorageItem("timer") || "00:00"
 
   tick()
   watch(() => {
-    safeSetLocalStorageItem("timer", currentTime.timerStarted)
+    safeSetLocalStorageItem("timer", reData.currentTime.timerStarted)
   })
   watch(() => {
-    selected.id
-    reData.visibletasks
+    reData.selectedScribe
+    reData.visibleTasks
     Promise.resolve().then(() => {
       let editdiv = document.getElementById("edit")
       if (editdiv) {
         const range = document.createRange()
         const sel = window.getSelection()
         range.selectNodeContents(editdiv)
-        if (!getObjectById(selected.id).name.startsWith(NEWSCRIBETEXT)) range.collapse()
+        if (!getObjectById(reData.selectedScribe).name.startsWith(NEWSCRIBETEXT)) range.collapse()
         sel.removeAllRanges()
         sel.addRange(range)
       }
       let selectedtaskdiv = document.getElementById("selectedtask")
       if (selectedtaskdiv) selectedtaskdiv.scrollIntoView(true)
       updateDateClass()
+      updateButtons()
     })
   })
   watch(() => {
-    currentTime.slider
+    reData.currentTime.slider
     const currentTimeMarker = document.getElementById("currentTimeMarker")
-    if (currentTimeMarker) currentTimeMarker.style = "left:" + currentTime.slider + "px"
+    if (currentTimeMarker) currentTimeMarker.style = "left:" + reData.currentTime.slider + "px"
   })
   render(app)
 })

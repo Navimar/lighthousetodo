@@ -11,7 +11,7 @@ export let check = ({ hash, ...userData }) => {
   const hmac = crypto.createHmac("sha256", secretKey).update(dataCheckString).digest("hex")
   return hmac === hash
 }
-export let addUser = (id, socket) => {
+export let addUser = (name, id, socket) => {
   const maxSocketsPerUser = 10 // Максимальное количество сокетов на одного пользователя
 
   let userExists = false
@@ -27,7 +27,7 @@ export let addUser = (id, socket) => {
     }
   })
   if (!userExists) {
-    users.push({ id, socket: [socket] })
+    users.push({ name, id, socket: [socket] })
   }
 }
 

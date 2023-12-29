@@ -1,4 +1,4 @@
-import { selectedDate } from "~/logic/reactive.js"
+import reData from "~/logic/reactive.js"
 import { isNameTaken } from "~/logic/util"
 import data from "~/logic/data.js"
 
@@ -15,7 +15,7 @@ export default (name, fromIds = [], toIds = []) => {
     name,
     note: "",
     time: dayjs().format("HH:mm"),
-    date: selectedDate.date,
+    date: reData.selectedDate,
     type: "window",
     fromIds: fromIds,
     toIds: toIds,

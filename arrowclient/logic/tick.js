@@ -1,27 +1,26 @@
 import { makevisible } from "~/logic/makevisible.js"
-import { selectedDate, currentTime, reData } from "~/logic/reactive.js"
+import reData from "~/logic/reactive.js"
 import data from "~/logic/data.js"
 import { socket } from "~/logic/socket.js"
-import { status } from "~/logic/reactive.js"
 
 import dayjs from "dayjs"
 
 export let tick = () => {
-  status.online = socket.connected
+  reData.clientIsOnline = socket.connected
 
   const time = dayjs()
   const totalMinutes = time.hour() * 60 + time.minute()
   const slider = document.getElementById("timeSlider")
   if (slider) {
     const sliderWidth = slider.offsetWidth - 16
-    currentTime.slider = (totalMinutes / 1440) * sliderWidth + 16
+    reData.currentTime.slider = (totalMinutes / 1440) * sliderWidth + 16
   }
 
   let newTime = time.format("HH:mm")
-  if (currentTime.clock !== newTime) {
+  if (reData.currentTime.clock !== newTime) {
     let needMv = false
     data.tasks.forEach((task) => {
-      if (task.time === currentTime.clock && task.date === currentTime.date) {
+      if (task.time === reData.currentTime.clock && task.date === reData.currentTime.date) {
         if (task.ready === true) {
           task.ready = false
           needMv = true
@@ -35,23 +34,23 @@ export let tick = () => {
         }
       }
     })
-    currentTime.clock = newTime
+    reData.currentTime.clock = newTime
     if (needMv) makevisible()
   }
 
-  currentTime.date = time.format("YYYY-MM-DD")
+  reData.currentTime.date = time.format("YYYY-MM-DD")
 
-  // Update selectedDate.date if it's in the past
-  if (dayjs(selectedDate.date).isBefore(currentTime.date)) {
-    selectedDate.date = currentTime.date
+  // Update reData.selectedDate if it's in the past
+  if (dayjs(reData.selectedDate).isBefore(reData.currentTime.date)) {
+    reData.selectedDate = reData.currentTime.date
     makevisible()
   }
 
-  if (currentTime.timerStarted) {
-    const diffInMinutes = Math.abs(time.diff(dayjs(currentTime.timerStarted, "HH:mm"), "minute"))
+  if (reData.currentTime.timerStarted) {
+    const diffInMinutes = Math.abs(time.diff(dayjs(reData.currentTime.timerStarted, "HH:mm"), "minute"))
     const hours = ((diffInMinutes % (24 * 60)) / 60) | 0
     const minutes = diffInMinutes % 60
-    currentTime.timer =
+    reData.currentTime.timer =
       hours.toLocaleString("en-US", { minimumIntegerDigits: 2 }) +
       ":" +
       minutes.toLocaleString("en-US", { minimumIntegerDigits: 2 })

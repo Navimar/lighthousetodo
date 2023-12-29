@@ -1,6 +1,6 @@
 import { html } from "@arrow-js/core"
 
-import { autocomplete } from "~/logic/reactive.js"
+import reData from "~/logic/reactive.js"
 
 function complete(e, divId) {
   // Получить элемент по его ID
@@ -16,7 +16,7 @@ function complete(e, divId) {
   const lines = divElement.innerText.trim().split("\n")
   // Найти индекс строки, которую нужно заменить
   const lowerCaseLines = lines.map((line) => line.toLowerCase())
-  const lineIndex = lowerCaseLines.indexOf(autocomplete.line.toLowerCase())
+  const lineIndex = lowerCaseLines.indexOf(reData.autoComplete.line.toLowerCase())
 
   if (lineIndex !== -1) {
     // Замена строки
@@ -26,14 +26,14 @@ function complete(e, divId) {
   // Объединить строки, обернув каждую из них в <div> и установить обратно в div
   divElement.innerHTML = lines.map((line) => `<div>${line}</div>`).join("")
 
-  autocomplete.list = []
+  reData.autoComplete.list = []
 }
 
 export default (divId) => {
-  if (autocomplete.list && autocomplete.div == divId && autocomplete.list.length > 0) {
+  if (reData.autoComplete.list && reData.autoComplete.div == divId && reData.autoComplete.list.length > 0) {
     const elements = []
-    for (let i = 0; i < autocomplete.list.length; i++) {
-      const e = autocomplete.list[i]
+    for (let i = 0; i < reData.autoComplete.list.length; i++) {
+      const e = reData.autoComplete.list[i]
       const div = html`
         <div
           class="cursor-pointer break-words hover:bg-neutral-200 dark:hover:bg-neutral-600 p-2"
@@ -70,5 +70,5 @@ document.addEventListener("click", function (event) {
   }
 
   // клик был за пределами элемента .autocomplete-list
-  autocomplete.list = []
+  reData.autoComplete.list = []
 })

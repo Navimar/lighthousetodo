@@ -1,4 +1,4 @@
-import { searchstring, selected } from "~/logic/reactive.js"
+import reData from "~/logic/reactive.js"
 import { makevisible } from "~/logic/makevisible.js"
 import saveTask from "~/logic/savetask.js"
 import { getObjectByName, getObjectById } from "~/logic/util"
@@ -8,14 +8,14 @@ import dayjs from "dayjs"
 export function selectTaskByName(identifier) {
   saveTask("selectTaskByName")
   clearSearch()
-  selected.id = getObjectByName(identifier).id
+  reData.selectedScribe = getObjectByName(identifier).id
   makevisible()
 }
 
 export function selectTaskById(identifier) {
   saveTask("selectTaskById")
   clearSearch()
-  selected.id = identifier
+  reData.selectedScribe = identifier
   makevisible()
 }
 
@@ -23,6 +23,7 @@ export function dateInputPauseButtonHTMLCSS() {
   let pc = document.getElementById("pauseCheckbox")
   if (pc) pc.checked = false
   updateDateClass()
+  updateButtons()
 }
 
 export function updateDateClass() {
@@ -60,8 +61,34 @@ export function updateDateClass() {
   }
 }
 
+export function updateButtons() {
+  const readyCheckbox = document.getElementById("readyCheckbox")
+  const pauseCheckbox = document.getElementById("pauseCheckbox")
+  const pauseCheckboxLabel = document.getElementById("pauseCheckboxLabel")
+  const saveButton = document.getElementById("savebutton") // Предполагаем, что кнопка "Сохранить" имеет id="savebutton"
+
+  if (readyCheckbox && pauseCheckbox && saveButton) {
+    const currentDate = dayjs()
+    const dateInputValue = document.getElementById("dateInput").value
+    const timeInputValue = document.getElementById("timeInput").value
+    const inputDateTime = dayjs(`${dateInputValue}T${timeInputValue}`)
+
+    const isTaskReady = readyCheckbox.checked
+    const isTaskFuture = inputDateTime.isAfter(currentDate) || inputDateTime.isSame(currentDate, "minute")
+    if (isTaskReady || isTaskFuture) {
+      saveButton.style.display = "block"
+      pauseCheckbox.style.display = "none"
+      pauseCheckboxLabel.style.display = "none"
+    } else {
+      saveButton.style.display = "none"
+      pauseCheckbox.style.display = "block"
+      pauseCheckboxLabel.style.display = "block"
+    }
+  }
+}
+
 export let clearSearch = () => {
   const inputElement = document.getElementById("searchinput")
   inputElement.value = ""
-  searchstring.text = ""
+  reData.searchString = ""
 }

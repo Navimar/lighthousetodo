@@ -10,6 +10,7 @@ const updateTimeSlider = (event) => {
   const totalMinutes = dayjsTime.hour() * 60 + dayjsTime.minute()
   const slider = document.getElementById("timeSlider")
   slider.value = totalMinutes
+  dateInputPauseButtonHTMLCSS()
 }
 
 function adjustDate(daysToAdd) {

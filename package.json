@@ -1,24 +1,27 @@
 {
-	"type": "module",
-	"dependencies": {
-		"@arrow-js/core": "^1.0.0-alpha.9",
-		"arrow-js": "^0.1.9",
-		"create-vite": "^4.4.1",
-		"crypto": "^1.0.1",
-		"dayjs": "^1.11.10",
-		"express": "^4.18.2",
-		"firebase": "^10.3.1",
-		"firebase-admin": "^11.10.1",
-		"gun": "^0.2020.1239",
-		"socket.io": "^4.4.1",
-		"uuid": "^9.0.1",
-		"vite": "^4.4.7"
-	},
-	"devDependencies": {
-		"eslint": "^8.49.0",
-		"eslint-config-prettier": "^9.0.0",
-		"eslint-plugin-prettier": "^5.0.0",
-		"lit-html": "^2.8.0",
-		"prettier": "^3.0.3"
-	}
+  "type": "module",
+  "dependencies": {
+    "@arrow-js/core": "^1.0.0-alpha.9",
+    "arrow-js": "^0.1.9",
+    "create-vite": "^4.4.1",
+    "crypto": "^1.0.1",
+    "dayjs": "^1.11.10",
+    "express": "^4.18.2",
+    "firebase": "^10.3.1",
+    "firebase-admin": "^11.10.1",
+    "gun": "^0.2020.1239",
+    "socket.io": "^4.4.1",
+    "uuid": "^9.0.1",
+    "vite": "^4.4.7"
+  },
+  "devDependencies": {
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "lit-html": "^2.8.0",
+    "prettier": "^3.0.3"
+  },
+  "scripts": {
+    "build": "cd arrowclient && vite build --outDir dist"
+  }
 }

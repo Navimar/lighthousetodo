@@ -1,4 +1,4 @@
-import { searchstring } from "~/logic/reactive.js"
+import reData from "~/logic/reactive.js"
 import { html } from "@arrow-js/core"
 import { clearSearch } from "~/logic/manipulate.js"
 
@@ -13,7 +13,7 @@ export default () => {
       class="box-border h-11 rounded-lg p-2 block w-full top-0 bg-neutral-100 dark:bg-neutral-900 dark:text-white focus:outline-none"
       @input="${(e) => {
         window.scrollTo(0, 0)
-        searchstring.text = e.target.value
+        reData.searchString = e.target.value
       }}"
     >
     </input>
@@ -23,7 +23,7 @@ export default () => {
 }
 
 let crossbutton = () => {
-  let crossbuttoncss = searchstring.text == "" ? "hidden" : ""
+  let crossbuttoncss = reData.searchString == "" ? "hidden" : ""
   return html` <button
     class="dark:text-white text-4xl absolute z-[100] right-5 font-extrabold ${crossbuttoncss}"
     @click="${() => {

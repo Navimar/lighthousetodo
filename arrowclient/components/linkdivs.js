@@ -1,15 +1,15 @@
 import { html } from "@arrow-js/core"
 import { getCurrentLine, getObjectById } from "~/logic/util.js"
-import { autocomplete } from "~/logic/reactive.js"
+import reData from "~/logic/reactive.js"
 import renderAutocomplete from "/components/autocomplete.js"
 import data from "~/logic/data.js"
 
 function handleInput(e) {
   const currentLineText = getCurrentLine().toLowerCase() // Преобразование к нижнему регистру
 
-  autocomplete.list = []
-  autocomplete.line = currentLineText
-  autocomplete.div = e.target.id
+  reData.autoComplete.list = []
+  reData.autoComplete.line = currentLineText
+  reData.autoComplete.div = e.target.id
 
   // Если строка пустая, вернуть пустой массив
   if (!currentLineText) {
@@ -30,8 +30,8 @@ function handleInput(e) {
     })
     .slice(0, 7) // Ограничиваем список
 
-  // Обновлять autocomplete.list с найденными именами совпадений
-  autocomplete.list = matches.map((match) => {
+  // Обновлять reData.autoComplete.list с найденными именами совпадений
+  reData.autoComplete.list = matches.map((match) => {
     const escapedText = currentLineText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
     const highlightedName = match.name.replace(new RegExp(escapedText, "ig"), (match) => `<strong>${match}</strong>`)
     return highlightedName

@@ -1,50 +1,49 @@
 import { html, reactive, watch } from "@arrow-js/core"
 import dayjs from "dayjs"
 
-import { selectedDate, reData, selected } from "~/logic/reactive.js"
+import reData from "~/logic/reactive.js"
 import { makevisible } from "~/logic/makevisible.js"
 import saveTask from "~/logic/savetask.js"
-import { searchstring } from "~/logic/reactive.js"
 
 let today = () => {
-  selectedDate.date = dayjs().format("YYYY-MM-DD")
+  reData.selectedDate = dayjs().format("YYYY-MM-DD")
 }
 
 function nextMonth() {
-  const nextMonthDate = dayjs(selectedDate.date).add(1, "month").format("YYYY-MM-DD")
-  selectedDate.date = nextMonthDate // обновление вашей реактивной переменной
+  const nextMonthDate = dayjs(reData.selectedDate).add(1, "month").format("YYYY-MM-DD")
+  reData.selectedDate = nextMonthDate // обновление вашей реактивной переменной
   makevisible()
 }
 
 function prevMonth() {
-  const prevMonthDate = dayjs(selectedDate.date).subtract(1, "month").format("YYYY-MM-DD")
-  selectedDate.date = prevMonthDate
+  const prevMonthDate = dayjs(reData.selectedDate).subtract(1, "month").format("YYYY-MM-DD")
+  reData.selectedDate = prevMonthDate
   makevisible()
 }
 
 function nextYear() {
-  const nextYearDate = dayjs(selectedDate.date).add(1, "year").format("YYYY-MM-DD")
-  selectedDate.date = nextYearDate
+  const nextYearDate = dayjs(reData.selectedDate).add(1, "year").format("YYYY-MM-DD")
+  reData.selectedDate = nextYearDate
   makevisible()
 }
 
 function prevYear() {
-  const prevYearDate = dayjs(selectedDate.date).subtract(1, "year").format("YYYY-MM-DD")
-  selectedDate.date = prevYearDate
+  const prevYearDate = dayjs(reData.selectedDate).subtract(1, "year").format("YYYY-MM-DD")
+  reData.selectedDate = prevYearDate
   makevisible()
 }
 
 function clickOnCaldendarDay(date) {
   saveTask("clickOnCaldendarDay")
-  selected.id = false
+  reData.selectedScribe = false
   // let date = e.target.innerText;
-  let clickedDate = dayjs(selectedDate.date).set("date", date)
+  let clickedDate = dayjs(reData.selectedDate).set("date", date)
 
   // Проверяем, является ли выбранный день прошлым или сегодняшним
   if (clickedDate.isBefore(dayjs()) || clickedDate.isSame(dayjs(), "day")) {
-    selectedDate.date = dayjs().format("YYYY-MM-DD") // Устанавливаем сегодняшний день
+    reData.selectedDate = dayjs().format("YYYY-MM-DD") // Устанавливаем сегодняшний день
   } else {
-    selectedDate.date = clickedDate.format("YYYY-MM-DD") // Устанавливаем выбранный день
+    reData.selectedDate = clickedDate.format("YYYY-MM-DD") // Устанавливаем выбранный день
   }
   makevisible()
 }
@@ -56,7 +55,7 @@ export default () => {
         <button @click="${prevYear}" class=""><<</button>
         <button @click="${prevMonth}" class=""><</button>
         <button @click="${today}" class="fontaccent w-1/2 uppercase">
-          ${dayjs(selectedDate.date).format("D MMMM YYYY")}
+          ${dayjs(reData.selectedDate).format("D MMMM YYYY")}
         </button>
         <button @click="${nextMonth}" class="">></button>
         <button @click="${nextYear}" class="">>></button>
@@ -66,7 +65,7 @@ export default () => {
 
   let week = (date) => {
     const isToday = dayjs().isSame(date, "day")
-    const isSelectedDate = dayjs(selectedDate.date).isSame(date, "day")
+    const isSelectedDate = dayjs(reData.selectedDate).isSame(date, "day")
     const today = isToday ? "text-white dark:white-back bg-accent dark:bg-accent-dark" : ""
     const focused = isSelectedDate ? "dark:border-neutral-600 border-neutral-400 " : "border-transparent"
 
@@ -96,7 +95,7 @@ export default () => {
       </td>`
     else return html`<td class="leading-3 text-center border-bright dark:border-neutral-800 border-2 p-0">&nbsp;</td>`
   }
-  const dateObject = dayjs(selectedDate.date)
+  const dateObject = dayjs(reData.selectedDate)
 
   let start = dateObject.date(0).day()
   start == 0 ? 7 : start - 1 //0 становится понедельником
@@ -111,7 +110,7 @@ export default () => {
   for (let i = 0; i < month.length; i += 7) {
     weeks.push(month.slice(i, i + 7))
   }
-  if (searchstring.text === "")
+  if (reData.searchString === "")
     return html`
       <div class="fontaccent w-full text-center p-3 dark:text-white bg-neutral-100  dark:bg-neutral-900">
         <div class="pb-3 text-base">${renderCalendarControls}</div>

@@ -1,8 +1,13 @@
 import serviceAccount from "../firebase.config.js"
 import admin from "firebase-admin"
 import { addUser, getUser } from "./user.js"
-import { syncTasksWithNeo4j, loadDataFromNeo4j, removeOldTasksFromNeo4j, updateCleanupTimeNeo4j } from "./database.js"
-import removeOldTasksFromFirebase from "./forget.js"
+import {
+  syncTasksNeo4j,
+  addCollaboratorNeo4j,
+  loadDataFromNeo4j,
+  removeOldTasksFromNeo4j,
+  updateCleanupTimeNeo4j,
+} from "./database.js"
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -28,6 +33,8 @@ export let inputSocket = (io) => {
     })
 
     socket.on("save", async (msg) => {
+      console.log("msg", msg)
+
       // Если токена нет, сразу отправляем ошибку
       if (!msg?.user?.token) {
         console.log(msg, "Токен не найден при загрузке")
@@ -50,21 +57,24 @@ export let inputSocket = (io) => {
         return
       }
 
-      addUser(userId, socket)
+      addUser(msg.user.name, userId, socket)
 
       try {
-        // Синхронизация задач с базой данных Neo4j
-        console.log(userId, msg.tasks)
-        await syncTasksWithNeo4j(userId, msg.tasks)
+        if (msg.data.tasks) {
+          // Синхронизация задач с базой данных
+          await syncTasksNeo4j(msg.user.name, userId, msg.data.tasks)
+        } else if (msg.data.collaboratorId) {
+          // Обработка добавления сотрудника
+          await addCollaboratorNeo4j(userId, msg.data.collaboratorId)
+        } else {
+          // Если не найдено ни одного из ожидаемых полей
+          throw new Error("No valid data fields found in message")
+        }
 
-        // Отправка подтверждения обратно через сокет
-        socket.emit("save-confirm", msg.requestId)
-        console.log("save-confirm")
+        // Отправка подтверждения и обновление других сокетов...
       } catch (error) {
-        // Обработка ошибок синхронизации задач
-        console.error("Error during task synchronization:", error)
-        socket.emit("err", "Ошибка при синхронизации задач.")
-        return
+        console.error("Error during request handling:", error)
+        socket.emit("err", "Ошибка при обработке запроса: " + error.message)
       }
 
       // Обновление других сокетов, если это необходимо
@@ -90,8 +100,7 @@ export let inputSocket = (io) => {
         return
       }
 
-      addUser(userId, socket)
-      console.log(msg, "load")
+      addUser(msg.name, userId, socket)
 
       const data = await loadDataFromNeo4j(userId)
       if (!data) {
@@ -101,20 +110,20 @@ export let inputSocket = (io) => {
 
       socket.emit("update", { tasks: data })
 
-      // Обновление данных о последней очистке и удаление старых задач, если это необходимо
-      const timeSinceLastCleanup = Date.now() - (data.lastCleanup || 0)
-      const DIFFERENCE_MILLISECONDS = 24 * 60 * 60 * 1000
-      // 24 * 60 * 60 * 1000
+      // // Обновление данных о последней очистке и удаление старых задач, если это необходимо
+      // const timeSinceLastCleanup = Date.now() - (data.lastCleanup || 0)
+      // const DIFFERENCE_MILLISECONDS = 24 * 60 * 60 * 1000
+      // // 24 * 60 * 60 * 1000
 
-      if (timeSinceLastCleanup > DIFFERENCE_MILLISECONDS) {
-        try {
-          await removeOldTasksFromNeo4j(userId, data)
-          await updateCleanupTimeNeo4j(userId)
-        } catch (error) {
-          console.error("Ошибка при очистке старых задач или обновлении времени последней очистки:", error)
-          // Обработка ошибок или дальнейшие действия
-        }
-      }
+      // if (timeSinceLastCleanup > DIFFERENCE_MILLISECONDS) {
+      //   try {
+      //     await removeOldTasksFromNeo4j(userId, data)
+      //     await updateCleanupTimeNeo4j(userId)
+      //   } catch (error) {
+      //     console.error("Ошибка при очистке старых задач или обновлении времени последней очистки:", error)
+      //     // Обработка ошибок или дальнейшие действия
+      //   }
+      // }
     })
   })
 }

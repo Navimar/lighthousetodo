@@ -1,4 +1,4 @@
-import { currentTime, selectedDate, reData, selected } from "~/logic/reactive.js"
+import reData from "~/logic/reactive.js"
 import { getObjectById } from "~/logic/util.js"
 import { PRIORITY } from "~/logic/const"
 import data from "~/logic/data.js"
@@ -24,22 +24,24 @@ export const makevisible = () => {
   const highestPriorityPerDate = {}
   const today = dayjs() // текущая дата
 
-  reData.visibletasks = []
+  reData.visibleTasks = []
 
   for (let task of data.tasks) {
     // Если задача является выбранной, добавляем её в видимые задачи
-    if (task.id === selected.id) {
-      reData.visibletasks.push(task)
+    if (task.id === reData.selectedScribe) {
+      reData.visibleTasks.push(task)
       continue // переходим к следующей итерации цикла
     }
 
     const isCurrentOrFutureTask =
-      selectedDate.date === currentTime.date
-        ? dayjs(task.date).isBefore(dayjs(selectedDate.date).add(1, "day")) || task.date == selectedDate || !task.date
-        : dayjs(task.date).isSame(dayjs(selectedDate.date)) || !task.date
+      reData.selectedDate === reData.currentTime.date
+        ? dayjs(task.date).isBefore(dayjs(reData.selectedDate).add(1, "day")) ||
+          task.date == reData.selectedDate ||
+          !task.date
+        : dayjs(task.date).isSame(dayjs(reData.selectedDate)) || !task.date
 
     if (!task.ready && isCurrentOrFutureTask && (areAllFromIdsReady(task) || task.type === "meeting")) {
-      reData.visibletasks.push(task)
+      reData.visibleTasks.push(task)
     }
 
     // Обновляем highestPriorityPerDate только для текущих и будущих дат
@@ -90,7 +92,7 @@ const getMaxTimestampFromIds = (task) => {
   return maxTimestamp
 }
 
-export const sort = (arrToSort = reData.visibletasks) => {
+export const sort = (arrToSort = reData.visibleTasks) => {
   arrToSort.sort((a, b) => {
     // Дисприоритет готовности
     if (!a.ready && b.ready) return -1
@@ -161,18 +163,18 @@ export const sort = (arrToSort = reData.visibletasks) => {
   })
 
   if (
-    reData.visibletasks[0] &&
-    (dayjs(reData.visibletasks[0].time, "HH:mm").isAfter(dayjs()) || reData.visibletasks[0].pause)
+    reData.visibleTasks[0] &&
+    (dayjs(reData.visibleTasks[0].time, "HH:mm").isAfter(dayjs()) || reData.visibleTasks[0].pause)
   ) {
     // Find the index of the first task that's due or overdue based on the current time
-    let index = reData.visibletasks.findIndex(
+    let index = reData.visibleTasks.findIndex(
       (task) => dayjs(task.time + " " + task.date, "HH:mm YYYY-MM-DD").isSameOrBefore(dayjs()) && !task.pause,
     )
 
     if (index != -1) {
       // Move the due or overdue task to the start of the list
-      let [task] = reData.visibletasks.splice(index, 1)
-      reData.visibletasks.unshift(task)
+      let [task] = reData.visibleTasks.splice(index, 1)
+      reData.visibleTasks.unshift(task)
     }
   }
 }

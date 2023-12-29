@@ -1,21 +1,49 @@
-import { html, reactive, watch } from "@arrow-js/core"
+import { html } from "@arrow-js/core"
 import { initializeApp } from "firebase/app"
 import { GoogleAuthProvider, signInWithPopup, getAuth, onAuthStateChanged, signOut } from "firebase/auth"
 import { loadData } from "~/logic/send.js"
-import { searchstring, reData, selected, user } from "~/logic/reactive.js"
+import reData from "~/logic/reactive.js"
+import { copyToClipboard } from "~/logic/util.js"
+import { addCollaborator } from "~/logic/collaborator.js"
 import data from "~/logic/data.js"
 
 import css from "/css.js"
 import firebaseConfig from "~/firebase.config.js"
 initializeApp(firebaseConfig)
 
+let collaboratorLink = () => {
+  return `${window.location.protocol}//${window.location.hostname}${
+    window.location.port ? `:${window.location.port}` : ""
+  }/${reData.user.id}`
+}
+let collobaratorComponent = () => {
+  if (reData.collabState) {
+    return html`
+      <span class="underline text-xs copy-link mr-2" @click="${() => copyToClipboard(collaboratorLink())}"
+        >${collaboratorLink()}</span
+      >
+    `
+  } else {
+    return html`
+      <button
+        class="inline-block border-b-neutral-100 mr-2 ${css.button}"
+        @click="${() => (reData.collabState = true)}">
+        Добавить соисполнителя
+      </button>
+    `
+  }
+}
+
 export let authentication = () => {
-  if (user && user.name) {
-    if (searchstring.text === "")
+  if (reData.user?.name) {
+    if (reData.searchString === "")
       return html`
         <div class="flex bg-neutral-100 fontmono dark:bg-neutral-900 dark:text-white p-2 text-sm ">
-          <div class="self-center">👤 <span class="select-text">${() => user.name}</span></div>
-          <button class="ml-auto border-b-neutral-100 ${css.button}" @click="${() => logout()}"> Выйти </button>
+          <div class="self-center">👤 <span class="select-text">${() => reData.user.name}</span></div>
+          <div class="ml-auto">
+            ${() => collobaratorComponent()}
+            <button class="inline-block border-b-neutral-100 ${css.button}" @click="${() => logout()}"> Выйти </button>
+          </div>
         </div>
       `
     else return ""
@@ -81,10 +109,14 @@ export const authenticationOnLoad = () => {
   // Слушаем изменения состояния аутентификации:
   onAuthStateChanged(auth, (firebaseUser) => {
     if (firebaseUser) {
-      user.name = firebaseUser.uid || "Unknown User"
+      reData.user.id = firebaseUser.uid || "Unknown User"
+      reData.user.name = firebaseUser.displayName || "Noname"
+      const pathSegments = window.location.pathname.split("/")
+      const collaboratorId = pathSegments[pathSegments.length - 1]
+      addCollaborator(collaboratorId)
       loadData()
     } else {
-      user.name = null
+      reData.user.id = null
     }
   })
 }
@@ -97,7 +129,8 @@ export let signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, provider)
     const firebaseUser = result.user
-    user.name = firebaseUser.uid || "Unknown User"
+    reData.user.id = firebaseUser.uid || "Unknown User"
+    reData.user.name = firebaseUser.displayName || "Noname"
   } catch (error) {
     alert("Error during Google authentication:", error)
   }
@@ -107,12 +140,13 @@ export let signInWithGoogle = async () => {
 export let logout = async () => {
   try {
     await signOut(auth)
-    user.name = null
+    reData.user.id = null
+    reData.user.name = ""
     reData.calendarSet = {}
-    selected.id = false
+    reData.selectedScribe = false
     data.tasks = []
     localStorage.clear()
-    reData.visibletasks = []
+    reData.visibleTasks = []
   } catch (error) {
     alert("Error during sign out:", error)
   }

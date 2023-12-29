@@ -67,6 +67,8 @@ function getCurrentLine() {
 }
 
 export function getLocalStorageItem(key) {
+  return undefined
+
   try {
     const value = localStorage.getItem(key)
     return value ? JSON.parse(value) : undefined
@@ -77,6 +79,8 @@ export function getLocalStorageItem(key) {
 }
 
 export function safeSetLocalStorageItem(key, value) {
+  return false
+
   try {
     const serializedValue = JSON.stringify(value)
     localStorage.setItem(key, serializedValue)
@@ -99,3 +103,20 @@ export function findGetParameter(name, url) {
   return decodeURIComponent(results[2].replace(/\+/g, " "))
 }
 export { getCurrentLine, clickPos, mouseX, mouseY }
+
+export let copyToClipboard = (text) => {
+  // Создаем временный элемент textarea
+  const textarea = document.createElement("textarea")
+  textarea.value = text
+  document.body.appendChild(textarea)
+
+  // Выделяем текст в элементе
+  textarea.select()
+  document.execCommand("copy")
+
+  // Удаляем временный элемент
+  document.body.removeChild(textarea)
+
+  // Опционально: показать сообщение об успешном копировании
+  alert("Ссылка скопирована в буфер обмена. Отправьте ее соисполнителю и получите такую же ссылку от него")
+}

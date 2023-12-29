@@ -28,44 +28,65 @@ export async function greetWorld(message) {
   return await runNeo4jQuery(cypherQuery, queryParameters)
 }
 
-export async function syncTasksWithNeo4j(userId, incomingTasks) {
+export async function syncTasksNeo4j(userName, userId, incomingScribes) {
   console.log("userId", userId)
-  console.log("incomingTasks", incomingTasks)
+  console.log("incomingScribes", incomingScribes)
+
   const cypherQuery = `
-MERGE (user:User {id: $userId})
-WITH user
-UNWIND $incomingTasks AS incomingTask
-MERGE (task:Task {id: incomingTask.id})
-ON CREATE SET task += incomingTask, task.fromIds = NULL, task.toIds = NULL
-ON MATCH SET task += incomingTask, task.fromIds = NULL, task.toIds = NULL
-MERGE (user)-[:HAS_TASK]->(task)
-WITH user, task, incomingTask.fromIds AS fromIds, incomingTask.toIds AS toIds
+    MERGE (user:User {id: $userId})
+    SET user.name = $userName
+    WITH user
+    UNWIND $incomingScribes AS incomingScribe
+    MERGE (task:Task {id: incomingScribe.id})
+    ON CREATE SET task += incomingScribe, task.fromIds = NULL, task.toIds = NULL
+    ON MATCH SET task += incomingScribe, task.fromIds = NULL, task.toIds = NULL
+    MERGE (user)-[:HAS_SCRIBE]->(task)
+    WITH user, task, incomingScribe.fromIds AS fromIds, incomingScribe.toIds AS toIds
 
-// Удаление старых связей OPENS
-OPTIONAL MATCH (task)-[oldRelation:OPENS]->()
-DELETE oldRelation
-WITH task, toIds
+    // Удаление старых связей OPENS
+    OPTIONAL MATCH (task)-[oldRelation:OPENS]->()
+    DELETE oldRelation
+    WITH task, toIds
 
-// Обработка связей TO
-FOREACH (toId IN toIds | 
-  MERGE (toTask:Task {id: toId})
-  MERGE (task)-[:OPENS]->(toTask)
+    // Обработка связей TO
+    FOREACH (toId IN toIds | 
+      MERGE (toTask:Task {id: toId})
+      MERGE (task)-[:OPENS]->(toTask)
 )
 `
+  const queryParameters = { userName, userId, incomingScribes }
 
-  const queryParameters = { userId, incomingTasks }
+  return await runNeo4jQuery(cypherQuery, queryParameters)
+}
+
+export async function addCollaboratorNeo4j(userId, collaboratorId) {
+  console.log("newcollaborator")
+  const cypherQuery = `
+    // Находим или создаем узел пользователя-инициатора
+    MERGE (initiator:User {id: $userId})
+    WITH initiator
+    // Находим или создаем узел пользователя-коллаборатора
+    MERGE (collaborator:User {id: $collaboratorId})
+    // Создаем связь ASSIGNS_TASKS_TO от инициатора к коллаборатору
+    MERGE (initiator)-[:ASSIGNS_TASKS_TO]->(collaborator)
+  `
+
+  const queryParameters = {
+    userId,
+    collaboratorId,
+  }
 
   return await runNeo4jQuery(cypherQuery, queryParameters)
 }
 
 export async function loadDataFromNeo4j(userId) {
   const cypherQuery = `
-   MATCH (user:User {id: $userId})-[:HAS_TASK]->(task:Task)
-OPTIONAL MATCH (task)-[:OPENS]->(toTask:Task)
-WITH task, collect(toTask.id) AS toIds
-OPTIONAL MATCH (fromTask:Task)-[:OPENS]->(task)
-WITH task, toIds, collect(fromTask.id) AS fromIds
-RETURN collect({task: task, toIds: toIds, fromIds: fromIds}) AS tasks
+  MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(scribe)
+OPTIONAL MATCH (scribe)-[:OPENS]->(toTask:Task)
+WITH scribe, collect(toTask.id) AS toIds
+OPTIONAL MATCH (fromTask:Task)-[:OPENS]->(scribe)
+WITH scribe, toIds, collect(fromTask.id) AS fromIds
+RETURN collect({task: scribe, toIds: toIds, fromIds: fromIds}) AS tasks
   `
   const queryParameters = { userId }
   const result = await runNeo4jQuery(cypherQuery, queryParameters)
@@ -75,25 +96,9 @@ RETURN collect({task: task, toIds: toIds, fromIds: fromIds}) AS tasks
     const fromIds = taskRecord.fromIds
     return { ...task, toIds, fromIds }
   })
-  console.log("load", tasks)
+  // console.log("load", tasks)
   return tasks
 }
-
-// export async function loadDataFromNeo4j(userId) {
-//   const cypherQuery = `
-//     MATCH (user:User {id: $userId})-[:HAS_TASK]->(task:Task)
-//     RETURN collect(task) AS tasks
-//   `
-//   const queryParameters = { userId }
-//   const result = await runNeo4jQuery(cypherQuery, queryParameters)
-//   if (result && result[0]) {
-//     const tasks = result[0].get("tasks").map((task) => task.properties)
-//     console.log("load", tasks)
-//     return tasks
-//   } else {
-//     return null
-//   }
-// }
 
 export async function updateCleanupTimeNeo4j(userId) {
   const updateCleanupTimeQuery = `
