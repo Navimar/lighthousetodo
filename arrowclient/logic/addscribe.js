@@ -20,6 +20,8 @@ export default (name, fromIds = [], toIds = []) => {
     fromIds: fromIds,
     toIds: toIds,
     timestamp: dayjs().valueOf(),
+    assignedBy: [],
+    assignedTo: [],
   }
 
   data.tasks.push(newTask)

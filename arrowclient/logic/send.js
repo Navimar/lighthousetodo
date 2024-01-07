@@ -29,6 +29,8 @@ export function inputSocket() {
   })
   socket.on("update", function (msg) {
     data.tasks = syncTasks(data.tasks, msg?.tasks)
+    reData.collaborators = msg?.collaborators
+    console.log("msg", msg)
     safeSetLocalStorageItem("tasks", data.tasks)
     makevisible()
   })
@@ -76,7 +78,7 @@ const addCollaboratorPermissonRequest = (collaboratorId) => {
 }
 
 export const sendCollaboratorPermisson = async (collaborator) => {
-  console.log("sendCollaboratorPermisson")
+  // console.log("sendCollaboratorPermisson")
   if (collaborator) addCollaboratorPermissonRequest(collaborator)
   if (data.pendingRequests) {
     for (let pendingPacket of data.pendingRequests) {
@@ -106,7 +108,7 @@ const sendPacket = async (packet) => {
         },
         data: packet,
       }
-      console.log("sentData", sentData)
+      // console.log("sentData", sentData)
       socket.emit("save", sentData)
     } catch (error) {
       console.error("Error sending data:", error)

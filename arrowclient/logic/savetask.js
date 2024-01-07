@@ -26,19 +26,37 @@ export default (m) => {
 
   // добываем массив строк из фром и ту
   // добываем массив ID из фром и ту
-  const fromEditIds = fromEdit.innerText
+  let fromEditIds = []
+  let toEditIds = []
+  let assignedBy = []
+  let assignedTo = []
+
+  fromEdit.innerText
     .trim()
     .split("\n")
-    .filter((name) => name.trim() !== "") // Фильтрация пустых строк
-    .map((name) => getObjectByName(name).id) // Используем функцию getObjectByName
+    .filter((name) => name.trim() !== "")
+    .forEach((name) => {
+      if (name.startsWith("@")) {
+        assignedTo.push(name.substring(1))
+      } else {
+        fromEditIds.push(getObjectByName(name).id)
+      }
+    })
 
-  const toEditIds = toEdit.innerText
+  toEdit.innerText
     .trim()
     .split("\n")
-    .filter((name) => name.trim() !== "") // Фильтрация пустых строк
-    .map((name) => getObjectByName(name).id)
-    .filter((id) => !fromEditIds.includes(id)) // Удаление из toEditIds всех ID, которые уже есть в fromEditIds
-
+    .filter((name) => name.trim() !== "")
+    .forEach((name) => {
+      if (name.startsWith("@")) {
+        assignedBy.push(name.substring(1))
+      } else {
+        let id = getObjectByName(name).id
+        if (!fromEditIds.includes(id)) {
+          toEditIds.push(id)
+        }
+      }
+    })
   // добаываем дату и время из инпутов
   const timeInput = document.getElementById("timeInput").value
   const dateInput = document.getElementById("dateInput").value
@@ -101,6 +119,9 @@ export default (m) => {
 
   thisTask.fromIds = fromEditIds
   thisTask.toIds = toEditIds
+
+  thisTask.assignedTo = assignedTo
+  thisTask.assignedBy = assignedBy
 
   thisTask.time = timeInput
   thisTask.date = dateInput

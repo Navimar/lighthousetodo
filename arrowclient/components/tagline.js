@@ -31,13 +31,17 @@ export default (givenTask, direction) => {
     })
   }
 
+  const assignedField = direction === "from" ? "assignedTo" : "assignedBy"
+  const assignedIds = givenTask[assignedField]
+  // console.log("assignedIds", direction, assignedIds, givenTask)
+
   const sortTasksByName = (a, b) => a.name.localeCompare(b.name)
   notReadyTasks.sort(sortTasksByName)
   notReadyFutureTasks.sort(sortTasksByName)
   readyTasks.sort(sortTasksByName)
 
   return html`<div class="text-sm empty:hidden flex flex-wrap gap-1 tagLine"
-    >${() =>
+    >${() => assignedIds?.map((collaborator) => html`<div class="bg-alternative-700 p-1">${collaborator}</div>`)}${() =>
       notReadyTasks.map((task) => {
         return html`<div
           @click="${(e) => {

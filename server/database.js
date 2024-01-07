@@ -29,8 +29,8 @@ export async function greetWorld(message) {
 }
 
 export async function syncTasksNeo4j(userName, userId, incomingScribes) {
-  console.log("userId", userId)
-  console.log("incomingScribes", incomingScribes)
+  // console.log("userId", userId)
+  // console.log("incomingScribes", incomingScribes)
 
   const cypherQuery = `
     MERGE (user:User {id: $userId})
@@ -41,18 +41,40 @@ export async function syncTasksNeo4j(userName, userId, incomingScribes) {
     ON CREATE SET task += incomingScribe, task.fromIds = NULL, task.toIds = NULL
     ON MATCH SET task += incomingScribe, task.fromIds = NULL, task.toIds = NULL
     MERGE (user)-[:HAS_SCRIBE]->(task)
-    WITH user, task, incomingScribe.fromIds AS fromIds, incomingScribe.toIds AS toIds
+    WITH user, task, incomingScribe.fromIds AS fromIds, incomingScribe.toIds AS toIds, incomingScribe.assignedTo AS assignedTo, incomingScribe.assignedBy AS assignedBy
 
     // Удаление старых связей OPENS
-    OPTIONAL MATCH (task)-[oldRelation:OPENS]->()
-    DELETE oldRelation
-    WITH task, toIds
+    OPTIONAL MATCH (task)-[oldOpenRelation:OPENS]->()
+    DELETE oldOpenRelation
+    WITH user, task, toIds, assignedTo, assignedBy
+
+    // Удаление старых связей ASSIGNED_TO
+    OPTIONAL MATCH (task)-[oldAssignedToRelation:ASSIGNED_TO]->()
+    DELETE oldAssignedToRelation
+    WITH user, task, toIds, assignedTo, assignedBy
+
+    // Удаление старых связей ASSIGNED_BY
+    OPTIONAL MATCH (task)-[oldAssignedByRelation:ASSIGNED_BY]->()
+    DELETE oldAssignedByRelation
+    WITH user, task, toIds, assignedTo, assignedBy
 
     // Обработка связей TO
     FOREACH (toId IN toIds | 
       MERGE (toTask:Task {id: toId})
       MERGE (task)-[:OPENS]->(toTask)
-)
+    )
+
+    // Обработка связей ASSIGNED_TO
+    FOREACH (assignToId IN assignedTo | 
+      MERGE (assignToUser:User {id: assignToId})
+      MERGE (task)-[:ASSIGNED_TO]->(assignToUser)
+    )
+
+    // Обработка связей ASSIGNED_BY
+    FOREACH (assignById IN assignedBy | 
+      MERGE (assignByUser:User {id: assignById})
+      MERGE (assignByUser)-[:ASSIGNED_BY]->(task)
+    )
 `
   const queryParameters = { userName, userId, incomingScribes }
 
@@ -81,12 +103,16 @@ export async function addCollaboratorNeo4j(userId, collaboratorId) {
 
 export async function loadDataFromNeo4j(userId) {
   const cypherQuery = `
-  MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(scribe)
-OPTIONAL MATCH (scribe)-[:OPENS]->(toTask:Task)
-WITH scribe, collect(toTask.id) AS toIds
-OPTIONAL MATCH (fromTask:Task)-[:OPENS]->(scribe)
-WITH scribe, toIds, collect(fromTask.id) AS fromIds
-RETURN collect({task: scribe, toIds: toIds, fromIds: fromIds}) AS tasks
+    MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(scribe)
+    OPTIONAL MATCH (scribe)-[:OPENS]->(toTask:Task)
+    
+    WITH user, scribe, collect(toTask.id) AS toIds
+    OPTIONAL MATCH (fromTask:Task)-[:OPENS]->(scribe)
+
+    WITH user, scribe, toIds, collect(fromTask.id) AS fromIds
+    OPTIONAL MATCH (user)-[:ASSIGNS_TASKS_TO]->(collaborator:User)
+    WITH scribe, toIds, fromIds, collect(collaborator.id) AS collaboratorIds
+    RETURN collect({task: scribe, toIds: toIds, fromIds: fromIds}) AS tasks, collaboratorIds
   `
   const queryParameters = { userId }
   const result = await runNeo4jQuery(cypherQuery, queryParameters)
@@ -96,8 +122,10 @@ RETURN collect({task: scribe, toIds: toIds, fromIds: fromIds}) AS tasks
     const fromIds = taskRecord.fromIds
     return { ...task, toIds, fromIds }
   })
-  // console.log("load", tasks)
-  return tasks
+  const collaborators = result[0].get("collaboratorIds")
+
+  console.log("load", tasks, collaborators)
+  return { tasks, collaborators }
 }
 
 export async function updateCleanupTimeNeo4j(userId) {

@@ -30,6 +30,7 @@ module.exports = {
         },
         alternative: {
           900: "#201020",
+          700: "#503250",
           200: "#f6e6fc",
           100: "#f7f0fa",
           DEFAULT: "#150515",

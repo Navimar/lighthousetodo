@@ -108,7 +108,7 @@ export let inputSocket = (io) => {
         return
       }
 
-      socket.emit("update", { tasks: data })
+      socket.emit("update", { tasks: data.tasks, collaborators: data.collaborators })
 
       // // Обновление данных о последней очистке и удаление старых задач, если это необходимо
       // const timeSinceLastCleanup = Date.now() - (data.lastCleanup || 0)

@@ -64,6 +64,7 @@ export default (task) => html`
       tabindex="0"
       @click="${handleDivClick}"
       @input="${handleInput}">
+      ${task.assignedTo?.map((id) => html`<div>@${id}</div>`)}
       ${task.fromIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}
     </div>
     ${() => renderAutocomplete("fromEdit")}
@@ -77,6 +78,7 @@ export default (task) => html`
       tabindex="0"
       @click="${handleDivClick}"
       @input="${handleInput}">
+      ${task.assignedBy?.map((id) => html`<div>@${id}</div>`)}
       ${task.toIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}
     </div>
     ${() => renderAutocomplete("toEdit")}
