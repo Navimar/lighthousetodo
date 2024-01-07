@@ -10,5 +10,9 @@
       "src": "/(.*)",
       "dest": "/app.js"
     }
-  ]
+  ],
+  "scripts": {
+    "build": "cd arrowclient && vite build",
+    "install": "npm install && cd arrowclient && npm install"
+  }
 }
