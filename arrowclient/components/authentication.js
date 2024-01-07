@@ -6,9 +6,17 @@ import reData from "~/logic/reactive.js"
 import { copyToClipboard } from "~/logic/util.js"
 import { addCollaborator } from "~/logic/collaborator.js"
 import data from "~/logic/data.js"
-
 import css from "/css.js"
-import firebaseConfig from "~/firebase.config.js"
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCkM0TYkdv3XK4WxlEaZ36JJisO0N55Qoo",
+  authDomain: "adastratodo.firebaseapp.com",
+  databaseURL: "https://adastratodo-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "adastratodo",
+  storageBucket: "adastratodo.appspot.com",
+  messagingSenderId: "472351514743",
+  appId: "1:472351514743:web:9d7c8892cc216443e06672",
+}
 initializeApp(firebaseConfig)
 
 let collaboratorLink = () => {

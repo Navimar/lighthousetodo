@@ -30,7 +30,7 @@ export function inputSocket() {
   socket.on("update", function (msg) {
     data.tasks = syncTasks(data.tasks, msg?.tasks)
     reData.collaborators = msg?.collaborators
-    console.log("msg", msg)
+    // console.log("msg", msg)
     safeSetLocalStorageItem("tasks", data.tasks)
     makevisible()
   })
