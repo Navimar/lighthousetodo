@@ -1,16 +1,4 @@
-import config from "../config.js"
-
 export let users = []
-export let check = ({ hash, ...userData }) => {
-  if (userData["id"] == "sandbox") return true
-  const secretKey = crypto.createHash("sha256").update(config.token).digest()
-  const dataCheckString = Object.keys(userData)
-    .sort()
-    .map((key) => `${key}=${userData[key]}`)
-    .join("\n")
-  const hmac = crypto.createHmac("sha256", secretKey).update(dataCheckString).digest("hex")
-  return hmac === hash
-}
 export let addUser = (name, id, socket) => {
   const maxSocketsPerUser = 10 // Максимальное количество сокетов на одного пользователя
 

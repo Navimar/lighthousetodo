@@ -1,6 +1,6 @@
 import { inputSocket } from "./server/socket.js"
-import config from "./config.js"
-
+import dotenv from "dotenv"
+dotenv.config()
 import express from "express"
 import http from "http"
 import { Server as SocketIOServer } from "socket.io"
@@ -22,8 +22,6 @@ app.get("*", function (req, res) {
 
 inputSocket(io)
 
-const { port, ip } = config
-
-server.listen(port, ip, function () {
-  console.log(`lighthouse server listening on ${ip}:${port}`)
+server.listen(process.env.PORT, process.env.IP, function () {
+  console.log(`lighthouse server listening on ${process.env.IP}:${process.env.PORT}`)
 })
