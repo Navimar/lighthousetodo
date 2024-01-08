@@ -13,6 +13,7 @@ async function runNeo4jQuery(cypherQuery, queryParameters) {
   const session = driver.session()
   try {
     const result = await session.run(cypherQuery, queryParameters)
+    console.log(cypherQuery, queryParameters, result)
     return result.records // Возвращаем результаты запроса
   } catch (error) {
     console.error("Произошла ошибка:", error)
