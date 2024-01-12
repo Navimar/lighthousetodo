@@ -20,10 +20,10 @@ export default (task, additionalClass = "") => {
     } else if (taskDate.isBefore(now.startOf("day"))) {
       // Если задача была вчера
       return "вчера"
-    } else if (task.type == "deadline" && taskDate.isSame(now, "day")) {
+    } else if (task.consequence == "onDay" && taskDate.isSame(now, "day")) {
       // Если задача была сегодня
       return "сегодня"
-    } else if (task.type == "deadline") {
+    } else if (task.consequence == "onDay") {
       return dayjs(task.date).format("DD.MM")
     } else return ""
   }

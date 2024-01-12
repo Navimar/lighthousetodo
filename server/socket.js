@@ -33,7 +33,7 @@ export let inputSocket = (io) => {
     })
 
     socket.on("save", async (msg) => {
-      console.log("msg", msg)
+      // console.log("msg", msg)
 
       // Если токена нет, сразу отправляем ошибку
       if (!msg?.user?.token) {

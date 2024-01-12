@@ -62,11 +62,19 @@ export default (m) => {
   const dateInput = document.getElementById("dateInput").value
 
   // добываем данные из радио
-  let radios = document.getElementsByName("typeradio")
-  let choosenradio = false
-  for (let i = 0; i < radios.length; i++) {
-    if (radios[i].checked) {
-      choosenradio = radios[i].value // Выводим значение выбранного элемента
+  let typeRadios = document.getElementsByName("timePeriod")
+  let priorityRadioType = false
+  for (let i = 0; i < typeRadios.length; i++) {
+    if (typeRadios[i].checked) {
+      priorityRadioType = typeRadios[i].value // Выводим значение выбранного элемента
+      break // Выходим из цикла, так как радио-кнопка найдена
+    }
+  }
+  let durationRadios = document.getElementsByName("consequenceDuration")
+  let priorityRadioConsequence = false
+  for (let i = 0; i < durationRadios.length; i++) {
+    if (durationRadios[i].checked) {
+      priorityRadioConsequence = durationRadios[i].value // Выводим значение выбранного элемента
       break // Выходим из цикла, так как радио-кнопка найдена
     }
   }
@@ -115,7 +123,8 @@ export default (m) => {
   thisTask.name = name
   thisTask.note = note
 
-  if (choosenradio) thisTask.type = choosenradio
+  if (priorityRadioType) thisTask.type = priorityRadioType
+  if (priorityRadioConsequence) thisTask.consequence = priorityRadioConsequence
 
   thisTask.fromIds = fromEditIds
   thisTask.toIds = toEditIds
