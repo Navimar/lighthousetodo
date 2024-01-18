@@ -54,7 +54,7 @@ export default (task) => html`
         value="onTime"
         class="hidden peer"
         ${checkedType(task, "onTime")} />
-      <label for="onTime" class="${css.radio}"> Время </label>
+      <label for="onTime" class="${css.radio}"> Ко времени </label>
     </div>
 
     <!-- Радиокнопки для выбора длительности последствий -->
@@ -66,7 +66,7 @@ export default (task) => html`
         value="daysDuration"
         class="hidden peer"
         ${checkedConsequence(task, "daysDuration")} />
-      <label for="daysDuration" class="${css.radio}"> Дни </label>
+      <label for="daysDuration" class="${css.radio}"> Обычно </label>
     </div>
 
     <div>
@@ -77,7 +77,7 @@ export default (task) => html`
         value="weeksDuration"
         class="hidden peer"
         ${checkedConsequence(task, "weeksDuration")} />
-      <label for="weeksDuration" class="${css.radio}"> Недели </label>
+      <label for="weeksDuration" class="${css.radio}"> Заметно </label>
     </div>
 
     <div>
@@ -88,7 +88,7 @@ export default (task) => html`
         value="monthsDuration"
         class="hidden peer"
         ${checkedConsequence(task, "monthsDuration")} />
-      <label for="monthsDuration" class="${css.radio}"> Месяцы </label>
+      <label for="monthsDuration" class="${css.radio}"> Важно </label>
     </div>
 
     <div>
@@ -99,7 +99,7 @@ export default (task) => html`
         value="yearsDuration"
         class="hidden peer"
         ${checkedConsequence(task, "yearsDuration")} />
-      <label for="yearsDuration" class="${css.radio}"> Годы </label>
+      <label for="yearsDuration" class="${css.radio}"> Критично </label>
     </div>
   </div>
 `

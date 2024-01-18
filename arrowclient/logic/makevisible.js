@@ -124,9 +124,6 @@ export const sort = (arrToSort = reData.visibleTasks) => {
       if (!datetimeA.isSame(datetimeB)) return datetimeA.isAfter(datetimeB) ? 1 : -1
     }
 
-    console.log(a.name, "aPriority.points", aPriority.points)
-    console.log(b.name, "bPriority.points", bPriority.points)
-
     if (aPriority.points > bPriority.points) return 1
     if (aPriority.points < bPriority.points) return -1
 
