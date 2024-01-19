@@ -30,6 +30,7 @@ export default (task, additionalClass = "") => {
   }
 
   const timeClass = () => {
+    if (task.type == "longTerm") return "hidden"
     if (task.consequence == "yearsDuration" && isInPast)
       return "text-neutral-100 dark:text-neutral-200 bg-accent dark:bg-accent-dark border-transparent"
     if (task.consequence == "yearsDuration")

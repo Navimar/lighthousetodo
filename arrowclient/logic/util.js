@@ -67,7 +67,7 @@ function getCurrentLine() {
 }
 
 export function getLocalStorageItem(key) {
-  return undefined
+  // return undefined
 
   try {
     const value = localStorage.getItem(key)
@@ -79,7 +79,7 @@ export function getLocalStorageItem(key) {
 }
 
 export function safeSetLocalStorageItem(key, value) {
-  return false
+  // return false
 
   try {
     const serializedValue = JSON.stringify(value)
