@@ -130,11 +130,12 @@ export const sort = (arrToSort = reData.visibleTasks) => {
     let bIsFuture = datetimeB.isAfter(now)
 
     // Если одна задача в будущем, а другая в прошлом, возвращаем будущую первой
-    if (aIsFuture && !bIsFuture) return -1
-    if (!aIsFuture && bIsFuture) return 1
+    if (aIsFuture && aPriority.type == "onTime" && !bIsFuture) return -1
+    if (!aIsFuture && bIsFuture && bPriority.type == "onTime") return 1
 
     // Если обе задачи в будущем, сравниваем их по времени
-    if (aIsFuture && bIsFuture) return datetimeA.isAfter(datetimeB) ? 1 : -1
+    if (aIsFuture && aPriority.type == "onTime" && bIsFuture && bPriority.type == "onTime")
+      return datetimeA.isAfter(datetimeB) ? 1 : -1
 
     if (aPriority.points > bPriority.points) return 1
     if (aPriority.points < bPriority.points) return -1
