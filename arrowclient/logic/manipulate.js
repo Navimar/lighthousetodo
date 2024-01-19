@@ -61,29 +61,44 @@ export function updateDateClass() {
   }
 }
 
-export function updateButtons() {
-  const readyCheckbox = document.getElementById("readyCheckbox")
+export function showSaveButtonHidePause() {
+  const saveButton = document.getElementById("savebutton")
   const pauseCheckbox = document.getElementById("pauseCheckbox")
   const pauseCheckboxLabel = document.getElementById("pauseCheckboxLabel")
-  const saveButton = document.getElementById("savebutton") // Предполагаем, что кнопка "Сохранить" имеет id="savebutton"
+  if (saveButton && pauseCheckbox && pauseCheckboxLabel) {
+    saveButton.style.display = "block"
+    pauseCheckbox.style.display = "none"
+    pauseCheckboxLabel.style.display = "none"
+  }
+}
 
-  if (readyCheckbox && pauseCheckbox && saveButton) {
-    const currentDate = dayjs()
-    const dateInputValue = document.getElementById("dateInput").value
-    const timeInputValue = document.getElementById("timeInput").value
-    const inputDateTime = dayjs(`${dateInputValue}T${timeInputValue}`)
+function hideSaveButtonShowPause() {
+  const saveButton = document.getElementById("savebutton")
+  const pauseCheckbox = document.getElementById("pauseCheckbox")
+  const pauseCheckboxLabel = document.getElementById("pauseCheckboxLabel")
 
-    const isTaskReady = readyCheckbox.checked
-    const isTaskFuture = inputDateTime.isAfter(currentDate) || inputDateTime.isSame(currentDate, "minute")
-    if (isTaskReady || isTaskFuture) {
-      saveButton.style.display = "block"
-      pauseCheckbox.style.display = "none"
-      pauseCheckboxLabel.style.display = "none"
-    } else {
-      saveButton.style.display = "none"
-      pauseCheckbox.style.display = "block"
-      pauseCheckboxLabel.style.display = "block"
-    }
+  if (saveButton && pauseCheckbox && pauseCheckboxLabel) {
+    saveButton.style.display = "none"
+    pauseCheckbox.style.display = "block"
+    pauseCheckboxLabel.style.display = "block"
+  }
+}
+
+export function updateButtons() {
+  const readyCheckbox = document.getElementById("readyCheckbox")
+  const currentDate = dayjs()
+  const dateInputValue = document.getElementById("dateInput")?.value
+  const timeInputValue = document.getElementById("timeInput")?.value
+  let inputDateTime
+  if (dateInputValue && timeInputValue) inputDateTime = dayjs(`${dateInputValue}T${timeInputValue}`)
+
+  const isTaskReady = readyCheckbox?.checked
+  const isTaskFuture = inputDateTime?.isAfter(currentDate) || inputDateTime?.isSame(currentDate, "minute")
+
+  if (isTaskReady || isTaskFuture) {
+    showSaveButtonHidePause()
+  } else {
+    hideSaveButtonShowPause()
   }
 }
 

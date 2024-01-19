@@ -41,7 +41,10 @@ export default (givenTask, direction) => {
   readyTasks.sort(sortTasksByName)
 
   return html`<div class="text-sm empty:hidden flex flex-wrap gap-1 tagLine"
-    >${() => assignedIds?.map((collaborator) => html`<div class="bg-alternative-700 p-1">${collaborator}</div>`)}${() =>
+    >${() =>
+      assignedIds?.map(
+        (collaborator) => html`<div class="bg-alternative-200 dark:bg-alternative-700 p-1">${collaborator}</div>`,
+      )}${() =>
       notReadyTasks.map((task) => {
         return html`<div
           @click="${(e) => {

@@ -29,7 +29,8 @@ export function inputSocket() {
   })
   socket.on("update", function (msg) {
     data.tasks = syncTasks(data.tasks, msg?.tasks)
-    reData.collaborators = msg?.collaborators
+    reData.collaborators = msg?.collaborators || []
+    reData.collaborationsRequests = msg?.collaborationsRequests || []
     // console.log("msg", msg)
     safeSetLocalStorageItem("tasks", data.tasks)
     makevisible()
@@ -68,7 +69,7 @@ const addTaskRequest = (changedTasks) => {
   safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
 }
 
-const addCollaboratorPermissonRequest = (collaboratorId) => {
+const addCollaboratorRequest = (collaboratorId) => {
   const packet = {
     collaboratorId,
     requestId: uuidv4(),
@@ -77,9 +78,9 @@ const addCollaboratorPermissonRequest = (collaboratorId) => {
   safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
 }
 
-export const sendCollaboratorPermisson = async (collaborator) => {
+export const sendCollaboratorRequest = async (collaborator) => {
   // console.log("sendCollaboratorPermisson")
-  if (collaborator) addCollaboratorPermissonRequest(collaborator)
+  if (collaborator) addCollaboratorRequest(collaborator)
   if (data.pendingRequests) {
     for (let pendingPacket of data.pendingRequests) {
       await sendPacket(pendingPacket)

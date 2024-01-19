@@ -4,7 +4,7 @@ import online from "./components/online.js"
 import search from "./components/search.js"
 import plusbutton from "./components/plusbutton.js"
 import { renderTasks } from "./components/tasks.js"
-import { renderCollabortors } from "./components/collaborators.js"
+import { renderCollabortors, renderCollaborationRequests } from "./components/collaborators.js"
 import { inputSocket } from "~/logic/send.js"
 import { NEWSCRIBETEXT } from "~/logic/const.js"
 import { updateDateClass, updateButtons } from "~/logic/manipulate.js"
@@ -31,7 +31,8 @@ const app = document.getElementById("App")
 const render = html`
   ${() => search()}
   <div class="flex flex-col gap-6 pb-80 max-w-full w-40rem px-3 m-auto">
-    ${() => authentication()} ${() => renderCalendar(dayjs())} ${() => renderCollabortors()} ${() => renderTasks()}
+    ${() => authentication()} ${() => renderCalendar(dayjs())} ${() => renderCollaborationRequests()}
+    ${() => renderCollabortors()} ${() => renderTasks()}
   </div>
   ${plusbutton} ${() => online()}
 `

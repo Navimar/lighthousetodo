@@ -1,5 +1,6 @@
 import { html } from "@arrow-js/core"
 import css from "~/css.js"
+import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 
 let checkedType = (task, type) => {
   if (task.type == type) return "checked"
@@ -20,6 +21,7 @@ export default (task) => html`
         name="timePeriod"
         value="longTerm"
         class="hidden peer"
+        @change="${handleRadioChange}"
         ${checkedType(task, "longTerm")} />
       <label for="longTerm" class="${css.radio}"> Окно </label>
     </div>
@@ -31,6 +33,7 @@ export default (task) => html`
         name="timePeriod"
         value="shortTerm"
         class="hidden peer"
+        @change="${handleRadioChange}"
         ${checkedType(task, "shortTerm")} />
       <label for="shortTerm" class="${css.radio}"> На днях </label>
     </div>
@@ -42,6 +45,7 @@ export default (task) => html`
         name="timePeriod"
         value="onDay"
         class="hidden peer"
+        @change="${handleRadioChange}"
         ${checkedType(task, "onDay")} />
       <label for="onDay" class="${css.radio}"> Срочно </label>
     </div>
@@ -53,6 +57,7 @@ export default (task) => html`
         name="timePeriod"
         value="onTime"
         class="hidden peer"
+        @change="${handleRadioChange}"
         ${checkedType(task, "onTime")} />
       <label for="onTime" class="${css.radio}"> Ко времени </label>
     </div>
@@ -65,6 +70,7 @@ export default (task) => html`
         name="consequenceDuration"
         value="daysDuration"
         class="hidden peer"
+        @change="${handleRadioChange}"
         ${checkedConsequence(task, "daysDuration")} />
       <label for="daysDuration" class="${css.radio}"> Обычно </label>
     </div>
@@ -76,6 +82,7 @@ export default (task) => html`
         name="consequenceDuration"
         value="weeksDuration"
         class="hidden peer"
+        @change="${handleRadioChange}"
         ${checkedConsequence(task, "weeksDuration")} />
       <label for="weeksDuration" class="${css.radio}"> Заметно </label>
     </div>
@@ -87,6 +94,7 @@ export default (task) => html`
         name="consequenceDuration"
         value="monthsDuration"
         class="hidden peer"
+        @change="${handleRadioChange}"
         ${checkedConsequence(task, "monthsDuration")} />
       <label for="monthsDuration" class="${css.radio}"> Важно </label>
     </div>
@@ -98,8 +106,13 @@ export default (task) => html`
         name="consequenceDuration"
         value="yearsDuration"
         class="hidden peer"
+        @change="${handleRadioChange}"
         ${checkedConsequence(task, "yearsDuration")} />
       <label for="yearsDuration" class="${css.radio}"> Критично </label>
     </div>
   </div>
 `
+
+let handleRadioChange = () => {
+  showSaveButtonHidePause()
+}

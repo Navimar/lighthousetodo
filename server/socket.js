@@ -81,7 +81,8 @@ export let inputSocket = (io) => {
       const sockets = getUser(userId)
       sockets.forEach((s) => {
         if (s !== socket) {
-          s.emit("update", msg)
+          // console.log("Отправлено другому сокету")
+          s.emit("update", { tasks: msg.data.tasks })
         }
       })
     })
@@ -108,7 +109,11 @@ export let inputSocket = (io) => {
         return
       }
 
-      socket.emit("update", { tasks: data.tasks, collaborators: data.collaborators })
+      socket.emit("update", {
+        tasks: data.tasks,
+        collaborators: data.collaborators,
+        collaborationRequests: data.collaborationRequests,
+      })
 
       // // Обновление данных о последней очистке и удаление старых задач, если это необходимо
       // const timeSinceLastCleanup = Date.now() - (data.lastCleanup || 0)

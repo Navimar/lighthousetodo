@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-console.log(process.env.NEO4J_URI, process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
+// console.log("NEO4J connection", process.env.NEO4J_URI, process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
 const driver = neo4j.driver(
   process.env.NEO4J_URI,
   neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD),
@@ -50,13 +50,8 @@ export async function syncTasksNeo4j(userName, userId, incomingScribes) {
     WITH user, task, toIds, assignedTo, assignedBy
 
     // Удаление старых связей ASSIGNED_TO
-    OPTIONAL MATCH (task)-[oldAssignedToRelation:ASSIGNED_TO]->()
+    OPTIONAL MATCH (task)-[oldAssignedToRelation:HAS_SCRIBE]->()
     DELETE oldAssignedToRelation
-    WITH user, task, toIds, assignedTo, assignedBy
-
-    // Удаление старых связей ASSIGNED_BY
-    OPTIONAL MATCH (task)-[oldAssignedByRelation:ASSIGNED_BY]->()
-    DELETE oldAssignedByRelation
     WITH user, task, toIds, assignedTo, assignedBy
 
     // Обработка связей TO
@@ -68,13 +63,7 @@ export async function syncTasksNeo4j(userName, userId, incomingScribes) {
     // Обработка связей ASSIGNED_TO
     FOREACH (assignToId IN assignedTo | 
       MERGE (assignToUser:User {id: assignToId})
-      MERGE (task)-[:ASSIGNED_TO]->(assignToUser)
-    )
-
-    // Обработка связей ASSIGNED_BY
-    FOREACH (assignById IN assignedBy | 
-      MERGE (assignByUser:User {id: assignById})
-      MERGE (assignByUser)-[:ASSIGNED_BY]->(task)
+      MERGE (task)<-[:HAS_SCRIBE]-(assignToUser)
     )
 `
   const queryParameters = { userName, userId, incomingScribes }
@@ -90,8 +79,8 @@ export async function addCollaboratorNeo4j(userId, collaboratorId) {
     WITH initiator
     // Находим или создаем узел пользователя-коллаборатора
     MERGE (collaborator:User {id: $collaboratorId})
-    // Создаем связь ASSIGNS_TASKS_TO от инициатора к коллаборатору
-    MERGE (initiator)-[:ASSIGNS_TASKS_TO]->(collaborator)
+    // Создаем связь COLLABORATE от инициатора к коллаборатору
+    MERGE (initiator)-[:COLLABORATE]->(collaborator)
   `
 
   const queryParameters = {
@@ -111,22 +100,30 @@ export async function loadDataFromNeo4j(userId) {
     OPTIONAL MATCH (fromTask:Task)-[:OPENS]->(scribe)
 
     WITH user, scribe, toIds, collect(fromTask.id) AS fromIds
-    OPTIONAL MATCH (user)-[:ASSIGNS_TASKS_TO]->(collaborator:User)
-    WITH scribe, toIds, fromIds, collect(collaborator.id) AS collaboratorIds
-    RETURN collect({task: scribe, toIds: toIds, fromIds: fromIds}) AS tasks, collaboratorIds
+    OPTIONAL MATCH (user)-[:COLLABORATE]->(outCollaborator:User)
+    WITH user, scribe, toIds, fromIds, collect(outCollaborator.id) AS collaborationRequests
+    OPTIONAL MATCH (user)<-[:COLLABORATE]-(inCollaborator:User)
+    WITH scribe, toIds, fromIds, collaborationRequests, collect(inCollaborator.id) AS inCollaboratorIds
+    RETURN collect({task: scribe, toIds: toIds, fromIds: fromIds}) AS tasks, collaborationRequests, inCollaboratorIds
   `
   const queryParameters = { userId }
   const result = await runNeo4jQuery(cypherQuery, queryParameters)
-  const tasks = result[0].get("tasks").map((taskRecord) => {
+  const tasks = result[0]?.get("tasks").map((taskRecord) => {
     const task = taskRecord.task.properties
     const toIds = taskRecord.toIds
     const fromIds = taskRecord.fromIds
     return { ...task, toIds, fromIds }
   })
-  const collaborators = result[0].get("collaboratorIds")
+  const collaborationRequests = result[0]?.get("collaborationRequests") || []
+  const inCollaborators = result[0]?.get("inCollaboratorIds") || []
 
-  // console.log("load", tasks, collaborators)
-  return { tasks, collaborators }
+  // Находим пересечение двух массивов для определения текущих коллабораторов
+  const collaborators = collaborationRequests.filter((id) => inCollaborators.includes(id))
+
+  // Удаляем из collaborationRequests те ID, которые уже есть в collaborators
+  const filteredCollaborationRequests = collaborationRequests.filter((id) => !collaborators.includes(id))
+
+  return { tasks, collaborators, collaborationRequests: filteredCollaborationRequests }
 }
 
 export async function updateCleanupTimeNeo4j(userId) {

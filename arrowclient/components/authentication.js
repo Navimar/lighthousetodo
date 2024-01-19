@@ -4,7 +4,7 @@ import { GoogleAuthProvider, signInWithPopup, getAuth, onAuthStateChanged, signO
 import { loadData } from "~/logic/send.js"
 import reData from "~/logic/reactive.js"
 import { copyToClipboard } from "~/logic/util.js"
-import { addCollaborator } from "~/logic/collaborator.js"
+import { addCollaborationRequest } from "~/logic/collaborator.js"
 import data from "~/logic/data.js"
 import css from "/css.js"
 
@@ -121,7 +121,7 @@ export const authenticationOnLoad = () => {
       reData.user.name = firebaseUser.displayName || "Noname"
       const pathSegments = window.location.pathname.split("/")
       const collaboratorId = pathSegments[pathSegments.length - 1]
-      addCollaborator(collaboratorId)
+      addCollaborationRequest(collaboratorId)
       loadData()
     } else {
       reData.user.id = null

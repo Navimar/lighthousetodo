@@ -116,16 +116,13 @@ export const sort = (arrToSort = reData.visibleTasks) => {
     const bPriority = getMaxPriorityTypeAndConsequence(b)
 
     // Приоритет ко времени
-    if (aPriority.type == "onTime" && bPriority.type != "onTime") return -1
-    if (aPriority.type == "onTime" && bPriority.type != "onTime") return 1
+    // if (aPriority.type == "onTime" && bPriority.type != "onTime") return -1
+    // if (aPriority.type == "onTime" && bPriority.type != "onTime") return 1
 
-    // Если обе ко времени, сравниваем datetime
-    if (aPriority.type == "onTime" && bPriority.type == "onTime") {
-      if (!datetimeA.isSame(datetimeB)) return datetimeA.isAfter(datetimeB) ? 1 : -1
-    }
-
-    if (aPriority.points > bPriority.points) return 1
-    if (aPriority.points < bPriority.points) return -1
+    // // Если обе ко времени, сравниваем datetime
+    // if (aPriority.type == "onTime" && bPriority.type == "onTime") {
+    //   if (!datetimeA.isSame(datetimeB)) return datetimeA.isAfter(datetimeB) ? 1 : -1
+    // }
 
     let now = dayjs()
 
@@ -133,11 +130,14 @@ export const sort = (arrToSort = reData.visibleTasks) => {
     let bIsFuture = datetimeB.isAfter(now)
 
     // Если одна задача в будущем, а другая в прошлом, возвращаем будущую первой
-    if (aIsFuture && !bIsFuture) return 1
-    if (!aIsFuture && bIsFuture) return -1
+    if (aIsFuture && !bIsFuture) return -1
+    if (!aIsFuture && bIsFuture) return 1
 
     // Если обе задачи в будущем, сравниваем их по времени
     if (aIsFuture && bIsFuture) return datetimeA.isAfter(datetimeB) ? 1 : -1
+
+    if (aPriority.points > bPriority.points) return 1
+    if (aPriority.points < bPriority.points) return -1
 
     // // Сортировка по таймстампу предков о_О
     const maxTimestampA = getMaxTimestampFromIds(a)
