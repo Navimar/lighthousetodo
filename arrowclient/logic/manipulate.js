@@ -19,6 +19,11 @@ export function selectTaskById(identifier) {
   makevisible()
 }
 
+export function selectCollaborator(id) {
+  reData.selectedScribe = false
+  reData.selectedCollaborator = id
+}
+
 export function dateInputPauseButtonHTMLCSS() {
   let pc = document.getElementById("pauseCheckbox")
   if (pc) pc.checked = false

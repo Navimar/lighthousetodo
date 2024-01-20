@@ -2,7 +2,7 @@ import { html } from "@arrow-js/core"
 import { selectTaskById } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import { getObjectById, getDayjsDateFromTask } from "~/logic/util"
-import taskplate from "~/components/taskplate.js"
+import taskplate from "~/components/tasks/taskplate.js"
 
 import dayjs from "dayjs"
 
