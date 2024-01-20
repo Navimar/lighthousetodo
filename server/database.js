@@ -72,14 +72,14 @@ export async function syncTasksNeo4j(userName, userId, incomingScribes) {
 }
 
 export async function addCollaboratorNeo4j(userId, collaboratorId) {
-  console.log("newcollaborator")
   const cypherQuery = `
-    // Находим или создаем узел пользователя-инициатора
-    MERGE (initiator:User {id: $userId})
+   // Находим существующий узел пользователя-инициатора
+    MATCH (initiator:User {id: $userId})
     WITH initiator
     // Находим или создаем узел пользователя-коллаборатора
-    MERGE (collaborator:User {id: $collaboratorId})
-    // Создаем связь COLLABORATE от инициатора к коллаборатору
+    MATCH (collaborator:User {id: $collaboratorId})
+    WITH initiator, collaborator
+    // Создаем связь COLLABORATE от инициатора к коллаборатору, если initiator найден
     MERGE (initiator)-[:COLLABORATE]->(collaborator)
   `
 

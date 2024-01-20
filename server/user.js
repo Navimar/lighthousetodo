@@ -5,27 +5,24 @@ export let addUser = (name, id, socket) => {
   let userExists = false
   users.forEach((e) => {
     if (e.id == id) {
-      if (e.socket.indexOf(socket) == -1) {
-        if (e.socket.length >= maxSocketsPerUser) {
-          e.socket.shift() // Удалить самый старый сокет
+      if (e.sockets.indexOf(socket) == -1) {
+        if (e.sockets.length >= maxSocketsPerUser) {
+          e.sockets.shift() // Удалить самый старый сокет
         }
-        e.socket.push(socket)
+        e.sockets.push(socket)
       }
       userExists = true
     }
   })
   if (!userExists) {
-    users.push({ name, id, socket: [socket] })
+    users.push({ name, id, sockets: [socket], collaboratorDictionary: {} })
   }
 }
 
 export let getUser = (id) => {
-  let r
-  users.forEach((e) => {
-    if (e.id == id) r = e.socket
-  })
-  return r
+  return users.find((user) => user.id === id)
 }
+
 export let removeUser = (id, socket) => {
   users.forEach((e) => {
     if (e.id == id) {
@@ -36,4 +33,24 @@ export let removeUser = (id, socket) => {
       // break;
     }
   })
+}
+
+export function updateCollaboratorDictionary(userId, dic) {
+  let collaboratorId = dic.id
+  let collaboratorName = dic.name
+  let timestamp = dic.timestamp
+
+  // Получаем текущий словарь коллабораторов пользователя
+  const user = getUser(userId)
+  let currentDictionary = user.collaboratorDictionary || {}
+
+  // Проверяем, нужно ли обновить запись
+  if (!currentDictionary[collaboratorId] || timestamp > currentDictionary[collaboratorId].timestamp) {
+    // Обновляем или добавляем запись о коллабораторе
+    currentDictionary[collaboratorId] = { name: collaboratorName, timestamp: timestamp }
+  }
+
+  // Обновляем словарь коллабораторов пользователя
+  user.collaboratorDictionary = currentDictionary
+  console.log("updateCollaboratorDictionary", user.collaboratorDictionary)
 }

@@ -1,6 +1,6 @@
 import serviceAccount from "../firebase.config.js"
 import admin from "firebase-admin"
-import { addUser, getUser } from "./user.js"
+import { addUser, getUser, updateCollaboratorDictionary } from "./user.js"
 import {
   syncTasksNeo4j,
   addCollaboratorNeo4j,
@@ -33,8 +33,8 @@ export let inputSocket = (io) => {
     })
 
     socket.on("save", async (msg) => {
-      // console.log("msg", msg)
-
+      socket.emit("save-confirm", msg.data.requestId)
+      console.log("msg", msg)
       // Если токена нет, сразу отправляем ошибку
       if (!msg?.user?.token) {
         console.log(msg, "Токен не найден при загрузке")
@@ -65,7 +65,10 @@ export let inputSocket = (io) => {
           await syncTasksNeo4j(msg.user.name, userId, msg.data.tasks)
         } else if (msg.data.collaboratorId) {
           // Обработка добавления сотрудника
+          // console.log("addCollaboratorNeo4j")
           await addCollaboratorNeo4j(userId, msg.data.collaboratorId)
+        } else if (msg.data.collaboratorDictionary) {
+          updateCollaboratorDictionary(userId, msg.data.collaboratorDictionary)
         } else {
           // Если не найдено ни одного из ожидаемых полей
           throw new Error("No valid data fields found in message")
@@ -78,7 +81,7 @@ export let inputSocket = (io) => {
       }
 
       // Обновление других сокетов, если это необходимо
-      const sockets = getUser(userId)
+      const sockets = getUser(userId)?.sockets || []
       sockets.forEach((s) => {
         if (s !== socket) {
           // console.log("Отправлено другому сокету")
@@ -109,7 +112,9 @@ export let inputSocket = (io) => {
         return
       }
 
+      // console.log("user", getUser(userId))
       socket.emit("update", {
+        collaboratorDictionary: getUser(userId).collaboratorDictionary,
         tasks: data.tasks,
         collaborators: data.collaborators,
         collaborationRequests: data.collaborationRequests,

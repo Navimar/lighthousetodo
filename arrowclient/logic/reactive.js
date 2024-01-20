@@ -2,6 +2,7 @@ import { reactive } from "@arrow-js/core"
 import dayjs from "dayjs"
 
 export default reactive({
+  collaboratorDictionary: {},
   calendarSet: [],
   visibleTasks: [],
   collaborators: [],

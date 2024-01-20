@@ -67,7 +67,8 @@ window.addEventListener("load", function () {
         const range = document.createRange()
         const sel = window.getSelection()
         range.selectNodeContents(editdiv)
-        if (!getObjectById(reData.selectedScribe).name.startsWith(NEWSCRIBETEXT)) range.collapse()
+        if (reData.selectedScribe && !getObjectById(reData.selectedScribe).name.startsWith(NEWSCRIBETEXT))
+          range.collapse()
         sel.removeAllRanges()
         sel.addRange(range)
       }

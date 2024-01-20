@@ -29,8 +29,10 @@ export function inputSocket() {
   })
   socket.on("update", function (msg) {
     data.tasks = syncTasks(data.tasks, msg?.tasks)
+    //заменить на синхронизацию полноценную
     reData.collaborators = msg?.collaborators || []
     reData.collaborationsRequests = msg?.collaborationsRequests || []
+    reData.collaboratorDictionary = msg?.collaboratorDictionary || []
     // console.log("msg", msg)
     safeSetLocalStorageItem("tasks", data.tasks)
     makevisible()
@@ -60,37 +62,39 @@ socket.on("save-confirm", (responseId) => {
   safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
 })
 
-const addTaskRequest = (changedTasks) => {
+export const sendCollaboratorDictionaryRequest = async (collaboratorDictionary) => {
   const packet = {
-    tasks: changedTasks,
+    collaboratorDictionary,
     requestId: uuidv4(),
   }
   data.pendingRequests.push(packet)
-  safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
+  sendPendingRequests()
 }
-
-const addCollaboratorRequest = (collaboratorId) => {
-  const packet = {
-    collaboratorId,
-    requestId: uuidv4(),
-  }
-  data.pendingRequests.push(packet)
-  safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
-}
-
-export const sendCollaboratorRequest = async (collaborator) => {
-  // console.log("sendCollaboratorPermisson")
-  if (collaborator) addCollaboratorRequest(collaborator)
-  if (data.pendingRequests) {
-    for (let pendingPacket of data.pendingRequests) {
-      await sendPacket(pendingPacket)
+export const sendCollaboratorRequest = async (collaboratorId) => {
+  if (collaboratorId) {
+    const packet = {
+      collaboratorId,
+      requestId: uuidv4(),
     }
+    data.pendingRequests.push(packet)
+    safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
   }
+  sendPendingRequests()
 }
 
 export const sendTasksData = async (changedTasks) => {
-  console.log("sendTasksData")
-  if (changedTasks) addTaskRequest(changedTasks)
+  if (changedTasks) {
+    const packet = {
+      tasks: changedTasks,
+      requestId: uuidv4(),
+    }
+    data.pendingRequests.push(packet)
+    safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
+  }
+  sendPendingRequests()
+}
+
+const sendPendingRequests = async () => {
   if (data.pendingRequests) {
     for (let pendingPacket of data.pendingRequests) {
       await sendPacket(pendingPacket)

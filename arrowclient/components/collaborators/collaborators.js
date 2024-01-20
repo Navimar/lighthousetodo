@@ -11,15 +11,20 @@ let renderCollabortor = (collaborator, index) => {
   if (reData.selectedCollaborator == collaborator)
     return html`<div class=" w-full dark:bg-alternative-900 bg-alternative-200 text-black dark:text-white p-3">
       ${controlButtons}
-      <p>${collaborator} </p></div
-    >`
+      <p>id: ${collaborator}</p>
+      <input
+        class="text-black w-full"
+        id="collaboratorName"
+        type="text"
+        value="${reData.collaboratorDictionary[collaborator]?.name}" />
+    </div>`
   else
     return html`<div
       @click="${() => {
         selectCollaborator(collaborator)
       }}"
       class="w-full dark:bg-alternative-900 bg-alternative-200 text-black dark:text-white p-3">
-      <p class="ml-2">${collaborator}</p></div
+      <p class="ml-2">${reData.collaboratorDictionary[collaborator]?.name} <small>id: ${collaborator}</p></small></div
     > `
 }
 export let renderCollaborationRequests = () => {
