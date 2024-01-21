@@ -1,7 +1,7 @@
 import { html } from "@arrow-js/core"
 import reData from "~/logic/reactive.js"
 import { selectCollaborator } from "~/logic/manipulate.js"
-import { controlButtons } from "~/components/collaborators/controlButtons.js"
+import { controlButtons } from "~/components/collaborators/controlbuttons.js"
 
 export let renderCollabortors = () => {
   return reData.collaborators.map(renderCollabortor)
