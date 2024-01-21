@@ -32,7 +32,7 @@ export let renderCollaborationRequests = () => {
 }
 
 let renderCollaborationRequest = (collaborator, index) => {
-  return html`<div class="w-full bg-green-200 text-black dark:text-white p-3"
+  return html`<div class="w-full dark:bg-green-950 bg-green-200 text-black dark:text-white p-3"
     ><p
       @click="${() => {
         selectCollaborator(collaborator)

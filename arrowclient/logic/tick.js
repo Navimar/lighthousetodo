@@ -23,13 +23,13 @@ export let tick = () => {
       if (task.time === reData.currentTime.clock && task.date === reData.currentTime.date) {
         if (task.ready === true) {
           task.ready = false
-          needMv = true
+          // needMv = true
         }
       }
       if (task.pause) {
         // Если разница между текущим временем и task.pause больше 5 минут
         if (dayjs().diff(dayjs(task.pause), "minute") > 5) {
-          needMv = true
+          // needMv = true
           task.pause = false
         }
       }
