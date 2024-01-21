@@ -22,7 +22,7 @@ export default (task, additionalClass = "") => {
       return "сегодня"
     } else if (task.type == "onDay") {
       return dayjs(task.date).format("DD.MM")
-    } else return "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+    } else return "&nbsp;"
   }
 
   let paused = () => {
@@ -31,24 +31,24 @@ export default (task, additionalClass = "") => {
 
   const timeClass = () => {
     if (task.consequence == "yearsDuration" && isInPast) return "border-accent"
-    if (task.consequence == "yearsDuration") return "border-transparent border-b-accent "
+    if (task.consequence == "yearsDuration") return "border-transparent border-r-accent "
 
     if (task.consequence == "monthsDuration" && isInPast) return "border-yellow-500 "
-    if (task.consequence == "monthsDuration") return "border-transparent border-b-yellow-500 "
+    if (task.consequence == "monthsDuration") return "border-transparent border-r-yellow-500 "
 
     if (task.consequence == "weeksDuration" && isInPast) return "border-lime-500 "
-    if (task.consequence == "weeksDuration") return "border-transparent border-b-lime-500 "
+    if (task.consequence == "weeksDuration") return "border-transparent border-r-lime-500 "
 
     if (task.consequence == "daysDuration" && isInPast) return "border-neutral-200 dark:border-neutral-800"
-    if (task.consequence == "daysDuration") return "border-transparent border-b-neutral-200 dark:border-b-neutral-800"
+    if (task.consequence == "daysDuration") return "border-transparent border-r-neutral-200 dark:border-r-neutral-800"
     return "hidden"
   }
 
   return html`<div
-      class="h-fit box-border border-2 border-transparent font-bold text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden rounded-sm ${additionalClass}"
+      class="h-fit box-border border-2  border-transparent font-bold text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden rounded-sm ${additionalClass}"
       >${paused()}</div
     ><div
-      class="h-fit border-2 box-border text-neutral-600 dark:text-neutral-350 text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden rounded-sm ${additionalClass} ${timeClass()}"
+      class="h-fit border-2 box-border text-neutral-600 dark:text-neutral-350 text-center uppercase whitespace-nowrap fontaccent text-sm rounded-sm ${additionalClass} ${timeClass()}"
       >${getTaskTime()}</div
     >`
 }
