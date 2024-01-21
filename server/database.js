@@ -126,32 +126,32 @@ export async function loadDataFromNeo4j(userId) {
   return { tasks, collaborators, collaborationRequests: filteredCollaborationRequests }
 }
 
-export async function updateCleanupTimeNeo4j(userId) {
-  const updateCleanupTimeQuery = `
-    MATCH (user:User {id: $userId})
-    SET user.lastCleanup = timestamp()
-  `
-  const queryParameters = { userId }
+// export async function updateCleanupTimeNeo4j(userId) {
+//   const updateCleanupTimeQuery = `
+//     MATCH (user:User {id: $userId})
+//     SET user.lastCleanup = timestamp()
+//   `
+//   const queryParameters = { userId }
 
-  try {
-    const result = await runNeo4jQuery(updateCleanupTimeQuery, queryParameters)
-    return result
-  } catch (error) {
-    console.error("Ошибка при обновлении времени последней очистки:", error)
-    throw error // Перебрасываем ошибку дальше, если требуется обработка на более высоком уровне
-  }
-}
+//   try {
+//     const result = await runNeo4jQuery(updateCleanupTimeQuery, queryParameters)
+//     return result
+//   } catch (error) {
+//     console.error("Ошибка при обновлении времени последней очистки:", error)
+//     throw error // Перебрасываем ошибку дальше, если требуется обработка на более высоком уровне
+//   }
+// }
 
 export async function removeOldTasksFromNeo4j(userId) {
   const removeOldTasksQuery = `
-    MATCH (user:User {id: $userId})-[:HAS_TASK]->(task:Task {ready:TRUE})
-    WHERE task.ready = true AND (task.timestamp < ($currentTime - $DIFFERENCE_MILLISECONDS))
+    MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(task:Task {ready:TRUE})
+    WHERE task.ready = true 
+    // AND (task.timestamp < ($currentTime - $DIFFERENCE_MILLISECONDS))
     OPTIONAL MATCH (task)-[:OPENS]-(tr {ready:TRUE})
     WITH task, COLLECT(tr) AS toNodesReady
     OPTIONAL MATCH (task)-[:OPENS]-(t)
     WITH task, toNodesReady, COLLECT(t) AS toNodes
     WHERE ALL(node IN toNodes WHERE node IN toNodesReady)
-    // RETURN collect(task) AS tasks
     DETACH DELETE task
   `
 

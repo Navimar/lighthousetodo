@@ -15,7 +15,7 @@ export let addUser = (name, id, socket) => {
     }
   })
   if (!userExists) {
-    users.push({ name, id, sockets: [socket], collaboratorDictionary: {} })
+    users.push({ name, id, sockets: [socket], collaboratorDictionary: {}, lastCleanUp: Date.now() })
   }
 }
 

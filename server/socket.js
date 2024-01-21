@@ -1,13 +1,7 @@
 import serviceAccount from "../firebase.config.js"
 import admin from "firebase-admin"
 import { addUser, getUser, updateCollaboratorDictionary } from "./user.js"
-import {
-  syncTasksNeo4j,
-  addCollaboratorNeo4j,
-  loadDataFromNeo4j,
-  removeOldTasksFromNeo4j,
-  updateCleanupTimeNeo4j,
-} from "./database.js"
+import { syncTasksNeo4j, addCollaboratorNeo4j, loadDataFromNeo4j, removeOldTasksFromNeo4j } from "./database.js"
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -34,7 +28,7 @@ export let inputSocket = (io) => {
 
     socket.on("save", async (msg) => {
       socket.emit("save-confirm", msg.data.requestId)
-      console.log("msg", msg)
+      // console.log("msg", msg)
       // Если токена нет, сразу отправляем ошибку
       if (!msg?.user?.token) {
         console.log(msg, "Токен не найден при загрузке")
@@ -120,20 +114,24 @@ export let inputSocket = (io) => {
         collaborationRequests: data.collaborationRequests,
       })
 
-      // // Обновление данных о последней очистке и удаление старых задач, если это необходимо
-      // const timeSinceLastCleanup = Date.now() - (data.lastCleanup || 0)
-      // const DIFFERENCE_MILLISECONDS = 24 * 60 * 60 * 1000
-      // // 24 * 60 * 60 * 1000
+      // Обновление данных о последней очистке и удаление старых задач, если это необходимо
+      const user = getUser(userId)
+      const timeSinceLastCleanup = Date.now() - (user.lastCleanup || 0)
+      const DIFFERENCE_MILLISECONDS = 60 * 60 * 1000
+      // 24 * 60 * 60 * 1000
 
-      // if (timeSinceLastCleanup > DIFFERENCE_MILLISECONDS) {
-      //   try {
-      //     await removeOldTasksFromNeo4j(userId, data)
-      //     await updateCleanupTimeNeo4j(userId)
-      //   } catch (error) {
-      //     console.error("Ошибка при очистке старых задач или обновлении времени последней очистки:", error)
-      //     // Обработка ошибок или дальнейшие действия
-      //   }
-      // }
+      // console.log("timeSinceLastCleanup", timeSinceLastCleanup, DIFFERENCE_MILLISECONDS)
+      if (timeSinceLastCleanup > DIFFERENCE_MILLISECONDS) {
+        try {
+          // console.log("Cleanup")
+          await removeOldTasksFromNeo4j(userId, data)
+          // await updateCleanupTimeNeo4j(userId)
+          user.lastCleanup = Date.now()
+        } catch (error) {
+          console.error("Ошибка при очистке старых задач или обновлении времени последней очистки:", error)
+          // Обработка ошибок или дальнейшие действия
+        }
+      }
     })
   })
 }

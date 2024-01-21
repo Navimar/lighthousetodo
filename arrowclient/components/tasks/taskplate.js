@@ -7,14 +7,16 @@ export default (task, additionalClass = "") => {
 
   let getTaskTime = () => {
     if (task.type == "onTime") return task.time
+    // if (task.type == "longTerm") return ""
+    // if (task.type == "longTerm" && task.consequence == "daysDuration") return ""
 
     let now = dayjs()
     let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
 
-    if (taskDate.isBefore(now.startOf("day").subtract(1, "day"))) {
+    if (task.type != "longTerm" && taskDate.isBefore(now.startOf("day").subtract(1, "day"))) {
       // Если задача была два дня назад или раньше
       return "давно"
-    } else if (taskDate.isBefore(now.startOf("day"))) {
+    } else if (task.type != "longTerm" && taskDate.isBefore(now.startOf("day"))) {
       // Если задача была вчера
       return "вчера"
     } else if (task.type == "onDay" && taskDate.isSame(now, "day")) {
@@ -22,7 +24,7 @@ export default (task, additionalClass = "") => {
       return "сегодня"
     } else if (task.type == "onDay") {
       return dayjs(task.date).format("DD.MM")
-    } else return "&nbsp;"
+    } else return "&#8205;"
   }
 
   let paused = () => {
@@ -39,8 +41,8 @@ export default (task, additionalClass = "") => {
     if (task.consequence == "weeksDuration" && isInPast) return "border-lime-500 "
     if (task.consequence == "weeksDuration") return "border-transparent border-r-lime-500 "
 
-    if (task.consequence == "daysDuration" && isInPast) return "border-neutral-200 dark:border-neutral-800"
-    if (task.consequence == "daysDuration") return "border-transparent border-r-neutral-200 dark:border-r-neutral-800"
+    if (task.consequence == "daysDuration" && isInPast) return "border-neutral-350 dark:border-neutral-600"
+    if (task.consequence == "daysDuration") return "border-transparent border-r-neutral-350 dark:border-r-neutral-600"
     return "hidden"
   }
 
