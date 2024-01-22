@@ -13,6 +13,7 @@ import reData from "~/logic/reactive.js"
 import { tick } from "~/logic/tick.js"
 import data from "~/logic/data.js"
 import { getObjectById } from "~/logic/util.js"
+import { removeOldTasks } from "~/logic/forget.js"
 import { makevisible } from "~/logic/makevisible.js"
 
 import { html, watch } from "@arrow-js/core"
@@ -46,7 +47,7 @@ window.addEventListener("load", function () {
   authenticationOnLoad()
 
   data.tasks = getLocalStorageItem("tasks") || []
-  // forget()
+  removeOldTasks()
   data.pendingRequests = getLocalStorageItem("pendingRequests") || []
 
   makevisible()

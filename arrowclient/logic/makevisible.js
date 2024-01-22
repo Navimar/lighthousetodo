@@ -86,6 +86,8 @@ const getMaxPriorityTypeAndConsequence = (task, depth = 0, visited = new Set()) 
 }
 
 const getMaxTimestampFromIds = (task) => {
+  if (!task.fromIds?.length) return task.timestamp
+
   let maxTimestamp = 0
 
   task.fromIds?.forEach((id) => {
@@ -115,28 +117,25 @@ export const sort = (arrToSort = reData.visibleTasks) => {
     const aPriority = getMaxPriorityTypeAndConsequence(a)
     const bPriority = getMaxPriorityTypeAndConsequence(b)
 
-    // Приоритет ко времени
-    // if (aPriority.type == "onTime" && bPriority.type != "onTime") return -1
-    // if (aPriority.type == "onTime" && bPriority.type != "onTime") return 1
-
-    // // Если обе ко времени, сравниваем datetime
-    // if (aPriority.type == "onTime" && bPriority.type == "onTime") {
-    //   if (!datetimeA.isSame(datetimeB)) return datetimeA.isAfter(datetimeB) ? 1 : -1
-    // }
-
     let now = dayjs()
 
     let aIsFuture = datetimeA.isAfter(now)
     let bIsFuture = datetimeB.isAfter(now)
 
-    // Если одна задача в будущем, а другая в прошлом, возвращаем будущую первой
-    if (aIsFuture && aPriority.type == "onTime" && !bIsFuture) return -1
-    if (!aIsFuture && bIsFuture && bPriority.type == "onTime") return 1
+    // Приоритет будущих задач ко времени над другими
+    if (aPriority.type == "onTime" && aIsFuture && bPriority.type != "onTime") return -1
+    if (bPriority.type == "onTime" && bIsFuture && aPriority.type != "onTime") return 1
 
-    // Если обе задачи в будущем, сравниваем их по времени
-    if (aIsFuture && aPriority.type == "onTime" && bIsFuture && bPriority.type == "onTime")
-      return datetimeA.isAfter(datetimeB) ? 1 : -1
+    // Если обе ко времени и обе в будущем, сравниваем datetime
+    if (aPriority.type == "onTime" && bPriority.type == "onTime" && aIsFuture && bIsFuture) {
+      if (!datetimeA.isSame(datetimeB)) return datetimeA.isAfter(datetimeB) ? 1 : -1
+    }
 
+    // Если одна задача в будущем, а другая в прошлом, возвращаем прошлую первой
+    if (aIsFuture && !bIsFuture) return 1
+    if (!aIsFuture && bIsFuture) return -1
+
+    // Сортируем по приоритету
     if (aPriority.points > bPriority.points) return 1
     if (aPriority.points < bPriority.points) return -1
 

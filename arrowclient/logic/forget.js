@@ -2,6 +2,7 @@ import { getObjectById, getDayjsDateFromTask } from "~/logic/util"
 import dayjs from "dayjs"
 import data from "~/logic/data.js"
 import { safeSetLocalStorageItem } from "~/logic/util.js"
+import { makevisible } from "~/logic/makevisible.js"
 
 const isTaskReadyToDelete = (taskId) => {
   const task = getObjectById(taskId)
@@ -14,8 +15,8 @@ const isTaskReadyToDelete = (taskId) => {
   if (taskDate.isAfter(now)) return false
 
   // 2. Проверяем, что timestamp задачи старше месяца.
-  const monthAgo = now.subtract(1, "month")
-  if (dayjs(task.timestamp).isAfter(monthAgo)) return false
+  const timeAgo = now.subtract(1, "hour")
+  if (dayjs(task.timestamp).isAfter(timeAgo)) return false
 
   // 3. Проверяем, что задача помечена как готова.
   if (!task.ready) return false
@@ -30,10 +31,15 @@ const isTaskReadyToDelete = (taskId) => {
   return true
 }
 
-const removeOldTasks = (tasks) => {
+export const removeOldTasks = (tasks) => {
   // Фильтруем массив задач, убирая из него задачи, которые подходят для удаления
+  console.log(
+    "remove",
+    data.tasks.filter((task) => isTaskReadyToDelete(task.id)),
+  )
   data.tasks = data.tasks.filter((task) => !isTaskReadyToDelete(task.id))
   safeSetLocalStorageItem("tasks", data.tasks)
+  makevisible()
 }
 
 export default removeOldTasks

@@ -145,8 +145,7 @@ export async function loadDataFromNeo4j(userId) {
 export async function removeOldTasksFromNeo4j(userId) {
   const removeOldTasksQuery = `
     MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(task:Task {ready:TRUE})
-    WHERE task.ready = true 
-    // AND (task.timestamp < ($currentTime - $DIFFERENCE_MILLISECONDS))
+    WHERE task.ready = true AND (task.timestamp < ($currentTime - $DIFFERENCE_MILLISECONDS))
     OPTIONAL MATCH (task)-[:OPENS]-(tr {ready:TRUE})
     WITH task, COLLECT(tr) AS toNodesReady
     OPTIONAL MATCH (task)-[:OPENS]-(t)
@@ -158,7 +157,7 @@ export async function removeOldTasksFromNeo4j(userId) {
   const queryParameters = {
     userId,
     currentTime: Date.now(),
-    DIFFERENCE_MILLISECONDS: 5000,
+    DIFFERENCE_MILLISECONDS: 1000 * 60 * 60,
   }
 
   try {
