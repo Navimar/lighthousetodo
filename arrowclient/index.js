@@ -47,7 +47,7 @@ window.addEventListener("load", function () {
   authenticationOnLoad()
 
   data.tasks = getLocalStorageItem("tasks") || []
-  // removeOldTasks()
+  removeOldTasks()
   data.pendingRequests = getLocalStorageItem("pendingRequests") || []
 
   makevisible()

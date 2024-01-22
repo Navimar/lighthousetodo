@@ -29,12 +29,17 @@ const isTaskReadyToDelete = (task) => {
 }
 
 export const removeOldTasks = (tasks) => {
-  // Фильтруем массив задач, убирая из него задачи, которые подходят для удаления
-  // console.log(
-  //   "remove",
-  //   data.tasks.filter((task) => isTaskReadyToDelete(task.id)),
-  // )
-  data.tasks = data.tasks.filter((task) => !isTaskReadyToDelete(task))
+  // 1. Создаем список ID задач, которые будут удалены
+  const tasksToDelete = data.tasks.filter(isTaskReadyToDelete).map((task) => task.id)
+
+  // 2. Обновляем связи в оставшихся задачах
+  data.tasks.forEach((task) => {
+    task.fromIds = task.fromIds?.filter((id) => !tasksToDelete.includes(id)) || []
+    task.toIds = task.toIds?.filter((id) => !tasksToDelete.includes(id)) || []
+  })
+
+  // 3. Фильтруем и удаляем старые задачи
+  data.tasks = data.tasks.filter((task) => !tasksToDelete.includes(task.id))
   safeSetLocalStorageItem("tasks", data.tasks)
   makevisible()
 }
