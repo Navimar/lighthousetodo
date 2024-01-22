@@ -116,9 +116,6 @@ export default (m) => {
 
   changedTasks.push(thisTask)
 
-  //ставим временную метку
-  thisTask.timestamp = dayjs().valueOf()
-
   //сохраняем новые значение
   thisTask.name = name
   thisTask.note = note
@@ -150,9 +147,13 @@ export default (m) => {
   if (readyCheckbox && readyCheckbox.checked) thisTask.ready = true
   else thisTask.ready = false
 
-  console.log("thisTask", thisTask)
+  // console.log("thisTask", thisTask)
 
+  //удаляем дубликаты
   changedTasks = [...new Set(changedTasks)]
+
+  //ставим временную метку
+  changedTasks.forEach((task) => (task.timestamp = dayjs().valueOf()))
 
   // Отправляем массив
   safeSetLocalStorageItem("tasks", data.tasks)
