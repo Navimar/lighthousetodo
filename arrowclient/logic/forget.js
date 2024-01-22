@@ -4,10 +4,7 @@ import data from "~/logic/data.js"
 import { safeSetLocalStorageItem } from "~/logic/util.js"
 import { makevisible } from "~/logic/makevisible.js"
 
-const isTaskReadyToDelete = (taskId) => {
-  const task = getObjectById(taskId)
-  if (!task) return false
-
+const isTaskReadyToDelete = (task) => {
   const now = dayjs()
   const taskDate = getDayjsDateFromTask(task)
 
@@ -33,11 +30,11 @@ const isTaskReadyToDelete = (taskId) => {
 
 export const removeOldTasks = (tasks) => {
   // Фильтруем массив задач, убирая из него задачи, которые подходят для удаления
-  console.log(
-    "remove",
-    data.tasks.filter((task) => isTaskReadyToDelete(task.id)),
-  )
-  data.tasks = data.tasks.filter((task) => !isTaskReadyToDelete(task.id))
+  // console.log(
+  //   "remove",
+  //   data.tasks.filter((task) => isTaskReadyToDelete(task.id)),
+  // )
+  data.tasks = data.tasks.filter((task) => !isTaskReadyToDelete(task))
   safeSetLocalStorageItem("tasks", data.tasks)
   makevisible()
 }
