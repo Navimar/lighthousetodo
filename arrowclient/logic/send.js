@@ -28,7 +28,7 @@ export function inputSocket() {
     // reData.clientIsOnline = false
   })
   socket.on("update", function (msg) {
-    data.tasks = syncTasks(data.tasks, msg?.tasks)
+    syncTasks(msg?.tasks)
     //заменить на синхронизацию полноценную
     reData.collaborators = msg?.collaborators || []
     reData.collaborationsRequests = msg?.collaborationsRequests || []

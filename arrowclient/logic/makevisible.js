@@ -10,7 +10,7 @@ dayjs.extend(isSameOrAfter)
 
 export const makevisible = () => {
   const areAllFromIdsReady = (task) => {
-    if (!task?.fromIds || task.fromIds.length === 0) return true
+    if (!task?.fromIds?.length) return true
     for (let id of task.fromIds) {
       const theTask = getObjectById(id)
 

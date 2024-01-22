@@ -1,6 +1,6 @@
-export default (existingTasks = [], incomingTasks = []) => {
-  const updatedTasks = [...existingTasks]
+import data from "~/logic/data.js"
 
+export default (incomingTasks = []) => {
   for (const incomingTask of incomingTasks) {
     // Проверяем наличие ID
     if (!incomingTask.id) {
@@ -8,19 +8,14 @@ export default (existingTasks = [], incomingTasks = []) => {
       throw new Error("Incoming task is missing an ID.")
     }
 
-    // Ищем задачу с тем же id
-    const matchingTask = updatedTasks.find((t) => t.id === incomingTask.id)
+    // Ищем задачу с тем же ID
+    let matchingTask = data.tasks.find((t) => t.id === incomingTask.id)
 
-    // Обновляем задачу, если у нее нет временной метки или если входящая задача новее
-    if (!matchingTask?.timestamp || incomingTask.timestamp > matchingTask.timestamp) {
-      const index = updatedTasks.findIndex((t) => t.id === incomingTask.id)
-      if (index > -1) {
-        updatedTasks[index] = incomingTask
-      } else {
-        updatedTasks.push(incomingTask)
-      }
+    if (!matchingTask) {
+      data.tasks.push(incomingTask)
+      // Обновляем задачу, если у нее нет временной метки или если входящая задача новее
+    } else if (incomingTask.timestamp > matchingTask.timestamp) {
+      Object.assign(matchingTask, incomingTask)
     }
   }
-
-  return updatedTasks
 }
