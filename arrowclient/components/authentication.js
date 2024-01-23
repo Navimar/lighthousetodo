@@ -121,7 +121,9 @@ export const authenticationOnLoad = () => {
       reData.user.name = firebaseUser.displayName || "Noname"
       const pathSegments = window.location.pathname.split("/")
       const collaboratorId = pathSegments[pathSegments.length - 1]
-      addCollaborationRequest(collaboratorId)
+      if (collaboratorId == reData.user.id)
+        alert("Нельзя добавить самого себя в соисполнители. Отправьте ссылку другому пользователю!")
+      else addCollaborationRequest(collaboratorId)
       loadData()
     } else {
       reData.user.id = null

@@ -81,6 +81,17 @@ export const sendCollaboratorRequest = async (collaboratorId) => {
   }
   sendPendingRequests()
 }
+export const sendCollaboratorRemovalRequest = async (collaboratorIdToRemove) => {
+  if (collaboratorIdToRemove) {
+    const packet = {
+      collaboratorIdToRemove, // Changed field name
+      requestId: uuidv4(),
+    }
+    data.pendingRequests.push(packet)
+    safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
+  }
+  sendPendingRequests()
+}
 
 export const sendTasksData = async (changedTasks) => {
   if (changedTasks) {

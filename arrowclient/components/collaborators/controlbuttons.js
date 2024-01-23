@@ -2,7 +2,7 @@ import { html } from "@arrow-js/core"
 import dayjs from "dayjs"
 import css from "~/css.js"
 import reData from "~/logic/reactive.js"
-import { sendCollaboratorDictionaryRequest } from "~/logic/send.js"
+import { sendCollaboratorDictionaryRequest, sendCollaboratorRemovalRequest } from "~/logic/send.js"
 
 export function controlButtons() {
   return html`<button @click="${remove}" class="${css.button}">Удалить</button
@@ -20,4 +20,6 @@ let save = () => {
   })
   reData.selectedCollaborator = false
 }
-let remove = () => {}
+let remove = () => {
+  sendCollaboratorRemovalRequest(reData.selectedCollaborator)
+}

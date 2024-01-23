@@ -1,7 +1,13 @@
 import serviceAccount from "../firebase.config.js"
 import admin from "firebase-admin"
 import { addUser, getUser, updateCollaboratorDictionary } from "./user.js"
-import { syncTasksNeo4j, addCollaboratorNeo4j, loadDataFromNeo4j, removeOldTasksFromNeo4j } from "./database.js"
+import {
+  syncTasksNeo4j,
+  removeCollaboratorNeo4j,
+  addCollaboratorNeo4j,
+  loadDataFromNeo4j,
+  removeOldTasksFromNeo4j,
+} from "./database.js"
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -57,10 +63,10 @@ export let inputSocket = (io) => {
         if (msg.data.tasks) {
           // Синхронизация задач с базой данных
           await syncTasksNeo4j(msg.user.name, userId, msg.data.tasks)
-        } else if (msg.data.collaboratorId) {
-          // Обработка добавления сотрудника
-          // console.log("addCollaboratorNeo4j")
+        } else if (msg.data.collaboratorId && msg.data.collaboratorId != userId) {
           await addCollaboratorNeo4j(userId, msg.data.collaboratorId)
+        } else if (msg.data.collaboratorIdToRemove) {
+          await removeCollaboratorNeo4j(userId, msg.data.collaboratorIdToRemove)
         } else if (msg.data.collaboratorDictionary) {
           updateCollaboratorDictionary(userId, msg.data.collaboratorDictionary)
         } else {

@@ -91,6 +91,27 @@ export async function addCollaboratorNeo4j(userId, collaboratorId) {
   return await runNeo4jQuery(cypherQuery, queryParameters)
 }
 
+export async function removeCollaboratorNeo4j(userId, collaboratorId) {
+  const cypherQuery = `
+    // Находим узел пользователя-инициатора
+    MATCH (initiator:User {id: $userId})
+    WITH initiator
+    // Находим узел пользователя-коллаборатора
+    MATCH (collaborator:User {id: $collaboratorId})
+    WITH initiator, collaborator
+    // Удаляем связь COLLABORATE между инициатором и коллаборатором
+    MATCH (initiator)-[collaboration:COLLABORATE]->(collaborator)
+    DELETE collaboration
+  `
+
+  const queryParameters = {
+    userId,
+    collaboratorId,
+  }
+
+  return await runNeo4jQuery(cypherQuery, queryParameters)
+}
+
 export async function loadDataFromNeo4j(userId) {
   const cypherQuery = `
     MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(scribe)
