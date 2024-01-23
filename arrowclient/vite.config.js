@@ -7,6 +7,7 @@ export default defineConfig({
     },
   },
   envDir: resolve(__dirname, "../"),
+  publicDir: resolve(__dirname, "/public"),
   server: {
     port: 3001,
     proxy: {
