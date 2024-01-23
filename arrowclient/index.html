@@ -1,23 +1,50 @@
 <!doctype html>
-<head>
-  <title>Ad Astra To Do</title>
-  <meta charset="UTF-8" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <script type="module">
-    import { reactive, html } from "@arrow-js/core"
-  </script>
-  <script type="module" src="/index.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Roboto+Mono:wght@300&family=Open+Sans&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="index.css" />
-</head>
 
 <html class="bg-white dark:bg-black">
+  <head>
+    <title>Ad Astra To Do</title>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Наведи порядок в жизни с легкостью и удовольствием" />
+    <meta name="keywords" content="тайм-менеджмент, туду, список дел, таскменеджер" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="%VITE_URL%" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <meta property="og:title" content="Ad Astra To Do — система управления делами" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="%VITE_URL%/static/imageog.png" />
+    <meta property="og:url" content="%VITE_URL%" />
+    <meta property="og:description" content="Наведи порядок в жизни с легкостью и удовольствием" />
+    <meta property="og:site_name" content="Ad Astra To Do" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ad Astra To Do — система управления делами" />
+    <meta name="twitter:description" content="Наведи порядок в жизни с легкостью и удовольствием" />
+    <meta name="twitter:image" content="%VITE_URL%/static/imagetw.png" />
+    <meta name="twitter:site" content="@Igor_Vaulin" />
+    <meta name="twitter:creator" content="@Igor_Vaulin" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/180x180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/static/512x512.png" />
+    <meta name="msapplication-TileImage" content="/static/144x144.png" />
+
+    <script type="module">
+      import { reactive, html } from "@arrow-js/core"
+    </script>
+    <script type="module" src="/index.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Roboto+Mono:wght@300&family=Open+Sans&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+
   <body class="text-lg cursor-default select-none touch-pan-y">
     <div class="fixed w-full h-full bg-cover bgimg bg-neutral-100 dark:bg-neutral-900 -z-10"></div>
     <div id="App"></div>
@@ -30,7 +57,7 @@
             >Игоря Ваулина</a
           ></p
         >
-        <p class="mt-4 mb-12 fontaccent">v.0.2.12</p>
+        <p class="mt-4 mb-12 fontaccent">v.0.2.13</p>
       </div>
     </footer>
   </body>

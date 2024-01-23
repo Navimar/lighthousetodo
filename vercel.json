@@ -1,5 +1,0 @@
-{
-  "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }],
-  "buildCommand": "cd arrowclient && vite build",
-  "installCommand": "npm install && cd arrowclient && npm install"
-}
