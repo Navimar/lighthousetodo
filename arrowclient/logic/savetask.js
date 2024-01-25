@@ -21,7 +21,7 @@ export default (m) => {
   let thisTask = getObjectById(reData.selectedScribe)
   // найти имя и заметку
   const lines = eDiv.innerText.trim().split("\n")
-  let name = lines[0]
+  let name = lines[0].trim()
   const note = lines.slice(1).join("\n")
 
   // добываем массив строк из фром и ту
@@ -34,19 +34,31 @@ export default (m) => {
   fromEdit.innerText
     .trim()
     .split("\n")
-    .filter((name) => name.trim() !== "")
-    .forEach((name) => {
-      if (name.startsWith("@")) {
-        assignedTo.push(name.substring(1))
+    .filter(
+      (e) =>
+        e.trim() !== "" &&
+        e !== "Задачи пионеры...\u200B" &&
+        e !== "\u200B" &&
+        e.trim().replace(/[\u200B\u200C\u200D]/g, "") !== name,
+    )
+    .forEach((e) => {
+      if (e.startsWith("@")) {
+        assignedTo.push(e.substring(1))
       } else {
-        fromEditIds.push(getObjectByName(name).id)
+        fromEditIds.push(getObjectByName(e.replace(/[\u200B\u200C\u200D]/g, "")).id)
       }
     })
 
   toEdit.innerText
     .trim()
     .split("\n")
-    .filter((name) => name.trim() !== "")
+    .filter(
+      (e) =>
+        e.trim() !== "" &&
+        e !== "Задачи на очереди...\u200B" &&
+        e !== "\u200B" &&
+        e.trim().replace(/[\u200B\u200C\u200D]/g, "") !== name,
+    )
     .forEach((name) => {
       if (name.startsWith("@")) {
         assignedBy.push(name.substring(1))

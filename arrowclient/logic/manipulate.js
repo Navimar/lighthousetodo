@@ -19,9 +19,9 @@ export function selectTaskById(identifier) {
   makevisible()
 }
 
-export function selectCollaborator(id) {
+export function selectCollaborator(collaborator) {
   reData.selectedScribe = false
-  reData.selectedCollaborator = id
+  reData.selectedCollaborator = collaborator
 }
 
 export function dateInputPauseButtonHTMLCSS() {

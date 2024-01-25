@@ -8,23 +8,21 @@ export let renderCollabortors = () => {
 }
 
 let renderCollabortor = (collaborator, index) => {
+  // console.log(collaborator)
   if (reData.selectedCollaborator == collaborator)
     return html`<div class=" w-full dark:bg-alternative-900 bg-alternative-200 text-black dark:text-white p-3">
       ${controlButtons}
-      <p>id: ${collaborator}</p>
-      <input
-        class="text-black w-full"
-        id="collaboratorName"
-        type="text"
-        value="${reData.collaboratorDictionary[collaborator]?.name}" />
+      <small class="select-text">id: ${collaborator.id}</small>
+      <input class="text-black w-full" id="collaboratorName" type="text" value="${collaborator.name}" />
     </div>`
+  //не выделенный
   else
     return html`<div
       @click="${() => {
         selectCollaborator(collaborator)
       }}"
       class="w-full dark:bg-alternative-900 bg-alternative-200 text-black dark:text-white p-3">
-      <p class="ml-2">${reData.collaboratorDictionary[collaborator]?.name} <small>id: ${collaborator}</p></small></div
+      <p class="ml-2">${collaborator.name} <small class="select-text">id: ${collaborator.id}</p></small></div
     > `
 }
 export let renderCollaborationRequests = () => {
@@ -38,7 +36,7 @@ let renderCollaborationRequest = (collaborator, index) => {
         selectCollaborator(collaborator)
       }}"
       class="ml-2"
-      >${collaborator}</p
+      >${collaborator.name} <small class="select-text">id: ${collaborator.id}</p
     ></div
   > `
 }

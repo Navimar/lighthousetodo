@@ -23,12 +23,6 @@ async function runNeo4jQuery(cypherQuery, queryParameters) {
   }
 }
 
-export async function greetWorld(message) {
-  const cypherQuery = "MERGE (a:Greeting {message: $message}) RETURN a.message as message"
-  const queryParameters = { message }
-  return await runNeo4jQuery(cypherQuery, queryParameters)
-}
-
 export async function syncTasksNeo4j(userName, userId, incomingScribes) {
   // console.log("userId", userId)
   // console.log("incomingScribes", incomingScribes)
@@ -71,21 +65,23 @@ export async function syncTasksNeo4j(userName, userId, incomingScribes) {
   return await runNeo4jQuery(cypherQuery, queryParameters)
 }
 
-export async function addCollaboratorNeo4j(userId, collaboratorId) {
+export async function addCollaboratorNeo4j(userId, collaboratorId, collaboratorName) {
   const cypherQuery = `
-   // Находим существующий узел пользователя-инициатора
+    // Находим существующий узел пользователя-инициатора
     MATCH (initiator:User {id: $userId})
     WITH initiator
     // Находим или создаем узел пользователя-коллаборатора
-    MATCH (collaborator:User {id: $collaboratorId})
+    MERGE (collaborator:User {id: $collaboratorId})
     WITH initiator, collaborator
-    // Создаем связь COLLABORATE от инициатора к коллаборатору, если initiator найден
-    MERGE (initiator)-[:COLLABORATE]->(collaborator)
+    // Создаем или обновляем связь COLLABORATE с добавлением имени
+    MERGE (initiator)-[relation:COLLABORATE]->(collaborator)
+    SET relation.name = $collaboratorName
   `
 
   const queryParameters = {
     userId,
     collaboratorId,
+    collaboratorName,
   }
 
   return await runNeo4jQuery(cypherQuery, queryParameters)
@@ -121,11 +117,11 @@ export async function loadDataFromNeo4j(userId) {
     OPTIONAL MATCH (fromTask:Task)-[:OPENS]->(scribe)
 
     WITH user, scribe, toIds, collect(fromTask.id) AS fromIds
-    OPTIONAL MATCH (user)-[:COLLABORATE]->(outCollaborator:User)
-    WITH user, scribe, toIds, fromIds, collect(outCollaborator.id) AS collaborationRequests
-    OPTIONAL MATCH (user)<-[:COLLABORATE]-(inCollaborator:User)
-    WITH scribe, toIds, fromIds, collaborationRequests, collect(inCollaborator.id) AS inCollaboratorIds
-    RETURN collect({task: scribe, toIds: toIds, fromIds: fromIds}) AS tasks, collaborationRequests, inCollaboratorIds
+    OPTIONAL MATCH (user)-[outRel:COLLABORATE]->(outCollaborator:User)
+    WITH user, scribe, toIds, fromIds, collect({id: outCollaborator.id, name: outRel.name}) AS outCollaborations
+    OPTIONAL MATCH (user)<-[inRel:COLLABORATE]-(inCollaborator:User)
+    WITH scribe, toIds, fromIds, outCollaborations, collect({id: inCollaborator.id, name: inRel.name}) AS inCollaborations
+    RETURN collect({task: scribe, toIds: toIds, fromIds: fromIds}) AS tasks, outCollaborations, inCollaborations
   `
   const queryParameters = { userId }
   const result = await runNeo4jQuery(cypherQuery, queryParameters)
@@ -135,33 +131,21 @@ export async function loadDataFromNeo4j(userId) {
     const fromIds = taskRecord.fromIds
     return { ...task, toIds, fromIds }
   })
-  const collaborationRequests = result[0]?.get("collaborationRequests") || []
-  const inCollaborators = result[0]?.get("inCollaboratorIds") || []
+  const outCollaborations = result[0]?.get("outCollaborations").filter((collab) => collab.id != null) || []
+  const inCollaborations = result[0]?.get("inCollaborations").filter((collab) => collab.id != null) || []
 
-  // Находим пересечение двух массивов для определения текущих коллабораторов
-  const collaborators = collaborationRequests.filter((id) => inCollaborators.includes(id))
+  // Формируем список текущих коллабораторов
+  const collaborators = outCollaborations.filter((outCollab) =>
+    inCollaborations.some((inCollab) => inCollab.id === outCollab.id),
+  )
 
-  // Удаляем из collaborationRequests те ID, которые уже есть в collaborators
-  const filteredCollaborationRequests = collaborationRequests.filter((id) => !collaborators.includes(id))
+  // Фильтруем исходящие запросы на сотрудничество, исключая текущих коллабораторов
+  const collaborationRequests = outCollaborations.filter(
+    (outCollab) => !collaborators.some((collab) => collab.id === outCollab.id),
+  )
 
-  return { tasks, collaborators, collaborationRequests: filteredCollaborationRequests }
+  return { tasks, collaborators, collaborationRequests }
 }
-
-// export async function updateCleanupTimeNeo4j(userId) {
-//   const updateCleanupTimeQuery = `
-//     MATCH (user:User {id: $userId})
-//     SET user.lastCleanup = timestamp()
-//   `
-//   const queryParameters = { userId }
-
-//   try {
-//     const result = await runNeo4jQuery(updateCleanupTimeQuery, queryParameters)
-//     return result
-//   } catch (error) {
-//     console.error("Ошибка при обновлении времени последней очистки:", error)
-//     throw error // Перебрасываем ошибку дальше, если требуется обработка на более высоком уровне
-//   }
-// }
 
 export async function removeOldTasksFromNeo4j(userId) {
   const removeOldTasksQuery = `
@@ -179,12 +163,12 @@ export async function removeOldTasksFromNeo4j(userId) {
   const queryParameters = {
     userId,
     currentTime: Date.now(),
-    DIFFERENCE_MILLISECONDS: 1000 * 60 * 60,
+    DIFFERENCE_MILLISECONDS: 1000 * 60 * 60 * 24 * 7,
   }
 
   try {
     const result = await runNeo4jQuery(removeOldTasksQuery, queryParameters)
-    console.log("Удаление старых задач выполнено:", result)
+    console.log("Удаление старых задач выполнено", result)
     // const tasks = result[0].get("tasks").map((task) => task.properties)
     // console.log("Удаление старых задач выполнено:", tasks)
   } catch (error) {

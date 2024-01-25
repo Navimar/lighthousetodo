@@ -10,14 +10,15 @@ import { sendCollaboratorRequest } from "~/logic/send.js"
 // }
 
 export let addCollaborationRequest = (collaboratorId) => {
-  // console.log(reData.collaborators)
-  if (collaboratorId && !reData.collaborators.includes(collaboratorId)) {
+  // Проверяем, содержит ли массив объект с данным id
+  const isCollaboratorExists = reData.collaborators.some((collaborator) => collaborator.id === collaboratorId)
+
+  if (collaboratorId && !isCollaboratorExists) {
     reData.collaborationRequests.push(collaboratorId)
-    reData.collaboratorDictionary[collaboratorId] = {
+    sendCollaboratorRequest({
+      id: collaboratorId,
       name: collaboratorId,
       timestamp: dayjs().valueOf(),
-    }
-    sendCollaboratorRequest(collaboratorId)
-    // console.log("collaboratorDictionary", reData.collaboratorDictionary)
+    })
   }
 }

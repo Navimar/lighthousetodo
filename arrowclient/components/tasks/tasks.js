@@ -9,6 +9,7 @@ import taskPlate from "~/components/tasks/taskplate.js"
 import { selectTaskById } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import data from "~/logic/data.js"
+
 import { html } from "@arrow-js/core"
 import dayjs from "dayjs"
 
@@ -64,7 +65,7 @@ let renderTask = (task, index) => {
           contenteditable="true"
           role="textbox"
           aria-multiline="true"
-          >${task.name}<div>${task.note}</div></div
+          ><div>${task.name}</div><div>${task.note}</div></div
         >${() => tagLine(task, "to")}</div
       >${() => renderTimeToNextTask(index)}</div
     >`

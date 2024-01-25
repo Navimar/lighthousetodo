@@ -1,6 +1,7 @@
 import serviceAccount from "../firebase.config.js"
 import admin from "firebase-admin"
-import { addUser, getUser, updateCollaboratorDictionary } from "./user.js"
+import { addUser, getUser } from "./user.js"
+import { pruneTaskIds } from "./process.js"
 import {
   syncTasksNeo4j,
   removeCollaboratorNeo4j,
@@ -63,12 +64,14 @@ export let inputSocket = (io) => {
         if (msg.data.tasks) {
           // Синхронизация задач с базой данных
           await syncTasksNeo4j(msg.user.name, userId, msg.data.tasks)
-        } else if (msg.data.collaboratorId && msg.data.collaboratorId != userId) {
-          await addCollaboratorNeo4j(userId, msg.data.collaboratorId)
+        } else if (msg.data.collaborator?.id && msg.data.collaborator?.id != userId) {
+          await addCollaboratorNeo4j(
+            userId,
+            msg.data.collaborator.id,
+            msg.data.collaborator.name || msg.data.collaborator.id,
+          )
         } else if (msg.data.collaboratorIdToRemove) {
           await removeCollaboratorNeo4j(userId, msg.data.collaboratorIdToRemove)
-        } else if (msg.data.collaboratorDictionary) {
-          updateCollaboratorDictionary(userId, msg.data.collaboratorDictionary)
         } else {
           // Если не найдено ни одного из ожидаемых полей
           throw new Error("No valid data fields found in message")
@@ -112,10 +115,10 @@ export let inputSocket = (io) => {
         return
       }
 
+      // console.log(userId, data.collaborationRequests)
       // console.log("user", getUser(userId))
       socket.emit("update", {
-        collaboratorDictionary: getUser(userId).collaboratorDictionary,
-        tasks: data.tasks,
+        tasks: pruneTaskIds(data.tasks),
         collaborators: data.collaborators,
         collaborationRequests: data.collaborationRequests,
       })

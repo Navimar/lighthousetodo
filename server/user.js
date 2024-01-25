@@ -34,23 +34,3 @@ export let removeUser = (id, socket) => {
     }
   })
 }
-
-export function updateCollaboratorDictionary(userId, dic) {
-  let collaboratorId = dic.id
-  let collaboratorName = dic.name
-  let timestamp = dic.timestamp
-
-  // Получаем текущий словарь коллабораторов пользователя
-  const user = getUser(userId)
-  let currentDictionary = user.collaboratorDictionary || {}
-
-  // Проверяем, нужно ли обновить запись
-  if (!currentDictionary[collaboratorId] || timestamp > currentDictionary[collaboratorId].timestamp) {
-    // Обновляем или добавляем запись о коллабораторе
-    currentDictionary[collaboratorId] = { name: collaboratorName, timestamp: timestamp }
-  }
-
-  // Обновляем словарь коллабораторов пользователя
-  user.collaboratorDictionary = currentDictionary
-  console.log("updateCollaboratorDictionary", user.collaboratorDictionary)
-}

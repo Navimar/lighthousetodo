@@ -20,7 +20,7 @@ let saveButton = () => {
   riseTask(reData.selectedScribe)
   reData.selectedScribe = false
   makevisible()
-  reData.selectedScribe = reData.visibleTasks[0].id
+  reData.selectedScribe = reData.visibleTasks[0]?.id
 }
 let riseTask = (taskId, visited = new Set(), depth = 0) => {
   let task = getObjectById(taskId)

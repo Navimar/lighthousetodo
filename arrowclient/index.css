@@ -74,3 +74,7 @@ input {
 #edit div:not(:first-child) {
   @apply text-sm;
 }
+
+#edit div:first-child {
+  @apply pb-2;
+}

@@ -3,6 +3,7 @@ import { selectTaskById } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import { getObjectById, getDayjsDateFromTask } from "~/logic/util"
 import taskplate from "~/components/tasks/taskplate.js"
+import reData from "~/logic/reactive.js"
 
 import dayjs from "dayjs"
 
@@ -42,9 +43,15 @@ export default (givenTask, direction) => {
 
   return html`<div class="text-sm empty:hidden flex flex-wrap gap-1 tagLine"
     >${() =>
-      assignedIds?.map(
-        (collaborator) => html`<div class="bg-alternative-200 dark:bg-alternative-700 p-1">${collaborator}</div>`,
-      )}${() =>
+      assignedIds?.map((collaboratorId) => {
+        console.log("assignedIds", collaboratorId)
+        let theCollaborator = reData.collaborators.find((cb) => cb.id === collaboratorId)
+        console.log("theCollaborator", theCollaborator)
+
+        return html`<div class="bg-alternative-200 dark:bg-alternative-700 p-1"
+          >${theCollaborator?.name || collaboratorId}</div
+        >`
+      })}${() =>
       notReadyTasks.map((task) => {
         return html`<div
           @click="${(e) => {

@@ -31,8 +31,7 @@ export function inputSocket() {
     syncTasks(msg?.tasks)
     //заменить на синхронизацию полноценную
     reData.collaborators = msg?.collaborators || []
-    reData.collaborationsRequests = msg?.collaborationsRequests || []
-    reData.collaboratorDictionary = msg?.collaboratorDictionary || []
+    reData.collaborationRequests = msg?.collaborationRequests || []
     // console.log("msg", msg)
     safeSetLocalStorageItem("tasks", data.tasks)
     makevisible()
@@ -62,18 +61,10 @@ socket.on("save-confirm", (responseId) => {
   safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
 })
 
-export const sendCollaboratorDictionaryRequest = async (collaboratorDictionary) => {
-  const packet = {
-    collaboratorDictionary,
-    requestId: uuidv4(),
-  }
-  data.pendingRequests.push(packet)
-  sendPendingRequests()
-}
-export const sendCollaboratorRequest = async (collaboratorId) => {
-  if (collaboratorId) {
+export const sendCollaboratorRequest = async (collaborator) => {
+  if (collaborator) {
     const packet = {
-      collaboratorId,
+      collaborator,
       requestId: uuidv4(),
     }
     data.pendingRequests.push(packet)
