@@ -15,6 +15,7 @@ import data from "~/logic/data.js"
 import { getObjectById } from "~/logic/util.js"
 import { removeOldTasks } from "~/logic/forget.js"
 import { makevisible } from "~/logic/makevisible.js"
+import { renderNodeCounter } from "~/components/nodecounter.js"
 
 import { html, watch } from "@arrow-js/core"
 import dayjs from "dayjs"
@@ -32,8 +33,8 @@ const app = document.getElementById("App")
 const render = html`
   ${() => search()}
   <div class="flex flex-col gap-6 pb-80 max-w-full w-40rem px-3 m-auto">
-    ${() => authentication()} ${() => renderCalendar(dayjs())} ${() => renderCollaborationRequests()}
-    ${() => renderCollabortors()} ${() => renderTasks()}
+    ${() => authentication()} ${() => renderNodeCounter()} ${() => renderCalendar(dayjs())}
+    ${() => renderCollaborationRequests()} ${() => renderCollabortors()} ${() => renderTasks()}
   </div>
   ${plusbutton} ${() => online()}
 `

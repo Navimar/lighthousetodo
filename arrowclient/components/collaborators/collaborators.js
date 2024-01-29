@@ -10,10 +10,15 @@ export let renderCollabortors = () => {
 let renderCollabortor = (collaborator, index) => {
   // console.log(collaborator)
   if (reData.selectedCollaborator == collaborator)
-    return html`<div class=" w-full dark:bg-alternative-900 bg-alternative-200 text-black dark:text-white p-3">
+    return html`<div
+      class=" w-full dark:bg-alternative-900 rounded-lg bg-alternative-200 text-black dark:text-white p-3">
       ${controlButtons}
       <small class="select-text">id: ${collaborator.id}</small>
-      <input class="text-black w-full" id="collaboratorName" type="text" value="${collaborator.name}" />
+      <input
+        class="text-black dark:text-white dark:bg-black p-2 w-full"
+        id="collaboratorName"
+        type="text"
+        value="${collaborator.name}" />
     </div>`
   //не выделенный
   else
@@ -21,7 +26,7 @@ let renderCollabortor = (collaborator, index) => {
       @click="${() => {
         selectCollaborator(collaborator)
       }}"
-      class="w-full dark:bg-alternative-900 bg-alternative-200 text-black dark:text-white p-3">
+      class="w-full dark:bg-alternative-900 rounded-lg bg-alternative-200 text-black dark:text-white p-3">
       <p class="ml-2">${collaborator.name} <small class="select-text">id: ${collaborator.id}</p></small></div
     > `
 }
@@ -30,7 +35,7 @@ export let renderCollaborationRequests = () => {
 }
 
 let renderCollaborationRequest = (collaborator, index) => {
-  return html`<div class="w-full dark:bg-green-950 bg-green-200 text-black dark:text-white p-3"
+  return html`<div class="w-full rounded-lg dark:bg-green-950 bg-green-200 text-black dark:text-white p-3"
     ><p
       @click="${() => {
         selectCollaborator(collaborator)

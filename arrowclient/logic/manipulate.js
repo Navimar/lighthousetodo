@@ -98,7 +98,7 @@ export function updateButtons() {
   if (dateInputValue && timeInputValue) inputDateTime = dayjs(`${dateInputValue}T${timeInputValue}`)
 
   const isTaskReady = readyCheckbox?.checked
-  const isTaskFuture = inputDateTime?.isAfter(currentDate) || inputDateTime?.isSame(currentDate, "minute")
+  const isTaskFuture = inputDateTime?.isAfter(currentDate)
 
   if (isTaskReady || isTaskFuture) {
     showSaveButtonHidePause()

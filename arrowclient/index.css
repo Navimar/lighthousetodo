@@ -66,15 +66,19 @@ input {
   letter-spacing: 0.1em;
 }
 
-#fromEdit div,
-#toEdit div {
-  @apply mx-2;
-}
-
 #edit div:not(:first-child) {
   @apply text-sm;
 }
 
 #edit div:first-child {
   @apply pb-2;
+}
+
+#fromEdit:empty::before {
+  content: attr(data-placeholder);
+  @apply block h-full text-neutral-500 italic;
+}
+#toEdit:empty::before {
+  content: attr(data-placeholder);
+  @apply block h-full text-neutral-500 italic;
 }

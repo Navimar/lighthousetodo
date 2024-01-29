@@ -3,9 +3,11 @@ import { getCurrentLine, getObjectById } from "~/logic/util.js"
 import reData from "~/logic/reactive.js"
 import renderAutocomplete from "/components/autocomplete.js"
 import data from "~/logic/data.js"
+import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 
 function handleInput(e) {
   const currentLineText = getCurrentLine().toLowerCase() // Преобразование к нижнему регистру
+  showSaveButtonHidePause()
 
   reData.autoComplete.list = []
   reData.autoComplete.line = currentLineText
@@ -53,64 +55,34 @@ function handleDivClick(e) {
   }
 }
 
-export default (task) => {
-  let isPlaceHolderFromClicked = false // Флаг для отслеживания клика
-  let isPlaceHolderToClicked = false
-  return html`
-    <div class="flex relative gap-4">
-      <div
-        id="fromEdit"
-        class="flex flex-col gap-2 text-sm w-1/2 h-8 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
-        contenteditable="true"
-        role="textbox"
-        aria-multiline="true"
-        tabindex="0"
-        @click="${handleDivClick}"
-        @input="${handleInput}">
-        ${task.assignedTo?.map((id) => html`<div>@${id}</div>`)}
-        ${task.fromIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}
-        ${!task.assignedTo?.length && !task.fromIds?.length
-          ? html`<div
-              class="text-neutral-500 w-full h-8 italic"
-              @mousedown="${(e) => {
-                if (!isPlaceHolderFromClicked) {
-                  e.target.innerHTML = "&ZeroWidthSpace;"
-                  e.target.className = ""
-                  isPlaceHolderFromClicked = true
-                }
-              }}"
-              >Задачи пионеры...&ZeroWidthSpace;</div
-            >`
-          : ""}
-      </div>
-      ${() => renderAutocomplete("fromEdit")}
+export default (task) => html`
+  <div class="flex relative gap-4">
+    <div
+      id="fromEdit"
+      class="flex flex-col block gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
+      contenteditable="true"
+      data-placeholder="Задачи пионеры..."
+      role="textbox"
+      aria-multiline="true"
+      tabindex="0"
+      @click="${handleDivClick}"
+      @input="${handleInput}"
+      >${task.fromIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}</div
+    >
+    ${() => renderAutocomplete("fromEdit")}
 
-      <div
-        id="toEdit"
-        class="flex flex-col gap-2 text-sm w-1/2 h-8 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
-        contenteditable="true"
-        role="textbox"
-        aria-multiline="true"
-        tabindex="0"
-        @click="${handleDivClick}"
-        @input="${handleInput}">
-        ${task.assignedBy?.map((id) => html`<div>@${id}</div>`)}
-        ${task.toIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}
-        ${!task.assignedBy?.length && !task.toIds?.length
-          ? html`<div
-              class="text-neutral-500 w-full h-8 italic"
-              @mousedown="${(e) => {
-                if (!isPlaceHolderToClicked) {
-                  e.target.innerHTML = "&ZeroWidthSpace;"
-                  e.target.className = ""
-                  isPlaceHolderToClicked = true
-                }
-              }}"
-              >Задачи на очереди...&ZeroWidthSpace;</div
-            >`
-          : ""}
-      </div>
-      ${() => renderAutocomplete("toEdit")}
-    </div>
-  `
-}
+    <div
+      id="toEdit"
+      class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
+      contenteditable="true"
+      role="textbox"
+      aria-multiline="true"
+      tabindex="0"
+      data-placeholder="Задачи на очереди..."
+      @click="${handleDivClick}"
+      @input="${handleInput}"
+      >${task.toIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}</div
+    >
+    ${() => renderAutocomplete("toEdit")}
+  </div>
+`

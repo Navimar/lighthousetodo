@@ -6,7 +6,7 @@ import radio from "~/components/tasks/priorityRadio.js"
 import linkDivs from "~/components/tasks/linkdivs.js"
 import controlButtons from "~/components/tasks/controlButtons.js"
 import taskPlate from "~/components/tasks/taskplate.js"
-import { selectTaskById } from "~/logic/manipulate.js"
+import { selectTaskById, showSaveButtonHidePause } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import data from "~/logic/data.js"
 
@@ -61,6 +61,7 @@ let renderTask = (task, index) => {
       ${timeSlider(task)} ${linkDivs(task)}<div class="flex flex-col gap-3 ml-3"
         >${() => tagLine(task, "from")}<div
           id="edit"
+          @input="${showSaveButtonHidePause}"
           class="ml-2 pr-5 w-full min-h-full whitespace-pre-wrap focus:outline-none"
           contenteditable="true"
           role="textbox"

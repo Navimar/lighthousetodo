@@ -17,7 +17,7 @@ const staticDir = path.join(currentDir, "arrowclient/dist")
 app.use(express.static(staticDir, {}))
 
 app.get("*", function (req, res) {
-  res.status(404).send("nothing there")
+  res.sendFile(path.join(staticDir, "index.html"))
 })
 
 inputSocket(io)

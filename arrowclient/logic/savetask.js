@@ -1,10 +1,12 @@
-import reData from "/logic/reactive.js"
-import { isNameTaken, safeSetLocalStorageItem } from "/logic/util.js"
-import { clearSearch } from "/logic/manipulate"
+import reData from "~/logic/reactive.js"
+import { isNameTaken, safeSetLocalStorageItem } from "~/logic/util.js"
+import { clearSearch } from "~/logic/manipulate"
 import data from "~/logic/data.js"
+import { sendTasksData } from "~/logic/send.js"
+import { getObjectByName, getObjectById } from "~/logic/util"
+import { getCollaboratorByName } from "~/logic/collaborator.js"
+
 import dayjs from "dayjs"
-import { sendTasksData } from "/logic/send.js"
-import { getObjectByName, getObjectById } from "/logic/util"
 
 export default (m) => {
   let changedTasks = []
@@ -28,45 +30,28 @@ export default (m) => {
   // добываем массив ID из фром и ту
   let fromEditIds = []
   let toEditIds = []
-  let assignedBy = []
-  let assignedTo = []
+  let assignedTo = [reData.user.id]
 
   fromEdit.innerText
     .trim()
     .split("\n")
-    .filter(
-      (e) =>
-        e.trim() !== "" &&
-        e !== "Задачи пионеры...\u200B" &&
-        e !== "\u200B" &&
-        e.trim().replace(/[\u200B\u200C\u200D]/g, "") !== name,
-    )
+    .filter((e) => e.trim() !== "" && e.trim() !== name)
     .forEach((e) => {
-      if (e.startsWith("@")) {
-        assignedTo.push(e.substring(1))
-      } else {
-        fromEditIds.push(getObjectByName(e.replace(/[\u200B\u200C\u200D]/g, "")).id)
-      }
+      e = e.trim()
+      let collaborator = getCollaboratorByName(e)
+      // console.log("collaborator", e, collaborator)
+      if (collaborator) assignedTo.push(collaborator.id)
+      else fromEditIds.push(getObjectByName(e).id)
     })
 
   toEdit.innerText
     .trim()
     .split("\n")
-    .filter(
-      (e) =>
-        e.trim() !== "" &&
-        e !== "Задачи на очереди...\u200B" &&
-        e !== "\u200B" &&
-        e.trim().replace(/[\u200B\u200C\u200D]/g, "") !== name,
-    )
+    .filter((e) => e.trim() !== "" && e.trim() !== name)
     .forEach((name) => {
-      if (name.startsWith("@")) {
-        assignedBy.push(name.substring(1))
-      } else {
-        let id = getObjectByName(name).id
-        if (!fromEditIds.includes(id)) {
-          toEditIds.push(id)
-        }
+      let id = getObjectByName(name).id
+      if (!fromEditIds.includes(id)) {
+        toEditIds.push(id)
       }
     })
   // добаываем дату и время из инпутов
@@ -138,16 +123,20 @@ export default (m) => {
   thisTask.fromIds = fromEditIds
   thisTask.toIds = toEditIds
 
-  thisTask.assignedTo = assignedTo
-  thisTask.assignedBy = assignedBy
+  thisTask.assignedTo = [...new Set(thisTask.assignedTo.concat(assignedTo))]
 
   thisTask.time = timeInput
   thisTask.date = dateInput
 
   // устанавливаем паузу
   let pauseCheckbox = document.getElementById("pauseCheckbox")
-  if (pauseCheckbox && pauseCheckbox.checked) thisTask.pause = dayjs().valueOf()
-  else thisTask.pause = false
+  if (pauseCheckbox && pauseCheckbox.checked) {
+    thisTask.pause = dayjs().valueOf()
+    thisTask.pauseTimes = (thisTask.pauseTimes || 0) + 1
+  } else {
+    thisTask.pause = false
+    thisTask.pauseTimes = 0
+  }
 
   // если выделено общая, то присоватить public
   let publicCheckbox = document.getElementById("publicCheckbox")

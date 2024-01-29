@@ -33,7 +33,9 @@ export default (givenTask, direction) => {
   }
 
   const assignedField = direction === "from" ? "assignedTo" : "assignedBy"
-  const assignedIds = givenTask[assignedField]
+  let assignedIds = givenTask[assignedField]
+  if (direction == "to") assignedIds = [assignedIds]
+
   // console.log("assignedIds", direction, assignedIds, givenTask)
 
   const sortTasksByName = (a, b) => a.name.localeCompare(b.name)
@@ -44,13 +46,19 @@ export default (givenTask, direction) => {
   return html`<div class="text-sm empty:hidden flex flex-wrap gap-1 tagLine"
     >${() =>
       assignedIds?.map((collaboratorId) => {
-        console.log("assignedIds", collaboratorId)
-        let theCollaborator = reData.collaborators.find((cb) => cb.id === collaboratorId)
-        console.log("theCollaborator", theCollaborator)
+        if (
+          (direction == "from" && collaboratorId != givenTask.assignedBy && collaboratorId != reData.user.id) ||
+          (direction == "to" && collaboratorId != reData.user.id)
+        ) {
+          // console.log("collaboratorId,givenTask.assignedBy", direction, collaboratorId, givenTask.assignedBy)
 
-        return html`<div class="bg-alternative-200 dark:bg-alternative-700 p-1"
-          >${theCollaborator?.name || collaboratorId}</div
-        >`
+          let theCollaborator = reData.collaborators.find((cb) => cb.id === collaboratorId)
+          // console.log("theCollaborator", theCollaborator)
+          return html`<div
+            class="text-neutral-700 dark:text-neutral-350 bg-alternative-200 dark:bg-alternative-700 px-2 m-0.5 border border-neutral-200 dark:border-neutral-700 rounded-lg"
+            ><div class="flex h-full items-center gap-2">${theCollaborator?.name || collaboratorId}</div></div
+          >`
+        }
       })}${() =>
       notReadyTasks.map((task) => {
         return html`<div
@@ -59,7 +67,7 @@ export default (givenTask, direction) => {
             clickPos(e)
             e.stopPropagation()
           }}"
-          class=" text-neutral-700 dark:text-neutral-350 m-0.5 inline-block align-middle rounded-lg px-2 bg-neutral-200 dark:bg-neutral-800">
+          class="text-neutral-700 dark:text-neutral-350 m-0.5 inline-block align-middle rounded-lg px-2 bg-neutral-200 dark:bg-neutral-800">
           <div class="flex h-full items-center gap-2"
             >${() => taskplate(task, "text-xs p-0.5")}<div class="p-1">${task.name}</div></div
           ></div

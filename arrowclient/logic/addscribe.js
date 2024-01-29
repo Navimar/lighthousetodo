@@ -21,8 +21,8 @@ export default (name, fromIds = [], toIds = []) => {
     fromIds: fromIds,
     toIds: toIds,
     timestamp: dayjs().valueOf(),
-    assignedBy: [],
-    assignedTo: [],
+    assignedBy: reData.user.id,
+    assignedTo: [reData.user.id],
   }
 
   data.tasks.push(newTask)

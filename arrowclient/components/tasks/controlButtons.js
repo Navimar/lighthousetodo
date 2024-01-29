@@ -11,10 +11,7 @@ let checkedPause = (task) => {
   if (task.pause) return "checked"
   else return ""
 }
-let checkedPublic = (task) => {
-  if (task.public) return "checked"
-  else return ""
-}
+
 let saveButton = () => {
   saveTask("sv")
   riseTask(reData.selectedScribe)
@@ -47,13 +44,7 @@ let riseTask = (taskId, visited = new Set(), depth = 0) => {
     })
   }
 }
-const publicTask = (event, task) => {
-  if (!event.target.checked) {
-    return
-  }
-  const link = `${window.location.origin}/${task.id}` // Создаем ссылку с использованием window.location.origin
-  copyToClipboard(link) // Копируем ссылку в буфер обмена
-}
+
 {
   /* <input
         class="appearance-none peer sr-only"
