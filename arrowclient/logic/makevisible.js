@@ -57,7 +57,12 @@ export const makevisible = () => {
 }
 
 const getMaxPriorityTypeAndConsequence = (task, depth = 0, visited = new Set()) => {
-  if (depth >= 7 || visited.has(task.id)) return { type: task.type, consequence: task.consequence }
+  if (depth >= 7 || visited.has(task.id))
+    return {
+      type: task.type,
+      consequence: task.consequence,
+      points: PRIORITY[task.type] + CONSEQUENCE_DURATION_PRIORITY[task.consequence],
+    }
 
   visited.add(task.id)
 
@@ -136,8 +141,8 @@ export const sort = (arrToSort = reData.visibleTasks) => {
     if (!aIsFuture && bIsFuture) return -1
 
     // Сортируем по приоритету
-    if (aPriority.points > bPriority.points) return 1
-    if (aPriority.points < bPriority.points) return -1
+    if (aPriority.points > bPriority.points) return -1
+    if (aPriority.points < bPriority.points) return 1
 
     // // Сортировка по таймстампу предков о_О
     const maxTimestampA = getMaxTimestampFromIds(a)
