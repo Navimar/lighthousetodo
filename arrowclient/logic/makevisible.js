@@ -56,38 +56,53 @@ export const makevisible = () => {
   sort()
 }
 
-const getMaxPriorityTypeAndConsequence = (task, depth = 0, visited = new Set()) => {
-  if (depth >= 7 || visited.has(task.id))
+const getMaxPriorityTypeAndConsequence = (task, depth = 0, visited = new Set(), nodeCount = { count: 0 }) => {
+  if (depth >= 7 || visited.has(task.id)) {
     return {
       type: task.type,
       consequence: task.consequence,
       points: PRIORITY[task.type] + CONSEQUENCE_DURATION_PRIORITY[task.consequence],
+      nodeCount: nodeCount.count,
     }
+  }
 
   visited.add(task.id)
+  nodeCount.count++
 
+  let maxPoints = PRIORITY[task.type] + CONSEQUENCE_DURATION_PRIORITY[task.consequence]
   let maxPriorityType = task.type
   let maxPriorityConsequence = task.consequence
-  let points = CONSEQUENCE_DURATION_PRIORITY[task.consequence] + PRIORITY[task.type]
+
   task.toIds?.forEach((id) => {
     const childTask = getObjectById(id)
-    if (!childTask || childTask.ready) return // Пропускаем задачи с ready === true или если они не найдены
+    if (!childTask || childTask.ready) return
 
-    const childPriority = getMaxPriorityTypeAndConsequence(childTask, depth + 1, visited)
+    const childPriority = getMaxPriorityTypeAndConsequence(childTask, depth + 1, visited, nodeCount)
 
-    if (
-      PRIORITY[childPriority.type] < PRIORITY[maxPriorityType] ||
-      (childPriority.type === maxPriorityType &&
-        CONSEQUENCE_DURATION_PRIORITY[childPriority.consequence] <
-          CONSEQUENCE_DURATION_PRIORITY[maxPriorityConsequence])
-    ) {
+    // Обновляем maxPoints независимо
+    if (childPriority.points > maxPoints) {
+      maxPoints = childPriority.points
+    }
+
+    // Обновляем maxPriorityType независимо
+    if (PRIORITY[childPriority.type] > PRIORITY[maxPriorityType]) {
       maxPriorityType = childPriority.type
+    }
+
+    // Обновляем maxPriorityConsequence независимо
+    if (
+      CONSEQUENCE_DURATION_PRIORITY[childPriority.consequence] > CONSEQUENCE_DURATION_PRIORITY[maxPriorityConsequence]
+    ) {
       maxPriorityConsequence = childPriority.consequence
-      points = PRIORITY[childPriority.type] + CONSEQUENCE_DURATION_PRIORITY[childPriority.consequence]
     }
   })
 
-  return { type: maxPriorityType, consequence: maxPriorityConsequence, points }
+  return {
+    type: maxPriorityType,
+    consequence: maxPriorityConsequence,
+    points: maxPoints, // Используем maxPoints напрямую, так как он уже отражает максимальное значение
+    nodeCount: nodeCount.count,
+  }
 }
 
 const getMaxTimestampFromIds = (task) => {
@@ -143,6 +158,10 @@ export const sort = (arrToSort = reData.visibleTasks) => {
     // Сортируем по приоритету
     if (aPriority.points > bPriority.points) return -1
     if (aPriority.points < bPriority.points) return 1
+
+    // Сортируем по количеству потомков
+    if (aPriority.nodeCount > bPriority.nodeCount) return 1
+    if (aPriority.nodeCount < bPriority.nodeCount) return -1
 
     // // Сортировка по таймстампу предков о_О
     const maxTimestampA = getMaxTimestampFromIds(a)
