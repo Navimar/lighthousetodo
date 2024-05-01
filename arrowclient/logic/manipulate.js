@@ -5,13 +5,6 @@ import { getObjectByName, getObjectById } from "~/logic/util"
 
 import dayjs from "dayjs"
 
-export function selectTaskByName(identifier) {
-  saveTask("selectTaskByName")
-  clearSearch()
-  reData.selectedScribe = getObjectByName(identifier).id
-  makevisible()
-}
-
 export function selectTaskById(identifier) {
   saveTask("selectTaskById")
   clearSearch()
@@ -28,7 +21,7 @@ export function dateInputPauseButtonHTMLCSS() {
   let pc = document.getElementById("pauseCheckbox")
   if (pc) pc.checked = false
   updateDateClass()
-  updateButtons()
+  updatePauseReadyButton()
 }
 
 export function updateDateClass() {
@@ -89,7 +82,7 @@ function hideSaveButtonShowPause() {
   }
 }
 
-export function updateButtons() {
+export function updatePauseReadyButton() {
   const readyCheckbox = document.getElementById("readyCheckbox")
   const currentDate = dayjs()
   const dateInputValue = document.getElementById("dateInput")?.value
@@ -105,6 +98,21 @@ export function updateButtons() {
   } else {
     hideSaveButtonShowPause()
   }
+}
+
+export function updateKairosButton() {
+  document.querySelectorAll('input[type="radio"][name="timePeriod"]').forEach((radio) => {
+    radio.checked = false
+  })
+
+  // Снятие выбора с радиокнопок группы importance
+  document.querySelectorAll('input[type="radio"][name="importance"]').forEach((radio) => {
+    radio.checked = false
+  })
+  // Снятие выбора с радиокнопок группы enthusiasm
+  document.querySelectorAll('input[type="radio"][name="enthusiasm"]').forEach((radio) => {
+    radio.checked = false
+  })
 }
 
 export let clearSearch = () => {

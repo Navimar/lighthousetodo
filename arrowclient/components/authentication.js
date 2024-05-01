@@ -17,13 +17,15 @@ const firebaseConfig = {
   messagingSenderId: "472351514743",
   appId: "1:472351514743:web:9d7c8892cc216443e06672",
 }
+
 initializeApp(firebaseConfig)
 
 let collaboratorLink = () => {
   return `${window.location.protocol}//${window.location.hostname}${
     window.location.port ? `:${window.location.port}` : ""
-  }/${reData.user.id}`
+  }/${reData.user.id}/add`
 }
+
 let collobaratorComponent = () => {
   if (reData.collabState) {
     return html`
@@ -119,11 +121,12 @@ export const authenticationOnLoad = () => {
     if (firebaseUser) {
       reData.user.id = firebaseUser.uid || "Unknown User"
       reData.user.name = firebaseUser.displayName || "Noname"
+
       const pathSegments = window.location.pathname.split("/")
-      const collaboratorId = pathSegments[pathSegments.length - 1]
-      if (collaboratorId == reData.user.id)
-        alert("Нельзя добавить самого себя в соисполнители. Отправьте ссылку другому пользователю!")
-      else addCollaborationRequest(collaboratorId)
+      const pathSegmentPreLast = [pathSegments.length - 2]
+      if (pathSegments[pathSegments.length - 1] == "add" && pathSegmentPreLast != reData.user.id)
+        addCollaborationRequest(pathSegmentPreLast)
+
       loadData()
     } else {
       reData.user.id = null

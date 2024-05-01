@@ -10,7 +10,10 @@ let checkedConsequence = (task, type) => {
   if (task.consequence == type) return "checked"
   else return ""
 }
-
+let checkedEnthusiasm = (task, type) => {
+  if (task.enthusiasm == type) return "checked"
+  else return ""
+}
 export default (task) => html`
   <div class="grid grid-cols-4 gap-3 w-full">
     <!-- Радиокнопки для выбора срока -->
@@ -67,7 +70,7 @@ export default (task) => html`
       <input
         type="radio"
         id="daysDuration"
-        name="consequenceDuration"
+        name="importance"
         value="daysDuration"
         class="hidden peer"
         @change="${handleRadioChange}"
@@ -79,7 +82,7 @@ export default (task) => html`
       <input
         type="radio"
         id="weeksDuration"
-        name="consequenceDuration"
+        name="importance"
         value="weeksDuration"
         class="hidden peer"
         @change="${handleRadioChange}"
@@ -91,7 +94,7 @@ export default (task) => html`
       <input
         type="radio"
         id="monthsDuration"
-        name="consequenceDuration"
+        name="importance"
         value="monthsDuration"
         class="hidden peer"
         @change="${handleRadioChange}"
@@ -103,16 +106,66 @@ export default (task) => html`
       <input
         type="radio"
         id="yearsDuration"
-        name="consequenceDuration"
+        name="importance"
         value="yearsDuration"
         class="hidden peer"
         @change="${handleRadioChange}"
         ${checkedConsequence(task, "yearsDuration")} />
       <label for="yearsDuration" class="${css.radio}"> Критично </label>
     </div>
+
+    <!-- Радиокнопки для выбора энтузиазма -->
+    <div>
+      <input
+        type="radio"
+        id="boring"
+        name="enthusiasm"
+        value="boring"
+        class="hidden peer"
+        @change="${handleRadioChange}"
+        ${checkedEnthusiasm(task, "boring")} />
+      <label for="boring" class="${css.radio}"> Скука </label>
+    </div>
+
+    <div>
+      <input
+        type="radio"
+        id="adequate"
+        name="enthusiasm"
+        value="adequate"
+        class="hidden peer"
+        @change="${handleRadioChange}"
+        ${checkedEnthusiasm(task, "adequate")} />
+      <label for="adequate" class="${css.radio}"> Пойдет </label>
+    </div>
+
+    <div>
+      <input
+        type="radio"
+        id="interesting"
+        name="enthusiasm"
+        value="interesting"
+        class="hidden peer"
+        @change="${handleRadioChange}"
+        ${checkedEnthusiasm(task, "interesting")} />
+      <label for="interesting" class="${css.radio}"> Интересно </label>
+    </div>
+
+    <div>
+      <input
+        type="radio"
+        id="delight"
+        name="enthusiasm"
+        value="delight"
+        class="hidden peer"
+        @change="${handleRadioChange}"
+        ${checkedEnthusiasm(task, "delight")} />
+      <label for="delight" class="${css.radio}"> Восторг </label>
+    </div>
   </div>
 `
 
 let handleRadioChange = () => {
   showSaveButtonHidePause()
+  document.getElementById("kairosCheckbox").checked = false
 }

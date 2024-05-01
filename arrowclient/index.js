@@ -7,7 +7,7 @@ import { renderTasks } from "./components/tasks/tasks.js"
 import { renderCollabortors, renderCollaborationRequests } from "./components/collaborators/collaborators.js"
 import { inputSocket } from "~/logic/send.js"
 import { NEWSCRIBETEXT } from "~/logic/const.js"
-import { updateDateClass, updateButtons } from "~/logic/manipulate.js"
+import { updateDateClass, updatePauseReadyButton } from "~/logic/manipulate.js"
 import { safeSetLocalStorageItem, getLocalStorageItem } from "~/logic/util.js"
 import reData from "~/logic/reactive.js"
 import { tick } from "~/logic/tick.js"
@@ -77,7 +77,7 @@ window.addEventListener("load", function () {
       let selectedtaskdiv = document.getElementById("selectedtask")
       if (selectedtaskdiv) selectedtaskdiv.scrollIntoView(true)
       updateDateClass()
-      updateButtons()
+      updatePauseReadyButton()
     })
   })
   watch(() => {

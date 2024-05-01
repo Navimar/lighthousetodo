@@ -3,12 +3,17 @@ import css from "~/css.js"
 import reData from "~/logic/reactive.js"
 import saveTask from "~/logic/savetask.js"
 import data from "~/logic/data.js"
-import { updateButtons } from "~/logic/manipulate.js"
+import { updatePauseReadyButton, updateKairosButton } from "~/logic/manipulate.js"
 import { makevisible } from "~/logic/makevisible.js"
 import { getObjectById, copyToClipboard } from "~/logic/util.js"
 
 let checkedPause = (task) => {
   if (task.pause) return "checked"
+  else return ""
+}
+
+let checkedKairos = (task) => {
+  if (task.type == "kairos" || task.consequence == "kairos" || task.enthusiasm == "kairos") return "checked"
   else return ""
 }
 
@@ -57,10 +62,22 @@ let riseTask = (taskId, visited = new Set(), depth = 0) => {
 export default (task) =>
   html`<div class="grid grid-cols-4 gap-3">
     <button class="${css.button}" @click="${() => (reData.selectedScribe = false)}">Закрыть</button>
-    <button class="${css.button}"></button>
+    <div>
+      <input
+        class="appearance-none peer sr-only"
+        type="checkbox"
+        id="kairosCheckbox"
+        @change="${updateKairosButton}"
+        ${checkedKairos(task)} />
+      <label class="${css.button} whitespace-nowrap" for="kairosCheckbox">Кайрос</label>
+    </div>
 
     <div>
-      <input class="appearance-none peer sr-only" type="checkbox" id="readyCheckbox" @change="${updateButtons}" />
+      <input
+        class="appearance-none peer sr-only"
+        type="checkbox"
+        id="readyCheckbox"
+        @change="${updatePauseReadyButton}" />
       <label class="${css.button} whitespace-nowrap" for="readyCheckbox">Готово</label>
     </div>
     <button style="display:none" id="savebutton" class="${css.button}" @click="${saveButton}">Сохранить</button>

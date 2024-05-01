@@ -1,9 +1,23 @@
 import { html } from "@arrow-js/core"
 import { NEWSCRIBETEXT } from "~/logic/const.js"
-import { selectTaskByName } from "~/logic/manipulate.js"
+import saveTask from "~/logic/savetask.js"
+import { clearSearch } from "~/logic/manipulate.js"
+import reData from "~/logic/reactive.js"
+import { getObjectByName } from "~/logic/util"
+import { makevisible } from "~/logic/makevisible.js"
+import audio from "~/logic/audio.js"
 
 let plusbutton = () => {
-  selectTaskByName(NEWSCRIBETEXT)
+  saveTask("selectTaskByName")
+  clearSearch()
+  let newScribe = getObjectByName(NEWSCRIBETEXT)
+  reData.selectedScribe = newScribe.id
+  newScribe.type = "onDay"
+  newScribe.consequence = "monthsDuration"
+  newScribe.enthusiasm = "interesting"
+
+  makevisible()
+  audio.playSound(audio.add)
 }
 
 export default html`<div

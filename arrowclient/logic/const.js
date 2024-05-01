@@ -4,10 +4,20 @@ export const PRIORITY = {
   onDay: 3,
   shortTerm: 2,
   longTerm: 1,
+  kairos: 0,
 }
-export const CONSEQUENCE_DURATION_PRIORITY = {
+export const IMPORTANCE_PRIORITY = {
   yearsDuration: 4,
   monthsDuration: 3,
   weeksDuration: 2,
   daysDuration: 1,
+  kairos: 0,
+}
+
+export const ENTHUSIASM_PRIORITY = {
+  delight: 4,
+  interesting: 3,
+  adequate: 2,
+  boring: 1,
+  kairos: 0,
 }

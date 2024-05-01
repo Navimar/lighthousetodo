@@ -41,7 +41,9 @@ export default (m) => {
       let collaborator = getCollaboratorByName(e)
       // console.log("collaborator", e, collaborator)
       if (collaborator) assignedTo.push(collaborator.id)
-      else fromEditIds.push(getObjectByName(e).id)
+      else {
+        fromEditIds.push(getObjectByName(e).id)
+      }
     })
 
   toEdit.innerText
@@ -60,20 +62,34 @@ export default (m) => {
 
   // добываем данные из радио
   let typeRadios = document.getElementsByName("timePeriod")
-  let priorityRadioType = false
+  let priorityRadioType = "kairos"
   for (let i = 0; i < typeRadios.length; i++) {
     if (typeRadios[i].checked) {
       priorityRadioType = typeRadios[i].value // Выводим значение выбранного элемента
       break // Выходим из цикла, так как радио-кнопка найдена
     }
   }
-  let durationRadios = document.getElementsByName("consequenceDuration")
-  let priorityRadioConsequence = false
-  for (let i = 0; i < durationRadios.length; i++) {
-    if (durationRadios[i].checked) {
-      priorityRadioConsequence = durationRadios[i].value // Выводим значение выбранного элемента
+  let importanceRadios = document.getElementsByName("importance")
+  let importancePriorityRadio = "kairos"
+  for (let i = 0; i < importanceRadios.length; i++) {
+    if (importanceRadios[i].checked) {
+      importancePriorityRadio = importanceRadios[i].value // Выводим значение выбранного элемента
       break // Выходим из цикла, так как радио-кнопка найдена
     }
+  }
+
+  let enthusiasmRadios = document.getElementsByName("enthusiasm")
+  let enthusiasmPriorityRadio = "kairos"
+  for (let i = 0; i < enthusiasmRadios.length; i++) {
+    if (enthusiasmRadios[i].checked) {
+      enthusiasmPriorityRadio = enthusiasmRadios[i].value // Выводим значение выбранного элемента
+      break // Выходим из цикла, так как радио-кнопка найдена
+    }
+  }
+  if (importancePriorityRadio == "kairos" || enthusiasmPriorityRadio == "kairos" || priorityRadioType == "kairos") {
+    if (priorityRadioType == "kairos") priorityRadioType = "longTerm"
+    if (importancePriorityRadio == "kairos") importancePriorityRadio = "daysDuration"
+    if (enthusiasmPriorityRadio == "kairos") enthusiasmPriorityRadio = "boring"
   }
 
   //провереяем что имя не пусто и не занято
@@ -118,7 +134,8 @@ export default (m) => {
   thisTask.note = note
 
   if (priorityRadioType) thisTask.type = priorityRadioType
-  if (priorityRadioConsequence) thisTask.consequence = priorityRadioConsequence
+  if (importancePriorityRadio) thisTask.consequence = importancePriorityRadio
+  if (enthusiasmPriorityRadio) thisTask.enthusiasm = enthusiasmPriorityRadio
 
   thisTask.fromIds = fromEditIds
   thisTask.toIds = toEditIds

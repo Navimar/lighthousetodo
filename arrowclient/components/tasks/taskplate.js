@@ -46,11 +46,19 @@ export default (task, additionalClass = "") => {
     return "hidden"
   }
 
+  const enthusiasmClass = () => {
+    if (task.enthusiasm == "boring") return ""
+    if (task.enthusiasm == "adequate") return "rounded-xl"
+    if (task.enthusiasm == "interesting") return "rounded-xl border-dashed"
+    if (task.enthusiasm == "delight") return "rounded-xl border-double border-4"
+    // return "hidden"
+  }
+
   return html`<div
-      class="h-fit box-border border-2  border-transparent font-bold text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden rounded-sm ${additionalClass}"
+      class="h-fit box-border border-2  border-transparent font-bold text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${additionalClass}"
       >${paused()}</div
     ><div
-      class="h-fit border-2 box-border text-neutral-600 dark:text-neutral-350 text-center uppercase whitespace-nowrap fontaccent text-sm rounded-sm ${additionalClass} ${timeClass()}"
+      class="h-fit border-2 box-border text-neutral-600 dark:text-neutral-350 text-center uppercase whitespace-nowrap fontaccent text-sm ${additionalClass} ${enthusiasmClass()} ${timeClass()}"
       >${getTaskTime()}</div
     >`
 }

@@ -37,11 +37,9 @@ export let renderTasks = () => {
 
 let renderTask = (task, index) => {
   let taskBgEditable = () => {
-    if (task.public) return "bg-purple-100 dark:bg-purple"
     return "bg-white dark:bg-black"
   }
   let taskBg = () => {
-    if (task.public) return "bg-purple-200 dark:bg-purple-900"
     return "bg-neutral-100 dark:bg-neutral-900"
   }
   let firstclass = ""

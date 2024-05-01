@@ -82,3 +82,19 @@ input {
   content: attr(data-placeholder);
   @apply block h-full text-neutral-500 italic;
 }
+
+.corner-box-bottom-right {
+  background-image: linear-gradient(to bottom right, transparent 50%, gray 50%);
+  background-repeat: no-repeat;
+  background-size: 0.5em 0.5em;
+  background-position: bottom right;
+  border-bottom-right-radius: 0;
+}
+
+.corner-box-top-left {
+  background-image: linear-gradient(to top left, transparent 50%, gray 50%);
+  background-repeat: no-repeat;
+  background-size: 0.5em 0.5em;
+  background-position: top left;
+  border-top-left-radius: 0;
+}
