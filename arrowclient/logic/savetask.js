@@ -86,7 +86,7 @@ export default (m) => {
       break // Выходим из цикла, так как радио-кнопка найдена
     }
   }
-  if (importancePriorityRadio == "kairos" || enthusiasmPriorityRadio == "kairos" || priorityRadioType == "kairos") {
+  if (!(importancePriorityRadio == "kairos" && enthusiasmPriorityRadio == "kairos" && priorityRadioType == "kairos")) {
     if (priorityRadioType == "kairos") priorityRadioType = "longTerm"
     if (importancePriorityRadio == "kairos") importancePriorityRadio = "daysDuration"
     if (enthusiasmPriorityRadio == "kairos") enthusiasmPriorityRadio = "boring"
