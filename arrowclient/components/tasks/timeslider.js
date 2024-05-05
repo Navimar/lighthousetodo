@@ -46,10 +46,14 @@ export default (task) =>
       <span class="font-bold fontmono">ˈ</span>
       <span
         @click="${() => {
+          const timeInput = document.getElementById("timeInput")
+          const dateInput = document.getElementById("dateInput")
+          timeInput.value = dayjs().format("HH:mm")
+          dateInput.value = dayjs().format("YYYY-MM-DD")
           const currentTimeInMinutes = dayjs().hour() * 60 + dayjs().minute()
           const slider = document.querySelector("#timeSlider")
           slider.value = currentTimeInMinutes
-          updateSliderLabel({ target: slider }) // Optional: to update other elements if needed
+          dateInputPauseButtonHTMLCSS()
         }}"
         class="text-white fontmono rounded-lg px-2 bg-accent dark:bg-accent-dark block"
         >${() => reData.currentTime.clock}</span

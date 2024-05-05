@@ -1,11 +1,5 @@
 import { Howl, Howler } from "howler"
 
-export const add = new Howl({
-  src: ["../audio/add.wav"],
-  loop: false,
-  volume: 0.5,
-})
-
 export default {
   playSound: (sound) => {
     // Генерация случайных значений для параметров
@@ -17,7 +11,16 @@ export default {
     sound.volume(volume)
     sound.play()
   },
-  add,
+  add: new Howl({
+    src: ["../audio/add.wav"],
+    loop: false,
+    volume: 0.5,
+  }),
+  readySave: new Howl({
+    src: ["../audio/readySave.mp3"],
+    loop: false,
+    volume: 0.5,
+  }),
 }
 function randomFloat(min, max) {
   return Math.random() * (max - min) + min

@@ -6,6 +6,7 @@ import data from "~/logic/data.js"
 import { updatePauseReadyButton, updateKairosButton } from "~/logic/manipulate.js"
 import { makevisible } from "~/logic/makevisible.js"
 import { getObjectById, copyToClipboard } from "~/logic/util.js"
+import audio from "~/logic/audio.js"
 
 let checkedPause = (task) => {
   if (task.pause) return "checked"
@@ -18,6 +19,8 @@ let checkedKairos = (task) => {
 }
 
 let saveButton = () => {
+  console.log("audio", audio)
+  audio.playSound(audio.readySave)
   saveTask("sv")
   riseTask(reData.selectedScribe)
   reData.selectedScribe = false
