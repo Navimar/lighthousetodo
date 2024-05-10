@@ -12,12 +12,12 @@ export default {
     sound.play()
   },
   add: new Howl({
-    src: ["../audio/add.wav"],
+    src: ["../add.wav"],
     loop: false,
     volume: 0.5,
   }),
   readySave: new Howl({
-    src: ["../audio/readySave.mp3"],
+    src: ["../readySave.mp3"],
     loop: false,
     volume: 0.5,
   }),
