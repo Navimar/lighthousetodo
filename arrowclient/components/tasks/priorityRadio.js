@@ -22,7 +22,7 @@ export default (task) => html`
       <input
         type="radio"
         id="longTerm"
-        name="timePeriod"
+        name="urgency"
         value="longTerm"
         class="hidden peer"
         @change="${handleRadioChange}"
@@ -34,7 +34,7 @@ export default (task) => html`
       <input
         type="radio"
         id="shortTerm"
-        name="timePeriod"
+        name="urgency"
         value="shortTerm"
         class="hidden peer"
         @change="${handleRadioChange}"
@@ -46,7 +46,7 @@ export default (task) => html`
       <input
         type="radio"
         id="onDay"
-        name="timePeriod"
+        name="urgency"
         value="onDay"
         class="hidden peer"
         @change="${handleRadioChange}"
@@ -58,7 +58,7 @@ export default (task) => html`
       <input
         type="radio"
         id="onTime"
-        name="timePeriod"
+        name="urgency"
         value="onTime"
         class="hidden peer"
         @change="${handleRadioChange}"

@@ -19,5 +19,5 @@ export const DIFFICULTY_PRIORITY = {
   day: 2,
   hour: 3,
   quick: 4,
-  kairos: 0,
+  kairos: 4,
 }

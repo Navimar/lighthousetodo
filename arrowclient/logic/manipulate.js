@@ -100,19 +100,40 @@ export function updatePauseReadyButton() {
   }
 }
 
-export function updateKairosButton() {
-  document.querySelectorAll('input[type="radio"][name="timePeriod"]').forEach((radio) => {
-    radio.checked = false
-  })
+export function updateKairosButton(event, task) {
+  if (event.target.checked) {
+    document.querySelectorAll('input[type="radio"][name="urgency"]').forEach((radio) => {
+      radio.checked = false
+    })
 
-  // Снятие выбора с радиокнопок группы importance
-  document.querySelectorAll('input[type="radio"][name="importance"]').forEach((radio) => {
-    radio.checked = false
-  })
-  // Снятие выбора с радиокнопок группы enthusiasm
-  document.querySelectorAll('input[type="radio"][name="enthusiasm"]').forEach((radio) => {
-    radio.checked = false
-  })
+    // Снятие выбора с радиокнопок группы importance
+    document.querySelectorAll('input[type="radio"][name="importance"]').forEach((radio) => {
+      radio.checked = false
+    })
+    // Снятие выбора с радиокнопок группы enthusiasm
+    document.querySelectorAll('input[type="radio"][name="difficulty"]').forEach((radio) => {
+      radio.checked = false
+    })
+    // Ваш код для обработки выделения
+  } else {
+    // Восстанавливаем состояние радиокнопок группы timePeriod
+    if (task.urgency) {
+      const radio = document.querySelector(`input[type="radio"][name="urgency"][value="${task.urgency}"]`)
+      if (radio) radio.checked = true
+    }
+
+    // Восстанавливаем состояние радиокнопок группы importance
+    if (task.importance) {
+      const radio = document.querySelector(`input[type="radio"][name="importance"][value="${task.importance}"]`)
+      if (radio) radio.checked = true
+    }
+
+    // Восстанавливаем состояние радиокнопок группы difficulty
+    if (task.difficulty) {
+      const radio = document.querySelector(`input[type="radio"][name="difficulty"][value="${task.difficulty}"]`)
+      if (radio) radio.checked = true
+    }
+  }
 }
 
 export let clearSearch = () => {

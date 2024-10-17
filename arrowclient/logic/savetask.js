@@ -61,11 +61,11 @@ export default (m) => {
   const dateInput = document.getElementById("dateInput").value
 
   // добываем данные из радио
-  let typeRadios = document.getElementsByName("timePeriod")
+  let urgencyRadios = document.getElementsByName("urgency")
   let priorityRadioType = "kairos"
-  for (let i = 0; i < typeRadios.length; i++) {
-    if (typeRadios[i].checked) {
-      priorityRadioType = typeRadios[i].value // Выводим значение выбранного элемента
+  for (let i = 0; i < urgencyRadios.length; i++) {
+    if (urgencyRadios[i].checked) {
+      priorityRadioType = urgencyRadios[i].value // Выводим значение выбранного элемента
       break // Выходим из цикла, так как радио-кнопка найдена
     }
   }

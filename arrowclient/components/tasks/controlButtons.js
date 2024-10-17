@@ -7,6 +7,7 @@ import { updatePauseReadyButton, updateKairosButton } from "~/logic/manipulate.j
 import { makevisible } from "~/logic/makevisible.js"
 import { getObjectById, copyToClipboard } from "~/logic/util.js"
 import audio from "~/logic/audio.js"
+import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 
 let checkedPause = (task) => {
   if (task.pause) return "checked"
@@ -70,7 +71,10 @@ export default (task) =>
         class="appearance-none peer sr-only"
         type="checkbox"
         id="kairosCheckbox"
-        @change="${updateKairosButton}"
+        @change="${(event) => {
+          updateKairosButton(event, task)
+          showSaveButtonHidePause()
+        }}"
         ${checkedKairos(task)} />
       <label class="${css.button} whitespace-nowrap" for="kairosCheckbox">Кайрос</label>
     </div>
