@@ -4,7 +4,7 @@ export default (incomingTasks = []) => {
   for (const incomingTask of incomingTasks) {
     // Проверяем наличие ID
     if (!incomingTask.id) {
-      console.log("incomingTask", incomingTask)
+      // console.log("incomingTask", incomingTask)
       throw new Error("Incoming task is missing an ID.")
     }
 

@@ -2,16 +2,17 @@ import { html } from "@arrow-js/core"
 import css from "~/css.js"
 import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 
-let checkedType = (task, type) => {
-  if (task.type == type) return "checked"
+let checkedUrgency = (task, type) => {
+  if (task.urgency == type) return "checked"
   else return ""
 }
 let checkedConsequence = (task, type) => {
-  if (task.consequence == type) return "checked"
+  if (task.importance == type) return "checked"
   else return ""
 }
-let checkedEnthusiasm = (task, type) => {
-  if (task.enthusiasm == type) return "checked"
+
+let checkedDifficulty = (task, type) => {
+  if (task.difficulty == type) return "checked"
   else return ""
 }
 export default (task) => html`
@@ -25,7 +26,7 @@ export default (task) => html`
         value="longTerm"
         class="hidden peer"
         @change="${handleRadioChange}"
-        ${checkedType(task, "longTerm")} />
+        ${checkedUrgency(task, "longTerm")} />
       <label for="longTerm" class="${css.radio}"> Окно </label>
     </div>
 
@@ -37,7 +38,7 @@ export default (task) => html`
         value="shortTerm"
         class="hidden peer"
         @change="${handleRadioChange}"
-        ${checkedType(task, "shortTerm")} />
+        ${checkedUrgency(task, "shortTerm")} />
       <label for="shortTerm" class="${css.radio}"> На днях </label>
     </div>
 
@@ -49,7 +50,7 @@ export default (task) => html`
         value="onDay"
         class="hidden peer"
         @change="${handleRadioChange}"
-        ${checkedType(task, "onDay")} />
+        ${checkedUrgency(task, "onDay")} />
       <label for="onDay" class="${css.radio}"> Срочно </label>
     </div>
 
@@ -61,106 +62,106 @@ export default (task) => html`
         value="onTime"
         class="hidden peer"
         @change="${handleRadioChange}"
-        ${checkedType(task, "onTime")} />
+        ${checkedUrgency(task, "onTime")} />
       <label for="onTime" class="${css.radio}"> Ко времени </label>
     </div>
 
-    <!-- Радиокнопки для выбора длительности последствий -->
+    <!-- Радиокнопки для выбора важности -->
     <div>
       <input
         type="radio"
-        id="daysDuration"
+        id="trivial"
         name="importance"
-        value="daysDuration"
+        value="trivial"
         class="hidden peer"
         @change="${handleRadioChange}"
-        ${checkedConsequence(task, "daysDuration")} />
-      <label for="daysDuration" class="${css.radio}"> Обычно </label>
+        ${checkedConsequence(task, "trivial")} />
+      <label for="trivial" class="${css.radio}"> Пустяк </label>
     </div>
 
     <div>
       <input
         type="radio"
-        id="weeksDuration"
+        id="noticeable"
         name="importance"
-        value="weeksDuration"
+        value="noticeable"
         class="hidden peer"
         @change="${handleRadioChange}"
-        ${checkedConsequence(task, "weeksDuration")} />
-      <label for="weeksDuration" class="${css.radio}"> Заметно </label>
+        ${checkedConsequence(task, "noticeable")} />
+      <label for="noticeable" class="${css.radio}"> Заметно </label>
     </div>
 
     <div>
       <input
         type="radio"
-        id="monthsDuration"
+        id="important"
         name="importance"
-        value="monthsDuration"
+        value="important"
         class="hidden peer"
         @change="${handleRadioChange}"
-        ${checkedConsequence(task, "monthsDuration")} />
-      <label for="monthsDuration" class="${css.radio}"> Важно </label>
+        ${checkedConsequence(task, "important")} />
+      <label for="important" class="${css.radio}"> Важно </label>
     </div>
 
     <div>
       <input
         type="radio"
-        id="yearsDuration"
+        id="critical"
         name="importance"
-        value="yearsDuration"
+        value="critical"
         class="hidden peer"
         @change="${handleRadioChange}"
-        ${checkedConsequence(task, "yearsDuration")} />
-      <label for="yearsDuration" class="${css.radio}"> Критично </label>
+        ${checkedConsequence(task, "critical")} />
+      <label for="critical" class="${css.radio}"> Критично </label>
     </div>
 
-    <!-- Радиокнопки для выбора энтузиазма -->
+    <!-- Радиокнопки для выбора сложности задачи -->
     <div>
       <input
         type="radio"
-        id="boring"
-        name="enthusiasm"
-        value="boring"
+        id="long"
+        name="difficulty"
+        value="long"
         class="hidden peer"
         @change="${handleRadioChange}"
-        ${checkedEnthusiasm(task, "boring")} />
-      <label for="boring" class="${css.radio}"> Скука </label>
-    </div>
-
-    <div>
-      <input
-        type="radio"
-        id="adequate"
-        name="enthusiasm"
-        value="adequate"
-        class="hidden peer"
-        @change="${handleRadioChange}"
-        ${checkedEnthusiasm(task, "adequate")} />
-      <label for="adequate" class="${css.radio}"> Пойдет </label>
+        ${checkedDifficulty(task, "long")} />
+      <label for="long" class="${css.radioСompliment}"> Долго </label>
     </div>
 
     <div>
       <input
         type="radio"
-        id="interesting"
-        name="enthusiasm"
-        value="interesting"
+        id="day"
+        name="difficulty"
+        value="day"
         class="hidden peer"
         @change="${handleRadioChange}"
-        ${checkedEnthusiasm(task, "interesting")} />
-      <label for="interesting" class="${css.radio}"> Интересно </label>
+        ${checkedDifficulty(task, "day")} />
+      <label for="day" class="${css.radioСompliment}"> Денёк </label>
     </div>
 
     <div>
       <input
         type="radio"
-        id="delight"
-        name="enthusiasm"
-        value="delight"
+        id="hour"
+        name="difficulty"
+        value="hour"
         class="hidden peer"
         @change="${handleRadioChange}"
-        ${checkedEnthusiasm(task, "delight")} />
-      <label for="delight" class="${css.radio}"> Восторг </label>
+        ${checkedDifficulty(task, "hour")} />
+      <label for="hour" class="${css.radioСompliment}"> Часок </label>
+    </div>
+
+    <div>
+      <input
+        type="radio"
+        id="quick"
+        name="difficulty"
+        value="quick"
+        class="hidden peer"
+        @change="${handleRadioChange}"
+        ${checkedDifficulty(task, "quick")} />
+      <label for="quick" class="${css.radioСompliment}"> Быстро </label>
     </div>
   </div>
 `

@@ -27,7 +27,7 @@ export let tick = () => {
         }
       }
       if (task.pause) {
-        // Если разница между текущим временем и task.pause больше 5 минут
+        // Если разница между текущим временем и task.pause больше 10 минут
         if (dayjs().diff(dayjs(task.pause), "minute") > 10 * task.pauseTimes) {
           // needMv = true
           task.pause = false

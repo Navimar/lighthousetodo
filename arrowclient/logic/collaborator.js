@@ -24,6 +24,6 @@ export let addCollaborationRequest = (collaboratorId) => {
 }
 
 export let getCollaboratorByName = (name) => {
-  console.log("reData.collaborators", reData.collaborators)
+  // console.log("reData.collaborators", reData.collaborators)
   return reData.collaborators.find((c) => c.name.trim().toLowerCase() === name.trim().toLowerCase())
 }

@@ -12,9 +12,9 @@ let plusbutton = () => {
   clearSearch()
   let newScribe = getObjectByName(NEWSCRIBETEXT)
   reData.selectedScribe = newScribe.id
-  newScribe.type = "onDay"
-  newScribe.consequence = "monthsDuration"
-  newScribe.enthusiasm = "interesting"
+  newScribe.urgency = "onDay"
+  newScribe.importance = "important"
+  newScribe.difficulty = "hour"
 
   makevisible()
   audio.playSound(audio.add)

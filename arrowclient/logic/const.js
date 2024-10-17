@@ -7,17 +7,17 @@ export const PRIORITY = {
   kairos: 0,
 }
 export const IMPORTANCE_PRIORITY = {
-  yearsDuration: 4,
-  monthsDuration: 3,
-  weeksDuration: 2,
-  daysDuration: 1,
+  critical: 4,
+  important: 3,
+  noticeable: 2,
+  trivial: 1,
   kairos: 0,
 }
 
-export const ENTHUSIASM_PRIORITY = {
-  delight: 4,
-  interesting: 3,
-  adequate: 2,
-  boring: 1,
+export const DIFFICULTY_PRIORITY = {
+  long: 1,
+  day: 2,
+  hour: 3,
+  quick: 4,
   kairos: 0,
 }

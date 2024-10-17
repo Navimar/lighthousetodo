@@ -56,7 +56,7 @@ export const loadData = async () => {
 
 socket.on("save-confirm", (responseId) => {
   // Удаляем подтвержденный пакет из массива
-  console.log("save-confirm", responseId)
+  // console.log("save-confirm", responseId)
   data.pendingRequests = data.pendingRequests.filter((packet) => packet.requestId !== responseId)
   safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
 })

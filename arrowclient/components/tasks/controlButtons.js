@@ -14,12 +14,12 @@ let checkedPause = (task) => {
 }
 
 let checkedKairos = (task) => {
-  if (task.type == "kairos" || task.consequence == "kairos" || task.enthusiasm == "kairos") return "checked"
+  if (task.urgency == "kairos" || task.importance == "kairos" || task.difficulty == "kairos") return "checked"
   else return ""
 }
 
 let saveButton = () => {
-  console.log("audio", audio)
+  // console.log("audio", audio)
   audio.playSound(audio.readySave)
   saveTask("sv")
   riseTask(reData.selectedScribe)

@@ -1,6 +1,6 @@
 import reData from "~/logic/reactive.js"
 import { getObjectById } from "~/logic/util.js"
-import { PRIORITY, IMPORTANCE_PRIORITY, ENTHUSIASM_PRIORITY } from "~/logic/const"
+import { PRIORITY, IMPORTANCE_PRIORITY, DIFFICULTY_PRIORITY } from "~/logic/const"
 import data from "~/logic/data.js"
 
 import dayjs from "dayjs"
@@ -46,8 +46,8 @@ export const makevisible = () => {
 
     // Обновляем highestPriorityPerDate только для текущих и будущих дат
     if (task.date && !task.ready && dayjs(task.date).isSameOrAfter(today)) {
-      if (!highestPriorityPerDate[task.date] || PRIORITY[task.type] < PRIORITY[highestPriorityPerDate[task.date]]) {
-        highestPriorityPerDate[task.date] = task.type
+      if (!highestPriorityPerDate[task.date] || PRIORITY[task.urgency] < PRIORITY[highestPriorityPerDate[task.date]]) {
+        highestPriorityPerDate[task.date] = task.urgency
       }
     }
   }
@@ -56,14 +56,58 @@ export const makevisible = () => {
   sort()
 }
 
+// const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { count: 0 }) => {
+//   // Базовый случай рекурсии или если задача уже посещена
+//   if (depth >= 7 || visited.has(task.id)) {
+//     return {
+//       urgency: task.urgency,
+//       importance: task.importance,
+//       enthusiasm: task.enthusiasm,
+//       points: PRIORITY[task.urgency] + IMPORTANCE_PRIORITY[task.importance] + ENTHUSIASM_PRIORITY[task.enthusiasm],
+//       nodeCount: nodeCount.count,
+//     }
+//   }
+
+//   visited.add(task.id)
+//   nodeCount.count++
+
+//   // Начальное значение очков, включая новый параметр enthusiasm
+//   let maxPoints = PRIORITY[task.urgency] + IMPORTANCE_PRIORITY[task.importance] + ENTHUSIASM_PRIORITY[task.enthusiasm]
+//   let maxPriorityType = task.urgency
+//   let maxPriorityConsequence = task.importance
+//   let maxPriorityEnthusiasm = task.enthusiasm
+
+//   task.toIds?.forEach((id) => {
+//     const childTask = getObjectById(id)
+//     if (!childTask || childTask.ready) return
+
+//     const childPriority = getMaxPriority(childTask, depth + 1, visited, nodeCount)
+
+//     // Обновляем maxPoints с учетом enthusiasm
+//     if (childPriority.points > maxPoints) {
+//       maxPoints = childPriority.points
+//       maxPriorityType = childPriority.urgency
+//       maxPriorityConsequence = childPriority.importance
+//       maxPriorityEnthusiasm = childPriority.enthusiasm
+//     }
+//   })
+
+//   return {
+//     urgency: maxPriorityType,
+//     importance: maxPriorityConsequence,
+//     enthusiasm: maxPriorityEnthusiasm,
+//     points: maxPoints,
+//     nodeCount: nodeCount.count,
+//   }
+// }
+
 const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { count: 0 }) => {
   // Базовый случай рекурсии или если задача уже посещена
   if (depth >= 7 || visited.has(task.id)) {
     return {
-      type: task.type,
-      consequence: task.consequence,
-      enthusiasm: task.enthusiasm,
-      points: PRIORITY[task.type] + IMPORTANCE_PRIORITY[task.consequence] + ENTHUSIASM_PRIORITY[task.enthusiasm],
+      urgency: task.urgency,
+      importance: task.importance,
+      points: PRIORITY[task.urgency] + IMPORTANCE_PRIORITY[task.importance],
       nodeCount: nodeCount.count,
     }
   }
@@ -71,11 +115,10 @@ const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { coun
   visited.add(task.id)
   nodeCount.count++
 
-  // Начальное значение очков, включая новый параметр enthusiasm
-  let maxPoints = PRIORITY[task.type] + IMPORTANCE_PRIORITY[task.consequence] + ENTHUSIASM_PRIORITY[task.enthusiasm]
-  let maxPriorityType = task.type
-  let maxPriorityConsequence = task.consequence
-  let maxPriorityEnthusiasm = task.enthusiasm
+  // Начальное значение очков
+  let maxPoints = PRIORITY[task.urgency] + IMPORTANCE_PRIORITY[task.importance]
+  let maxPriorityType = task.urgency
+  let maxPriorityConsequence = task.importance
 
   task.toIds?.forEach((id) => {
     const childTask = getObjectById(id)
@@ -83,19 +126,17 @@ const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { coun
 
     const childPriority = getMaxPriority(childTask, depth + 1, visited, nodeCount)
 
-    // Обновляем maxPoints с учетом enthusiasm
+    // Обновляем maxPoints
     if (childPriority.points > maxPoints) {
       maxPoints = childPriority.points
-      maxPriorityType = childPriority.type
-      maxPriorityConsequence = childPriority.consequence
-      maxPriorityEnthusiasm = childPriority.enthusiasm
+      maxPriorityType = childPriority.urgency
+      maxPriorityConsequence = childPriority.importance
     }
   })
 
   return {
-    type: maxPriorityType,
-    consequence: maxPriorityConsequence,
-    enthusiasm: maxPriorityEnthusiasm,
+    urgency: maxPriorityType,
+    importance: maxPriorityConsequence,
     points: maxPoints,
     nodeCount: nodeCount.count,
   }
@@ -133,17 +174,20 @@ export const sort = (arrToSort = reData.visibleTasks) => {
     const aPriority = getMaxPriority(a)
     const bPriority = getMaxPriority(b)
 
+    const aTotalPriority = aPriority.points + DIFFICULTY_PRIORITY[a.difficulty]
+    const bTotalPriority = bPriority.points + DIFFICULTY_PRIORITY[b.difficulty]
+
     let now = dayjs()
 
     let aIsFuture = datetimeA.isAfter(now)
     let bIsFuture = datetimeB.isAfter(now)
 
     // Приоритет будущих задач ко времени над другими
-    if (aPriority.type == "onTime" && aIsFuture && bPriority.type != "onTime") return -1
-    if (bPriority.type == "onTime" && bIsFuture && aPriority.type != "onTime") return 1
+    if (aPriority.urgency == "onTime" && aIsFuture && bPriority.urgency != "onTime") return -1
+    if (bPriority.urgency == "onTime" && bIsFuture && aPriority.urgency != "onTime") return 1
 
     // Если обе ко времени и обе в будущем, сравниваем datetime
-    if (aPriority.type == "onTime" && bPriority.type == "onTime" && aIsFuture && bIsFuture) {
+    if (aPriority.urgency == "onTime" && bPriority.urgency == "onTime" && aIsFuture && bIsFuture) {
       if (!datetimeA.isSame(datetimeB)) return datetimeA.isAfter(datetimeB) ? 1 : -1
     }
 
@@ -151,9 +195,8 @@ export const sort = (arrToSort = reData.visibleTasks) => {
     if (aIsFuture && !bIsFuture) return 1
     if (!aIsFuture && bIsFuture) return -1
 
-    // Сортируем по приоритету
-    if (aPriority.points > bPriority.points) return -1
-    if (aPriority.points < bPriority.points) return 1
+    if (aTotalPriority > bTotalPriority) return -1
+    if (aTotalPriority < bTotalPriority) return 1
 
     // Сортируем по количеству потомков
     if (aPriority.nodeCount > bPriority.nodeCount) return 1

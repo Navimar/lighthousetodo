@@ -11,7 +11,7 @@ import dayjs from "dayjs"
 export default (m) => {
   let changedTasks = []
   //понять откуда вызвано сохрание
-  console.log("saveTask", m)
+  // console.log("saveTask", m)
   //если нет выделенных то выйти
   if (!reData.selectedScribe) return false
 
@@ -78,18 +78,18 @@ export default (m) => {
     }
   }
 
-  let enthusiasmRadios = document.getElementsByName("enthusiasm")
-  let enthusiasmPriorityRadio = "kairos"
-  for (let i = 0; i < enthusiasmRadios.length; i++) {
-    if (enthusiasmRadios[i].checked) {
-      enthusiasmPriorityRadio = enthusiasmRadios[i].value // Выводим значение выбранного элемента
+  let difficultyRadios = document.getElementsByName("difficulty")
+  let difficultyPriorityRadio = "kairos"
+  for (let i = 0; i < difficultyRadios.length; i++) {
+    if (difficultyRadios[i].checked) {
+      difficultyPriorityRadio = difficultyRadios[i].value // Выводим значение выбранного элемента
       break // Выходим из цикла, так как радио-кнопка найдена
     }
   }
-  if (!(importancePriorityRadio == "kairos" && enthusiasmPriorityRadio == "kairos" && priorityRadioType == "kairos")) {
+  if (!(importancePriorityRadio == "kairos" && difficultyPriorityRadio == "kairos" && priorityRadioType == "kairos")) {
     if (priorityRadioType == "kairos") priorityRadioType = "longTerm"
-    if (importancePriorityRadio == "kairos") importancePriorityRadio = "daysDuration"
-    if (enthusiasmPriorityRadio == "kairos") enthusiasmPriorityRadio = "boring"
+    if (importancePriorityRadio == "kairos") importancePriorityRadio = "trivial"
+    if (difficultyPriorityRadio == "kairos") difficultyPriorityRadio = "boring"
   }
 
   //провереяем что имя не пусто и не занято
@@ -133,9 +133,9 @@ export default (m) => {
   thisTask.name = name
   thisTask.note = note
 
-  if (priorityRadioType) thisTask.type = priorityRadioType
-  if (importancePriorityRadio) thisTask.consequence = importancePriorityRadio
-  if (enthusiasmPriorityRadio) thisTask.enthusiasm = enthusiasmPriorityRadio
+  if (priorityRadioType) thisTask.urgency = priorityRadioType
+  if (importancePriorityRadio) thisTask.importance = importancePriorityRadio
+  if (difficultyPriorityRadio) thisTask.difficulty = difficultyPriorityRadio
 
   thisTask.fromIds = fromEditIds
   thisTask.toIds = toEditIds
@@ -164,8 +164,6 @@ export default (m) => {
   let readyCheckbox = document.getElementById("readyCheckbox")
   if (readyCheckbox && readyCheckbox.checked) thisTask.ready = true
   else thisTask.ready = false
-
-  // console.log("thisTask", thisTask)
 
   //удаляем дубликаты
   changedTasks = [...new Set(changedTasks)]

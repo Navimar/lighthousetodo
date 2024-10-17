@@ -46,7 +46,7 @@ let renderTask = (task, index) => {
   let sticky = false
   if (task.ready) firstclass += "border-box border-b-02rem border-compliment dark:border-compliment"
   else firstclass = index == 0 ? "border-box border-b-02rem border-accent dark:border-accent-dark " : ""
-  if (task.type == "meeting" && firststicky) {
+  if (task.urgency == "meeting" && firststicky) {
     sticky = "sticky bottom-0 z-[50]"
     firststicky = false
   }
@@ -91,7 +91,7 @@ let renderTimeToNextTask = (index) => {
   let nextTaskIndex = index + 1
   while (nextTaskIndex < reData.visibleTasks.length) {
     let nextTask = reData.visibleTasks[nextTaskIndex]
-    if (nextTask.type === "meeting" || nextTask.type === "frame") {
+    if (nextTask.urgency === "meeting" || nextTask.urgency === "frame") {
       let now = dayjs(reData.currentTime.clock, "HH:mm")
       let nextTaskTime = dayjs(`${nextTask.date}T${nextTask.time}`, "YYYY-MM-DDTHH:mm")
       let difference = nextTaskTime.diff(now)
