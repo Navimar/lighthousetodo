@@ -50,13 +50,13 @@ export default (task, additionalClass = "") => {
     const importanceBorderClass = () => {
       switch (task.importance) {
         case "critical":
-          return "border-x-accent"
+          return "border-accent"
         case "important":
-          return "border-x-yellow-500"
+          return "border-yellow-500"
         case "noticeable":
-          return "border-x-lime-500"
+          return "border-lime-500"
         case "trivial":
-          return "border-x-neutral-350 dark:border-x-neutral-600"
+          return "border-neutral-350 dark:border-neutral-600"
         default:
           return ""
       }
@@ -85,7 +85,7 @@ export default (task, additionalClass = "") => {
 
     let result = ""
     for (let i = 0; i < count; i++) {
-      result += `<div class="text-sm border-[1px] box-border ${importanceBorderClass()}">&#8203;</div>`
+      result += `<div class="w-0 h-fit border-[1px] fontaccent whitespace-nowrap box-border ${importanceBorderClass()}"><span class=" uppercase">&#8203;</span></div>`
     }
     return result
   }

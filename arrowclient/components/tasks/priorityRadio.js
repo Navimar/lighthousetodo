@@ -76,7 +76,7 @@ export default (task) => html`
         class="hidden peer"
         @change="${handleRadioChange}"
         ${checkedConsequence(task, "trivial")} />
-      <label for="trivial" class="${css.radio}"> Пустяк </label>
+      <label for="trivial" class="${css.radio}"> Обычно </label>
     </div>
 
     <div>
