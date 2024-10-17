@@ -77,7 +77,7 @@ let renderTask = (task, index) => {
       }}"
       class="${sticky} ${firstclass} flex flex-col gap-3 break-words ${taskBg()} p-3 rounded-lg overflow dark:text-white"
       >${!sticky ? () => tagLine(task, "from") : ""}<div class="ml-2 flex gap-3"
-        ><div class="w-full my-auto "
+        ><div class="w-full my-auto break-all "
           >${() => task.name}${() => {
             if (task.note && task.note.length > 0) return " 📝"
           }}</div

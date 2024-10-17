@@ -174,8 +174,10 @@ export const sort = (arrToSort = reData.visibleTasks) => {
     const aPriority = getMaxPriority(a)
     const bPriority = getMaxPriority(b)
 
-    const aTotalPriority = aPriority.points + DIFFICULTY_PRIORITY[a.difficulty]
-    const bTotalPriority = bPriority.points + DIFFICULTY_PRIORITY[b.difficulty]
+    const aTotalPriority =
+      aPriority.points && DIFFICULTY_PRIORITY[a.difficulty] ? aPriority.points + DIFFICULTY_PRIORITY[a.difficulty] : 0
+    const bTotalPriority =
+      bPriority.points && DIFFICULTY_PRIORITY[b.difficulty] ? bPriority.points + DIFFICULTY_PRIORITY[b.difficulty] : 0
 
     let now = dayjs()
 

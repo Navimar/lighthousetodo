@@ -89,7 +89,7 @@ export default (m) => {
   if (!(importancePriorityRadio == "kairos" && difficultyPriorityRadio == "kairos" && priorityRadioType == "kairos")) {
     if (priorityRadioType == "kairos") priorityRadioType = "longTerm"
     if (importancePriorityRadio == "kairos") importancePriorityRadio = "trivial"
-    if (difficultyPriorityRadio == "kairos") difficultyPriorityRadio = "boring"
+    if (difficultyPriorityRadio == "kairos") difficultyPriorityRadio = "quick"
   }
 
   //провереяем что имя не пусто и не занято
