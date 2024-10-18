@@ -56,7 +56,7 @@ export default (givenTask, direction) => {
           // console.log("theCollaborator", theCollaborator)
           return html`<div
             class="text-neutral-700 dark:text-neutral-350 bg-alternative-200 dark:bg-alternative-700 px-2 m-0.5 border border-neutral-200 dark:border-neutral-700 rounded-lg"
-            ><div class="flex h-full items-center gap-2">${theCollaborator?.name || collaboratorId}</div></div
+            ><div class="flex h-full break-all items-center gap-2">${theCollaborator?.name || collaboratorId}</div></div
           >`
         }
       })}${() =>

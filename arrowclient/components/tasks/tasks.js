@@ -76,12 +76,12 @@ let renderTask = (task, index) => {
         clickPos(e)
       }}"
       class="${sticky} ${firstclass} flex flex-col gap-3 break-words ${taskBg()} p-3 rounded-lg overflow dark:text-white"
-      >${!sticky ? () => tagLine(task, "from") : ""}<div class="ml-2 flex gap-3"
-        ><div class="w-full my-auto break-all "
+      >${!sticky ? () => tagLine(task, "from") : ""}<div class="ml-2 flex flex-wrap-reverse gap-3"
+        ><div class="w-8/12 mr-auto "
           >${() => task.name}${() => {
             if (task.note && task.note.length > 0) return " 📝"
           }}</div
-        >${() => taskPlate(task, "p-1")}</div
+        ><div class="flex gap-3">${() => taskPlate(task, "p-1")}</div></div
       >${!sticky ? () => tagLine(task, "to") : ""}</div
     >`
   }
