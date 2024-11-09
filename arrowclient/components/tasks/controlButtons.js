@@ -20,11 +20,16 @@ let checkedKairos = (task) => {
 }
 
 let saveButton = () => {
-  saveTask("sv")
-  riseTask(reData.selectedScribe)
-  reData.selectedScribe = false
-  makevisible()
-  reData.selectedScribe = reData.visibleTasks[0]?.id
+  performance.start("saveButton")
+  try {
+    saveTask("sv")
+    riseTask(reData.selectedScribe)
+    reData.selectedScribe = false
+    makevisible()
+    reData.selectedScribe = reData.visibleTasks[0]?.id
+  } finally {
+    performance.end("saveButton")
+  }
 }
 let riseTask = (taskId, visited = new Set(), depth = 0) => {
   let task = getObjectById(taskId)
