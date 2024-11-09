@@ -12,42 +12,53 @@ dayjs.extend(isSameOrAfter)
 export const makevisible = () => {
   performance.start("makevisible")
   try {
+    performance.start("initializeCache")
+    const taskCache = {}
+    const getCachedTaskById = (id) => {
+      if (!taskCache[id]) {
+        taskCache[id] = getObjectById(id)
+      }
+      return taskCache[id]
+    }
+    performance.end("initializeCache")
+
     const areAllFromIdsReady = (task) => {
       if (!task?.fromIds?.length) return true
       for (let id of task.fromIds) {
-        const theTask = getObjectById(id)
-
+        const theTask = getCachedTaskById(id)
         if (!theTask) console.log("in makevisible не найден таск по ID", id, task.name)
         if (!theTask?.ready) return false
       }
-
       return true
     }
 
     const highestPriorityPerDate = {}
-    const today = dayjs() // текущая дата
 
-    reData.visibleTasks = []
+    performance.start("mainLoop")
+
+    // Собираем задачи в новый массив
+    const visibleTasks = []
+    const selectedDateObj = dayjs(reData.selectedDate) // Кэшируем объект даты для оптимизации
+    const today = dayjs() // Текущая дата
 
     for (let task of data.tasks) {
-      // Если задача является выбранной, добавляем её в видимые задачи
       if (task.id === reData.selectedScribe) {
-        reData.visibleTasks.push(task)
-        continue // переходим к следующей итерации цикла
+        visibleTasks.push(task)
+        continue
       }
 
+      // Проверка на текущую или будущую задачу
       const isCurrentOrFutureTask =
         reData.selectedDate === reData.currentTime.date
-          ? dayjs(task.date).isBefore(dayjs(reData.selectedDate).add(1, "day")) ||
-            task.date == reData.selectedDate ||
-            !task.date
-          : dayjs(task.date).isSame(dayjs(reData.selectedDate)) || !task.date
+          ? dayjs(task.date).isBefore(selectedDateObj.add(1, "day")) || task.date == reData.selectedDate || !task.date
+          : dayjs(task.date).isSame(selectedDateObj) || !task.date
 
+      // Добавление задачи в видимые задачи, если все условия соблюдены
       if (!task.ready && isCurrentOrFutureTask && areAllFromIdsReady(task)) {
-        reData.visibleTasks.push(task)
+        visibleTasks.push(task)
       }
 
-      // Обновляем highestPriorityPerDate только для текущих и будущих дат
+      // Обновление `highestPriorityPerDate` для текущих и будущих задач
       if (task.date && !task.ready && dayjs(task.date).isSameOrAfter(today)) {
         if (
           !highestPriorityPerDate[task.date] ||
@@ -58,8 +69,18 @@ export const makevisible = () => {
       }
     }
 
+    // Присваивание массива видимых задач
+    reData.visibleTasks = visibleTasks
+
+    performance.end("mainLoop")
+
+    performance.start("updateCalendarSet")
     Object.assign(reData.calendarSet, highestPriorityPerDate)
+    performance.end("updateCalendarSet")
+
+    performance.start("sortFunction")
     sort()
+    performance.end("sortFunction")
   } finally {
     performance.end("makevisible")
   }

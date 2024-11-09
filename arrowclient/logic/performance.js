@@ -1,6 +1,6 @@
 export default {
-  threshold: 1000,
-  minLogTime: 10, // Минимальное время для логирования в мс
+  threshold: 10,
+  minLogTime: 2, // Минимальное время для логирования в мс
   times: {},
   activeTimers: new Set(),
 
