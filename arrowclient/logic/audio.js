@@ -17,7 +17,12 @@ export default {
     volume: 0.5,
   }),
   readySave: new Howl({
-    src: ["../readySave.mp3"],
+    src: ["../readySave.wav"],
+    loop: false,
+    volume: 0.5,
+  }),
+  afterward: new Howl({
+    src: ["../afterward.wav"],
     loop: false,
     volume: 0.5,
   }),

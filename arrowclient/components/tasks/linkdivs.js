@@ -17,10 +17,9 @@ function handleInput(e) {
   if (!currentLineText) {
     return
   }
-
   // Искать совпадения в data.tasks на основе поля name
   const matches = data.tasks
-    .filter((taskItem) => taskItem.name.toLowerCase().includes(currentLineText)) // Преобразование к нижнему регистру
+    .filter((taskItem) => taskItem.name.toLowerCase().includes(currentLineText) && taskItem.id != reData.selectedScribe) // Преобразование к нижнему регистру
     .sort((a, b) => {
       // Основная сортировка на основе длины toNames
       const difference =

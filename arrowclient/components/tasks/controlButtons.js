@@ -20,8 +20,6 @@ let checkedKairos = (task) => {
 }
 
 let saveButton = () => {
-  // console.log("audio", audio)
-  audio.playSound(audio.readySave)
   saveTask("sv")
   riseTask(reData.selectedScribe)
   reData.selectedScribe = false
@@ -87,7 +85,16 @@ export default (task) =>
         @change="${updatePauseReadyButton}" />
       <label class="${css.button} whitespace-nowrap" for="readyCheckbox">Готово</label>
     </div>
-    <button style="display:none" id="savebutton" class="${css.button}" @click="${saveButton}">Сохранить</button>
+    <button
+      style="display:none"
+      id="savebutton"
+      class="${css.button}"
+      @click="${() => {
+        audio.playSound(audio.readySave)
+        saveButton()
+      }}"
+      >Сохранить</button
+    >
     <input
       class="sr-only peer"
       type="checkbox"
@@ -95,6 +102,7 @@ export default (task) =>
       ${checkedPause(task)}
       @change="${(e) => {
         if (e.target.checked) {
+          audio.playSound(audio.afterward)
           saveButton()
         }
       }}" />

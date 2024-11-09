@@ -82,7 +82,7 @@ export default (task) => {
         <input
           id="dateInput"
           value="${task.date}"
-          class="text-base shrink-0 dark:bg-black bg-white dark:border-black my-auto text-center h-10 border-b-02rem border-white  dark:border-black rounded-none"
+          class="whitespace-nowrap text-base shrink-0 dark:bg-black bg-white dark:border-black my-auto text-center h-10 border-b-02rem border-white  dark:border-black rounded-none"
           type="date"
           id="task-date"
           name="task-date"

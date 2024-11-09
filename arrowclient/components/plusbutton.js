@@ -15,8 +15,9 @@ let plusbutton = () => {
   newScribe.urgency = "onDay"
   newScribe.importance = "important"
   newScribe.difficulty = "hour"
-
   makevisible()
+  let editdiv = document.getElementById("edit")
+  if (editdiv) editdiv.innerText = NEWSCRIBETEXT
   audio.playSound(audio.add)
 }
 
