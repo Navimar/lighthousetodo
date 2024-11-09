@@ -2,6 +2,7 @@ import reData from "~/logic/reactive.js"
 import { getObjectById } from "~/logic/util.js"
 import { PRIORITY, IMPORTANCE_PRIORITY, DIFFICULTY_PRIORITY } from "~/logic/const"
 import data from "~/logic/data.js"
+import performance from "~/logic/performance.js"
 
 import dayjs from "dayjs"
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
@@ -9,51 +10,59 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
 dayjs.extend(isSameOrAfter)
 
 export const makevisible = () => {
-  const areAllFromIdsReady = (task) => {
-    if (!task?.fromIds?.length) return true
-    for (let id of task.fromIds) {
-      const theTask = getObjectById(id)
+  performance.start("makevisible")
+  try {
+    const areAllFromIdsReady = (task) => {
+      if (!task?.fromIds?.length) return true
+      for (let id of task.fromIds) {
+        const theTask = getObjectById(id)
 
-      if (!theTask) console.log("in makevisible не найден таск по ID", id, task.name)
-      if (!theTask?.ready) return false
+        if (!theTask) console.log("in makevisible не найден таск по ID", id, task.name)
+        if (!theTask?.ready) return false
+      }
+
+      return true
     }
 
-    return true
-  }
+    const highestPriorityPerDate = {}
+    const today = dayjs() // текущая дата
 
-  const highestPriorityPerDate = {}
-  const today = dayjs() // текущая дата
+    reData.visibleTasks = []
 
-  reData.visibleTasks = []
+    for (let task of data.tasks) {
+      // Если задача является выбранной, добавляем её в видимые задачи
+      if (task.id === reData.selectedScribe) {
+        reData.visibleTasks.push(task)
+        continue // переходим к следующей итерации цикла
+      }
 
-  for (let task of data.tasks) {
-    // Если задача является выбранной, добавляем её в видимые задачи
-    if (task.id === reData.selectedScribe) {
-      reData.visibleTasks.push(task)
-      continue // переходим к следующей итерации цикла
-    }
+      const isCurrentOrFutureTask =
+        reData.selectedDate === reData.currentTime.date
+          ? dayjs(task.date).isBefore(dayjs(reData.selectedDate).add(1, "day")) ||
+            task.date == reData.selectedDate ||
+            !task.date
+          : dayjs(task.date).isSame(dayjs(reData.selectedDate)) || !task.date
 
-    const isCurrentOrFutureTask =
-      reData.selectedDate === reData.currentTime.date
-        ? dayjs(task.date).isBefore(dayjs(reData.selectedDate).add(1, "day")) ||
-          task.date == reData.selectedDate ||
-          !task.date
-        : dayjs(task.date).isSame(dayjs(reData.selectedDate)) || !task.date
+      if (!task.ready && isCurrentOrFutureTask && areAllFromIdsReady(task)) {
+        reData.visibleTasks.push(task)
+      }
 
-    if (!task.ready && isCurrentOrFutureTask && areAllFromIdsReady(task)) {
-      reData.visibleTasks.push(task)
-    }
-
-    // Обновляем highestPriorityPerDate только для текущих и будущих дат
-    if (task.date && !task.ready && dayjs(task.date).isSameOrAfter(today)) {
-      if (!highestPriorityPerDate[task.date] || PRIORITY[task.urgency] < PRIORITY[highestPriorityPerDate[task.date]]) {
-        highestPriorityPerDate[task.date] = task.urgency
+      // Обновляем highestPriorityPerDate только для текущих и будущих дат
+      if (task.date && !task.ready && dayjs(task.date).isSameOrAfter(today)) {
+        if (
+          !highestPriorityPerDate[task.date] ||
+          PRIORITY[task.urgency] < PRIORITY[highestPriorityPerDate[task.date]]
+        ) {
+          highestPriorityPerDate[task.date] = task.urgency
+        }
       }
     }
-  }
 
-  Object.assign(reData.calendarSet, highestPriorityPerDate)
-  sort()
+    Object.assign(reData.calendarSet, highestPriorityPerDate)
+    sort()
+  } finally {
+    performance.end("makevisible")
+  }
 }
 
 // const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { count: 0 }) => {
