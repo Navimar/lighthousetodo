@@ -1,5 +1,6 @@
 export default {
   threshold: 1000,
+  minLogTime: 10, // Минимальное время для логирования в мс
   times: {},
   activeTimers: new Set(),
 
@@ -20,7 +21,7 @@ export default {
     if (!this.times[label]) {
       this.times[label] = []
     }
-    console.time(label)
+    this.times[label].push(performance.now()) // Сохраняем время начала
   },
 
   end(funcOrString) {
@@ -29,16 +30,19 @@ export default {
       console.warn(`[Warning] Timer "${label}" does not exist`)
       return
     }
-    console.timeEnd(label)
+
+    const endTime = performance.now()
+    const startTime = this.times[label].pop()
+    const duration = endTime - startTime
+
     this.activeTimers.delete(label)
 
-    const timeEntry = performance.now()
-    const startTime = this.times[label].slice(-1)[0] || timeEntry
-    const duration = timeEntry - startTime
+    // Проверка на минимальное время для логирования
+    if (duration >= this.minLogTime) {
+      console.debug(`[Debug] ${label}: ${duration.toFixed(3)}ms`)
+    }
 
-    this.times[label].push(duration)
-
-    if (this.times[label].length > 1) {
+    if (this.times[label].length > 0) {
       const initialDuration = this.times[label][0]
       if (duration - initialDuration > this.threshold) {
         console.warn(

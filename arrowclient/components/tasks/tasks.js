@@ -9,6 +9,7 @@ import taskPlate from "~/components/tasks/taskplate.js"
 import { selectTaskById, showSaveButtonHidePause } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import data from "~/logic/data.js"
+import performance from "~/logic/performance.js"
 
 import { html } from "@arrow-js/core"
 import dayjs from "dayjs"
@@ -16,23 +17,28 @@ import dayjs from "dayjs"
 let firststicky = true
 
 export let renderTasks = () => {
-  firststicky = true
-  if (reData.searchString) {
-    let filteredTasks = data.tasks.slice()
-    // Filter tasks by matching with the search input
-    filteredTasks = data.tasks.filter(
-      (task) => task.name && task.name.toLowerCase().includes(reData.searchString.toLocaleLowerCase()),
-    )
-    if (filteredTasks.length === 0) {
-      return html`<div
-        class="fontmono flex flex-col gap-3 bg-near dark:bg-black p-3 rounded-lg overflow dark:text-white italic"
-        >Ничего не найдено...</div
-      >`
+  performance.start("renderTasks")
+  try {
+    firststicky = true
+    if (reData.searchString) {
+      let filteredTasks = data.tasks.slice()
+      // Filter tasks by matching with the search input
+      filteredTasks = data.tasks.filter(
+        (task) => task.name && task.name.toLowerCase().includes(reData.searchString.toLocaleLowerCase()),
+      )
+      if (filteredTasks.length === 0) {
+        return html`<div
+          class="fontmono flex flex-col gap-3 bg-near dark:bg-black p-3 rounded-lg overflow dark:text-white italic"
+          >Ничего не найдено...</div
+        >`
+      }
+      // sort(filteredTasks)
+      return filteredTasks.map(renderTask)
     }
-    // sort(filteredTasks)
-    return filteredTasks.map(renderTask)
+    return reData.visibleTasks.map(renderTask)
+  } finally {
+    performance.end("renderTasks")
   }
-  return reData.visibleTasks.map(renderTask)
 }
 
 let renderTask = (task, index) => {
