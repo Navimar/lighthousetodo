@@ -8,6 +8,7 @@ import { makevisible } from "~/logic/makevisible.js"
 import { getObjectById, copyToClipboard } from "~/logic/util.js"
 import audio from "~/logic/audio.js"
 import { showSaveButtonHidePause } from "~/logic/manipulate.js"
+import performance from "~/logic/performance.js"
 
 let checkedPause = (task) => {
   if (task.pause) return "checked"
