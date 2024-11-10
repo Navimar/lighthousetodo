@@ -3,6 +3,7 @@ export default {
   minLogTime: 2, // Минимальное время для логирования в мс
   times: {},
   activeTimers: new Set(),
+  debugEnabled: false, // Поле для включения/выключения дебага
 
   getLabel(funcOrString) {
     if (typeof funcOrString === "function") {
@@ -12,6 +13,8 @@ export default {
   },
 
   start(funcOrString) {
+    if (!this.debugEnabled) return // Если дебаг выключен, ничего не делаем
+
     const label = this.getLabel(funcOrString)
     if (this.activeTimers.has(label)) {
       console.warn(`[Warning] Timer "${label}" already exists`)
@@ -25,6 +28,8 @@ export default {
   },
 
   end(funcOrString) {
+    if (!this.debugEnabled) return // Если дебаг выключен, ничего не делаем
+
     const label = this.getLabel(funcOrString)
     if (!this.activeTimers.has(label)) {
       console.warn(`[Warning] Timer "${label}" does not exist`)

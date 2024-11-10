@@ -6,6 +6,7 @@ import { sendTasksData } from "~/logic/send.js"
 import { getObjectByName, getObjectById } from "~/logic/util"
 import { getCollaboratorByName } from "~/logic/collaborator.js"
 import performance from "~/logic/performance.js"
+import audio from "~/logic/audio.js"
 
 import dayjs from "dayjs"
 
@@ -153,6 +154,7 @@ export default (m) => {
     // устанавливаем паузу
     let pauseCheckbox = document.getElementById("pauseCheckbox")
     if (pauseCheckbox && pauseCheckbox.checked) {
+      audio.playSound(audio.afterward)
       thisTask.pause = dayjs().valueOf()
       thisTask.pauseTimes = (thisTask.pauseTimes || 0) + 1
     } else {
@@ -167,8 +169,10 @@ export default (m) => {
 
     // если готова, то ready
     let readyCheckbox = document.getElementById("readyCheckbox")
-    if (readyCheckbox && readyCheckbox.checked) thisTask.ready = true
-    else thisTask.ready = false
+    if (readyCheckbox && readyCheckbox.checked) {
+      audio.playSound(audio.readySave)
+      thisTask.ready = true
+    } else thisTask.ready = false
 
     //удаляем дубликаты
     changedTasks = [...new Set(changedTasks)]
@@ -182,6 +186,8 @@ export default (m) => {
 
     // Опустошаем строку поиска
     clearSearch()
+
+    if (!thisTask.ready && !thisTask.pause) audio.playSound(audio.save)
 
     return true
   } finally {

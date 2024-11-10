@@ -21,6 +21,21 @@ export default {
     loop: false,
     volume: 0.5,
   }),
+  save: new Howl({
+    src: ["../save.wav"],
+    loop: false,
+    volume: 0.5,
+  }),
+  ready: new Howl({
+    src: ["../ready.wav"],
+    loop: false,
+    volume: 0.5,
+  }),
+  unready: new Howl({
+    src: ["../unready.wav"],
+    loop: false,
+    volume: 0.5,
+  }),
   afterward: new Howl({
     src: ["../afterward.wav"],
     loop: false,

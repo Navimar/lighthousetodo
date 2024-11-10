@@ -6,7 +6,6 @@ import data from "~/logic/data.js"
 import { updatePauseReadyButton, updateKairosButton } from "~/logic/manipulate.js"
 import { makevisible } from "~/logic/makevisible.js"
 import { getObjectById, copyToClipboard } from "~/logic/util.js"
-import audio from "~/logic/audio.js"
 import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 import performance from "~/logic/performance.js"
 
@@ -96,7 +95,6 @@ export default (task) =>
       id="savebutton"
       class="${css.button}"
       @click="${() => {
-        audio.playSound(audio.readySave)
         saveButton()
       }}"
       >Сохранить</button
@@ -108,7 +106,6 @@ export default (task) =>
       ${checkedPause(task)}
       @change="${(e) => {
         if (e.target.checked) {
-          audio.playSound(audio.afterward)
           saveButton()
         }
       }}" />
