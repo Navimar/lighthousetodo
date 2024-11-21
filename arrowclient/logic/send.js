@@ -8,14 +8,27 @@ import { socket } from "~/logic/socket.js"
 
 import { v4 as uuidv4 } from "uuid"
 
+let lastTokenFetchTime = 0
+const TOKEN_FETCH_INTERVAL = 60000 // 1 минута
+
 async function getToken() {
-  if (auth.currentUser)
+  const currentTime = Date.now()
+  if (auth.currentUser && currentTime - lastTokenFetchTime > TOKEN_FETCH_INTERVAL) {
     try {
+      lastTokenFetchTime = currentTime
       return await auth.currentUser.getIdToken(true)
     } catch (error) {
       console.error("Error getting token:", error)
       throw error
     }
+  } else if (auth.currentUser) {
+    try {
+      return await auth.currentUser.getIdToken(false)
+    } catch (error) {
+      console.error("Error getting cached token:", error)
+      throw error
+    }
+  }
 }
 
 export function inputSocket() {

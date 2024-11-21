@@ -9,6 +9,39 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
 
 dayjs.extend(isSameOrAfter)
 
+const updateVisibleTasks = (newVisibleTasks) => {
+  // Создаем Set для хранения идентификаторов задач
+  const oldTaskIds = new Set(reData.visibleTasks.map((task) => task.id))
+  const newTaskIds = new Set(newVisibleTasks.map((task) => task.id))
+
+  // Задачи, которые нужно добавить (есть в новом, но нет в старом)
+  const tasksToAdd = newVisibleTasks.filter((task) => !oldTaskIds.has(task.id))
+
+  // Задачи, которые нужно удалить (есть в старом, но нет в новом)
+  const tasksToRemove = reData.visibleTasks.filter((task) => !newTaskIds.has(task.id))
+
+  // Удаляем задачи, которых больше нет в новом массиве
+  for (let task of tasksToRemove) {
+    const index = reData.visibleTasks.findIndex((t) => t.id === task.id)
+    if (index > -1) {
+      reData.visibleTasks.splice(index, 1)
+    }
+  }
+
+  // Добавляем задачи, которых не было в старом массиве
+  for (let task of tasksToAdd) {
+    reData.visibleTasks.push(task)
+  }
+
+  // Обновляем задачи, которые уже находятся в массиве
+  for (let task of reData.visibleTasks) {
+    const newTask = newVisibleTasks.find((t) => t.id === task.id)
+    if (newTask) {
+      Object.assign(task, newTask)
+    }
+  }
+}
+
 export const makevisible = () => {
   performance.start("makevisible")
   try {
@@ -54,7 +87,7 @@ export const makevisible = () => {
           : dayjs(task.date).isSame(selectedDateObj) || !task.date
 
       // Добавление задачи в видимые задачи, если все условия соблюдены
-      if (!task.ready && isCurrentOrFutureTask && areAllFromIdsReady(task)) {
+      if (!task.ready && isCurrentOrFutureTask && (areAllFromIdsReady(task) || task.intention)) {
         visibleTasks.push(task)
       }
 
@@ -70,7 +103,7 @@ export const makevisible = () => {
     }
 
     // Присваивание массива видимых задач
-    reData.visibleTasks = visibleTasks
+    updateVisibleTasks(visibleTasks)
 
     performance.end("mainLoop")
 
@@ -226,6 +259,10 @@ export const sort = (arrToSort = reData.visibleTasks) => {
     // Если одна задача в будущем, а другая в прошлом, возвращаем прошлую первой
     if (aIsFuture && !bIsFuture) return 1
     if (!aIsFuture && bIsFuture) return -1
+
+    // Приоритет intention
+    if (a.intention && !b.intention) return -1
+    if (!a.intention && b.intention) return 1
 
     if (aTotalPriority > bTotalPriority) return -1
     if (aTotalPriority < bTotalPriority) return 1

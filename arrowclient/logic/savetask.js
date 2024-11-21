@@ -162,6 +162,14 @@ export default (m) => {
       thisTask.pauseTimes = 0
     }
 
+    // устанавливаем намерение
+    let intentionCheckbox = document.getElementById("intentionCheckbox")
+    if (intentionCheckbox && intentionCheckbox.checked) {
+      thisTask.intention = true
+    } else {
+      thisTask.intention = false
+    }
+
     // если выделено общая, то присоватить public
     let publicCheckbox = document.getElementById("publicCheckbox")
     if (publicCheckbox && publicCheckbox.checked) thisTask.public = true

@@ -43,10 +43,10 @@ export let renderTasks = () => {
 
 let renderTask = (task, index) => {
   let taskBgEditable = () => {
-    return "bg-white dark:bg-black"
+    return `bg-white dark:bg-black ${task.intention ? "bg-diagonal-stripes" : ""}`
   }
   let taskBg = () => {
-    return "bg-neutral-100 dark:bg-neutral-900"
+    return `bg-neutral-100 dark:bg-neutral-900 ${task.intention ? "bg-diagonal-stripes" : ""}`
   }
   let firstclass = ""
   let sticky = false

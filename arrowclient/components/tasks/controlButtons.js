@@ -14,6 +14,11 @@ let checkedPause = (task) => {
   else return ""
 }
 
+let checkedIntention = (task) => {
+  if (task.intention) return "checked"
+  else return ""
+}
+
 let checkedKairos = (task) => {
   if (task.urgency == "kairos" || task.importance == "kairos" || task.difficulty == "kairos") return "checked"
   else return ""
@@ -110,4 +115,15 @@ export default (task) =>
         }
       }}" />
     <label id="pauseCheckboxLabel" class="${css.button} whitespace-nowrap" for="pauseCheckbox">Потом</label>
+    <div>
+      <input
+        class="appearance-none peer sr-only"
+        type="checkbox"
+        id="intentionCheckbox"
+        @change="${(event) => {
+          showSaveButtonHidePause()
+        }}"
+        ${checkedIntention(task)} />
+      <label class="${css.button} whitespace-nowrap" for="intentionCheckbox">Намерение</label>
+    </div>
   </div>`

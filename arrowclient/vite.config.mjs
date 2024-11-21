@@ -1,6 +1,8 @@
 import { defineConfig } from "vite"
 import { readdirSync } from "fs"
 import { resolve } from "path"
+import tailwindcss from "tailwindcss"
+import autoprefixer from "autoprefixer"
 
 function getBlogEntries() {
   const blogDir = resolve(__dirname, "blog")
@@ -46,7 +48,7 @@ export default defineConfig({
   },
   css: {
     postcss: {
-      plugins: [require("tailwindcss"), require("autoprefixer")],
+      plugins: [tailwindcss, autoprefixer],
     },
   },
 })
