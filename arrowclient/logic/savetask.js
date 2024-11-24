@@ -14,12 +14,12 @@ export default (m) => {
   performance.start("savetask")
   try {
     let changedTasks = []
-    //понять откуда вызвано сохрание
+    // понять откуда вызвано сохранение
     // console.log("saveTask", m)
-    //если нет выделенных то выйти
+    // если нет выделенных, то выйти
     if (!reData.selectedScribe) return false
 
-    //найти див редактирования
+    // найти див редактирования
     const eDiv = document.getElementById("edit")
 
     if (!eDiv) return false
@@ -60,7 +60,7 @@ export default (m) => {
           toEditIds.push(id)
         }
       })
-    // добаываем дату и время из инпутов
+    // добавляем дату и время из инпутов
     const timeInput = document.getElementById("timeInput").value
     const dateInput = document.getElementById("dateInput").value
 
@@ -98,7 +98,7 @@ export default (m) => {
       if (difficultyPriorityRadio == "kairos") difficultyPriorityRadio = "quick"
     }
 
-    //провереяем что имя не пусто и не занято
+    // проверяем, что имя не пусто и не занято
     if (name === "") {
       name = thisTask.name
     }
@@ -135,7 +135,7 @@ export default (m) => {
 
     changedTasks.push(thisTask)
 
-    //сохраняем новые значение
+    // сохраняем новые значения
     thisTask.name = name
     thisTask.note = note
 
@@ -170,7 +170,7 @@ export default (m) => {
       thisTask.intention = false
     }
 
-    // если выделено общая, то присоватить public
+    // если выделено общая, то присваивать public
     let publicCheckbox = document.getElementById("publicCheckbox")
     if (publicCheckbox && publicCheckbox.checked) thisTask.public = true
     else thisTask.public = false
@@ -179,27 +179,43 @@ export default (m) => {
     let readyCheckbox = document.getElementById("readyCheckbox")
     if (readyCheckbox && readyCheckbox.checked) {
       audio.playSound(audio.readySave)
+      if (!thisTask.ready) {
+        thisTask.readyLogs = thisTask.readyLogs || []
+        thisTask.readyLogs.push({ status: true, timestamp: dayjs().valueOf() })
+        if (thisTask.readyLogs.length > 1000) {
+          thisTask.readyLogs.shift() // удаляем самую старую запись, если превышено 1000 записей
+        }
+      }
       thisTask.ready = true
-    } else thisTask.ready = false
+    } else {
+      if (thisTask.ready) {
+        thisTask.readyLogs = thisTask.readyLogs || []
+        thisTask.readyLogs.push({ status: false, timestamp: dayjs().valueOf() })
+        if (thisTask.readyLogs.length > 1000) {
+          thisTask.readyLogs.shift() // удаляем самую старую запись, если превышено 1000 записей
+        }
+      }
+      thisTask.ready = false
+    }
 
-    //удаляем дубликаты
+    // удаляем дубликаты
     changedTasks = [...new Set(changedTasks)]
 
-    //ставим временную метку
+    // ставим временную метку
     changedTasks.forEach((task) => (task.timestamp = dayjs().valueOf()))
 
-    // Отправляем массив
+    // отправляем массив
     safeSetLocalStorageItem("tasks", data.tasks)
     sendTasksData(changedTasks)
 
-    // Опустошаем строку поиска
+    // опустошаем строку поиска
     clearSearch()
 
     if (!thisTask.ready && !thisTask.pause) audio.playSound(audio.save)
 
     return true
   } finally {
-    // Гарантируем завершение таймера независимо от того, как завершилась функция
+    // гарантируем завершение таймера независимо от того, как завершилась функция
     performance.end("savetask")
   }
 }

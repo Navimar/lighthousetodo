@@ -1,6 +1,6 @@
 export default {
   threshold: 10,
-  minLogTime: 2, // Минимальное время для логирования в мс
+  minLogTime: 5, // Минимальное время для логирования в мс
   times: {},
   activeTimers: new Set(),
   debugEnabled: true, // Поле для включения/выключения дебага

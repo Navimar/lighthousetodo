@@ -24,6 +24,7 @@ export default (name, fromIds = [], toIds = []) => {
     timestamp: dayjs().valueOf(),
     assignedBy: reData.user.id,
     assignedTo: [reData.user.id],
+    readyLogs: [{ status: false, timestamp: dayjs().valueOf() }], // добавляем поле readyLogs для хранения логов статуса готовности
   }
 
   data.tasks.push(newTask)
