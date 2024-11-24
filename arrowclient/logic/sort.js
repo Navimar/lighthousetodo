@@ -199,6 +199,23 @@ export default (arrToSort = reData.visibleTasks) => {
     }
     performance.end("Sorting - Intention Check")
 
+    performance.start("Sorting - Priority")
+    const aPriority = getMaxPriority(a)
+    const bPriority = getMaxPriority(b)
+
+    const aTotalPriority =
+      aPriority.points && DIFFICULTY_PRIORITY[a.difficulty] ? aPriority.points + DIFFICULTY_PRIORITY[a.difficulty] : 0
+    const bTotalPriority =
+      bPriority.points && DIFFICULTY_PRIORITY[b.difficulty] ? bPriority.points + DIFFICULTY_PRIORITY[b.difficulty] : 0
+
+    if (aTotalPriority > bTotalPriority) {
+      return -1
+    }
+    if (aTotalPriority < bTotalPriority) {
+      return 1
+    }
+    performance.end("Sorting - Priority")
+
     performance.start("Sorting - Ready Percentage Comparison")
     // Сравнение по проценту готовности всех fromIds
     const aReadyPercentage = calculateReadyPercentage(a)
@@ -213,27 +230,6 @@ export default (arrToSort = reData.visibleTasks) => {
       return -1
     }
     performance.end("Sorting - Ready Percentage Comparison")
-
-    performance.start("Sorting - Priority Calculation")
-    const aPriority = getMaxPriority(a)
-    const bPriority = getMaxPriority(b)
-
-    const aTotalPriority =
-      aPriority.points && DIFFICULTY_PRIORITY[a.difficulty] ? aPriority.points + DIFFICULTY_PRIORITY[a.difficulty] : 0
-    const bTotalPriority =
-      bPriority.points && DIFFICULTY_PRIORITY[b.difficulty] ? bPriority.points + DIFFICULTY_PRIORITY[b.difficulty] : 0
-    performance.end("Sorting - Priority Calculation")
-
-    performance.start("Sorting - Total Priority Comparison")
-    if (aTotalPriority > bTotalPriority) {
-      performance.end("Sorting - Total Priority Comparison")
-      return -1
-    }
-    if (aTotalPriority < bTotalPriority) {
-      performance.end("Sorting - Total Priority Comparison")
-      return 1
-    }
-    performance.end("Sorting - Total Priority Comparison")
 
     performance.start("Sorting - Node Count and Timestamp Check")
 
