@@ -13,14 +13,14 @@ const calculateReadyPercentage = (task) => {
   const fromTasks = task.fromIds.map((id) => getObjectById(id)).filter((t) => t)
 
   if (fromTasks.length === 0) {
-    return 0 // Если задачи не найдены
+    return 100 // Если задачи не найдены
   }
 
   // Получаем временную метку первой записи readyLogs самой задачи
   if (!task.readyLogs) return 0 // Если нет логов у задачи
   const startTime = task.readyLogs[0]?.timestamp
   if (!startTime) {
-    return 0 // Если нет логов у задачи
+    return 100 // Если нет логов у задачи
   }
 
   let totalReadyTime = 0
@@ -206,11 +206,11 @@ export default (arrToSort = reData.visibleTasks) => {
 
     if (aReadyPercentage < bReadyPercentage) {
       performance.end("Sorting - Ready Percentage Comparison")
-      return -1
+      return 1
     }
     if (aReadyPercentage > bReadyPercentage) {
       performance.end("Sorting - Ready Percentage Comparison")
-      return 1
+      return -1
     }
     performance.end("Sorting - Ready Percentage Comparison")
 
