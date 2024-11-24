@@ -32,7 +32,7 @@ const calculateReadyPercentage = (task) => {
     let isAllReady = false
 
     // Проверяем логи текущей задачи и анализируем готовность всех fromTasks
-    for (let j = 0; j < currentTask.readyLogs.length; j++) {
+    for (let j = 0; j < currentTask.readyLogs?.length; j++) {
       const log = currentTask.readyLogs[j]
 
       if (log.status) {
