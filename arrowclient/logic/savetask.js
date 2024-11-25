@@ -182,8 +182,8 @@ export default (m) => {
       if (!thisTask.ready) {
         thisTask.readyLogs = thisTask.readyLogs || []
         thisTask.readyLogs.push({ status: true, timestamp: dayjs().valueOf() })
-        if (thisTask.readyLogs?.length > 1000) {
-          thisTask.readyLogs.shift() // удаляем самую старую запись, если превышено 1000 записей
+        if (thisTask.readyLogs?.length > 100) {
+          thisTask.readyLogs.shift() // удаляем самую старую запись, если превышено 100 записей
         }
       }
       thisTask.ready = true
@@ -191,8 +191,8 @@ export default (m) => {
       if (thisTask.ready) {
         thisTask.readyLogs = thisTask.readyLogs || []
         thisTask.readyLogs.push({ status: false, timestamp: dayjs().valueOf() })
-        if (thisTask.readyLogs?.length > 1000) {
-          thisTask.readyLogs.shift() // удаляем самую старую запись, если превышено 1000 записей
+        if (thisTask.readyLogs?.length > 100) {
+          thisTask.readyLogs.shift() // удаляем самую старую запись, если превышено 100 записей
         }
       }
       thisTask.ready = false

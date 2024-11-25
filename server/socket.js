@@ -1,7 +1,7 @@
 import serviceAccount from "../firebase.config.js"
 import admin from "firebase-admin"
 import { addUser, getUser } from "./user.js"
-import { pruneTaskIds } from "./process.js"
+import { pruneTaskIds, prepareTasks } from "./process.js"
 import {
   syncTasksNeo4j,
   removeCollaboratorNeo4j,
@@ -62,6 +62,14 @@ export let inputSocket = (io) => {
 
       try {
         if (msg.data.tasks) {
+          // Преобразование поля readyLogs каждого таска в строку
+          msg.data.tasks = msg.data.tasks.map((task) => {
+            if (task.readyLogs) {
+              task.readyLogs = JSON.stringify(task.readyLogs)
+            }
+            return task
+          })
+
           // Синхронизация задач с базой данных
           await syncTasksNeo4j(msg.user.name, userId, msg.data.tasks)
         } else if (msg.data.collaborator?.id && msg.data.collaborator?.id != userId) {
@@ -118,7 +126,7 @@ export let inputSocket = (io) => {
       // console.log(userId, data.collaborationRequests)
       // console.log("user", getUser(userId))
       socket.emit("update", {
-        tasks: pruneTaskIds(data.tasks),
+        tasks: pruneTaskIds(prepareTasks(data.tasks)),
         collaborators: data.collaborators,
         collaborationRequests: data.collaborationRequests,
       })

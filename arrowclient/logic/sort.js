@@ -16,15 +16,8 @@ const calculateReadyPercentage = (task) => {
     return 100 // Если задачи не найдены
   }
 
-  // Получаем временную метку первой записи readyLogs самой задачи
-  if (!task.readyLogs) return 0 // Если нет логов у задачи
-  const startTime = task.readyLogs[0]?.timestamp
-  if (!startTime) {
-    return 100 // Если нет логов у задачи
-  }
-
   let totalReadyTime = 0
-  let lastTimestamp = startTime
+  let lastTimestamp = task.timestamp
 
   // Итерация по временным меткам, чтобы найти участки времени, где все задачи были готовы
   for (let i = 0; i < fromTasks.length; i++) {
@@ -52,7 +45,7 @@ const calculateReadyPercentage = (task) => {
   const endTime = dayjs().valueOf()
   totalReadyTime += endTime - lastTimestamp
 
-  const duration = endTime - startTime
+  const duration = endTime - task.timestamp
   return duration > 0 ? (totalReadyTime / duration) * 100 : 0
 }
 
@@ -209,9 +202,11 @@ export default (arrToSort = reData.visibleTasks) => {
       bPriority.points && DIFFICULTY_PRIORITY[b.difficulty] ? bPriority.points + DIFFICULTY_PRIORITY[b.difficulty] : 0
 
     if (aTotalPriority > bTotalPriority) {
+      performance.end("Sorting - Priority")
       return -1
     }
     if (aTotalPriority < bTotalPriority) {
+      performance.end("Sorting - Priority")
       return 1
     }
     performance.end("Sorting - Priority")

@@ -10,3 +10,16 @@ export const pruneTaskIds = (tasks) => {
   }
   return []
 }
+
+export const prepareTasks = (tasks) => {
+  return tasks.map((task) => {
+    if (typeof task.readyLogs === "string") {
+      try {
+        task.readyLogs = JSON.parse(task.readyLogs)
+      } catch (e) {
+        console.error("Error parsing readyLogs", e)
+      }
+    }
+    return task
+  })
+}
