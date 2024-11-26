@@ -211,8 +211,6 @@ export default (arrToSort = reData.visibleTasks) => {
       aIntentionSet.size > 0 && Array.from(aIntentionSet).every((id) => getObjectById(id).postpone == true)
     const bHasPostponeIntention =
       bIntentionSet.size > 0 && Array.from(bIntentionSet).every((id) => getObjectById(id).postpone == true)
-    if (a.name == "testtask" || b.name == "testtask")
-      console.log("IntentionSet", aIntentionSet, aHasPostponeIntention, bIntentionSet, bHasPostponeIntention)
 
     if (aHasPostponeIntention && !bHasPostponeIntention) {
       performance.end("Sorting - Postpone Intention Check")

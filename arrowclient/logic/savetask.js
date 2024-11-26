@@ -176,8 +176,6 @@ export default (m) => {
       thisTask.pause = dayjs().valueOf()
       thisTask.pauseTimes = (thisTask.pauseTimes || 2) + 1
     } else {
-      thisTask.pause = false
-      thisTask.pauseTimes = 0
       thisTask.postpone = false
     }
 
