@@ -170,6 +170,17 @@ export default (m) => {
       thisTask.intention = false
     }
 
+    let postponeCheckbox = document.getElementById("postponeCheckbox")
+    if (postponeCheckbox && postponeCheckbox.checked) {
+      thisTask.postpone = true
+      thisTask.pause = dayjs().valueOf()
+      thisTask.pauseTimes = (thisTask.pauseTimes || 2) + 1
+    } else {
+      thisTask.pause = false
+      thisTask.pauseTimes = 0
+      thisTask.postpone = false
+    }
+
     // если выделено общая, то присваивать public
     let publicCheckbox = document.getElementById("publicCheckbox")
     if (publicCheckbox && publicCheckbox.checked) thisTask.public = true

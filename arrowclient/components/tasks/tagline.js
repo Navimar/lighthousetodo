@@ -36,8 +36,6 @@ export default (givenTask, direction) => {
   let assignedIds = givenTask[assignedField]
   if (direction == "to") assignedIds = [assignedIds]
 
-  // console.log("assignedIds", direction, assignedIds, givenTask)
-
   const sortTasksByName = (a, b) => a.name.localeCompare(b.name)
   notReadyTasks.sort(sortTasksByName)
   notReadyFutureTasks.sort(sortTasksByName)
@@ -50,10 +48,7 @@ export default (givenTask, direction) => {
           (direction == "from" && collaboratorId != givenTask.assignedBy && collaboratorId != reData.user.id) ||
           (direction == "to" && collaboratorId != reData.user.id)
         ) {
-          // console.log("collaboratorId,givenTask.assignedBy", direction, collaboratorId, givenTask.assignedBy)
-
           let theCollaborator = reData.collaborators.find((cb) => cb.id === collaboratorId)
-          // console.log("theCollaborator", theCollaborator)
           return html`<div
             class="text-neutral-700 dark:text-neutral-350 bg-alternative-200 dark:bg-alternative-700 px-2 m-0.5 border border-neutral-200 dark:border-neutral-700 rounded-lg"
             ><div class="flex h-full break-all items-center gap-2">${theCollaborator?.name || collaboratorId}</div></div
@@ -70,7 +65,9 @@ export default (givenTask, direction) => {
             clickPos(e)
             e.stopPropagation()
           }}"
-          class="${cornerbox} text-neutral-700 dark:text-neutral-350 m-0.5 inline-block align-middle rounded-lg px-2 bg-neutral-200 dark:bg-neutral-800">
+          class="${cornerbox} ${task.intention
+            ? "bg-diagonal-stripes"
+            : ""} text-neutral-700 dark:text-neutral-350 m-0.5 inline-block align-middle rounded-lg px-2 bg-neutral-200 dark:bg-neutral-800">
           <div class="flex h-full items-center gap-2"
             ><div class="p-1 break-all ">${task.name}</div>${() => taskplate(task, "text-xs p-0.5")}</div
           ></div
@@ -83,7 +80,9 @@ export default (givenTask, direction) => {
             clickPos(e)
             e.stopPropagation()
           }}"
-          class=" text-neutral-700 dark:text-neutral-350 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block align-middle rounded-lg px-2 bg-white dark:bg-black">
+          class="${task.intention
+            ? "bg-diagonal-stripes"
+            : ""} text-neutral-700 dark:text-neutral-350 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block align-middle rounded-lg px-2 bg-white dark:bg-black">
           <div class="flex  h-full items-center gap-2"
             ><div class="p-1 break-all">${task.name}</div>${() => taskplate(task, "text-xs p-0.5")}</div
           ></div
@@ -96,7 +95,9 @@ export default (givenTask, direction) => {
             clickPos(e)
             e.stopPropagation()
           }}"
-          class="text-neutral-400 dark:text-neutral-500 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block rounded-lg px-2">
+          class="${task.intention
+            ? "bg-diagonal-stripes"
+            : ""} text-neutral-400 dark:text-neutral-500 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block rounded-lg px-2">
           <div class="p-1 break-all">${task.name}</div></div
         >`
       })}</div

@@ -49,7 +49,7 @@ const calculateReadyPercentage = (task) => {
   return duration > 0 ? (totalReadyTime / duration) * 100 : 0
 }
 
-const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { count: 0 }) => {
+const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { count: 0 }, intentionSet = new Set()) => {
   // Базовый случай рекурсии или если задача уже посещена
   if (depth >= 7 || visited.has(task.id)) {
     return {
@@ -57,23 +57,25 @@ const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { coun
       importance: task.importance,
       points: PRIORITY[task.urgency] + IMPORTANCE_PRIORITY[task.importance],
       nodeCount: nodeCount.count,
+      intentionSet: intentionSet,
     }
   }
 
   visited.add(task.id)
   nodeCount.count++
 
-  // Если задача намерение, возвращаем нулевой приоритет и передаем приоритет дальше
+  // Если задача намерение, добавляем её в сет и передаем приоритет дальше
   if (task.intention) {
+    intentionSet.add(task.id)
     return task.toIds?.reduce(
       (maxPriority, id) => {
         const childTask = getObjectById(id)
         if (!childTask || childTask.ready) return maxPriority
 
-        const childPriority = getMaxPriority(childTask, depth + 1, visited, nodeCount)
+        const childPriority = getMaxPriority(childTask, depth + 1, visited, nodeCount, intentionSet)
         return childPriority.points > maxPriority.points ? childPriority : maxPriority
       },
-      { urgency: 0, importance: 0, points: 0, nodeCount: nodeCount.count },
+      { urgency: 0, importance: 0, points: 0, nodeCount: nodeCount.count, intentionSet: intentionSet },
     )
   }
 
@@ -86,7 +88,7 @@ const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { coun
     const childTask = getObjectById(id)
     if (!childTask || childTask.ready) return
 
-    const childPriority = getMaxPriority(childTask, depth + 1, visited, nodeCount)
+    const childPriority = getMaxPriority(childTask, depth + 1, visited, nodeCount, intentionSet)
 
     // Обновляем maxPoints
     if (childPriority.points > maxPoints) {
@@ -101,6 +103,7 @@ const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { coun
     importance: maxPriorityConsequence,
     points: maxPoints,
     nodeCount: nodeCount.count,
+    intentionSet: intentionSet,
   }
 }
 
@@ -192,9 +195,35 @@ export default (arrToSort = reData.visibleTasks) => {
     }
     performance.end("Sorting - Intention Check")
 
-    performance.start("Sorting - Priority")
+    performance.start("Sorting - getMaxPriority")
+
     const aPriority = getMaxPriority(a)
     const bPriority = getMaxPriority(b)
+
+    performance.end("Sorting - getMaxPriority")
+
+    const aIntentionSet = aPriority.intentionSet
+    const bIntentionSet = bPriority.intentionSet
+
+    // Дисприоритет задач с postpone == true в intentionSet
+    performance.start("Sorting - Postpone Intention Check")
+    const aHasPostponeIntention =
+      aIntentionSet.size > 0 && Array.from(aIntentionSet).every((id) => getObjectById(id).postpone == true)
+    const bHasPostponeIntention =
+      bIntentionSet.size > 0 && Array.from(bIntentionSet).every((id) => getObjectById(id).postpone == true)
+    if (a.name == "testtask" || b.name == "testtask")
+      console.log("IntentionSet", aIntentionSet, aHasPostponeIntention, bIntentionSet, bHasPostponeIntention)
+
+    if (aHasPostponeIntention && !bHasPostponeIntention) {
+      performance.end("Sorting - Postpone Intention Check")
+      return 1
+    }
+    if (!aHasPostponeIntention && bHasPostponeIntention) {
+      performance.end("Sorting - Postpone Intention Check")
+      return -1
+    }
+    performance.end("Sorting - Postpone Intention Check")
+    performance.start("Sorting - Priority")
 
     const aTotalPriority =
       aPriority.points && DIFFICULTY_PRIORITY[a.difficulty] ? aPriority.points + DIFFICULTY_PRIORITY[a.difficulty] : 0
