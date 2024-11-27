@@ -7,16 +7,16 @@ export default (task, additionalClass = "") => {
 
   let getTaskTime = () => {
     if (task.urgency == "onTime") return task.time
-    // if (task.urgency == "longTerm") return ""
-    // if (task.urgency == "longTerm" && task.importance == "trivial") return ""
 
     let now = dayjs()
     let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
 
-    if (task.urgency != "longTerm" && taskDate.isBefore(now.startOf("day").subtract(1, "day"))) {
+    if (task.intention) {
+      return "цель"
+    } else if (task.urgency == "onDay" && taskDate.isBefore(now.startOf("day").subtract(1, "day"))) {
       // Если задача была два дня назад или раньше
       return "давно"
-    } else if (task.urgency != "longTerm" && taskDate.isBefore(now.startOf("day"))) {
+    } else if (task.urgency == "onDay" && taskDate.isBefore(now.startOf("day"))) {
       // Если задача была вчера
       return "вчера"
     } else if (task.urgency == "onDay" && taskDate.isSame(now, "day")) {
@@ -24,6 +24,8 @@ export default (task, additionalClass = "") => {
       return "сегодня"
     } else if (task.urgency == "onDay") {
       return dayjs(task.date).format("DD.MM")
+    } else if (task.urgency == "shortTerm") {
+      return "на днях"
     } else return "&#8205;"
   }
 
@@ -32,6 +34,7 @@ export default (task, additionalClass = "") => {
   }
 
   const timeClass = () => {
+    if (task.intention) return "border-transparent"
     if (task.importance == "critical" && isInPast) return "border-accent"
     if (task.importance == "critical") return "border-transparent border-l-accent "
 
@@ -46,7 +49,12 @@ export default (task, additionalClass = "") => {
     return "hidden"
   }
 
+  const сolorClass = () => {
+    return task.intention ? "text-accent" : "text-neutral-600 dark:text-neutral-350"
+  }
+
   const duration = () => {
+    if (task.intention) return ""
     const importanceBorderClass = () => {
       switch (task.importance) {
         case "critical":
@@ -90,12 +98,18 @@ export default (task, additionalClass = "") => {
     return result
   }
 
-  return html`<div
-      class="h-fit box-border border-2  border-transparent font-bold text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${additionalClass}"
-      >${paused()}</div
-    >${duration()}<div
-      class="h-fit border-2 box-border text-neutral-600 dark:text-neutral-350 text-center uppercase whitespace-nowrap fontaccent text-sm ${additionalClass} ${timeClass()}"
-      >${getTaskTime()}</div
-    ></div
-  >`
+  return html`
+  <div
+    class="h-fit box-border border-2 border-transparent font-bold text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${additionalClass} ${сolorClass()}"
+  >
+    ${paused()}
+  </div>
+  ${duration()}
+  <div
+    class="h-fit border-2 box-border ${сolorClass()} text-center uppercase whitespace-nowrap fontaccent text-sm ${additionalClass} ${timeClass()}"
+  >
+    ${getTaskTime()}
+  </div>
+</div>
+`
 }
