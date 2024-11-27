@@ -4,6 +4,7 @@ import { clickPos } from "~/logic/util.js"
 import { getObjectById, getDayjsDateFromTask } from "~/logic/util"
 import taskplate from "~/components/tasks/taskplate.js"
 import reData from "~/logic/reactive.js"
+import css from "~/css.js"
 
 import dayjs from "dayjs"
 
@@ -66,7 +67,7 @@ export default (givenTask, direction) => {
             e.stopPropagation()
           }}"
           class="${cornerbox} ${task.intention
-            ? "bg-diagonal-stripes-dark"
+            ? css.intention
             : ""} text-neutral-700 dark:text-neutral-350 m-0.5 inline-block align-middle rounded-lg px-2 bg-neutral-200 dark:bg-neutral-800">
           <div class="flex h-full items-center gap-2"
             ><div class="p-1 break-all ">${task.name}</div>${() => taskplate(task, "text-xs p-0.5")}</div
@@ -81,7 +82,7 @@ export default (givenTask, direction) => {
             e.stopPropagation()
           }}"
           class="${task.intention
-            ? "bg-diagonal-stripes dark:bg-diagonal-stripes-dark"
+            ? css.intention
             : ""} text-neutral-700 dark:text-neutral-350 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block align-middle rounded-lg px-2 bg-white dark:bg-black">
           <div class="flex  h-full items-center gap-2"
             ><div class="p-1 break-all">${task.name}</div>${() => taskplate(task, "text-xs p-0.5")}</div
@@ -96,7 +97,7 @@ export default (givenTask, direction) => {
             e.stopPropagation()
           }}"
           class="${task.intention
-            ? "bg-diagonal-stripes dark:bg-diagonal-stripes-dark"
+            ? css.intention
             : ""} text-neutral-400 dark:text-neutral-500 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block rounded-lg px-2">
           <div class="p-1 break-all">${task.name}</div></div
         >`

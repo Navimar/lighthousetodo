@@ -10,6 +10,7 @@ import { selectTaskById, showSaveButtonHidePause } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import data from "~/logic/data.js"
 import performance from "~/logic/performance.js"
+import css from "~/css.js"
 
 import { html } from "@arrow-js/core"
 import dayjs from "dayjs"
@@ -43,17 +44,14 @@ export let renderTasks = () => {
 
 let renderTask = (task, index) => {
   let taskBgEditable = () => {
-    return `bg-white dark:bg-black ${task.intention ? "bg-diagonal-stripes dark:bg-diagonal-stripes-dark" : ""}`
+    return `bg-white dark:bg-black ${task.intention ? css.intention : ""}`
   }
   let taskBg = () => {
-    return `bg-neutral-100 dark:bg-neutral-900 ${
-      task.intention ? "bg-diagonal-stripes dark:bg-diagonal-stripes-dark" : ""
-    }`
+    return `bg-neutral-100 dark:bg-neutral-900 ${task.intention ? css.intention : ""}`
   }
   let firstclass = ""
   let sticky = false
   if (task.ready) firstclass += "border-box border-b-02rem border-compliment dark:border-compliment"
-  else firstclass = index == 0 ? "border-box border-b-02rem border-accent dark:border-accent-dark " : ""
   if (task.urgency == "meeting" && firststicky) {
     sticky = "sticky bottom-0 z-[50]"
     firststicky = false
