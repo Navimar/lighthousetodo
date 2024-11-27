@@ -259,21 +259,21 @@ export default (arrToSort = reData.visibleTasks) => {
   })
   performance.end("Full Sorting Process")
 
-  // performance.start("Post-Sorting Adjustment")
-  // if (
-  //   reData.visibleTasks[0] &&
-  //   (dayjs(reData.visibleTasks[0].time, "HH:mm").isAfter(dayjs()) || reData.visibleTasks[0].pause)
-  // ) {
-  //   // Find the index of the first task that's due or overdue based on the current time
-  //   let index = reData.visibleTasks.findIndex(
-  //     (task) => dayjs(task.time + " " + task.date, "HH:mm YYYY-MM-DD").isSameOrBefore(dayjs()) && !task.pause,
-  //   )
+  performance.start("Post-Sorting Adjustment")
+  if (
+    reData.visibleTasks[0] &&
+    (dayjs(reData.visibleTasks[0].time, "HH:mm").isAfter(dayjs()) || reData.visibleTasks[0].pause)
+  ) {
+    // Find the index of the first task that's due or overdue based on the current time
+    let index = reData.visibleTasks.findIndex(
+      (task) => dayjs(task.time + " " + task.date, "HH:mm YYYY-MM-DD").isSameOrBefore(dayjs()) && !task.pause,
+    )
 
-  //   if (index != -1) {
-  //     // Move the due or overdue task to the start of the list
-  //     let [task] = reData.visibleTasks.splice(index, 1)
-  //     reData.visibleTasks.unshift(task)
-  //   }
-  // }
-  // performance.end("Post-Sorting Adjustment")
+    if (index != -1) {
+      // Move the due or overdue task to the start of the list
+      let [task] = reData.visibleTasks.splice(index, 1)
+      reData.visibleTasks.unshift(task)
+    }
+  }
+  performance.end("Post-Sorting Adjustment")
 }
