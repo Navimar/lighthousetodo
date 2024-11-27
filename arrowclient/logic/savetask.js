@@ -13,7 +13,7 @@ import dayjs from "dayjs"
 export default (m) => {
   performance.start("savetask")
   try {
-    let changedTasks = []
+    let changedTasks = new Set()
     // понять откуда вызвано сохранение
     // console.log("saveTask", m)
     // если нет выделенных, то выйти
@@ -36,6 +36,16 @@ export default (m) => {
     let toEditIds = []
     let assignedTo = [reData.user.id]
 
+    // устанавливаем намерение
+    let intentionCheckbox = document.getElementById("intentionCheckbox")
+    if (intentionCheckbox && intentionCheckbox.checked) {
+      thisTask.intention = true
+    } else {
+      thisTask.intention = false
+    }
+
+    let fromRole = thisTask.intention ? "common" : "kairos"
+
     fromEdit.innerText
       .trim()
       .split("\n")
@@ -46,16 +56,17 @@ export default (m) => {
         // console.log("collaborator", e, collaborator)
         if (collaborator) assignedTo.push(collaborator.id)
         else {
-          fromEditIds.push(getObjectByName(e).id)
+          fromEditIds.push(getObjectByName(e, fromRole).id)
         }
       })
 
+    let toRole = "intention"
     toEdit.innerText
       .trim()
       .split("\n")
       .filter((e) => e.trim() !== "" && e.trim() !== name)
       .forEach((name) => {
-        let id = getObjectByName(name).id
+        let id = getObjectByName(name, toRole).id
         if (!fromEditIds.includes(id)) {
           toEditIds.push(id)
         }
@@ -111,29 +122,29 @@ export default (m) => {
       // 1. Удаляем связи для тех задач, где они больше не нужны.
       if (theTask.fromIds?.includes(reData.selectedScribe) && !fromEditIds.includes(theTask.id)) {
         theTask.fromIds = theTask.fromIds?.filter((id) => id !== reData.selectedScribe) || []
-        changedTasks.push(theTask)
+        changedTasks.add(theTask)
       }
 
       if (theTask.toIds?.includes(reData.selectedScribe) && !toEditIds.includes(theTask.id)) {
         theTask.toIds = theTask.toIds?.filter((id) => id !== reData.selectedScribe) || []
-        changedTasks.push(theTask)
+        changedTasks.add(theTask)
       }
 
       // 2. Добавляем связи, если они установлены пользователем.
       if (fromEditIds.includes(theTask.id) && !theTask.toIds?.includes(reData.selectedScribe)) {
         if (!theTask.toIds) theTask.toIds = []
         theTask.toIds.push(reData.selectedScribe)
-        changedTasks.push(theTask)
+        changedTasks.add(theTask)
       }
 
       if (toEditIds.includes(theTask.id) && !theTask.fromIds?.includes(reData.selectedScribe)) {
         if (!theTask.fromIds) theTask.fromIds = []
         theTask.fromIds.push(reData.selectedScribe)
-        changedTasks.push(theTask)
+        changedTasks.add(theTask)
       }
     }
 
-    changedTasks.push(thisTask)
+    changedTasks.add(thisTask)
 
     // сохраняем новые значения
     thisTask.name = name
@@ -160,14 +171,6 @@ export default (m) => {
     } else {
       thisTask.pause = false
       thisTask.pauseTimes = 0
-    }
-
-    // устанавливаем намерение
-    let intentionCheckbox = document.getElementById("intentionCheckbox")
-    if (intentionCheckbox && intentionCheckbox.checked) {
-      thisTask.intention = true
-    } else {
-      thisTask.intention = false
     }
 
     let postponeCheckbox = document.getElementById("postponeCheckbox")
@@ -208,7 +211,7 @@ export default (m) => {
     }
 
     // удаляем дубликаты
-    changedTasks = [...new Set(changedTasks)]
+    changedTasks = Array.from(changedTasks)
 
     // ставим временную метку
     changedTasks.forEach((task) => (task.timestamp = dayjs().valueOf()))

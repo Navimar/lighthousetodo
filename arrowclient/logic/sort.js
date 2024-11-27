@@ -3,7 +3,6 @@ import dayjs from "dayjs"
 import performance from "~/logic/performance.js"
 import { getObjectById } from "~/logic/util.js"
 import { PRIORITY, IMPORTANCE_PRIORITY, DIFFICULTY_PRIORITY } from "~/logic/const"
-
 const calculateReadyPercentage = (task) => {
   if (!task.fromIds || task.fromIds.length === 0) {
     return 100 // Нет зависимых задач, значит все готовы
@@ -16,39 +15,44 @@ const calculateReadyPercentage = (task) => {
     return 100 // Если задачи не найдены
   }
 
-  let totalReadyTime = 0
-  let lastTimestamp = task.timestamp
+  // Получаем дату создания задачи из первой записи readyLogs
+  const creationTimestamp = task.readyLogs?.[0]?.timestamp
+  if (!creationTimestamp) return 100
 
-  // Итерация по временным меткам, чтобы найти участки времени, где все задачи были готовы
-  for (let i = 0; i < fromTasks.length; i++) {
-    const currentTask = fromTasks[i]
-    let isAllReady = false
+  const endTime = dayjs().valueOf()
 
-    // Проверяем логи текущей задачи и анализируем готовность всех fromTasks
-    for (let j = 0; j < currentTask.readyLogs?.length; j++) {
-      const log = currentTask.readyLogs[j]
+  // Инициализируем начальные значения
+  let notReadyTime = 0
 
-      if (log.status) {
-        if (isAllReady === false) {
-          lastTimestamp = log.timestamp
+  // Итерация по зависимым задачам
+  for (const currentTask of fromTasks) {
+    let lastNotReadyTimestamp = null
+
+    // Проверяем логи текущей задачи и суммируем периоды, когда задача была не готова
+    for (const log of currentTask.readyLogs || []) {
+      if (!log.status) {
+        // Задача стала "не готова"
+        if (lastNotReadyTimestamp === null) {
+          lastNotReadyTimestamp = log.timestamp
         }
-        isAllReady = true
-      } else {
-        if (isAllReady) {
-          totalReadyTime += log.timestamp - lastTimestamp
-        }
-        isAllReady = false
+      } else if (lastNotReadyTimestamp !== null) {
+        // Задача снова "готова", фиксируем время
+        notReadyTime += log.timestamp - lastNotReadyTimestamp
+        lastNotReadyTimestamp = null
       }
+    }
+
+    // Если задача так и не стала готовой после последнего "не готова"
+    if (lastNotReadyTimestamp !== null) {
+      notReadyTime += endTime - lastNotReadyTimestamp
     }
   }
 
-  const endTime = dayjs().valueOf()
-  totalReadyTime += endTime - lastTimestamp
+  const totalDuration = endTime - creationTimestamp
+  const readyTime = totalDuration - notReadyTime
 
-  const duration = endTime - task.timestamp
-  return duration > 0 ? (totalReadyTime / duration) * 100 : 0
+  return totalDuration > 0 ? (readyTime / totalDuration) * 100 : 0
 }
-
 const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { count: 0 }, intentionSet = new Set()) => {
   // Базовый случай рекурсии или если задача уже посещена
   if (depth >= 7 || visited.has(task.id)) {
@@ -105,22 +109,6 @@ const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { coun
     nodeCount: nodeCount.count,
     intentionSet: intentionSet,
   }
-}
-
-const getMaxTimestampFromIds = (task) => {
-  if (!task.fromIds?.length) return task.timestamp
-
-  let maxTimestamp = 0
-
-  task.fromIds?.forEach((id) => {
-    const relatedTask = getObjectById(id)
-
-    if (relatedTask?.timestamp > maxTimestamp) {
-      maxTimestamp = relatedTask.timestamp
-    }
-  })
-
-  return maxTimestamp
 }
 
 export default (arrToSort = reData.visibleTasks) => {
@@ -245,11 +233,11 @@ export default (arrToSort = reData.visibleTasks) => {
 
     if (aReadyPercentage < bReadyPercentage) {
       performance.end("Sorting - Ready Percentage Comparison")
-      return 1
+      return -1
     }
     if (aReadyPercentage > bReadyPercentage) {
       performance.end("Sorting - Ready Percentage Comparison")
-      return -1
+      return 1
     }
     performance.end("Sorting - Ready Percentage Comparison")
 
@@ -265,39 +253,27 @@ export default (arrToSort = reData.visibleTasks) => {
       return -1
     }
 
-    // Сортировка по таймстампу предков о_О
-    const maxTimestampA = getMaxTimestampFromIds(a)
-    const maxTimestampB = getMaxTimestampFromIds(b)
-
-    if (maxTimestampA > maxTimestampB) {
-      performance.end("Sorting - Node Count and Timestamp Check")
-      return -1
-    } else if (maxTimestampA < maxTimestampB) {
-      performance.end("Sorting - Node Count and Timestamp Check")
-      return 1
-    }
-
     performance.end("Sorting - Node Count and Timestamp Check")
 
-    return 0
+    return b.timestamp - a.timestamp
   })
   performance.end("Full Sorting Process")
 
-  performance.start("Post-Sorting Adjustment")
-  if (
-    reData.visibleTasks[0] &&
-    (dayjs(reData.visibleTasks[0].time, "HH:mm").isAfter(dayjs()) || reData.visibleTasks[0].pause)
-  ) {
-    // Find the index of the first task that's due or overdue based on the current time
-    let index = reData.visibleTasks.findIndex(
-      (task) => dayjs(task.time + " " + task.date, "HH:mm YYYY-MM-DD").isSameOrBefore(dayjs()) && !task.pause,
-    )
+  // performance.start("Post-Sorting Adjustment")
+  // if (
+  //   reData.visibleTasks[0] &&
+  //   (dayjs(reData.visibleTasks[0].time, "HH:mm").isAfter(dayjs()) || reData.visibleTasks[0].pause)
+  // ) {
+  //   // Find the index of the first task that's due or overdue based on the current time
+  //   let index = reData.visibleTasks.findIndex(
+  //     (task) => dayjs(task.time + " " + task.date, "HH:mm YYYY-MM-DD").isSameOrBefore(dayjs()) && !task.pause,
+  //   )
 
-    if (index != -1) {
-      // Move the due or overdue task to the start of the list
-      let [task] = reData.visibleTasks.splice(index, 1)
-      reData.visibleTasks.unshift(task)
-    }
-  }
-  performance.end("Post-Sorting Adjustment")
+  //   if (index != -1) {
+  //     // Move the due or overdue task to the start of the list
+  //     let [task] = reData.visibleTasks.splice(index, 1)
+  //     reData.visibleTasks.unshift(task)
+  //   }
+  // }
+  // performance.end("Post-Sorting Adjustment")
 }

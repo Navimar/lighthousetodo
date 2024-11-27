@@ -5,7 +5,7 @@ import data from "~/logic/data.js"
 import { v4 as uuidv4 } from "uuid"
 import dayjs from "dayjs"
 
-export default (name, fromIds = [], toIds = []) => {
+export default (name, role = "common") => {
   if (isNameTaken(name)) {
     return false
   }
@@ -16,15 +16,27 @@ export default (name, fromIds = [], toIds = []) => {
     note: "",
     time: dayjs().format("HH:mm"),
     date: reData.selectedDate,
-    urgency: "kairos",
-    importance: "kairos",
-    difficulty: "kairos",
-    fromIds: fromIds,
-    toIds: toIds,
+    urgency: "onDay",
+    importance: "important",
+    difficulty: "hour",
+    intention: false,
+    fromIds: [],
+    toIds: [],
     timestamp: dayjs().valueOf(),
     assignedBy: reData.user.id,
     assignedTo: [reData.user.id],
     readyLogs: [{ status: false, timestamp: dayjs().valueOf() }], // добавляем поле readyLogs для хранения логов статуса готовности
+  }
+
+  if (role === "intention") {
+    newTask.urgency = "kairos"
+    newTask.importance = "kairos"
+    newTask.difficulty = "kairos"
+    newTask.intention = true
+  } else if (role === "kairos") {
+    newTask.urgency = "kairos"
+    newTask.importance = "kairos"
+    newTask.difficulty = "kairos"
   }
 
   data.tasks.push(newTask)

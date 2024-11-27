@@ -28,7 +28,7 @@ export const getObjectById = (id) => {
   throw `getObjectById не нашел ${id} `
 }
 
-export const getObjectByName = (name) => {
+export const getObjectByName = (name, role) => {
   if (nameCache[name]?.name === name) {
     return nameCache[name]
   }
@@ -38,7 +38,7 @@ export const getObjectByName = (name) => {
     nameCache[name] = foundTask
     return foundTask
   } else {
-    return addscribe(name)
+    return addscribe(name, role)
   }
 }
 

@@ -10,11 +10,8 @@ import audio from "~/logic/audio.js"
 let plusbutton = () => {
   saveTask("selectTaskByName")
   clearSearch()
-  let newScribe = getObjectByName(NEWSCRIBETEXT)
+  let newScribe = getObjectByName(NEWSCRIBETEXT, "common")
   reData.selectedScribe = newScribe.id
-  newScribe.urgency = "onDay"
-  newScribe.importance = "important"
-  newScribe.difficulty = "hour"
   makevisible()
   let editdiv = document.getElementById("edit")
   if (editdiv) editdiv.innerText = NEWSCRIBETEXT
