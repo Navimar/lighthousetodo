@@ -3,15 +3,16 @@ import dayjs from "dayjs"
 
 export default (task, additionalClass = "") => {
   let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
-  let isInPast = dayjs().isAfter(taskDate)
 
   let getTaskTime = () => {
     if (task.urgency == "onTime") return task.time
 
     let now = dayjs()
-    let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
 
-    if (task.intention) {
+    if (taskDate.isAfter(now)) {
+      // Если задача находится в будущем (по дате и времени)
+      return `с ${taskDate.format("HH:mm")}`
+    } else if (task.intention) {
       return "цель"
     } else if (task.urgency == "onDay" && taskDate.isBefore(now.startOf("day").subtract(1, "day"))) {
       // Если задача была два дня назад или раньше
@@ -26,90 +27,52 @@ export default (task, additionalClass = "") => {
       return dayjs(task.date).format("DD.MM")
     } else if (task.urgency == "shortTerm") {
       return "на днях"
-    } else return "&#8205;"
+    } else return ""
   }
 
   let paused = () => {
     return task.pause ? "II" : ""
   }
 
-  const timeClass = () => {
-    if (task.intention) return "border-transparent"
-    if (task.importance == "critical" && isInPast) return "border-accent"
-    if (task.importance == "critical") return "border-transparent border-l-accent "
-
-    if (task.importance == "important" && isInPast) return "border-yellow-500 "
-    if (task.importance == "important") return "border-transparent border-l-yellow-500 "
-
-    if (task.importance == "noticeable" && isInPast) return "border-lime-500 "
-    if (task.importance == "noticeable") return "border-transparent border-l-lime-500 "
-
-    if (task.importance == "trivial" && isInPast) return "border-neutral-350 dark:border-neutral-600"
-    if (task.importance == "trivial") return "border-transparent border-l-neutral-350 dark:border-r-neutral-600"
-    return "hidden"
+  const bulletClass = () => {
+    if (task.intention) return "text-blue-500"
+    if (task.importance == "critical") return "text-accent"
+    if (task.importance == "important") return "text-yellow-500"
+    if (task.importance == "noticeable") return "text-lime-500"
+    if (task.importance == "trivial") return "text-neutral-350 dark:text-neutral-600"
+    return ""
   }
 
-  const сolorClass = () => {
-    return task.intention ? "text-accent" : "text-neutral-600 dark:text-neutral-350"
-  }
-
-  const duration = () => {
-    if (task.intention) return ""
-    const importanceBorderClass = () => {
-      switch (task.importance) {
-        case "critical":
-          return "border-accent"
-        case "important":
-          return "border-yellow-500"
-        case "noticeable":
-          return "border-lime-500"
-        case "trivial":
-          return "border-neutral-350 dark:border-neutral-600"
+  const bulletSymbol = () => {
+    let symbol = ""
+    if (task.intention) symbol = "<b class='text-base'>!</b>"
+    else
+      switch (task.difficulty) {
+        case "long":
+          symbol = "▲"
+          break
+        case "day":
+          symbol = "☀"
+          break
+        case "hour":
+          symbol = "◉"
+          break
+        case "quick":
+          symbol = "★"
+          break
+        case "kairos":
+          return "" // Сразу возвращаем пустую строку для "kairos"
         default:
-          return ""
+          symbol = "?"
       }
-    }
-
-    let count = 0
-    switch (task.difficulty) {
-      case "long":
-        count = 3
-        break
-      case "day":
-        count = 2
-        break
-      case "hour":
-        count = 1
-        break
-      case "quick":
-        count = 0
-        break
-      case "kairos":
-        count = 0
-        break
-      default:
-        count = 4
-    }
-
-    let result = ""
-    for (let i = 0; i < count; i++) {
-      result += `<div class="w-0 h-fit border-[1px] fontaccent whitespace-nowrap box-border ${importanceBorderClass()}"><span class=" uppercase">&#8203;</span></div>`
-    }
-    return result
+    return `<span class="mr-2 ${bulletClass()} text-xs inline-block">${symbol}</span>`
   }
 
   return html`
   <div
-    class="h-fit box-border border-2 border-transparent font-bold text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${additionalClass} ${сolorClass()}"
-  >
-    ${paused()}
-  </div>
-  ${duration()}
-  <div
-    class="h-fit border-2 box-border ${сolorClass()} text-center uppercase whitespace-nowrap fontaccent text-sm ${additionalClass} ${timeClass()}"
-  >
-    ${getTaskTime()}
-  </div>
+    class="h-fit box-border font-bold text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${additionalClass}"
+  >${paused()}</div><div
+    class="h-fit flex items-center text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${additionalClass}">${bulletSymbol()}${getTaskTime()}</div>
 </div>
 `
 }

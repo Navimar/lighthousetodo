@@ -92,11 +92,4 @@ window.addEventListener("load", function () {
     if (currentTimeMarker) currentTimeMarker.style = "left:" + reData.currentTime.slider + "px"
   })
   render(app)
-
-  function logDOMElementCount() {
-    console.log("Количество DOM элементов:", document.getElementsByTagName("*").length)
-  }
-
-  // Вызов функции для проверки
-  setInterval(logDOMElementCount, 10000) // каждые 10 секунд
 })
