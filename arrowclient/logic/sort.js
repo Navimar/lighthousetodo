@@ -3,46 +3,36 @@ import dayjs from "dayjs"
 import performance from "~/logic/performance.js"
 import { getObjectById } from "~/logic/util.js"
 import { PRIORITY, IMPORTANCE_PRIORITY, DIFFICULTY_PRIORITY } from "~/logic/const"
+
 const calculateReadyPercentage = (task) => {
   if (!task.fromIds || task.fromIds.length === 0) {
     return 100 // Нет зависимых задач, значит все готовы
   }
 
-  // Находим все объекты задач по fromIds
   const fromTasks = task.fromIds.map((id) => getObjectById(id)).filter((t) => t)
 
   if (fromTasks.length === 0) {
     return 100 // Если задачи не найдены
   }
 
-  // Получаем дату создания задачи из первой записи readyLogs
   const creationTimestamp = task.readyLogs?.[0]?.timestamp
   if (!creationTimestamp) return 100
 
   const endTime = dayjs().valueOf()
-
-  // Инициализируем начальные значения
   let notReadyTime = 0
 
-  // Итерация по зависимым задачам
   for (const currentTask of fromTasks) {
     let lastNotReadyTimestamp = null
-
-    // Проверяем логи текущей задачи и суммируем периоды, когда задача была не готова
     for (const log of currentTask.readyLogs || []) {
       if (!log.status) {
-        // Задача стала "не готова"
         if (lastNotReadyTimestamp === null) {
           lastNotReadyTimestamp = log.timestamp
         }
       } else if (lastNotReadyTimestamp !== null) {
-        // Задача снова "готова", фиксируем время
         notReadyTime += log.timestamp - lastNotReadyTimestamp
         lastNotReadyTimestamp = null
       }
     }
-
-    // Если задача так и не стала готовой после последнего "не готова"
     if (lastNotReadyTimestamp !== null) {
       notReadyTime += endTime - lastNotReadyTimestamp
     }
@@ -53,8 +43,8 @@ const calculateReadyPercentage = (task) => {
 
   return totalDuration > 0 ? (readyTime / totalDuration) * 100 : 0
 }
+
 const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { count: 0 }, intentionSet = new Set()) => {
-  // Базовый случай рекурсии или если задача уже посещена
   if (depth >= 7 || visited.has(task.id)) {
     return {
       urgency: task.urgency,
@@ -68,7 +58,6 @@ const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { coun
   visited.add(task.id)
   nodeCount.count++
 
-  // Если задача намерение, добавляем её в сет и передаем приоритет дальше
   if (task.intention) {
     intentionSet.add(task.id)
     return task.toIds?.reduce(
@@ -83,7 +72,6 @@ const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { coun
     )
   }
 
-  // Начальное значение очков
   let maxPoints = PRIORITY[task.urgency] + IMPORTANCE_PRIORITY[task.importance]
   let maxPriorityType = task.urgency
   let maxPriorityConsequence = task.importance
@@ -94,7 +82,6 @@ const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { coun
 
     const childPriority = getMaxPriority(childTask, depth + 1, visited, nodeCount, intentionSet)
 
-    // Обновляем maxPoints
     if (childPriority.points > maxPoints) {
       maxPoints = childPriority.points
       maxPriorityType = childPriority.urgency
@@ -111,191 +98,227 @@ const getMaxPriority = (task, depth = 0, visited = new Set(), nodeCount = { coun
   }
 }
 
-export default (arrToSort = reData.visibleTasks) => {
-  performance.start("Full Sorting Process")
-  const now = dayjs()
+const sortByReadiness = (a, b) => {
+  performance.start("Sorting - Readiness Check")
+  if (!a.ready && b.ready) {
+    performance.end("Sorting - Readiness Check")
+    return -1
+  }
+  if (a.ready && !b.ready) {
+    performance.end("Sorting - Readiness Check")
+    return 1
+  }
+  performance.end("Sorting - Readiness Check")
+  return 0
+}
 
-  arrToSort.sort((a, b) => {
-    // Дисприоритет готовности
-    if (!a.ready && b.ready) {
-      return -1
-    }
-    if (a.ready && !b.ready) {
-      return 1
-    }
+const sortByPause = (a, b) => {
+  performance.start("Sorting - Pause Check")
+  if (!a.pause && b.pause) {
+    performance.end("Sorting - Pause Check")
+    return -1
+  }
+  if (a.pause && !b.pause) {
+    performance.end("Sorting - Pause Check")
+    return 1
+  }
+  performance.end("Sorting - Pause Check")
+  return 0
+}
 
-    // Дисприоритет паузы
-    if (!a.pause && b.pause) {
-      return -1
-    }
-    if (a.pause && !b.pause) {
-      return 1
-    }
+const sortByTimeTask = (a, b, now) => {
+  performance.start("Sorting - Future Task Check")
 
-    performance.start("Sorting - DateTime Parsing")
-    let datetimeA = dayjs(`${a.date}T${a.time}`, "YYYY-MM-DDTHH:mm")
-    let datetimeB = dayjs(`${b.date}T${b.time}`, "YYYY-MM-DDTHH:mm")
-    performance.end("Sorting - DateTime Parsing")
+  // Check the condition for task a
+  const isTaskACritical =
+    a.urgency === "onTime" && (a.importance === "critical" || a.importance === "important") && a.difficulty !== "quick"
 
-    performance.start("Sorting - Future Task Check")
+  // Check the condition for task b
+  const isTaskBCritical =
+    b.urgency === "onTime" && (b.importance === "critical" || b.importance === "important") && b.difficulty !== "quick"
 
-    let aIsFuture = datetimeA.isAfter(now)
-    let bIsFuture = datetimeB.isAfter(now)
-
-    // Приоритет будущих задач ко времени над другими
-    if (
-      a.urgency == "onTime" &&
-      aIsFuture &&
-      (a.importance == "critical" || a.importance == "important") &&
-      a.difficulty != "quick" &&
-      !(
-        b.urgency == "onTime" &&
-        bIsFuture &&
-        (b.importance == "critical" || b.importance == "important") &&
-        b.difficulty != "quick"
-      )
-    ) {
-      performance.end("Sorting - Future Task Check")
-      return -1
-    }
-    if (
-      b.urgency == "onTime" &&
-      bIsFuture &&
-      (b.importance == "critical" || b.importance == "important") &&
-      b.difficulty != "quick" &&
-      !(
-        a.urgency == "onTime" &&
-        aIsFuture &&
-        (a.importance == "critical" || a.importance == "important") &&
-        a.difficulty != "quick"
-      )
-    ) {
-      performance.end("Sorting - Future Task Check")
-      return 1
-    }
-
-    // Если обе ко времени и обе в будущем, сравниваем datetime
-    if (a.urgency == "onTime" && b.urgency == "onTime" && aIsFuture && bIsFuture) {
-      if (!datetimeA.isSame(datetimeB)) {
-        performance.end("Sorting - Future Task Check")
-        return datetimeA.isAfter(datetimeB) ? 1 : -1
-      }
-    }
-
-    // Если одна задача в будущем, а другая в прошлом, возвращаем прошлую первой
-    if (aIsFuture && !bIsFuture) {
-      performance.end("Sorting - Future Task Check")
-      return 1
-    }
-    if (!aIsFuture && bIsFuture) {
-      performance.end("Sorting - Future Task Check")
-      return -1
-    }
+  // If task a meets the condition and task b does not, prioritize task a
+  if (isTaskACritical && !isTaskBCritical) {
     performance.end("Sorting - Future Task Check")
+    return -1
+  }
 
-    performance.start("Sorting - Intention Check")
-    // Приоритет intention
-    if (a.intention && !b.intention) {
-      performance.end("Sorting - Intention Check")
+  // If task b meets the condition and task a does not, prioritize task b
+  if (!isTaskACritical && isTaskBCritical) {
+    performance.end("Sorting - Future Task Check")
+    return 1
+  }
+
+  // If both tasks meet the condition, sort by datetime
+  if (isTaskACritical && isTaskBCritical) {
+    const datetimeA = dayjs(`${a.date}T${a.time}`, "YYYY-MM-DDTHH:mm")
+    const datetimeB = dayjs(`${b.date}T${b.time}`, "YYYY-MM-DDTHH:mm")
+
+    // Compare the dates and times
+    if (datetimeA.isBefore(datetimeB)) {
+      performance.end("Sorting - Future Task Check")
       return -1
-    }
-    if (!a.intention && b.intention) {
-      performance.end("Sorting - Intention Check")
+    } else if (datetimeA.isAfter(datetimeB)) {
+      performance.end("Sorting - Future Task Check")
       return 1
     }
+  }
+
+  performance.end("Sorting - Future Task Check")
+  return 0
+}
+
+const sortByFuture = (a, b, now) => {
+  const datetimeA = dayjs(`${a.date}T${a.time}`, "YYYY-MM-DDTHH:mm")
+  const datetimeB = dayjs(`${b.date}T${b.time}`, "YYYY-MM-DDTHH:mm")
+  const aIsFuture = datetimeA.isAfter(now)
+  const bIsFuture = datetimeB.isAfter(now)
+  if (aIsFuture && !bIsFuture) {
+    performance.end("Sorting - Future Task Check")
+    return 1
+  }
+  if (!aIsFuture && bIsFuture) {
+    performance.end("Sorting - Future Task Check")
+    return -1
+  }
+  return 0
+}
+
+const sortByIntention = (a, b) => {
+  performance.start("Sorting - Intention Check")
+  if (a.intention && !b.intention) {
     performance.end("Sorting - Intention Check")
+    return -1
+  }
+  if (!a.intention && b.intention) {
+    performance.end("Sorting - Intention Check")
+    return 1
+  }
+  performance.end("Sorting - Intention Check")
+  return 0
+}
 
-    performance.start("Sorting - getMaxPriority")
+const sortByPriority = (a, b, aPriority, bPriority) => {
+  performance.start("Sorting - Priority Check")
 
-    const aPriority = getMaxPriority(a)
-    const bPriority = getMaxPriority(b)
+  const aTotalPriority =
+    aPriority.points && DIFFICULTY_PRIORITY[a.difficulty] ? aPriority.points + DIFFICULTY_PRIORITY[a.difficulty] : 0
+  const bTotalPriority =
+    bPriority.points && DIFFICULTY_PRIORITY[b.difficulty] ? bPriority.points + DIFFICULTY_PRIORITY[b.difficulty] : 0
 
-    performance.end("Sorting - getMaxPriority")
+  if (aTotalPriority > bTotalPriority) {
+    performance.end("Sorting - Priority Check")
+    return -1
+  }
+  if (aTotalPriority < bTotalPriority) {
+    performance.end("Sorting - Priority Check")
+    return 1
+  }
+  performance.end("Sorting - Priority Check")
+  return 0
+}
 
-    const aIntentionSet = aPriority.intentionSet
-    const bIntentionSet = bPriority.intentionSet
+const sortByReadyPercentage = (a, b) => {
+  performance.start("Sorting - Ready Percentage Comparison")
+  const aReadyPercentage = calculateReadyPercentage(a)
+  const bReadyPercentage = calculateReadyPercentage(b)
 
-    // Дисприоритет задач с postpone == true в intentionSet
-    performance.start("Sorting - Postpone Intention Check")
-    const aHasPostponeIntention =
-      aIntentionSet.size > 0 && Array.from(aIntentionSet).every((id) => getObjectById(id).postpone == true)
-    const bHasPostponeIntention =
-      bIntentionSet.size > 0 && Array.from(bIntentionSet).every((id) => getObjectById(id).postpone == true)
-
-    if (aHasPostponeIntention && !bHasPostponeIntention) {
-      performance.end("Sorting - Postpone Intention Check")
-      return 1
-    }
-    if (!aHasPostponeIntention && bHasPostponeIntention) {
-      performance.end("Sorting - Postpone Intention Check")
-      return -1
-    }
-    performance.end("Sorting - Postpone Intention Check")
-    performance.start("Sorting - Priority")
-
-    const aTotalPriority =
-      aPriority.points && DIFFICULTY_PRIORITY[a.difficulty] ? aPriority.points + DIFFICULTY_PRIORITY[a.difficulty] : 0
-    const bTotalPriority =
-      bPriority.points && DIFFICULTY_PRIORITY[b.difficulty] ? bPriority.points + DIFFICULTY_PRIORITY[b.difficulty] : 0
-
-    if (aTotalPriority > bTotalPriority) {
-      performance.end("Sorting - Priority")
-      return -1
-    }
-    if (aTotalPriority < bTotalPriority) {
-      performance.end("Sorting - Priority")
-      return 1
-    }
-    performance.end("Sorting - Priority")
-
-    performance.start("Sorting - Ready Percentage Comparison")
-    // Сравнение по проценту готовности всех fromIds
-    const aReadyPercentage = calculateReadyPercentage(a)
-    const bReadyPercentage = calculateReadyPercentage(b)
-
-    if (aReadyPercentage < bReadyPercentage) {
-      performance.end("Sorting - Ready Percentage Comparison")
-      return -1
-    }
-    if (aReadyPercentage > bReadyPercentage) {
-      performance.end("Sorting - Ready Percentage Comparison")
-      return 1
-    }
+  if (aReadyPercentage < bReadyPercentage) {
     performance.end("Sorting - Ready Percentage Comparison")
+    return -1
+  }
+  if (aReadyPercentage > bReadyPercentage) {
+    performance.end("Sorting - Ready Percentage Comparison")
+    return 1
+  }
+  performance.end("Sorting - Ready Percentage Comparison")
+  return 0
+}
 
-    performance.start("Sorting - Node Count and Timestamp Check")
+const sortByNodeCountAndTimestamp = (a, b, aPriority, bPriority) => {
+  performance.start("Sorting - Node Count and Timestamp Check")
 
-    // Сортируем по количеству потомков
-    if (aPriority.nodeCount > bPriority.nodeCount) {
-      performance.end("Sorting - Node Count and Timestamp Check")
-      return 1
-    }
-    if (aPriority.nodeCount < bPriority.nodeCount) {
-      performance.end("Sorting - Node Count and Timestamp Check")
-      return -1
-    }
-
+  if (aPriority.nodeCount > bPriority.nodeCount) {
     performance.end("Sorting - Node Count and Timestamp Check")
+    return 1
+  }
+  if (aPriority.nodeCount < bPriority.nodeCount) {
+    performance.end("Sorting - Node Count and Timestamp Check")
+    return -1
+  }
 
-    return b.timestamp - a.timestamp
-  })
-  performance.end("Full Sorting Process")
+  performance.end("Sorting - Node Count and Timestamp Check")
+  return b.timestamp - a.timestamp
+}
 
+const postSortingAdjustment = () => {
   performance.start("Post-Sorting Adjustment")
   if (
     reData.visibleTasks[0] &&
     (dayjs(reData.visibleTasks[0].time, "HH:mm").isAfter(dayjs()) || reData.visibleTasks[0].pause)
   ) {
-    // Find the index of the first task that's due or overdue based on the current time
     let index = reData.visibleTasks.findIndex(
       (task) => dayjs(task.time + " " + task.date, "HH:mm YYYY-MM-DD").isSameOrBefore(dayjs()) && !task.pause,
     )
 
     if (index != -1) {
-      // Move the due or overdue task to the start of the list
       let [task] = reData.visibleTasks.splice(index, 1)
       reData.visibleTasks.unshift(task)
     }
   }
   performance.end("Post-Sorting Adjustment")
+}
+
+const sortByOnTime = (a, b) => {
+  console.log(a.urgency, b.urgency)
+  if (a.urgency == "onTime" && b.urgency != "onTime") return -1
+  if (a.urgency != "onTime" && b.urgency == "onTime") return 1
+
+  if (a.urgency === "onTime" && b.urgency === "onTime") {
+    const datetimeA = dayjs(`${a.date}T${a.time}`, "YYYY-MM-DDTHH:mm")
+    const datetimeB = dayjs(`${b.date}T${b.time}`, "YYYY-MM-DDTHH:mm")
+    performance.end("Sorting - OnTime Check")
+    return datetimeA.isAfter(datetimeB) ? 1 : -1
+  }
+
+  return 0
+}
+
+export default (arrToSort = reData.visibleTasks) => {
+  performance.start("Full Sorting Process")
+  const now = dayjs()
+
+  arrToSort.sort((a, b) => {
+    let result = 0
+    result = sortByReadiness(a, b)
+    if (result != 0) return result
+
+    result = sortByPause(a, b)
+    if (result != 0) return result
+
+    result = sortByTimeTask(a, b, now)
+    if (result != 0) return result
+
+    result = sortByFuture(a, b, now)
+    if (result != 0) return result
+
+    result = sortByIntention(a, b)
+    if (result != 0) return result
+
+    const aPriority = getMaxPriority(a)
+    const bPriority = getMaxPriority(b)
+
+    result = sortByPriority(a, b, aPriority, bPriority)
+    if (result != 0) return result
+
+    result = sortByReadyPercentage(a, b)
+    if (result != 0) return result
+
+    result = sortByNodeCountAndTimestamp(a, b, aPriority, bPriority)
+    if (result != 0) return result
+    return result
+  })
+
+  performance.end("Full Sorting Process")
+  postSortingAdjustment()
 }

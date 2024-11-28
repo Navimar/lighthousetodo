@@ -10,18 +10,14 @@ export default (task, additionalClass = "") => {
 
     let now = dayjs()
     if (taskDate.isAfter(now)) {
-      // Если задача находится в будущем (по дате и времени)
       return `с ${taskDate.format("HH:mm")}`
     } else if (task.intention) {
       return "цель"
     } else if (task.urgency == "onDay" && taskDate.isBefore(now.startOf("day").subtract(1, "day"))) {
-      // Если задача была два дня назад или раньше
       return "давно"
     } else if (task.urgency == "onDay" && taskDate.isBefore(now.startOf("day"))) {
-      // Если задача была вчера
       return "вчера"
     } else if (task.urgency == "onDay" && taskDate.isSame(now, "day")) {
-      // Если задача была сегодня
       return "сегодня"
     } else if (task.urgency == "onDay") {
       return dayjs(task.date).format("DD.MM")
@@ -46,7 +42,7 @@ export default (task, additionalClass = "") => {
 
   const bulletSymbol = () => {
     let symbol = ""
-    if (task.ready) symbol = "<b class='text-base'>✓</b>"
+    if (task.ready) symbol = "✓"
     else if (task.intention) symbol = "<b class='text-base'>!</b>"
     else
       switch (task.difficulty) {
@@ -54,27 +50,34 @@ export default (task, additionalClass = "") => {
           symbol = "▲"
           break
         case "day":
-          symbol = "☀"
+          symbol = "◉"
           break
         case "hour":
-          symbol = "◉"
+          symbol = "<span class='text-base'>⧗</span>"
           break
         case "quick":
           symbol = "★"
           break
         case "kairos":
-          return "" // Сразу возвращаем пустую строку для "kairos"
+          return ""
         default:
           symbol = "?"
       }
     return `<span class="mr-2 ${bulletClass()} text-xs inline-block">${symbol}</span>`
   }
 
-  return html`
-  <div
-    class="h-fit box-border font-bold text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${additionalClass}"
-  >${paused()}</div><div
-    class="h-fit flex items-center text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${additionalClass}">${bulletSymbol()}${getTaskTime()}</div>
-</div>
-`
+  const isPastTask = () => {
+    let now = dayjs()
+    return task.urgency == "onTime" && taskDate.isBefore(now) && !task.ready
+  }
+
+  let finalClass = `${additionalClass} ${isPastTask() ? "text-accent" : ""}`.trim()
+
+  return html`<div
+      class="h-fit box-border font-bold text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${finalClass}"
+      >${paused()}</div
+    ><div
+      class="h-fit flex items-center text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${finalClass}"
+      >${bulletSymbol()}${getTaskTime()}</div
+    >`
 }
