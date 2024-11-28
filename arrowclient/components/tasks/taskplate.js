@@ -5,10 +5,10 @@ export default (task, additionalClass = "") => {
   let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
 
   let getTaskTime = () => {
+    if (task.ready) return "готово"
     if (task.urgency == "onTime") return task.time
 
     let now = dayjs()
-
     if (taskDate.isAfter(now)) {
       // Если задача находится в будущем (по дате и времени)
       return `с ${taskDate.format("HH:mm")}`
@@ -35,7 +35,8 @@ export default (task, additionalClass = "") => {
   }
 
   const bulletClass = () => {
-    if (task.intention) return "text-blue-500"
+    if (task.ready) return "text-black"
+    if (task.intention) return "text-compliment"
     if (task.importance == "critical") return "text-accent"
     if (task.importance == "important") return "text-yellow-500"
     if (task.importance == "noticeable") return "text-lime-500"
@@ -45,7 +46,8 @@ export default (task, additionalClass = "") => {
 
   const bulletSymbol = () => {
     let symbol = ""
-    if (task.intention) symbol = "<b class='text-base'>!</b>"
+    if (task.ready) symbol = "<b class='text-base'>✓</b>"
+    else if (task.intention) symbol = "<b class='text-base'>!</b>"
     else
       switch (task.difficulty) {
         case "long":

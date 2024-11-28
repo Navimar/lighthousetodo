@@ -51,7 +51,6 @@ let renderTask = (task, index) => {
   }
   let firstclass = ""
   let sticky = false
-  if (task.ready) firstclass += "border-box border-b-02rem border-compliment dark:border-compliment"
   if (task.urgency == "meeting" && firststicky) {
     sticky = "sticky bottom-0 z-[50]"
     firststicky = false
