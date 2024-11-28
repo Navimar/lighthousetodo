@@ -143,13 +143,17 @@ export default (arrToSort = reData.visibleTasks) => {
     let bIsFuture = datetimeB.isAfter(now)
 
     // Приоритет будущих задач ко времени над другими
-    // Приоритет будущих задач ко времени над другими
     if (
       a.urgency == "onTime" &&
       aIsFuture &&
-      b.urgency != "onTime" &&
       (a.importance == "critical" || a.importance == "important") &&
-      a.difficulty != "quick"
+      a.difficulty != "quick" &&
+      !(
+        b.urgency == "onTime" &&
+        bIsFuture &&
+        (b.importance == "critical" || b.importance == "important") &&
+        b.difficulty != "quick"
+      )
     ) {
       performance.end("Sorting - Future Task Check")
       return -1
@@ -157,9 +161,14 @@ export default (arrToSort = reData.visibleTasks) => {
     if (
       b.urgency == "onTime" &&
       bIsFuture &&
-      a.urgency != "onTime" &&
       (b.importance == "critical" || b.importance == "important") &&
-      b.difficulty != "quick"
+      b.difficulty != "quick" &&
+      !(
+        a.urgency == "onTime" &&
+        aIsFuture &&
+        (a.importance == "critical" || a.importance == "important") &&
+        a.difficulty != "quick"
+      )
     ) {
       performance.end("Sorting - Future Task Check")
       return 1
