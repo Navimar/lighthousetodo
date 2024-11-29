@@ -174,11 +174,9 @@ const sortByFuture = (a, b, now) => {
   const aIsFuture = datetimeA.isAfter(now)
   const bIsFuture = datetimeB.isAfter(now)
   if (aIsFuture && !bIsFuture) {
-    performance.end("Sorting - Future Task Check")
     return 1
   }
   if (!aIsFuture && bIsFuture) {
-    performance.end("Sorting - Future Task Check")
     return -1
   }
   return 0

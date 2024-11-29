@@ -55,6 +55,7 @@ export const makevisible = () => {
     }
     performance.end("initializeCache")
 
+    performance.start("areAllFromIdsReady")
     const areAllFromIdsReady = (task) => {
       if (!task?.fromIds?.length) return true
       for (let id of task.fromIds) {
@@ -66,6 +67,7 @@ export const makevisible = () => {
     }
 
     const highestPriorityPerDate = {}
+    performance.end("areAllFromIdsReady")
 
     performance.start("mainLoop")
 

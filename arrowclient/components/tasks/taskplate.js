@@ -9,11 +9,10 @@ export default (task, additionalClass = "") => {
     if (task.urgency == "onTime") return task.time
 
     let now = dayjs()
-    if (taskDate.isAfter(now)) {
-      return `с ${taskDate.format("HH:mm")}`
-    } else if (task.intention) {
-      return "цель"
-    } else if (task.urgency == "onDay" && taskDate.isBefore(now.startOf("day").subtract(1, "day"))) {
+    if (taskDate.isAfter(now.endOf("day"))) return `с ${taskDate.format("DD.MM")}`
+    if (taskDate.isAfter(now)) return `с ${taskDate.format("HH:mm")}`
+    if (task.intention) return "цель"
+    if (task.urgency == "onDay" && taskDate.isBefore(now.startOf("day").subtract(1, "day"))) {
       return "давно"
     } else if (task.urgency == "onDay" && taskDate.isBefore(now.startOf("day"))) {
       return "вчера"
