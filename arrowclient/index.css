@@ -19,6 +19,7 @@
 
 * {
   font-family: "Open Sans", sans-serif;
+  touch-action: pan-x pan-y;
 }
 
 .bgimg {
