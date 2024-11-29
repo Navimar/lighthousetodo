@@ -16,10 +16,8 @@
     --plus-image: url("img/plusdark.png");
   }
 }
-
 * {
   font-family: "Open Sans", sans-serif;
-  touch-action: pan-x pan-y;
 }
 
 .bgimg {
@@ -98,4 +96,8 @@ input {
   background-size: 0.5em 0.5em;
   background-position: top left;
   border-top-left-radius: 0;
+}
+
+body {
+  touch-action: pan-x pan-y;
 }
