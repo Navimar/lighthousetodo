@@ -46,17 +46,16 @@ window.addEventListener("load", function () {
     let text = e.clipboardData.getData("text/plain")
     document.execCommand("insertText", false, text)
   })
-  document.addEventListener("gesturestart", function (e) {
-    e.preventDefault()
-  })
 
-  document.addEventListener("gesturechange", function (e) {
-    e.preventDefault()
-  })
-
-  document.addEventListener("gestureend", function (e) {
-    e.preventDefault()
-  })
+  window.addEventListener(
+    "touchmove",
+    function (e) {
+      if (e.scale !== 1) {
+        e.preventDefault()
+      }
+    },
+    { passive: false },
+  )
 
   authenticationOnLoad()
 
