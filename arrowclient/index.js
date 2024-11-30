@@ -3,6 +3,7 @@ import renderCalendar from "./components/calendar.js"
 import online from "./components/online.js"
 import search from "./components/search.js"
 import plusbutton from "./components/plusbutton.js"
+import footer from "~/components/footer.js"
 import { renderTasks } from "./components/tasks/tasks.js"
 import { renderCollabortors, renderCollaborationRequests } from "./components/collaborators/collaborators.js"
 import { inputSocket } from "~/logic/send.js"
@@ -33,11 +34,10 @@ const app = document.getElementById("App")
 
 const render = html`
   ${() => search()}
-  <div class="flex flex-col gap-6 pb-80 max-w-full w-40rem px-3 m-auto">
+  <div class="flex flex-col gap-6 pb-[30rem] max-w-full w-40rem px-3 m-auto">
     ${() => authentication()} ${() => renderNodeCounter()} ${() => renderCalendar(dayjs())}
-    ${() => renderCollaborationRequests()} ${() => renderCollabortors()} ${() => renderTasks()}
-  </div>
-  ${plusbutton} ${() => online()}
+    ${() => renderCollaborationRequests()} ${() => renderCollabortors()} ${() => renderTasks()} </div
+  >${footer()}${plusbutton}${() => online()}
 `
 
 window.addEventListener("load", function () {

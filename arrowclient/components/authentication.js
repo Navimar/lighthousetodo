@@ -123,7 +123,7 @@ export const authenticationOnLoad = () => {
       reData.user.name = firebaseUser.displayName || "Noname"
 
       const pathSegments = window.location.pathname.split("/")
-      const pathSegmentPreLast = [pathSegments.length - 2]
+      const pathSegmentPreLast = pathSegments[pathSegments.length - 2]
       if (pathSegments[pathSegments.length - 1] == "add" && pathSegmentPreLast != reData.user.id)
         addCollaborationRequest(pathSegmentPreLast)
 

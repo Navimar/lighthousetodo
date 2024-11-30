@@ -192,7 +192,7 @@ export default (m) => {
     if (readyCheckbox && readyCheckbox.checked) {
       audio.playSound(audio.readySave)
       if (!thisTask.ready) {
-        thisTask.readyLogs = thisTask.readyLogs || []
+        thisTask.readyLogs = Array.isArray(thisTask.readyLogs) ? thisTask.readyLogs : []
         thisTask.readyLogs.push({ status: true, timestamp: dayjs().valueOf() })
         if (thisTask.readyLogs?.length > 100) {
           thisTask.readyLogs.shift() // удаляем самую старую запись, если превышено 100 записей
@@ -201,7 +201,7 @@ export default (m) => {
       thisTask.ready = true
     } else {
       if (thisTask.ready) {
-        thisTask.readyLogs = thisTask.readyLogs || []
+        thisTask.readyLogs = Array.isArray(thisTask.readyLogs) ? thisTask.readyLogs : []
         thisTask.readyLogs.push({ status: false, timestamp: dayjs().valueOf() })
         if (thisTask.readyLogs?.length > 100) {
           thisTask.readyLogs.shift() // удаляем самую старую запись, если превышено 100 записей

@@ -21,3 +21,5 @@ export const DIFFICULTY_PRIORITY = {
   quick: 4,
   kairos: 4,
 }
+
+export const VERSION = "0.6.1"

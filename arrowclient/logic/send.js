@@ -5,6 +5,7 @@ import data from "~/logic/data.js"
 import { makevisible } from "~/logic/makevisible"
 import { safeSetLocalStorageItem } from "~/logic/util.js"
 import { socket } from "~/logic/socket.js"
+import { VERSION } from "~/logic/const"
 
 import { v4 as uuidv4 } from "uuid"
 
@@ -35,6 +36,13 @@ export function inputSocket() {
   socket.on("connect", function () {
     loadData()
     // reData.clientIsOnline = true
+  })
+  socket.on("version", function (msg) {
+    reData.version = msg.version
+    if (msg && msg.version != VERSION) {
+      const safeVersion = encodeURIComponent(msg.version) // Надежное экранирование версии
+      window.location.href = `${window.location.pathname}?version=${safeVersion}`
+    }
   })
   socket.on("disconnect", function () {
     console.log("DISCONNECT!!!")

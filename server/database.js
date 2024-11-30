@@ -70,8 +70,8 @@ export async function addCollaboratorNeo4j(userId, collaboratorId, collaboratorN
     // Находим существующий узел пользователя-инициатора
     MATCH (initiator:User {id: $userId})
     WITH initiator
-    // Находим или создаем узел пользователя-коллаборатора
-    MERGE (collaborator:User {id: $collaboratorId})
+    // Находим существующий узел пользователя-коллаборатора
+    MATCH (collaborator:User {id: $collaboratorId})
     WITH initiator, collaborator
     // Создаем или обновляем связь COLLABORATE с добавлением имени
     MERGE (initiator)-[relation:COLLABORATE]->(collaborator)

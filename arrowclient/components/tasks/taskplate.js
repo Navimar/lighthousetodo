@@ -62,7 +62,7 @@ export default (task, additionalClass = "") => {
         default:
           symbol = "?"
       }
-    return `<span class="mr-2 ${bulletClass()} text-xs inline-block">${symbol}</span>`
+    return `<span class="${bulletClass()} text-xs inline-block">${symbol}</span>`
   }
 
   const isPastTask = () => {
@@ -77,6 +77,6 @@ export default (task, additionalClass = "") => {
       >${paused()}</div
     ><div
       class="h-fit flex items-center text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${finalClass}"
-      >${bulletSymbol()}${getTaskTime()}</div
+      >${bulletSymbol()}<span class="ml-2 fontaccent">${getTaskTime()}</span></div
     >`
 }
