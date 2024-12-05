@@ -10,9 +10,11 @@ import { selectTaskById, showSaveButtonHidePause } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import data from "~/logic/data.js"
 import performance from "~/logic/performance.js"
+import sort from "~/logic/sort.js"
+
 import css from "~/css.js"
 
-import { html } from "@arrow-js/core"
+import { html } from "~/arrow-js/index.js"
 import dayjs from "dayjs"
 
 let firststicky = true
@@ -22,9 +24,8 @@ export let renderTasks = () => {
   try {
     firststicky = true
     if (reData.searchString) {
-      let filteredTasks = data.tasks.slice()
       // Filter tasks by matching with the search input
-      filteredTasks = data.tasks.filter(
+      let filteredTasks = data.tasks.filter(
         (task) => task.name && task.name.toLowerCase().includes(reData.searchString.toLocaleLowerCase()),
       )
       if (filteredTasks.length === 0) {
@@ -33,7 +34,7 @@ export let renderTasks = () => {
           >Ничего не найдено...</div
         >`
       }
-      // sort(filteredTasks)
+      sort(filteredTasks)
       return filteredTasks.map(renderTask)
     }
     return reData.visibleTasks.map(renderTask)
@@ -61,7 +62,7 @@ let renderTask = (task, index) => {
       id="selectedtask"
       class="${firstclass} -mx-3 z-[45] flex min-h-screen flex-col gap-5 ${taskBgEditable()} p-3 sm:rounded-lg overflow dark:text-white"
       ><div class="flex flex-col gap-3"> ${controlButtons(task)} ${radio(task)}</div> ${dateInput(task)}
-      ${timeSlider(task)} ${linkDivs(task)}<div class="flex flex-col gap-3 ml-3"
+      ${timeSlider(task)} ${linkDivs(task)}<div class="flex flex-col gap-3 mx-3"
         >${() => tagLine(task, "from")}<div
           id="edit"
           @input="${showSaveButtonHidePause}"

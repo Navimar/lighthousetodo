@@ -19,7 +19,7 @@ import { makevisible } from "~/logic/makevisible.js"
 import { renderNodeCounter } from "~/components/nodecounter.js"
 import performance from "~/logic/performance.js"
 
-import { html, watch } from "@arrow-js/core"
+import { html, watch } from "~/arrow-js/index.js"
 import dayjs from "dayjs"
 import "dayjs/locale/ru" // Импорт русской локали
 import localizedFormat from "dayjs/plugin/localizedFormat" // Плагин для локализованного форматирования
@@ -46,16 +46,6 @@ window.addEventListener("load", function () {
     let text = e.clipboardData.getData("text/plain")
     document.execCommand("insertText", false, text)
   })
-
-  window.addEventListener(
-    "touchmove",
-    function (e) {
-      if (e.scale !== 1) {
-        e.preventDefault()
-      }
-    },
-    { passive: false },
-  )
 
   authenticationOnLoad()
 

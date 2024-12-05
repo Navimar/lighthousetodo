@@ -1,4 +1,4 @@
-import { html } from "@arrow-js/core"
+import { html } from "~/arrow-js/index.js"
 import css from "~/css.js"
 import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 

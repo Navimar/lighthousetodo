@@ -1,4 +1,4 @@
-import { html } from "@arrow-js/core"
+import { html } from "~/arrow-js/index.js"
 import dayjs from "dayjs"
 
 export default (task, additionalClass = "") => {
@@ -76,7 +76,7 @@ export default (task, additionalClass = "") => {
       class="h-fit box-border font-bold text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${finalClass}"
       >${paused()}</div
     ><div
-      class="h-fit flex items-center text-center uppercase whitespace-nowrap fontaccent text-sm empty:hidden ${finalClass}"
-      >${bulletSymbol()}<span class="ml-2 fontaccent">${getTaskTime()}</span></div
+      class="h-fit flex items-center text-center uppercase whitespace-nowrap fontaccent text-sm gap-2 empty:hidden ${finalClass}"
+      >${bulletSymbol()}${getTaskTime()}</div
     >`
 }

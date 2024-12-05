@@ -1,4 +1,4 @@
-import { reactive } from "@arrow-js/core"
+import { reactive } from "~/arrow-js/index.js"
 import dayjs from "dayjs"
 
 export default reactive({

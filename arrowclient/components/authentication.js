@@ -1,4 +1,4 @@
-import { html } from "@arrow-js/core"
+import { html } from "~/arrow-js/index.js"
 import { initializeApp } from "firebase/app"
 import { GoogleAuthProvider, signInWithPopup, getAuth, onAuthStateChanged, signOut } from "firebase/auth"
 import { loadData } from "~/logic/send.js"

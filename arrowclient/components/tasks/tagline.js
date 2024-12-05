@@ -1,4 +1,4 @@
-import { html } from "@arrow-js/core"
+import { html } from "~/arrow-js/index.js"
 import { selectTaskById } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import { getObjectById, getDayjsDateFromTask } from "~/logic/util"
@@ -51,7 +51,7 @@ export default (givenTask, direction) => {
           let theCollaborator = reData.collaborators.find((cb) => cb.id === collaboratorId)
           return html`<div
             class="text-neutral-700 dark:text-neutral-350 bg-alternative-200 dark:bg-alternative-700 px-2 m-0.5 border border-neutral-200 dark:border-neutral-700 rounded-lg"
-            ><div class="flex h-full break-all items-center gap-2">${theCollaborator?.name || collaboratorId}</div></div
+            ><div class="flex h-full break-word items-center">${theCollaborator?.name || collaboratorId}</div></div
           >`
         }
       })}${() =>
@@ -66,8 +66,8 @@ export default (givenTask, direction) => {
             e.stopPropagation()
           }}"
           class="${cornerbox} text-neutral-700 dark:text-neutral-350 m-0.5 inline-block align-middle rounded-lg px-2 bg-neutral-200 dark:bg-neutral-800">
-          <div class="flex h-full items-center gap-2"
-            ><div class="p-1 break-all ">${task.name}</div>${() => taskplate(task, "text-xs p-0.5")}</div
+          <div class="flex h-full items-center"
+            ><div class="p-1 break-word">${task.name}</div>${() => taskplate(task, "text-xs p-0.5")}</div
           ></div
         >`
       })}${() =>
@@ -79,8 +79,8 @@ export default (givenTask, direction) => {
             e.stopPropagation()
           }}"
           class="text-neutral-700 dark:text-neutral-350 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block align-middle rounded-lg px-2 bg-white dark:bg-black">
-          <div class="flex  h-full items-center gap-2"
-            ><div class="p-1 break-all">${task.name}</div>${() => taskplate(task, "text-xs p-0.5")}</div
+          <div class="flex  h-full items-center"
+            ><div class="p-1 break-word">${task.name}</div>${() => taskplate(task, "text-xs p-0.5")}</div
           ></div
         >`
       })}${() =>
@@ -92,7 +92,7 @@ export default (givenTask, direction) => {
             e.stopPropagation()
           }}"
           class="text-neutral-400 dark:text-neutral-500 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block rounded-lg px-2">
-          <div class="p-1 break-all">${task.name}</div></div
+          <div class="p-1 break-word">${task.name}</div></div
         >`
       })}</div
   >`

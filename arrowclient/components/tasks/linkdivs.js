@@ -1,4 +1,4 @@
-import { html } from "@arrow-js/core"
+import { html } from "~/arrow-js/index.js"
 import { getCurrentLine, getObjectById } from "~/logic/util.js"
 import reData from "~/logic/reactive.js"
 import renderAutocomplete from "/components/autocomplete.js"

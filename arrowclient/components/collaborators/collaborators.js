@@ -1,4 +1,4 @@
-import { html } from "@arrow-js/core"
+import { html } from "~/arrow-js/index.js"
 import reData from "~/logic/reactive.js"
 import { selectCollaborator } from "~/logic/manipulate.js"
 import { controlButtons } from "~/components/collaborators/controlbuttons.js"

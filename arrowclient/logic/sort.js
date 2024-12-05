@@ -249,24 +249,6 @@ const sortByNodeCountAndTimestamp = (a, b, aPriority, bPriority) => {
   return b.timestamp - a.timestamp
 }
 
-const postSortingAdjustment = () => {
-  performance.start("Post-Sorting Adjustment")
-  if (
-    reData.visibleTasks[0] &&
-    (dayjs(reData.visibleTasks[0].time, "HH:mm").isAfter(dayjs()) || reData.visibleTasks[0].pause)
-  ) {
-    let index = reData.visibleTasks.findIndex(
-      (task) => dayjs(task.time + " " + task.date, "HH:mm YYYY-MM-DD").isSameOrBefore(dayjs()) && !task.pause,
-    )
-
-    if (index != -1) {
-      let [task] = reData.visibleTasks.splice(index, 1)
-      reData.visibleTasks.unshift(task)
-    }
-  }
-  performance.end("Post-Sorting Adjustment")
-}
-
 const sortByOnTime = (a, b) => {
   console.log(a.urgency, b.urgency)
   if (a.urgency == "onTime" && b.urgency != "onTime") return -1
@@ -280,6 +262,20 @@ const sortByOnTime = (a, b) => {
   }
 
   return 0
+}
+const postSortingAdjustment = (arrToAdjust) => {
+  performance.start("Post-Sorting Adjustment")
+  if (arrToAdjust[0] && (dayjs(arrToAdjust[0].time, "HH:mm").isAfter(dayjs()) || arrToAdjust[0].pause)) {
+    let index = arrToAdjust.findIndex(
+      (task) => dayjs(task.time + " " + task.date, "HH:mm YYYY-MM-DD").isSameOrBefore(dayjs()) && !task.pause,
+    )
+
+    if (index != -1) {
+      let [task] = arrToAdjust.splice(index, 1)
+      arrToAdjust.unshift(task)
+    }
+  }
+  performance.end("Post-Sorting Adjustment")
 }
 
 export default (arrToSort = reData.visibleTasks) => {
@@ -316,7 +312,6 @@ export default (arrToSort = reData.visibleTasks) => {
     if (result != 0) return result
     return result
   })
-
+  postSortingAdjustment(arrToSort)
   performance.end("Full Sorting Process")
-  postSortingAdjustment()
 }

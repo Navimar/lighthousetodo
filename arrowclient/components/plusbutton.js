@@ -1,4 +1,4 @@
-import { html } from "@arrow-js/core"
+import { html } from "~/arrow-js/index.js"
 import { NEWSCRIBETEXT } from "~/logic/const.js"
 import saveTask from "~/logic/savetask.js"
 import { clearSearch } from "~/logic/manipulate.js"

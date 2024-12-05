@@ -1,4 +1,4 @@
-import { html, reactive, watch } from "@arrow-js/core"
+import { html, reactive, watch } from "~/arrow-js/index.js"
 import dayjs from "dayjs"
 
 import reData from "~/logic/reactive.js"
@@ -49,19 +49,17 @@ function clickOnCaldendarDay(date) {
 }
 
 export default () => {
-  let renderCalendarControls = () => {
-    return html`
-      <div class="flex justify-between gap-4">
-        <button @click="${prevYear}" class=""><<</button>
-        <button @click="${prevMonth}" class=""><</button>
-        <button @click="${today}" class="fontaccent w-1/2 uppercase">
-          ${dayjs(reData.selectedDate).format("D MMMM YYYY")}
-        </button>
-        <button @click="${nextMonth}" class="">></button>
-        <button @click="${nextYear}" class="">>></button>
-      </div>
-    `
-  }
+  let calendarControls = html`
+    <div class="flex justify-between gap-4">
+      <button @click="${prevYear}" class=""><<</button>
+      <button @click="${prevMonth}" class=""><</button>
+      <button @click="${today}" class="fontaccent w-1/2 uppercase">
+        ${() => dayjs(reData.selectedDate).format("D MMMM YYYY")}
+      </button>
+      <button @click="${nextMonth}" class="">></button>
+      <button @click="${nextYear}" class="">>></button>
+    </div>
+  `
 
   let week = (date) => {
     const isToday = dayjs().isSame(date, "day")
@@ -113,7 +111,7 @@ export default () => {
   if (reData.searchString === "")
     return html`
       <div class="fontaccent w-full text-center p-3 dark:text-white bg-neutral-100  dark:bg-neutral-900">
-        <div class="pb-3 text-base">${renderCalendarControls}</div>
+        <div class="pb-3 text-base">${calendarControls}</div>
         <table class="text-base w-full">
           <tr class="bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-800 border-neutral-200 border-2">
             <td class="text-center pb-1 fontaccent">Пн</td>

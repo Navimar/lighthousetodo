@@ -1,5 +1,5 @@
 import reData from "~/logic/reactive.js"
-import { html } from "@arrow-js/core"
+import { html } from "~/arrow-js/index.js"
 import { clearSearch } from "~/logic/manipulate.js"
 
 export default () => {
