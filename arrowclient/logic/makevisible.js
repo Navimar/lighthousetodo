@@ -10,15 +10,14 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
 dayjs.extend(isSameOrAfter)
 
 const updateVisibleTasks = (newVisibleTasks) => {
-  // Создаем Set для хранения идентификаторов задач
-  const oldTaskIds = new Set(reData.visibleTasks.map((task) => task.id))
-  const newTaskIds = new Set(newVisibleTasks.map((task) => task.id))
+  // Создаем Map для быстрого доступа к задачам из newVisibleTasks по id
+  const newTasksMap = new Map(newVisibleTasks.map((task) => [task.id, task]))
 
   // Задачи, которые нужно добавить (есть в новом, но нет в старом)
-  const tasksToAdd = newVisibleTasks.filter((task) => !oldTaskIds.has(task.id))
+  const tasksToAdd = newVisibleTasks.filter((task) => !reData.visibleTasks.some((t) => t.id === task.id))
 
   // Задачи, которые нужно удалить (есть в старом, но нет в новом)
-  const tasksToRemove = reData.visibleTasks.filter((task) => !newTaskIds.has(task.id))
+  const tasksToRemove = reData.visibleTasks.filter((task) => !newTasksMap.has(task.id))
 
   // Удаляем задачи, которых больше нет в новом массиве
   for (let task of tasksToRemove) {
@@ -33,9 +32,9 @@ const updateVisibleTasks = (newVisibleTasks) => {
     reData.visibleTasks.push(task)
   }
 
-  // Обновляем задачи, которые уже находятся в массиве
+  // Обновляем задачи, которые уже находятся в массиве visibleTasks
   for (let task of reData.visibleTasks) {
-    const newTask = newVisibleTasks.find((t) => t.id === task.id)
+    const newTask = newTasksMap.get(task.id)
     if (newTask) {
       Object.assign(task, newTask)
     }
@@ -45,21 +44,10 @@ const updateVisibleTasks = (newVisibleTasks) => {
 export const makevisible = () => {
   performance.start("makevisible")
   try {
-    performance.start("initializeCache")
-    const taskCache = {}
-    const getCachedTaskById = (id) => {
-      if (!taskCache[id]) {
-        taskCache[id] = getObjectById(id)
-      }
-      return taskCache[id]
-    }
-    performance.end("initializeCache")
-
-    performance.start("areAllFromIdsReady")
     const areAllFromIdsReady = (task) => {
       if (!task?.fromIds?.length) return true
       for (let id of task.fromIds) {
-        const theTask = getCachedTaskById(id)
+        const theTask = getObjectById(id)
         if (!theTask) console.log("in makevisible не найден таск по ID", id, task.name)
         if (!theTask?.ready) return false
       }
@@ -67,7 +55,6 @@ export const makevisible = () => {
     }
 
     const highestPriorityPerDate = {}
-    performance.end("areAllFromIdsReady")
 
     performance.start("mainLoop")
 
