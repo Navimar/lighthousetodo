@@ -318,8 +318,10 @@ export default (arrToSort = reData.visibleTasks) => {
     // result = sortByTimeTask(a, b, now)
     // if (result != 0) return result
 
-    result = sortByFuture(a, b, now)
-    if (result != 0) return result
+    if (!a.intention || !b.intention) {
+      result = sortByFuture(a, b, now)
+      if (result != 0) return result
+    }
 
     // result = sortByIntention(a, b)
     // if (result != 0) return result
