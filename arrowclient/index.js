@@ -4,7 +4,10 @@ import online from "./components/online.js"
 import search from "./components/search.js"
 import plusbutton from "./components/plusbutton.js"
 import footer from "~/components/footer.js"
-import { renderTasks } from "./components/tasks/tasks.js"
+import renderTasks from "./components/tasks/tasks.js"
+import renderIntention from "./components/tasks/intention.js"
+import navigation from "./components/navigation.js"
+
 import { renderCollabortors, renderCollaborationRequests } from "./components/collaborators/collaborators.js"
 import { inputSocket } from "~/logic/send.js"
 import { NEWSCRIBETEXT } from "~/logic/const.js"
@@ -18,6 +21,7 @@ import { removeOldTasks } from "~/logic/forget.js"
 import { makevisible } from "~/logic/makevisible.js"
 import { renderNodeCounter } from "~/components/nodecounter.js"
 import performance from "~/logic/performance.js"
+import router from "~/logic/router.js"
 
 import { html, watch } from "~/arrow-js/index.js"
 import dayjs from "dayjs"
@@ -35,8 +39,20 @@ const app = document.getElementById("App")
 const render = html`
   ${() => search()}
   <div class="flex flex-col gap-6 pb-[30rem] max-w-full w-40rem px-3 m-auto">
-    ${() => authentication()} ${() => renderNodeCounter()} ${() => renderCalendar(dayjs())}
-    ${() => renderCollaborationRequests()} ${() => renderCollabortors()} ${() => renderTasks()} </div
+    ${() => authentication()} ${() => renderNodeCounter()} ${navigation()}
+    ${() => {
+      if (reData.route[0] == "tasks") return renderCalendar(dayjs())
+    }}
+    ${() => {
+      if (reData.route[0] == "collaborators")
+        return html` ${() => renderCollaborationRequests()} ${() => renderCollabortors()}`
+    }}
+    ${() => {
+      if (reData.route[0] == "tasks") return renderTasks()
+    }}
+    ${() => {
+      if (reData.route[0] == "intentions") return renderIntention()
+    }}</div
   >${footer()}${plusbutton}${() => online()}
 `
 

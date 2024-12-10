@@ -3,10 +3,10 @@ import { initializeApp } from "firebase/app"
 import { GoogleAuthProvider, signInWithPopup, getAuth, onAuthStateChanged, signOut } from "firebase/auth"
 import { loadData } from "~/logic/send.js"
 import reData from "~/logic/reactive.js"
-import { copyToClipboard } from "~/logic/util.js"
 import { addCollaborationRequest } from "~/logic/collaborator.js"
 import data from "~/logic/data.js"
 import css from "/css.js"
+import navigate from "~/logic/router.js"
 
 const firebaseConfig = {
   apiKey: "AIzaSyCkM0TYkdv3XK4WxlEaZ36JJisO0N55Qoo",
@@ -27,23 +27,12 @@ let collaboratorLink = () => {
 }
 
 let collobaratorComponent = () => {
-  if (reData.collabState) {
-    return html`
-      <span class="underline text-xs copy-link mr-2" @click="${() => copyToClipboard(collaboratorLink())}"
-        >${collaboratorLink()}</span
-      >
-    `
-  } else {
-    return html`
-      <button
-        class="inline-block border-b-neutral-100 mr-2 ${css.button}"
-        @click="${() => (reData.collabState = true)}">
-        Добавить соисполнителя
-      </button>
-    `
-  }
+  return html`
+    <button class="inline-block border-b-neutral-100 mr-2 ${css.button}" @click="${() => navigate("collaborators")}">
+      Соисполнители
+    </button>
+  `
 }
-
 export let authentication = () => {
   if (reData.user?.name) {
     if (reData.searchString === "")

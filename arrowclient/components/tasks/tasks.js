@@ -19,7 +19,7 @@ import dayjs from "dayjs"
 
 let firststicky = true
 
-export let renderTasks = () => {
+export default () => {
   performance.start("renderTasks")
   try {
     firststicky = true
@@ -44,25 +44,19 @@ export let renderTasks = () => {
 }
 
 let renderTask = (task, index) => {
-  let taskBgEditable = () => {
-    return `bg-white dark:bg-black ${task.intention ? css.intention : ""}`
-  }
-  let taskBg = () => {
-    return `bg-neutral-100 dark:bg-neutral-900 ${task.intention ? css.intention : ""}`
-  }
-  let firstclass = ""
-  let sticky = false
-  if (task.urgency == "meeting" && firststicky) {
-    sticky = "sticky bottom-0 z-[50]"
-    firststicky = false
-  }
   if (reData.selectedScribe == task.id) {
     // Редактируемый
     return html`<div
       id="selectedtask"
-      class="${firstclass} -mx-3 z-[45] flex min-h-screen flex-col gap-5 ${taskBgEditable()} p-3 sm:rounded-lg overflow dark:text-white"
-      ><div class="flex flex-col gap-3"> ${controlButtons(task)} ${radio(task)}</div> ${dateInput(task)}
-      ${timeSlider(task)} ${linkDivs(task)}<div class="flex flex-col gap-3 mx-3"
+      class="-mx-3 z-[45] flex min-h-screen flex-col gap-5 bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white"
+      ><div class="flex flex-col gap-3">
+        ${controlButtons(task)}
+        ${
+          ""
+          //radio(task)
+        }
+      </div>
+      ${dateInput(task)} ${timeSlider(task)} ${linkDivs(task)}<div class="flex flex-col gap-3 mx-3"
         >${() => tagLine(task, "from")}<div
           id="edit"
           @input="${showSaveButtonHidePause}"
@@ -81,14 +75,14 @@ let renderTask = (task, index) => {
         selectTaskById(task.id)
         clickPos(e)
       }}"
-      class="${sticky} ${firstclass} flex flex-col gap-3 break-words ${taskBg()} p-3 rounded-lg overflow dark:text-white"
-      >${!sticky ? () => tagLine(task, "from") : ""}<div class="ml-2 flex flex-wrap-reverse gap-3"
+      class="flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg overflow dark:text-white"
+      >${() => tagLine(task, "from")}<div class="ml-2 flex flex-wrap-reverse gap-3"
         ><div class="w-[28rem] max-w-full mr-auto "
           >${() => task.name}${() => {
             if (task.note && task.note.length > 0) return " 📝"
           }}</div
         ><div class="flex gap-3">${() => taskPlate(task, "p-1")}</div></div
-      >${!sticky ? () => tagLine(task, "to") : ""}</div
+      >${() => tagLine(task, "to")}</div
     >`
   }
 }

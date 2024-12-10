@@ -59,6 +59,7 @@ export const makevisible = () => {
     performance.start("mainLoop")
 
     // Собираем задачи в новый массив
+    reData.intentions = []
     const visibleTasks = []
     const selectedDateObj = dayjs(reData.selectedDate) // Кэшируем объект даты для оптимизации
     const today = dayjs() // Текущая дата
@@ -78,6 +79,7 @@ export const makevisible = () => {
       // Добавление задачи в видимые задачи, если все условия соблюдены
       if (!task.ready && isCurrentOrFutureTask && (areAllFromIdsReady(task) || task.intention)) {
         visibleTasks.push(task)
+        if (task.intention) reData.intentions.push(task)
       }
 
       // Обновление `highestPriorityPerDate` для текущих и будущих задач
@@ -101,6 +103,7 @@ export const makevisible = () => {
     performance.end("updateCalendarSet")
 
     sort()
+    sort(reData.intentions)
   } finally {
     performance.end("makevisible")
   }

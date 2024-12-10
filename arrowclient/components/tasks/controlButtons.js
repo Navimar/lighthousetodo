@@ -37,17 +37,17 @@ let saveButton = () => {
 export default (task) =>
   html`<div class="grid grid-cols-4 gap-3">
     <button class="${css.button}" @click="${() => (reData.selectedScribe = false)}">Закрыть</button>
+
     <div>
       <input
         class="appearance-none peer sr-only"
         type="checkbox"
-        id="kairosCheckbox"
+        id="intentionCheckbox"
         @change="${(event) => {
-          updateKairosButton(event, task)
           showSaveButtonHidePause()
         }}"
-        ${checkedKairos(task)} />
-      <label class="${css.button} whitespace-nowrap" for="kairosCheckbox">Кайрос</label>
+        ${checkedIntention(task)} />
+      <label class="${css.button} whitespace-nowrap" for="intentionCheckbox">Намерение</label>
     </div>
 
     <div>
@@ -78,26 +78,15 @@ export default (task) =>
         }
       }}" />
     <label id="pauseCheckboxLabel" class="${css.button} whitespace-nowrap" for="pauseCheckbox">Потом</label>
-    <div>
-      <input
-        class="appearance-none peer sr-only"
-        type="checkbox"
-        id="intentionCheckbox"
-        @change="${(event) => {
-          showSaveButtonHidePause()
-        }}"
-        ${checkedIntention(task)} />
-      <label class="${css.button} whitespace-nowrap" for="intentionCheckbox">Намерение</label>
-    </div>
-    <div>
-      <input
-        class="sr-only peer"
-        type="checkbox"
-        id="postponeCheckbox"
-        @change="${(e) => {
-          saveButton()
-        }}"
-        ${task.postpone ? "checked" : ""} />
-      <label class="${css.button} whitespace-nowrap" for="postponeCheckbox">Отложить</label>
-    </div>
   </div>`
+//  <div>
+//     <input
+//       class="sr-only peer"
+//       type="checkbox"
+//       id="postponeCheckbox"
+//       @change="${(e) => {
+//     saveButton()
+//   }}"
+//       ${task.postpone ? "checked" : ""} />
+//     <label class="${css.button} whitespace-nowrap" for="postponeCheckbox">Отложить</label>
+//   </div>

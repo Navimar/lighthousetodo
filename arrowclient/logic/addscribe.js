@@ -20,6 +20,7 @@ export default (name, role = "common") => {
     importance: "important",
     difficulty: "hour",
     intention: false,
+    intentionPriority: 1,
     fromIds: [],
     toIds: [],
     timestamp: dayjs().valueOf(),

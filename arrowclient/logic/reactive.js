@@ -6,6 +6,8 @@ export default reactive({
   calendarSet: [],
   visibleTasks: [],
   collaborators: [],
+  route: [],
+  intentions: [],
   collaborationRequests: [],
   selectedScribe: "",
   clientIsOnline: false,
