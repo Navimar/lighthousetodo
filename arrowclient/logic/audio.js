@@ -1,16 +1,7 @@
-import { Howl, Howler } from "howler"
+import { Howl } from "howler";
 
-export default {
-  playSound: (sound) => {
-    // Генерация случайных значений для параметров
-    let rate = randomFloat(0.8, 1.2) // Скорость воспроизведения от 0.8 до 1.2
-    let volume = randomFloat(0.8, 1.0) // Громкость от 0.5 до 1.0
-
-    // Применение параметров и воспроизведение звука
-    sound.rate(rate)
-    sound.volume(volume)
-    sound.play()
-  },
+// Предварительная загрузка звуков
+const sounds = {
   add: new Howl({
     src: ["../add.wav"],
     loop: false,
@@ -41,7 +32,30 @@ export default {
     loop: false,
     volume: 0.5,
   }),
-}
+};
+
+// Функция для генерации случайного числа в заданном диапазоне
 function randomFloat(min, max) {
-  return Math.random() * (max - min) + min
+  return Math.random() * (max - min) + min;
 }
+
+// Экспортируемый объект с методами для управления звуками
+export default {
+  playSound: (soundName) => {
+    const sound = sounds[soundName];
+    if (!sound) {
+      console.error(`Sound "${soundName}" not found`);
+      return;
+    }
+
+    // Генерация случайных значений для параметров
+    const rate = randomFloat(0.8, 1.2); // Скорость воспроизведения от 0.8 до 1.2
+    const volume = randomFloat(0.8, 1.0); // Громкость от 0.8 до 1.0
+
+    // Применение параметров и воспроизведение звука
+    sound.rate(rate);
+    sound.volume(volume);
+    sound.play();
+  },
+  sounds,
+};

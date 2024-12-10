@@ -15,7 +15,7 @@ let plusbutton = () => {
   makevisible()
   let editdiv = document.getElementById("edit")
   if (editdiv) editdiv.innerText = NEWSCRIBETEXT
-  audio.playSound(audio.add)
+  audio.playSound('add')
 }
 
 export default html`<div
