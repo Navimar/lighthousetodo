@@ -50,7 +50,7 @@ export default () => {
         sendTasksData([correspondingTask])
       }
       movedTask.intentionPriority = correspondingTask.intentionPriority
-
+      console.log("intentionPriority", movedTask.intentionPriority, correspondingTask.intentionPriority)
       // Сохранить данные локально
       safeSetLocalStorageItem("tasks", data.tasks)
 
