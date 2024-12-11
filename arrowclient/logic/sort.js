@@ -309,6 +309,7 @@ export default (arrToSort = reData.visibleTasks) => {
   performance.start("Full Sorting Process")
 
   arrToSort.sort((a, b) => {
+    return a.name - b.name
     let result = 0
     result = sortByReadiness(a, b)
     if (result != 0) return result
@@ -347,6 +348,7 @@ export default (arrToSort = reData.visibleTasks) => {
 
     return b.timestamp - a.timestamp
   })
+
   // postSortingAdjustment(arrToSort)
   performance.end("Full Sorting Process")
 }
