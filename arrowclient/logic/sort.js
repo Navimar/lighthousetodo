@@ -309,6 +309,7 @@ export default (arrToSort = reData.visibleTasks) => {
   performance.start("Full Sorting Process")
 
   arrToSort.sort((a, b) => {
+    return Math.random() - 0.5
     let result = 0
     result = sortByReadiness(a, b)
     if (result != 0) return result
