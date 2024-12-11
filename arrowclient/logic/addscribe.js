@@ -9,7 +9,6 @@ export default (name, role = "common") => {
   if (isNameTaken(name)) {
     return false
   }
-
   let newTask = {
     id: uuidv4(),
     name,
@@ -20,7 +19,7 @@ export default (name, role = "common") => {
     importance: "important",
     difficulty: "hour",
     intention: false,
-    intentionPriority: Math.random() + 1,
+    intentionPriority: (reData.intentions[0]?.intentionPriority || Math.random()) / 2,
     fromIds: [],
     toIds: [],
     timestamp: dayjs().valueOf(),
