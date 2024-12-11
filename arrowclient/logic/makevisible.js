@@ -103,7 +103,7 @@ export const makevisible = () => {
     performance.end("updateCalendarSet")
 
     sort()
-    sort(reData.intentions)
+    reData.intentions.sort((a, b) => a.intentionPriority - b.intentionPriority)
   } finally {
     performance.end("makevisible")
   }
