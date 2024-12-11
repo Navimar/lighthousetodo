@@ -104,6 +104,7 @@ export const makevisible = () => {
 
     sort()
     sort(reData.intentions)
+    console.log(reData.intentions)
   } finally {
     performance.end("makevisible")
   }
