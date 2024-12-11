@@ -335,7 +335,8 @@ export default (arrToSort = reData.visibleTasks) => {
 
     let pa = getMinIntentionPriority(a)
     let pb = getMinIntentionPriority(b)
-    console.log(a.intentionPriority, pa, b.intentionPriority, pb)
+    if (a.intentionPriority != pa) console.log(a)
+    if (b.intentionPriority != pb) console.log(b)
     if (pa > pb) result = 1
     if (pa < pb) result = -1
 
