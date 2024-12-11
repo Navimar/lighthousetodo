@@ -46,16 +46,15 @@ export default () => {
       const correspondingTask = data.tasks.find((t) => t.id === movedTask.id)
       if (correspondingTask) {
         correspondingTask.intentionPriority = newPriority || Math.random() + 1
+        correspondingTask.timestamp = dayjs().valueOf()
+        sendTasksData([correspondingTask])
       }
-
-      // Отметить изменённую задачу с актуальным timestamp
-      movedTask.timestamp = dayjs().valueOf()
+      movedTask.intentionPriority = correspondingTask.intentionPriority
 
       // Сохранить данные локально
       safeSetLocalStorageItem("tasks", data.tasks)
 
       // Отправить изменённые задачи на сервер
-      sendTasksData([movedTask])
     }
     dragIndex = null
   }
