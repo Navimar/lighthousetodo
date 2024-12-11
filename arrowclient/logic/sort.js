@@ -304,8 +304,9 @@ const postSortingAdjustment = (arrToAdjust) => {
 }
 
 export default (arrToSort = reData.visibleTasks) => {
+  if (arrToSort != reData.visibleTasks) console.log("before", arrToSort)
+
   performance.start("Full Sorting Process")
-  const now = dayjs()
 
   arrToSort.sort((a, b) => {
     let result = 0
@@ -319,6 +320,7 @@ export default (arrToSort = reData.visibleTasks) => {
     // if (result != 0) return result
 
     if (!a.intention || !b.intention) {
+      const now = dayjs()
       result = sortByFuture(a, b, now)
       if (result != 0) return result
     }
@@ -343,6 +345,9 @@ export default (arrToSort = reData.visibleTasks) => {
 
     return b.timestamp - a.timestamp
   })
-  postSortingAdjustment(arrToSort)
+
+  if (arrToSort != reData.visibleTasks) console.log("after", arrToSort)
+
+  // postSortingAdjustment(arrToSort)
   performance.end("Full Sorting Process")
 }
