@@ -331,10 +331,13 @@ export default (arrToSort = reData.visibleTasks) => {
     // const aPriority = getMaxPriority(a)
     // const bPriority = getMaxPriority(b)
 
-    return a.intentionPriority - b.intentionPriority
-    if (getMinIntentionPriority(a) > getMinIntentionPriority(b)) result = 1
-    if (getMinIntentionPriority(a) < getMinIntentionPriority(b)) result = -1
-    console.log("getMinIntentionPriority", getMinIntentionPriority(a), getMinIntentionPriority(b), result)
+    // return a.intentionPriority - b.intentionPriority
+
+    let pa = getMinIntentionPriority(a)
+    let pb = getMinIntentionPriority(b)
+    if (pa > pb) result = 1
+    if (pa < pb) result = -1
+
     if (result != 0) return result
 
     // result = sortByPriority(a, b, aPriority, bPriority)
