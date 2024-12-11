@@ -51,9 +51,9 @@ const getMinIntentionPriority = (task, depth = 0, maxDepth = 7, visited = new Se
 
   visited.add(task.id)
 
-  // Определяем приоритет текущей задачи.
+  // Определяем приоритет текущей задачи с учётом значения по умолчанию.
   let currentPriority = 100
-  if (task.intention) {
+  if (task.intention && typeof task.intentionPriority === "number") {
     currentPriority = task.intentionPriority
   }
 
@@ -63,7 +63,9 @@ const getMinIntentionPriority = (task, depth = 0, maxDepth = 7, visited = new Se
     if (!childTask) return
 
     const childPriority = getMinIntentionPriority(childTask, depth + 1, maxDepth, visited)
-    currentPriority = Math.min(currentPriority, childPriority)
+    if (typeof childPriority === "number" && !isNaN(childPriority)) {
+      currentPriority = Math.min(currentPriority, childPriority)
+    }
   })
 
   return currentPriority
@@ -304,12 +306,9 @@ const postSortingAdjustment = (arrToAdjust) => {
 }
 
 export default (arrToSort = reData.visibleTasks) => {
-  if (arrToSort != reData.visibleTasks) console.log("before", arrToSort)
-
   performance.start("Full Sorting Process")
 
   arrToSort.sort((a, b) => {
-    return Math.random() - 0.5
     let result = 0
     result = sortByReadiness(a, b)
     if (result != 0) return result
@@ -347,9 +346,6 @@ export default (arrToSort = reData.visibleTasks) => {
 
     return b.timestamp - a.timestamp
   })
-
-  if (arrToSort != reData.visibleTasks) console.log("after", arrToSort)
-
   // postSortingAdjustment(arrToSort)
   performance.end("Full Sorting Process")
 }
