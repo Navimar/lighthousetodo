@@ -79,7 +79,9 @@ export const makevisible = () => {
       // Добавление задачи в видимые задачи, если все условия соблюдены
       if (!task.ready && isCurrentOrFutureTask && (areAllFromIdsReady(task) || task.intention)) {
         visibleTasks.push(task)
-        if (task.intention) reData.intentions.push(task)
+      }
+      if (!task.ready && task.intention) {
+        reData.intentions.push(task)
       }
 
       // Обновление `highestPriorityPerDate` для текущих и будущих задач
