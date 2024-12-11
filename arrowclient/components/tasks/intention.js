@@ -45,7 +45,7 @@ export default () => {
       // Найти соответствующую задачу в data.tasks
       const correspondingTask = data.tasks.find((t) => t.id === movedTask.id)
       if (correspondingTask) {
-        correspondingTask.intentionPriority = newPriority || 1
+        correspondingTask.intentionPriority = newPriority || Math.random() + 1
       }
 
       // Отметить изменённую задачу с актуальным timestamp
