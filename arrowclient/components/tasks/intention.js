@@ -72,8 +72,7 @@ function renderIntention(task, index, handleDragStart, handleDragEnd, handleDrop
     class="flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg overflow dark:text-white"
     ><div class="ml-2 flex flex-wrap-reverse gap-3"
       ><div class="w-[28rem] max-w-full mr-auto "
-        >${() => task.intentionPriority}
-        ${() => task.name}${() => {
+        ><div class="text-xs text-gray-500">${() => task.intentionPriority}</div> ${() => task.name}${() => {
           if (task.note && task.note.length > 0) return " 📝"
         }}</div
       ><div class="flex gap-3">${() => taskPlate(task, "p-1")}</div></div

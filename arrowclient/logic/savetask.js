@@ -40,6 +40,7 @@ export default (m) => {
     let intentionCheckbox = document.getElementById("intentionCheckbox")
     if (intentionCheckbox && intentionCheckbox.checked) {
       thisTask.intention = true
+      thisTask.intentionPriority = (reData.intentions[0]?.intentionPriority || Math.random()) / 2
     } else {
       thisTask.intention = false
     }
@@ -165,7 +166,7 @@ export default (m) => {
     // устанавливаем паузу
     let pauseCheckbox = document.getElementById("pauseCheckbox")
     if (pauseCheckbox && pauseCheckbox.checked) {
-      audio.playSound('afterward')
+      audio.playSound("afterward")
       thisTask.pause = dayjs().valueOf()
       thisTask.pauseTimes = (thisTask.pauseTimes || 0) + 1
     } else {
@@ -190,7 +191,7 @@ export default (m) => {
     // если готова, то ready
     let readyCheckbox = document.getElementById("readyCheckbox")
     if (readyCheckbox && readyCheckbox.checked) {
-      audio.playSound('readySave')
+      audio.playSound("readySave")
       if (!thisTask.ready) {
         thisTask.readyLogs = Array.isArray(thisTask.readyLogs) ? thisTask.readyLogs : []
         thisTask.readyLogs.push({ status: true, timestamp: dayjs().valueOf() })
@@ -223,7 +224,7 @@ export default (m) => {
     // опустошаем строку поиска
     clearSearch()
 
-    if (!thisTask.ready && !thisTask.pause) audio.playSound('save')
+    if (!thisTask.ready && !thisTask.pause) audio.playSound("save")
 
     return true
   } finally {
