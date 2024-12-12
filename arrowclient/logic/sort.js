@@ -2,7 +2,7 @@ import reData from "~/logic/reactive.js"
 import dayjs from "dayjs"
 import performance from "~/logic/performance.js"
 import { getObjectById } from "~/logic/util.js"
-import { PRIORITY, IMPORTANCE_PRIORITY, DIFFICULTY_PRIORITY } from "~/logic/const"
+// import { PRIORITY, IMPORTANCE_PRIORITY, DIFFICULTY_PRIORITY } from "~/logic/const"
 
 const calculateReadyPercentage = (task) => {
   if (!task.fromIds || task.fromIds.length === 0) {
@@ -46,13 +46,13 @@ const calculateReadyPercentage = (task) => {
 const getMinIntentionPriority = (task, depth = 0, maxDepth = 7, visited = new Set()) => {
   // Проверяем на превышение глубины или повторное посещение.
   if (depth > maxDepth || visited.has(task.id)) {
-    return 100 // Фиксированное значение при превышении глубины.
+    return Infinity // Фиксированное значение при превышении глубины.
   }
 
   visited.add(task.id)
 
   // Определяем приоритет текущей задачи с учётом значения по умолчанию.
-  let currentPriority = 100
+  let currentPriority = Infinity
   if (task.intention && typeof task.intentionPriority === "number") {
     currentPriority = task.intentionPriority
   }
@@ -223,25 +223,25 @@ const sortByIntention = (a, b) => {
   return 0
 }
 
-const sortByPriority = (a, b, aPriority, bPriority) => {
-  performance.start("Sorting - Priority Check")
+// const sortByPriority = (a, b, aPriority, bPriority) => {
+//   performance.start("Sorting - Priority Check")
 
-  const aTotalPriority =
-    aPriority.points && DIFFICULTY_PRIORITY[a.difficulty] ? aPriority.points + DIFFICULTY_PRIORITY[a.difficulty] : 0
-  const bTotalPriority =
-    bPriority.points && DIFFICULTY_PRIORITY[b.difficulty] ? bPriority.points + DIFFICULTY_PRIORITY[b.difficulty] : 0
+//   const aTotalPriority =
+//     aPriority.points && DIFFICULTY_PRIORITY[a.difficulty] ? aPriority.points + DIFFICULTY_PRIORITY[a.difficulty] : 0
+//   const bTotalPriority =
+//     bPriority.points && DIFFICULTY_PRIORITY[b.difficulty] ? bPriority.points + DIFFICULTY_PRIORITY[b.difficulty] : 0
 
-  if (aTotalPriority > bTotalPriority) {
-    performance.end("Sorting - Priority Check")
-    return -1
-  }
-  if (aTotalPriority < bTotalPriority) {
-    performance.end("Sorting - Priority Check")
-    return 1
-  }
-  performance.end("Sorting - Priority Check")
-  return 0
-}
+//   if (aTotalPriority > bTotalPriority) {
+//     performance.end("Sorting - Priority Check")
+//     return -1
+//   }
+//   if (aTotalPriority < bTotalPriority) {
+//     performance.end("Sorting - Priority Check")
+//     return 1
+//   }
+//   performance.end("Sorting - Priority Check")
+//   return 0
+// }
 
 const sortByReadyPercentage = (a, b) => {
   performance.start("Sorting - Ready Percentage Comparison")
