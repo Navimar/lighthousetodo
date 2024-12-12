@@ -42,20 +42,38 @@ const updateVisibleTasks = (newVisibleTasks) => {
     reData.visibleTasks.splice(i, 1)
   }
 }
+const areAllFromIdsReady = (task) => {
+  if (!task?.fromIds?.length) return true
+  for (let id of task.fromIds) {
+    const theTask = getObjectById(id)
+    if (!theTask) console.log("in makevisible не найден таск по ID", id, task.name)
+    if (!theTask?.ready) return false
+  }
+  return true
+}
+export const makevisibleIntentions = () => {
+  for (let task of data.tasks) {
+    if (!task.ready && task.intention) {
+      reData.intentions.push(task)
+    }
+  }
+
+  reData.intentions.sort((a, b) => a.intentionPriority - b.intentionPriority)
+
+  if (reData.intentions && reData.intentions[0]?.intentionPriority < 1) {
+    for (let e in reData.intentions) {
+      let t = getObjectById(reData.intentions[e].id)
+      if (t?.intentionPriority !== undefined) {
+        t.intentionPriority = 1000000 + (1000000 * e) / reData.intentions.length
+        reData.intentions[e].intentionPriority = t.intentionPriority
+      }
+    }
+  }
+}
 
 export const makevisible = () => {
   performance.start("makevisible")
   try {
-    const areAllFromIdsReady = (task) => {
-      if (!task?.fromIds?.length) return true
-      for (let id of task.fromIds) {
-        const theTask = getObjectById(id)
-        if (!theTask) console.log("in makevisible не найден таск по ID", id, task.name)
-        if (!theTask?.ready) return false
-      }
-      return true
-    }
-
     performance.start("mainLoop")
 
     reData.intentions = []
@@ -63,10 +81,6 @@ export const makevisible = () => {
     const selectedDateObj = dayjs(reData.selectedDate)
 
     for (let task of data.tasks) {
-      if (!task.ready && task.intention) {
-        reData.intentions.push(task)
-      }
-
       if (task.id === reData.selectedScribe) {
         visibleTasks.push(task)
         continue
@@ -76,7 +90,6 @@ export const makevisible = () => {
         reData.selectedDate === reData.currentTime.date
           ? dayjs(task.date).isBefore(selectedDateObj.add(1, "day")) || task.date == reData.selectedDate || !task.date
           : dayjs(task.date).isSame(selectedDateObj) || !task.date
-
       if (!task.ready && isCurrentOrFutureTask && (areAllFromIdsReady(task) || task.intention)) {
         visibleTasks.push(task)
       }
@@ -101,7 +114,6 @@ export const makevisible = () => {
     // performance.end("updateCalendarSet")
 
     sort()
-    reData.intentions.sort((a, b) => a.intentionPriority - b.intentionPriority)
   } finally {
     performance.end("makevisible")
   }

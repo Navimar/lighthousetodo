@@ -5,6 +5,7 @@ import { safeSetLocalStorageItem } from "~/logic/util.js"
 import data from "~/logic/data.js"
 import { sendTasksData } from "~/logic/send.js"
 import dayjs from "dayjs"
+import { getObjectById } from "~/logic/util.js"
 
 export default () => {
   let dragIndex = null
@@ -105,7 +106,7 @@ export default () => {
       }
 
       // Найти соответствующую задачу в data.tasks
-      const movedTaskData = data.tasks.find((t) => t.id === movedTask.id)
+      const movedTaskData = getObjectById(movedTask.id)
       if (movedTaskData) {
         movedTaskData.intentionPriority = newPriority || Math.random() + 1
         movedTaskData.timestamp = dayjs().valueOf()

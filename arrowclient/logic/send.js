@@ -2,7 +2,7 @@ import { auth } from "/components/authentication.js"
 import reData from "~/logic/reactive.js"
 import syncTasks from "/logic/synctasks.js"
 import data from "~/logic/data.js"
-import { makevisible } from "~/logic/makevisible"
+import { makevisible, makevisibleIntentions } from "~/logic/makevisible"
 import { safeSetLocalStorageItem } from "~/logic/util.js"
 import { socket } from "~/logic/socket.js"
 import { VERSION } from "~/logic/const"
@@ -56,6 +56,7 @@ export function inputSocket() {
     // console.log("msg", msg)
     safeSetLocalStorageItem("tasks", data.tasks)
     makevisible()
+    makevisibleIntentions()
   })
 
   socket.on("err", (val) => {

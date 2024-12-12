@@ -3,7 +3,7 @@ import { html } from "~/arrow-js/index.js"
 import { clickPos } from "~/logic/util.js"
 
 import css from "/css.js"
-import { makevisible } from "~/logic/makevisible.js"
+import { makevisible, makevisibleIntentions } from "~/logic/makevisible.js"
 
 export default () => {
   return html`
@@ -16,7 +16,7 @@ export default () => {
           class="appearance-none peer sr-only"
           @change="${(e) => {
             navigate("intentions")
-            makevisible()
+            makevisibleIntentions()
             clickPos(e)
           }}" />
         <span class="${css.button} whitespace-nowrap">Намерения</span>
