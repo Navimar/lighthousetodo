@@ -19,7 +19,7 @@ export default (name, role = "common") => {
     importance: "important",
     difficulty: "hour",
     intention: false,
-    intentionPriority: (reData.intentions[0]?.intentionPriority || Math.random()) / 2,
+    intentionPriority: reData.intentions[0]?.intentionPriority || 10000,
     fromIds: [],
     toIds: [],
     timestamp: dayjs().valueOf(),

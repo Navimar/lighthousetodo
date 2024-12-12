@@ -40,7 +40,8 @@ export default (m) => {
     let intentionCheckbox = document.getElementById("intentionCheckbox")
     if (intentionCheckbox && intentionCheckbox.checked) {
       thisTask.intention = true
-      thisTask.intentionPriority = (reData.intentions[0]?.intentionPriority || Math.random()) / 2
+      if (!thisTask.intentionPriority)
+        thisTask.intentionPriority = (reData.intentions[0]?.intentionPriority || Math.random()) / 2
     } else {
       thisTask.intention = false
     }
