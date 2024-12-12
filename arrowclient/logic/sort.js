@@ -319,19 +319,12 @@ export default (arrToSort = reData.visibleTasks) => {
     // result = sortByTimeTask(a, b, now)
     // if (result != 0) return result
 
-    if (!a.intention || !b.intention) {
-      const now = dayjs()
-      result = sortByFuture(a, b, now)
-      if (result != 0) return result
-    }
+    const now = dayjs()
+    result = sortByFuture(a, b, now)
+    if (result != 0) return result
 
     // result = sortByIntention(a, b)
     // if (result != 0) return result
-
-    // const aPriority = getMaxPriority(a)
-    // const bPriority = getMaxPriority(b)
-
-    // return a.intentionPriority - b.intentionPriority
 
     let pa = getMinIntentionPriority(a)
     let pb = getMinIntentionPriority(b)
@@ -340,6 +333,8 @@ export default (arrToSort = reData.visibleTasks) => {
 
     if (result != 0) return result
 
+    // const aPriority = getMaxPriority(a)
+    // const bPriority = getMaxPriority(b)
     // result = sortByPriority(a, b, aPriority, bPriority)
     // if (result != 0) return result
 
