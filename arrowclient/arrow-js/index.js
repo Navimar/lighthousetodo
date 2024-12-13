@@ -327,7 +327,6 @@ const listeners = new WeakMap()
  * A list of HTML templates to a HTMLTemplate element that contains instances
  * of each. This acts as a cache.
  */
-const templateMemo = {}
 /**
  * The delimiter that describes where expressions are located.
  */
@@ -538,16 +537,9 @@ function setNode(value, p) {
  * @returns
  */
 function createNodes(html) {
-  var _a
-  const tpl =
-    (_a = templateMemo[html]) !== null && _a !== void 0
-      ? _a
-      : (() => {
-          const tpl = document.createElement("template")
-          tpl.innerHTML = html
-          return (templateMemo[html] = tpl)
-        })()
-  const dom = tpl.content.cloneNode(true)
+  const newTemplate = document.createElement("template")
+  newTemplate.innerHTML = html
+  const dom = newTemplate.content.cloneNode(true)
   dom.normalize() // textNodes are automatically split somewhere around 65kb, this joins them back together.
   return dom.childNodes
 }
