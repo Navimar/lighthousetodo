@@ -1,5 +1,6 @@
 import Navigo from "navigo"
 import reData from "~/logic/reactive.js"
+import { isPWA } from "~/logic/util.js"
 
 // Инициализация роутера
 const router = new Navigo("/")
@@ -9,7 +10,11 @@ export function getCurrentRouteAsArray() {}
 
 // Функция для обновления маршрута
 export default function navigate(path) {
-  router.navigate(path)
+  if (isPWA()) {
+    router.resolve(path) // В PWA используем resolve, чтобы не менять URL
+  } else {
+    router.navigate(path) // В браузере изменяем URL
+  }
 }
 
 // Настройка маршрутов

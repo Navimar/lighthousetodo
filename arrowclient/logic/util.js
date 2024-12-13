@@ -120,3 +120,7 @@ export let copyToClipboard = (text) => {
   // Опционально: показать сообщение об успешном копировании
   alert("Ссылка скопирована в буфер обмена. Отправьте ее соисполнителю и получите такую же ссылку от него")
 }
+
+export function isPWA() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true
+}
