@@ -6,6 +6,8 @@ import data from "~/logic/data.js"
 import { sendTasksData } from "~/logic/send.js"
 import dayjs from "dayjs"
 import { getObjectById } from "~/logic/util.js"
+import { selectTaskById } from "~/logic/manipulate.js"
+import navigate from "~/logic/router.js"
 
 let dragIndex = null
 let startY = 0
@@ -16,7 +18,7 @@ let draggingElement = null
 const onMove = (event) => {
   if (dragIndex == null) return
 
-  event.preventDefault() // Предотвращаем скролл страницы при таче, и лишние выделения при мыши
+  event.preventDefault() // Предотвращаем скролл страницы при таче и лишние выделения при мыши
 
   currentY = getYFromEvent(event)
   const deltaY = currentY - startY
@@ -34,7 +36,6 @@ const onMove = (event) => {
   placeholderIndex = dragIndex
 
   for (let i = 0; i < elements.length; i++) {
-    if (i === dragIndex) continue
     const rect = elements[i].getBoundingClientRect()
     const middle = rect.top + rect.height / 2
     if (deltaY > 0 && draggedRect.bottom > middle) {
@@ -62,8 +63,8 @@ const onStart = (index, event) => {
   startY = getYFromEvent(event)
   currentY = startY
 
-  draggingElement = event.currentTarget
-  draggingElement.style.opacity = "0.7"
+  draggingElement = event.currentTarget.closest(".intention-item")
+  // draggingElement.style.opacity = "0.7"
   draggingElement.style.zIndex = "999"
 
   // Добавляем слушатели на документ, чтобы отлавливать движение даже если курсор/палец вышел за пределы элемента
@@ -72,6 +73,7 @@ const onStart = (index, event) => {
   document.addEventListener("mousemove", onMove)
   document.addEventListener("mouseup", onEnd)
 }
+
 const onEnd = () => {
   if (dragIndex == null) return
 
@@ -131,6 +133,14 @@ const onEnd = () => {
   draggingElement = null
 }
 
+const onIntentionClick = (task) => {
+  navigate("tasks")
+
+  selectTaskById(task.id)
+
+  console.log(`Task clicked: ${task.name}`) // Здесь можно добавить нужную логику обработки клика
+}
+
 function renderIntention(task, index) {
   const isHighlighted =
     reData.searchString && task.name && task.name.toLowerCase().includes(reData.searchString.toLowerCase())
@@ -139,17 +149,24 @@ function renderIntention(task, index) {
 
   return html`<div
     class="intention-item flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg overflow dark:text-white border ${isHighlighted}"
-    @mousedown="${(e) => onStart(index, e)}"
-    @touchstart="${(e) => onStart(index, e)}">
-    <div class="ml-2 flex flex-wrap-reverse gap-3">
-      <div class="w-[28rem] max-w-full mr-auto">
-        <div class="text-xs text-gray-500">${() => task.intentionPriority}</div>
-        ${() => task.name}${() => (task.note && task.note.length > 0 ? " 📝" : "")}
+    @click="${(e) => onIntentionClick(task)}">
+    <div class="flex items-center">
+      <div
+        class="fontaccent pl-0.5 drag-handle w-7 h-7 bg-neutral-150 dark:bg-neutral-700 rounded-full flex justify-center items-center cursor-move"
+        @mousedown="${(e) => onStart(index, e)}"
+        @touchstart="${(e) => onStart(index, e)}">
+        ${index + 1}
       </div>
-      <div class="flex gap-3">${() => taskPlate(task, "p-1")}</div>
+      <div class="ml-4 flex flex-wrap-reverse gap-3 w-full">
+        <div class="w-[28rem] max-w-full mr-auto">
+          ${() => task.name}${() => (task.note && task.note.length > 0 ? " 📝" : "")}
+        </div>
+        <div class="flex gap-3">${() => taskPlate(task, "p-1")}</div>
+      </div>
     </div>
   </div>`
 }
+// <div class="text-xs text-gray-500">${() => task.intentionPriority}</div>
 
 export default () => {
   return html`${() => reData.intentions.map(renderIntention)}`
