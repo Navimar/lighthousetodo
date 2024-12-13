@@ -5,7 +5,7 @@ import css from "~/css.js"
 import reData from "~/logic/reactive.js"
 
 export const renderNodeCounter = () => {
-  if (reData.searchString) return ""
+  // if (reData.searchString) return ""
   return html`
     <div class="flex bg-neutral-100 font-mono dark:bg-neutral-900 dark:text-white p-2 text-sm">
       <div class="self-center"> ${data.tasks.length}/250 записей </div>

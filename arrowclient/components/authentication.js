@@ -35,17 +35,16 @@ let collobaratorComponent = () => {
 }
 export let authentication = () => {
   if (reData.user?.name) {
-    if (reData.searchString === "")
-      return html`
-        <div class="flex bg-neutral-100 fontmono dark:bg-neutral-900 dark:text-white p-2 text-sm ">
-          <div class="self-center">👤 <span class="select-text">${() => reData.user.name}</span></div>
-          <div class="ml-auto">
-            ${() => collobaratorComponent()}
-            <button class="inline-block border-b-neutral-100 ${css.button}" @click="${() => logout()}"> Выйти </button>
-          </div>
+    // if (reData.searchString !== "") return ""
+    return html`
+      <div class="flex bg-neutral-100 fontmono dark:bg-neutral-900 dark:text-white p-2 text-sm ">
+        <div class="self-center">👤 <span class="select-text">${() => reData.user.name}</span></div>
+        <div class="ml-auto">
+          ${() => collobaratorComponent()}
+          <button class="inline-block border-b-neutral-100 ${css.button}" @click="${() => logout()}"> Выйти </button>
         </div>
-      `
-    else return ""
+      </div>
+    `
   } else
     return html`
       <div

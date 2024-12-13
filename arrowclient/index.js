@@ -40,10 +40,11 @@ const app = document.getElementById("App")
 const render = html`
   ${() => search()}
   <div class="flex flex-col gap-6 pb-[30rem] max-w-full w-40rem px-3 m-auto">
-    ${() => authentication()} ${() => renderNodeCounter()} ${navigation()}
+    ${() => authentication()} ${() => renderNodeCounter()}
     ${() => {
       if (reData.route[0] == "tasks") return renderCalendar(dayjs())
     }}
+    ${navigation()}
     ${() => {
       if (reData.route[0] == "collaborators")
         return html` ${() => renderCollaborationRequests()} ${() => renderCollabortors()}`

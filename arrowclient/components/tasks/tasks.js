@@ -17,12 +17,9 @@ import css from "~/css.js"
 import { html } from "~/arrow-js/index.js"
 import dayjs from "dayjs"
 
-let firststicky = true
-
 export default () => {
   performance.start("renderTasks")
   try {
-    firststicky = true
     if (reData.searchString) {
       // Filter tasks by matching with the search input
       let filteredTasks = data.tasks.filter(

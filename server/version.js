@@ -1,1 +1,1 @@
-export default "0.7.23-c"
+export default "0.8.0"

@@ -41,7 +41,7 @@ export default (m) => {
     if (intentionCheckbox && intentionCheckbox.checked) {
       thisTask.intention = true
       if (!thisTask.intentionPriority)
-        thisTask.intentionPriority = (reData.intentions[0]?.intentionPriority || Math.random()) / 2
+        thisTask.intentionPriority = (reData.intentions[0]?.intentionPriority || 2000000) / 2
     } else {
       thisTask.intention = false
     }
