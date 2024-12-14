@@ -137,8 +137,6 @@ const onIntentionClick = (task) => {
   navigate("tasks")
 
   selectTaskById(task.id)
-
-  console.log(`Task clicked: ${task.name}`) // Здесь можно добавить нужную логику обработки клика
 }
 
 function renderIntention(task, index) {

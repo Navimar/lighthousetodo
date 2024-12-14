@@ -55,8 +55,8 @@ export function inputSocket() {
     reData.collaborationRequests = msg?.collaborationRequests || []
     // console.log("msg", msg)
     safeSetLocalStorageItem("tasks", data.tasks)
-    makevisible()
-    makevisibleIntentions()
+    if (reData.route[0] == "tasks") makevisible()
+    if (reData.route[0] == "intentions") makevisibleIntentions()
   })
 
   socket.on("err", (val) => {

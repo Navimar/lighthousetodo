@@ -52,6 +52,7 @@ const areAllFromIdsReady = (task) => {
   return true
 }
 export const makevisibleIntentions = () => {
+  reData.intentions = []
   for (let task of data.tasks) {
     if (!task.ready && task.intention) {
       reData.intentions.push(task)
@@ -76,7 +77,6 @@ export const makevisible = () => {
   try {
     performance.start("mainLoop")
 
-    reData.intentions = []
     let visibleTasks = []
     const selectedDateObj = dayjs(reData.selectedDate)
 
