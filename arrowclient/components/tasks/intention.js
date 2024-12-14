@@ -148,8 +148,7 @@ function renderIntention(task, index) {
       : "border-neutral-100 dark:border-neutral-900"
 
   return html`<div
-    class="intention-item flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg overflow dark:text-white border ${isHighlighted}"
-    @click="${(e) => onIntentionClick(task)}">
+    class="intention-item flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg overflow dark:text-white border ${isHighlighted}">
     <div class="flex items-center">
       <div
         class="fontaccent pl-0.5 drag-handle w-7 h-7 bg-neutral-150 dark:bg-neutral-700 rounded-full flex justify-center items-center cursor-move"
@@ -157,7 +156,7 @@ function renderIntention(task, index) {
         @touchstart="${(e) => onStart(index, e)}">
         ${index + 1}
       </div>
-      <div class="ml-4 flex flex-wrap-reverse gap-3 w-full">
+      <div @click="${(e) => onIntentionClick(task)}" class="ml-4 flex flex-wrap-reverse gap-3 w-full">
         <div class="w-[28rem] max-w-full mr-auto">
           ${() => task.name}${() => (task.note && task.note.length > 0 ? " 📝" : "")}
         </div>
