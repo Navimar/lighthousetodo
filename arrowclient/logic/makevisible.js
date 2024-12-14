@@ -5,6 +5,8 @@ import performance from "~/logic/performance.js"
 import sort from "~/logic/sort.js"
 import dayjs from "dayjs"
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
+import { sendTasksData } from "~/logic/send.js"
+import { safeSetLocalStorageItem } from "~/logic/util.js"
 
 dayjs.extend(isSameOrAfter)
 
@@ -61,14 +63,16 @@ export const makevisibleIntentions = () => {
 
   reData.intentions.sort((a, b) => a.intentionPriority - b.intentionPriority)
 
-  if (reData.intentions && reData.intentions[0]?.intentionPriority < 1) {
+  if (reData.intentions && reData.intentions[0]?.intentionPriority < 0.0000001) {
+    let changedTasks = []
     for (let e in reData.intentions) {
       let t = getObjectById(reData.intentions[e].id)
-      if (t?.intentionPriority !== undefined) {
-        t.intentionPriority = 1000000 + (1000000 * e) / reData.intentions.length
-        reData.intentions[e].intentionPriority = t.intentionPriority
-      }
+      t.intentionPriority = 1000000 + (1000000 * e) / reData.intentions.length
+      reData.intentions[e].intentionPriority = t.intentionPriority
+      changedTasks.push(t)
     }
+    safeSetLocalStorageItem("tasks", data.tasks)
+    sendTasksData(changedTasks)
   }
 }
 
