@@ -77,6 +77,7 @@ export const makevisibleIntentions = () => {
 }
 
 export const makevisible = () => {
+  console.log(reData.currentPage)
   performance.start("makevisible")
   try {
     performance.start("mainLoop")
@@ -105,7 +106,7 @@ export const makevisible = () => {
     sort(visibleTasks)
 
     // Implement pagination
-    const page = reData.currnetPage || 1
+    const page = reData.currentPage || 1
     const pageSize = 10
     const totalTasks = visibleTasks.length
     const startIndex = (page - 1) * pageSize
