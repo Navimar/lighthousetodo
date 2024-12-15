@@ -27,6 +27,7 @@ let saveButton = () => {
   try {
     saveTask("sv")
     reData.selectedScribe = false
+    reData.currentPage = 1
     makevisible()
     reData.selectedScribe = reData.visibleTasks[0]?.id
   } finally {
