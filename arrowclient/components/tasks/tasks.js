@@ -33,6 +33,7 @@ export default () => {
         >`
       }
       sort(filteredTasks)
+      filteredTasks = filteredTasks.slice(0, 40)
       return filteredTasks.map(renderTask)
     }
     return reData.visibleTasks.map(renderTask)

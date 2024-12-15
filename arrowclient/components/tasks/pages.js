@@ -11,7 +11,7 @@ function scroll() {
 }
 
 export default () => {
-  if (reData.route[0] !== "tasks" || reData.totalPages == 1) return ""
+  if (reData.route[0] !== "tasks" || reData.totalPages == 1 || reData.searchString != "") return ""
 
   let hiddenPrev = reData.currentPage === 1 ? "opacity-50 hidden" : ""
   let hiddenNext = reData.currentPage === reData.totalPages ? "opacity-50 hidden" : ""

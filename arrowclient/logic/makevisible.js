@@ -105,7 +105,7 @@ export const makevisible = () => {
     sort(visibleTasks)
 
     // Determine the page for the selected task
-    const pageSize = 5
+    const pageSize = 40
     const selectedTaskIndex = visibleTasks.findIndex((task) => task.id === reData.selectedScribe)
     if (selectedTaskIndex !== -1) {
       reData.currentPage = Math.floor(selectedTaskIndex / pageSize) + 1

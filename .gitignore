@@ -17,3 +17,4 @@ digitalocean/digitalocean.pub
 digitalocean/digitalocean
 arrowclient/neo4j
 .env
+arrowclient/arrow-js/index_original.js

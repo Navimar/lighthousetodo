@@ -167,5 +167,5 @@ function renderIntention(task, index) {
 
 export default () => {
   if (reData.route[0] != "intentions") return ""
-  return html`${() => reData.intentions.map(renderIntention)}`
+  return reData.intentions.map(renderIntention)
 }
