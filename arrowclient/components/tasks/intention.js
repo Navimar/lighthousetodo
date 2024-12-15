@@ -166,5 +166,6 @@ function renderIntention(task, index) {
 // <div class="text-xs text-gray-500">${() => task.intentionPriority}</div>
 
 export default () => {
+  if (reData.route[0] != "intentions") return ""
   return html`${() => reData.intentions.map(renderIntention)}`
 }

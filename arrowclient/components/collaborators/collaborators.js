@@ -4,6 +4,7 @@ import { selectCollaborator } from "~/logic/manipulate.js"
 import { controlButtons } from "~/components/collaborators/controlbuttons.js"
 
 export let renderCollabortors = () => {
+  if (reData.route[0] != "collaborators") return ""
   return reData.collaborators.map(renderCollabortor)
 }
 
@@ -31,6 +32,7 @@ let renderCollabortor = (collaborator, index) => {
     > `
 }
 export let renderCollaborationRequests = () => {
+  if (reData.route[0] != "collaborators") return ""
   return reData.collaborationRequests.map(renderCollaborationRequest)
 }
 

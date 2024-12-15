@@ -6,6 +6,7 @@ import plusbutton from "./components/plusbutton.js"
 import footer from "~/components/footer.js"
 import renderTasks from "./components/tasks/tasks.js"
 import renderIntention from "./components/tasks/intention.js"
+import pages from "./components/tasks/pages.js"
 import navigation from "./components/navigation.js"
 
 import { renderCollabortors, renderCollaborationRequests } from "./components/collaborators/collaborators.js"
@@ -36,23 +37,9 @@ dayjs.locale("ru")
 const app = document.getElementById("App")
 
 const render = html`
-  ${() => search()}
-  <div class="flex flex-col gap-6 pb-[30rem] max-w-full w-40rem px-3 m-auto">
-    ${() => authentication()} ${() => renderNodeCounter()}
-    ${() => {
-      if (reData.route[0] == "tasks") return renderCalendar(dayjs())
-    }}
-    ${navigation()}
-    ${() => {
-      if (reData.route[0] == "collaborators")
-        return html` ${() => renderCollaborationRequests()} ${() => renderCollabortors()}`
-    }}
-    ${() => {
-      if (reData.route[0] == "tasks") return renderTasks()
-    }}
-    ${() => {
-      if (reData.route[0] == "intentions") return renderIntention()
-    }}</div
+  ${search}
+  <div class="flex flex-col gap-6 pb-[30rem] max-w-full w-40rem px-3 m-auto"
+    >${authentication}${renderNodeCounter}${renderCalendar}${navigation()}${renderCollaborationRequests}${renderCollabortors}${renderTasks}${pages}${renderIntention}</div
   >${footer()}${plusbutton}${() => online()}
 `
 

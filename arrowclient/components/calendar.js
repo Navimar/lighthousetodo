@@ -49,6 +49,7 @@ function clickOnCaldendarDay(date) {
 }
 
 export default () => {
+  if (reData.route[0] != "tasks") return ""
   let calendarControls = html`
     <div class="flex justify-between gap-4">
       <button @click="${prevYear}" class=""><<</button>

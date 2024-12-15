@@ -97,27 +97,26 @@ export const makevisible = () => {
       if (!task.ready && isCurrentOrFutureTask && (areAllFromIdsReady(task) || task.intention)) {
         visibleTasks.push(task)
       }
-      // Обновление `highestPriorityPerDate` для текущих и будущих задач
-      // if (task.date && !task.ready && dayjs(task.date).isSameOrAfter(today)) {
-      //   if (
-      //     !highestPriorityPerDate[task.date] ||
-      //     PRIORITY[task.urgency] < PRIORITY[highestPriorityPerDate[task.date]]
-      //   ) {
-      //     highestPriorityPerDate[task.date] = task.urgency
-      //   }
-      // }
     }
-
-    // Применяем оптимизированную функцию обновления visibleTasks
-    updateVisibleTasks(visibleTasks)
 
     performance.end("mainLoop")
 
-    // performance.start("updateCalendarSet")
-    // Object.assign(reData.calendarSet, highestPriorityPerDate)
-    // performance.end("updateCalendarSet")
+    // Sort tasks
+    sort(visibleTasks)
 
-    sort()
+    // Implement pagination
+    const page = reData.currnetPage || 1
+    const pageSize = 10
+    const totalTasks = visibleTasks.length
+    const startIndex = (page - 1) * pageSize
+    const endIndex = startIndex + pageSize
+    const paginatedTasks = visibleTasks.slice(startIndex, endIndex)
+
+    // Update visible tasks with the paginated list
+    updateVisibleTasks(paginatedTasks)
+
+    // Update total pages in reData
+    reData.totalPages = Math.ceil(totalTasks / pageSize)
   } finally {
     performance.end("makevisible")
   }

@@ -11,6 +11,7 @@ export default reactive({
   collaborationRequests: [],
   selectedScribe: "",
   clientIsOnline: false,
+  currentPage: 1,
   user: {},
   autoComplete: {
     list: [],

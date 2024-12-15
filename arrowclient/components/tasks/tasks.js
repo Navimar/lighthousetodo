@@ -20,6 +20,7 @@ import dayjs from "dayjs"
 export default () => {
   performance.start("renderTasks")
   try {
+    if (reData.route[0] != "tasks") return ""
     if (reData.searchString) {
       // Filter tasks by matching with the search input
       let filteredTasks = data.tasks.filter(
