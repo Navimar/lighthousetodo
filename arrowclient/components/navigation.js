@@ -7,7 +7,7 @@ import { makevisible, makevisibleIntentions } from "~/logic/makevisible.js"
 
 export default () => {
   return html`
-    <div class="bg-neutral-100 dark:bg-neutral-900 flex justify-center p-2">
+    <div id="navigationmenu" class="bg-neutral-100 dark:bg-neutral-900 flex justify-center p-2">
       <label class="flex items-center mr-2">
         <input
           type="radio"

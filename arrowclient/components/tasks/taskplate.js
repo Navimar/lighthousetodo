@@ -5,6 +5,7 @@ export default (task, additionalClass = "") => {
   let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
 
   let getTaskTime = () => {
+    return ""
     if (task.ready) return "готово"
     if (task.urgency == "onTime") return task.time
 
@@ -41,7 +42,7 @@ export default (task, additionalClass = "") => {
 
   const bulletSymbol = () => {
     let symbol = ""
-    if (task.ready) symbol = "✓"
+    if (task.ready) symbol = "<b class='text-accent text-base'>✓</b>"
     else if (task.intention) symbol = "<b class='text-base'>!</b>"
     else
       switch (task.difficulty) {

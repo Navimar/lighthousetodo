@@ -13,7 +13,7 @@ export const renderNodeCounter = () => {
         <button
           class="inline-block border-b-neutral-100 ${css.button}"
           @click="${() => {
-            window.open("https://boosty.to/adastratodo", "_blank")
+            window.location.href = "/info/donate/"
           }}"
           >Поддержать проект</button
         >

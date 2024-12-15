@@ -6,8 +6,10 @@ import reData from "~/logic/reactive.js"
 import { getObjectByName } from "~/logic/util"
 import { makevisible } from "~/logic/makevisible.js"
 import audio from "~/logic/audio.js"
+import navigate from "~/logic/router.js"
 
 let plusbutton = () => {
+  navigate("tasks")
   saveTask("selectTaskByName")
   clearSearch()
   let newScribe = getObjectByName(NEWSCRIBETEXT, "common")
@@ -15,7 +17,7 @@ let plusbutton = () => {
   makevisible()
   let editdiv = document.getElementById("edit")
   if (editdiv) editdiv.innerText = NEWSCRIBETEXT
-  audio.playSound('add')
+  audio.playSound("add")
 }
 
 export default html`<div

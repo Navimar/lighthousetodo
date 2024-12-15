@@ -5,7 +5,7 @@ import tailwindcss from "tailwindcss"
 import autoprefixer from "autoprefixer"
 
 function getBlogEntries() {
-  const blogDir = resolve(__dirname, "blog")
+  const blogDir = resolve(__dirname, "info")
   const entries = {}
 
   readdirSync(blogDir, { withFileTypes: true })

@@ -1,14 +1,4 @@
-import fs from "fs"
-import path from "path"
-import { fileURLToPath } from "url"
-import { readdir, rm, mkdir } from "fs/promises"
-import html from "./html.js"
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-function generateHtml(templateObject, fileName) {
-  let taskBg = () => "bg-neutral-100 dark:bg-neutral-900"
-
-  const outputHtml = html`
     <!doctype html>
     <html class="bg-white min-h-screen dark:bg-black">
       <head>
@@ -34,8 +24,38 @@ function generateHtml(templateObject, fileName) {
               Вернуться к приложению
             </button></div
           >
-          <div class="select-auto flex flex-col gap-3 break-words ${taskBg()} p-3 rounded-lg overflow dark:text-white">
-            ${templateObject.text}</div
+          <div class="select-auto flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg overflow dark:text-white">
+            
+    <div class="donation-page text-center m-auto">
+      <h1 class="text-4xl font-bold mb-4">Поддержите нас</h1>
+      <p class="text-lg mb-6">Если вам нравится наша работа, вы можете нас поддержать!</p>
+      <div class="mb-4">
+        <a
+          href="https://boosty.to/adastratodo"
+          target="_blank"
+          class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 block mb-2">
+          Поддержать на Boosty
+        </a>
+        <a
+          href="https://www.patreon.com/c/adastratodo"
+          target="_blank"
+          class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 block">
+          Поддержать на Patreon
+        </a>
+      </div>
+      <p class="text-lg mb-6">
+        Также вы можете подписаться на наш канал в Telegram!<br />
+        Нам это тоже очень поможет!</p
+      >
+      <a
+        href="https://t.me/vaulinblog"
+        target="_blank"
+        class="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800">
+        Подписаться на Telegram-канал
+      </a>
+    </div>
+    <br />
+  </div
           >
         </div>
         <footer class="py-6 text-lg text-white dark:text-neutral-400 fontaccent">
@@ -49,39 +69,4 @@ function generateHtml(templateObject, fileName) {
         </footer>
       </body>
     </html>
-  `
-  const outputPath = path.resolve(__dirname, "../arrowclient/info", fileName, "index.html")
-  fs.writeFileSync(outputPath, outputHtml)
-  console.log(`Сгенерирован HTML: ${outputPath}`)
-}
-
-async function processTemplates() {
-  const templatesDir = path.resolve(__dirname, "template")
-  const outputDir = path.resolve(__dirname, "../arrowclient/info")
-
-  // Удаление существующего содержимого в outputDir
-  try {
-    await rm(outputDir, { recursive: true, force: true })
-    console.log("Existing content removed")
-  } catch (err) {
-    console.error(`Error removing existing content: ${err}`)
-  }
-
-  // Чтение и обработка шаблонов
-  const templateFiles = await readdir(templatesDir)
-  for (const fileName of templateFiles) {
-    const templatePath = path.resolve(templatesDir, fileName)
-    const templateModule = await import(`file://${templatePath}`)
-
-    // Создание целевой папки для каждого шаблона
-    const targetDir = path.resolve(outputDir, path.basename(fileName, ".js")) // Убедитесь, что используете правильное расширение файла
-    await mkdir(targetDir, { recursive: true })
-
-    // Генерация HTML и сохранение в целевую папку
-    generateHtml(templateModule.default, targetDir) // предполагается, что generateHtml адаптирована для сохранения файла в targetDir
-  }
-
-  console.log("Templates processed")
-}
-
-processTemplates().catch(console.error)
+  

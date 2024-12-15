@@ -27,6 +27,7 @@ let collaboratorLink = () => {
 }
 
 let collobaratorComponent = () => {
+  return ""
   return html`
     <button class="inline-block border-b-neutral-100 mr-2 ${css.button}" @click="${() => navigate("collaborators")}">
       Соисполнители
