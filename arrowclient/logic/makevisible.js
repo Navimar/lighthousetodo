@@ -119,7 +119,7 @@ export const makevisible = () => {
     const paginatedTasks = visibleTasks.slice(startIndex, endIndex)
 
     // Update visible tasks with the paginated list
-    updateVisibleTasks(paginatedTasks)
+    reData.visibleTasks = paginatedTasks
 
     // Update total pages in reData
     reData.totalPages = Math.ceil(totalTasks / pageSize)

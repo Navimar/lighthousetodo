@@ -154,7 +154,7 @@ function renderIntention(task, index) {
         @touchstart="${(e) => onStart(index, e)}">
         ${index + 1}
       </div>
-      <div @click="${(e) => onIntentionClick(task)}" class="ml-4 flex gap-3 w-full">
+      <div @click="${(e) => onIntentionClick(task)}" class="ml-4 justify-between flex gap-3 w-full">
         <div class="break-word"> ${() => task.name}${() => (task.note && task.note.length > 0 ? " 📝" : "")} </div>
         <div class="flex gap-3">${() => taskPlate(task, "p-1")}</div>
       </div>
