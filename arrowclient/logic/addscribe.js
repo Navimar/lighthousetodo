@@ -29,14 +29,7 @@ export default (name, role = "common") => {
   }
 
   if (role === "intention") {
-    newTask.urgency = "kairos"
-    newTask.importance = "kairos"
-    newTask.difficulty = "kairos"
     newTask.intention = true
-  } else if (role === "kairos") {
-    newTask.urgency = "kairos"
-    newTask.importance = "kairos"
-    newTask.difficulty = "kairos"
   }
 
   data.tasks.push(newTask)

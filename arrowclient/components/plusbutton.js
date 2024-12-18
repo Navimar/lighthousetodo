@@ -12,7 +12,7 @@ let plusbutton = () => {
   navigate("tasks")
   saveTask("selectTaskByName")
   clearSearch()
-  let newScribe = getObjectByName(NEWSCRIBETEXT, "common")
+  let newScribe = getObjectByName(NEWSCRIBETEXT, "intention")
   reData.selectedScribe = newScribe.id
   makevisible()
   let editdiv = document.getElementById("edit")

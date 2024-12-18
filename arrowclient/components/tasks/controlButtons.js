@@ -6,6 +6,7 @@ import { updatePauseReadyButton, updateKairosButton } from "~/logic/manipulate.j
 import { makevisible } from "~/logic/makevisible.js"
 import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 import performance from "~/logic/performance.js"
+import audio from "~/logic/audio.js"
 
 let checkedPause = (task) => {
   if (task.pause) return "checked"
@@ -35,6 +36,20 @@ let saveButton = () => {
   }
 }
 
+function handleReadyCheckboxChange(event) {
+  const isChecked = event.target.checked
+
+  // Воспроизводим соответствующий звук
+  if (isChecked) {
+    audio.playSound("ready") // Звук для состояния "включено"
+  } else {
+    audio.playSound("unready") // Звук для состояния "выключено"
+  }
+
+  // Вызываем основную функцию
+  updatePauseReadyButton(event)
+}
+
 export default (task) =>
   html`<div class="grid grid-cols-4 gap-3">
     <button class="${css.button}" @click="${() => (reData.selectedScribe = false)}">Закрыть</button>
@@ -56,7 +71,7 @@ export default (task) =>
         class="appearance-none peer sr-only"
         type="checkbox"
         id="readyCheckbox"
-        @change="${updatePauseReadyButton}" />
+        @change="${handleReadyCheckboxChange}" />
       <label class="${css.button} whitespace-nowrap" for="readyCheckbox">Готово</label>
     </div>
     <button
