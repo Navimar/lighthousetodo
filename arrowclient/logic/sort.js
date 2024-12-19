@@ -16,14 +16,24 @@ const calculateReadyPercentage = (task) => {
   }
 
   const creationTimestamp = task.readyLogs?.[0]?.timestamp
-  if (!creationTimestamp) return 100
+  if (!creationTimestamp || isNaN(creationTimestamp)) {
+    return 100 // Если нет корректной метки времени создания
+  }
 
   const endTime = dayjs().valueOf()
+  if (!endTime || isNaN(endTime)) {
+    throw new Error("Некорректное время завершения") // Это крайне маловероятно
+  }
+
   let notReadyTime = 0
 
   for (const currentTask of fromTasks) {
     let lastNotReadyTimestamp = null
     for (const log of currentTask.readyLogs || []) {
+      if (!log || isNaN(log.timestamp)) {
+        continue // Пропускаем некорректные или пустые логи
+      }
+
       if (!log.status) {
         if (lastNotReadyTimestamp === null) {
           lastNotReadyTimestamp = log.timestamp
@@ -39,10 +49,18 @@ const calculateReadyPercentage = (task) => {
   }
 
   const totalDuration = endTime - creationTimestamp
-  const readyTime = totalDuration - notReadyTime
+  if (totalDuration <= 0) {
+    return 100 // Если общее время не корректно, считаем, что задача готова
+  }
 
-  return totalDuration > 0 ? (readyTime / totalDuration) * 100 : 0
+  const readyTime = totalDuration - notReadyTime
+  const readyPercent = (readyTime / totalDuration) * 100
+
+  console.log(task.name, readyPercent)
+
+  return readyPercent >= 0 ? readyPercent : 0 // Защита от отрицательных процентов
 }
+
 const getMinIntentionPriority = (task, depth = 0, maxDepth = 7, visited = new Set()) => {
   // Проверяем на превышение глубины или повторное посещение.
   if (depth > maxDepth || visited.has(task.id)) {
@@ -213,11 +231,11 @@ const sortByIntention = (a, b) => {
   performance.start("Sorting - Intention Check")
   if (a.intention && !b.intention) {
     performance.end("Sorting - Intention Check")
-    return -1
+    return 1
   }
   if (!a.intention && b.intention) {
     performance.end("Sorting - Intention Check")
-    return 1
+    return -1
   }
   performance.end("Sorting - Intention Check")
   return 0
@@ -323,14 +341,13 @@ export default (arrToSort = reData.visibleTasks) => {
     result = sortByFuture(a, b, now)
     if (result != 0) return result
 
-    // result = sortByIntention(a, b)
-    // if (result != 0) return result
-
     let pa = getMinIntentionPriority(a)
     let pb = getMinIntentionPriority(b)
     if (pa > pb) result = 1
     if (pa < pb) result = -1
+    if (result != 0) return result
 
+    result = sortByIntention(a, b)
     if (result != 0) return result
 
     // const aPriority = getMaxPriority(a)

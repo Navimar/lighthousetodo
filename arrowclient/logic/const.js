@@ -22,4 +22,4 @@ export const DIFFICULTY_PRIORITY = {
   kairos: 4,
 }
 
-export const VERSION = "0.8.12"
+export const VERSION = "0.8.13"
