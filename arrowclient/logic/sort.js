@@ -56,8 +56,6 @@ const calculateReadyPercentage = (task) => {
   const readyTime = totalDuration - notReadyTime
   const readyPercent = (readyTime / totalDuration) * 100
 
-  console.log(task.name, readyPercent)
-
   return readyPercent >= 0 ? readyPercent : 0 // Защита от отрицательных процентов
 }
 
