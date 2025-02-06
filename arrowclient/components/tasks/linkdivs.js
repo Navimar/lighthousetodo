@@ -56,9 +56,6 @@ function handleDivClick(e) {
 
 export default (task) => html`
   <div class="flex flex-col gap-4">
-    ${() => renderAutocomplete("fromEdit")} ${() => renderAutocomplete("toEdit")}
-    ${() => renderAutocomplete("moreImportantEdit")} ${() => renderAutocomplete("lessImportantEdit")}
-
     <div class="flex gap-4">
       <div
         id="fromEdit"
@@ -114,5 +111,7 @@ export default (task) => html`
         >${task.lessImportantIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}</div
       >
     </div>
+    ${() => renderAutocomplete("fromEdit")} ${() => renderAutocomplete("toEdit")}
+    ${() => renderAutocomplete("moreImportantEdit")} ${() => renderAutocomplete("lessImportantEdit")}
   </div>
 `
