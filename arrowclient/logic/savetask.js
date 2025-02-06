@@ -21,7 +21,6 @@ export default (m) => {
 
     // найти див редактирования
     const eDiv = document.getElementById("edit")
-
     if (!eDiv) return false
 
     let thisTask = getObjectById(reData.selectedScribe)
@@ -30,8 +29,8 @@ export default (m) => {
     let name = lines[0].trim()
     const note = lines.slice(1).join("\n")
 
-    // добываем массив строк из фром и ту
-    // добываем массив ID из фром и ту
+    // добываем массив строк из полей from и to
+    // и получаем соответствующие ID
     let fromEditIds = []
     let toEditIds = []
     let assignedTo = [reData.user.id]
@@ -55,7 +54,7 @@ export default (m) => {
       .forEach((e) => {
         e = e.trim()
         let collaborator = getCollaboratorByName(e)
-        // console.log("collaborator", e, collaborator)
+        // Если найден сотрудник, добавляем его ID в assignedTo
         if (collaborator) assignedTo.push(collaborator.id)
         else {
           fromEditIds.push(getObjectByName(e, fromRole).id)
@@ -67,31 +66,62 @@ export default (m) => {
       .trim()
       .split("\n")
       .filter((e) => e.trim() !== "" && e.trim() !== name)
-      .forEach((name) => {
-        let id = getObjectByName(name, toRole).id
+      .forEach((line) => {
+        let id = getObjectByName(line, toRole).id
         if (!fromEditIds.includes(id)) {
           toEditIds.push(id)
         }
       })
+
+    // === Новый блок для обработки moreImportant и lessImportant ===
+    let moreImportantEditIds = []
+    let lessImportantEditIds = []
+    const moreImportantEdit = document.getElementById("moreImportantEdit")
+    const lessImportantEdit = document.getElementById("lessImportantEdit")
+
+    if (moreImportantEdit) {
+      moreImportantEdit.innerText
+        .trim()
+        .split("\n")
+        .filter((e) => e.trim() !== "" && e.trim() !== name)
+        .forEach((e) => {
+          e = e.trim()
+          // Используем роль "moreImportant" – при необходимости измените её
+          moreImportantEditIds.push(getObjectByName(e, "common").id)
+        })
+    }
+    if (lessImportantEdit) {
+      lessImportantEdit.innerText
+        .trim()
+        .split("\n")
+        .filter((e) => e.trim() !== "" && e.trim() !== name)
+        .forEach((e) => {
+          e = e.trim()
+          // Используем роль "lessImportant" – при необходимости измените её
+          lessImportantEditIds.push(getObjectByName(e, "common").id)
+        })
+    }
+    // ===================================================================
+
     // добавляем дату и время из инпутов
     const timeInput = document.getElementById("timeInput").value
     const dateInput = document.getElementById("dateInput").value
 
-    // добываем данные из радио
+    // добываем данные из радио-кнопок
     let urgencyRadios = document.getElementsByName("urgency")
     let priorityRadioType = "kairos"
     for (let i = 0; i < urgencyRadios.length; i++) {
       if (urgencyRadios[i].checked) {
-        priorityRadioType = urgencyRadios[i].value // Выводим значение выбранного элемента
-        break // Выходим из цикла, так как радио-кнопка найдена
+        priorityRadioType = urgencyRadios[i].value // выбранное значение
+        break
       }
     }
     let importanceRadios = document.getElementsByName("importance")
     let importancePriorityRadio = "kairos"
     for (let i = 0; i < importanceRadios.length; i++) {
       if (importanceRadios[i].checked) {
-        importancePriorityRadio = importanceRadios[i].value // Выводим значение выбранного элемента
-        break // Выходим из цикла, так как радио-кнопка найдена
+        importancePriorityRadio = importanceRadios[i].value
+        break
       }
     }
 
@@ -99,8 +129,8 @@ export default (m) => {
     let difficultyPriorityRadio = "kairos"
     for (let i = 0; i < difficultyRadios.length; i++) {
       if (difficultyRadios[i].checked) {
-        difficultyPriorityRadio = difficultyRadios[i].value // Выводим значение выбранного элемента
-        break // Выходим из цикла, так как радио-кнопка найдена
+        difficultyPriorityRadio = difficultyRadios[i].value
+        break
       }
     }
     if (
@@ -111,7 +141,7 @@ export default (m) => {
       if (difficultyPriorityRadio == "kairos") difficultyPriorityRadio = "quick"
     }
 
-    // проверяем, что имя не пусто и не занято
+    // проверяем, что имя не пустое и не занято
     if (name === "") {
       name = thisTask.name
     }
@@ -120,6 +150,7 @@ export default (m) => {
         name += "!"
       }
 
+    // Обновляем связи между задачами
     for (let theTask of data.tasks) {
       // 1. Удаляем связи для тех задач, где они больше не нужны.
       if (theTask.fromIds?.includes(reData.selectedScribe) && !fromEditIds.includes(theTask.id)) {
@@ -144,11 +175,35 @@ export default (m) => {
         theTask.fromIds.push(reData.selectedScribe)
         changedTasks.add(theTask)
       }
+
+      // === Новый блок для moreImportant и lessImportant связей ===
+      if (theTask.moreImportantIds?.includes(reData.selectedScribe) && !moreImportantEditIds.includes(theTask.id)) {
+        theTask.moreImportantIds = theTask.moreImportantIds?.filter((id) => id !== reData.selectedScribe) || []
+        changedTasks.add(theTask)
+      }
+
+      if (theTask.lessImportantIds?.includes(reData.selectedScribe) && !lessImportantEditIds.includes(theTask.id)) {
+        theTask.lessImportantIds = theTask.lessImportantIds?.filter((id) => id !== reData.selectedScribe) || []
+        changedTasks.add(theTask)
+      }
+
+      if (moreImportantEditIds.includes(theTask.id) && !theTask.lessImportantIds?.includes(reData.selectedScribe)) {
+        if (!theTask.lessImportantIds) theTask.lessImportantIds = []
+        theTask.lessImportantIds.push(reData.selectedScribe)
+        changedTasks.add(theTask)
+      }
+
+      if (lessImportantEditIds.includes(theTask.id) && !theTask.moreImportantIds?.includes(reData.selectedScribe)) {
+        if (!theTask.moreImportantIds) theTask.moreImportantIds = []
+        theTask.moreImportantIds.push(reData.selectedScribe)
+        changedTasks.add(theTask)
+      }
+      // ============================================================
     }
 
     changedTasks.add(thisTask)
 
-    // сохраняем новые значения
+    // сохраняем новые значения в задаче
     thisTask.name = name
     thisTask.note = note
 
@@ -158,6 +213,9 @@ export default (m) => {
 
     thisTask.fromIds = fromEditIds
     thisTask.toIds = toEditIds
+    // Сохраняем новые связи для более/менее важных задач
+    thisTask.moreImportantIds = moreImportantEditIds
+    thisTask.lessImportantIds = lessImportantEditIds
 
     thisTask.assignedTo = [...new Set(thisTask.assignedTo.concat(assignedTo))]
 
@@ -195,7 +253,10 @@ export default (m) => {
       audio.playSound("readySave")
       if (!thisTask.ready) {
         thisTask.readyLogs = Array.isArray(thisTask.readyLogs) ? thisTask.readyLogs : []
-        thisTask.readyLogs.push({ status: true, timestamp: dayjs().valueOf() })
+        thisTask.readyLogs.push({
+          status: true,
+          timestamp: dayjs().valueOf(),
+        })
         if (thisTask.readyLogs?.length > 100) {
           thisTask.readyLogs.shift() // удаляем самую старую запись, если превышено 100 записей
         }
@@ -204,7 +265,10 @@ export default (m) => {
     } else {
       if (thisTask.ready) {
         thisTask.readyLogs = Array.isArray(thisTask.readyLogs) ? thisTask.readyLogs : []
-        thisTask.readyLogs.push({ status: false, timestamp: dayjs().valueOf() })
+        thisTask.readyLogs.push({
+          status: false,
+          timestamp: dayjs().valueOf(),
+        })
         if (thisTask.readyLogs?.length > 100) {
           thisTask.readyLogs.shift() // удаляем самую старую запись, если превышено 100 записей
         }

@@ -82,6 +82,15 @@ input {
   @apply block h-full text-neutral-500 italic;
 }
 
+#moreImportantEdit:empty::before {
+  content: attr(data-placeholder);
+  @apply block h-full text-neutral-500 italic;
+}
+#lessImportantEdit:empty::before {
+  content: attr(data-placeholder);
+  @apply block h-full text-neutral-500 italic;
+}
+
 .corner-box-bottom-right {
   background-image: linear-gradient(to bottom right, transparent 50%, gray 50%);
   background-repeat: no-repeat;

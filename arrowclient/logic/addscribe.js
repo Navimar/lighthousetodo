@@ -22,6 +22,8 @@ export default (name, role = "common") => {
     intentionPriority: (reData.intentions[0]?.intentionPriority || 2000000) / 2,
     fromIds: [],
     toIds: [],
+    moreImportantIds: [],
+    lessImportantIds: [],
     timestamp: dayjs().valueOf(),
     assignedBy: reData.user.id,
     assignedTo: [reData.user.id],

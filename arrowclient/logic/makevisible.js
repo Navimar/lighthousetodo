@@ -94,7 +94,7 @@ export const makevisible = () => {
         reData.selectedDate === reData.currentTime.date
           ? dayjs(task.date).isBefore(selectedDateObj.add(1, "day")) || task.date == reData.selectedDate || !task.date
           : dayjs(task.date).isSame(selectedDateObj) || !task.date
-      if (!task.ready && isCurrentOrFutureTask && (areAllFromIdsReady(task) || task.intention)) {
+      if (!task.ready && isCurrentOrFutureTask && areAllFromIdsReady(task)) {
         visibleTasks.push(task)
       }
     }

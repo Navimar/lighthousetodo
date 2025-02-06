@@ -44,7 +44,7 @@ export default (divId) => {
       elements.push(div)
     }
     return html`
-      <div id="autocomplete-list" class="w-full sm:w-1/2 absolute z-10 top-full ">
+      <div id="autocomplete-list" class="w-full z-10 top-full ">
         <div
           class=" border border-neutral-400 dark:bg-neutral-800 dark:border-neutral-600 rounded bg-white dark:bg-black">
           ${() => elements}

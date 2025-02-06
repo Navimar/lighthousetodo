@@ -55,33 +55,64 @@ function handleDivClick(e) {
 }
 
 export default (task) => html`
-  <div class="flex relative gap-4">
-    <div
-      id="fromEdit"
-      class="flex flex-col block gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
-      contenteditable="true"
-      data-placeholder="Задачи пионеры..."
-      role="textbox"
-      aria-multiline="true"
-      tabindex="0"
-      @click="${handleDivClick}"
-      @input="${handleInput}"
-      >${task.fromIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}</div
-    >
-    ${() => renderAutocomplete("fromEdit")}
+  <div class="flex flex-col gap-4">
+    ${() => renderAutocomplete("fromEdit")} ${() => renderAutocomplete("toEdit")}
+    ${() => renderAutocomplete("moreImportantEdit")} ${() => renderAutocomplete("lessImportantEdit")}
 
-    <div
-      id="toEdit"
-      class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
-      contenteditable="true"
-      role="textbox"
-      aria-multiline="true"
-      tabindex="0"
-      data-placeholder="Задачи на очереди..."
-      @click="${handleDivClick}"
-      @input="${handleInput}"
-      >${task.toIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}</div
-    >
-    ${() => renderAutocomplete("toEdit")}
+    <div class="flex gap-4">
+      <div
+        id="fromEdit"
+        class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
+        contenteditable="true"
+        data-placeholder="Задачи пионеры..."
+        role="textbox"
+        aria-multiline="true"
+        tabindex="0"
+        @click="${handleDivClick}"
+        @input="${handleInput}"
+        >${task.fromIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}</div
+      >
+
+      <div
+        id="toEdit"
+        class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
+        contenteditable="true"
+        data-placeholder="Задачи на очереди..."
+        role="textbox"
+        aria-multiline="true"
+        tabindex="0"
+        @click="${handleDivClick}"
+        @input="${handleInput}"
+        >${task.toIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}</div
+      >
+    </div>
+
+    <div class="flex gap-4">
+      <div
+        id="moreImportantEdit"
+        class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
+        contenteditable="true"
+        data-placeholder="Задачи важнее..."
+        role="textbox"
+        aria-multiline="true"
+        tabindex="0"
+        @click="${handleDivClick}"
+        @input="${handleInput}"
+        >${task.moreImportantIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}</div
+      >
+
+      <div
+        id="lessImportantEdit"
+        class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
+        contenteditable="true"
+        data-placeholder="Менее важные задачи..."
+        role="textbox"
+        aria-multiline="true"
+        tabindex="0"
+        @click="${handleDivClick}"
+        @input="${handleInput}"
+        >${task.lessImportantIds?.map((id) => html`<div>${getObjectById(id).name}</div>`)}</div
+      >
+    </div>
   </div>
 `
