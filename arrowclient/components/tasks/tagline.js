@@ -49,7 +49,7 @@ export default (givenTask, direction) => {
   readyTasks.sort(sortTasksByName)
   importantTasks.sort(sortTasksByName)
 
-  return html`<div class="text-sm empty:hidden flex flex-wrap gap-1 tagLine"
+  return html`<div class="text-sm empty:hidden flex flex-wrap gap-1 tagLine max-h-32 overflow-y-auto"
     >${() =>
       assignedIds?.map((collaboratorId) => {
         if (

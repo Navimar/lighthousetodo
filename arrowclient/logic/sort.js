@@ -80,35 +80,39 @@ const sortByReadyPercentage = (a, b) => {
   return calculateReadyPercentage(a) - calculateReadyPercentage(b)
 }
 
-const areAllFromIdsReady = (task) => {
-  if (!task?.fromIds?.length) return true
+const countValidTails = (task, visited = new Set(), depth = 0, maxDepth = 12, now) => {
+  if (!task || visited.has(task.id) || depth >= maxDepth) return 0
+  visited.add(task.id)
+
+  if (sortByFuture(task, {}, now) || task.pause || task.ready) return 0
+
+  if (!task.fromIds || task.fromIds.length === 0) return 1 // Хвост, если нет зависимостей
+
+  let count = 0
   for (let id of task.fromIds) {
-    const theTask = getObjectById(id)
-    if (!theTask?.ready) return false
+    const fromTask = getObjectById(id)
+    if (fromTask) {
+      count += countValidTails(fromTask, visited, depth + 1, maxDepth, now)
+    }
   }
-  return true
+
+  return count
 }
 
 const sortByMoreImportantIdsLength = (a, b, now) => {
-  const getValidCount = (obj) => {
-    return (obj.moreImportantIds || []).filter((id) => {
+  const getValidPathsCount = (obj) => {
+    return (obj.moreImportantIds || []).reduce((acc, id) => {
       const task = getObjectById(id)
-      return areAllFromIdsReady(task) && !task.ready && !task.pause && !sortByFuture(task, {}, now)
-    }).length
+      return acc + (task ? countValidTails(task, new Set(), 0, 12, now) : 0)
+    }, 0)
   }
 
-  return getValidCount(a) - getValidCount(b)
+  return getValidPathsCount(a) - getValidPathsCount(b)
 }
 
-const sortByLessImportantIdsLength = (a, b, now) => {
-  const getValidCount = (obj) => {
-    return (obj.lessImportantIds || []).filter((id) => {
-      const task = getObjectById(id)
-      return areAllFromIdsReady(task) && !task.ready && !task.pause && !sortByFuture(task, {}, now)
-    }).length
-  }
-
-  return getValidCount(b) - getValidCount(a)
+const sortByLessImportantIdsLength = (a, b) => {
+  const getCount = (obj) => (obj.lessImportantIds || []).length
+  return getCount(b) - getCount(a)
 }
 
 export default (arrToSort = reData.visibleTasks) => {
