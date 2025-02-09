@@ -1,17 +1,16 @@
 export const pruneTaskIds = (tasks) => {
-  if (tasks) {
-    const taskIds = new Set(tasks.map((task) => task.id)) // 1️⃣ Собираем все task.id в Set
+  if (!tasks) return [] // Если tasks = undefined/null → вернуть пустой массив
 
-    return tasks.map((task) => {
-      const toIds = task.toIds.filter((id) => taskIds.has(id)) // 2️⃣ Фильтруем toIds
-      const fromIds = task.fromIds.filter((id) => taskIds.has(id)) // 3️⃣ Фильтруем fromIds
-      const moreImportantIds = task.moreImportantIds.filter((id) => taskIds.has(id)) // 4️⃣ Фильтруем moreImportantIds
-      const lessImportantIds = task.lessImportantIds.filter((id) => taskIds.has(id)) // 5️⃣ Фильтруем lessImportantIds
+  const taskIds = new Set(tasks.map((task) => task.id)) // 1️⃣ Собираем все task.id в Set
 
-      return { ...task, toIds, fromIds, moreImportantIds, lessImportantIds } // 6️⃣ Возвращаем новый объект task с обновленными id
-    })
-  }
-  return []
+  return tasks.map((task) => {
+    const toIds = (task.toIds || []).filter((id) => taskIds.has(id)) // 2️⃣ Фильтруем toIds
+    const fromIds = (task.fromIds || []).filter((id) => taskIds.has(id)) // 3️⃣ Фильтруем fromIds
+    const moreImportantIds = (task.moreImportantIds || []).filter((id) => taskIds.has(id)) // 4️⃣ Фильтруем moreImportantIds
+    const lessImportantIds = (task.lessImportantIds || []).filter((id) => taskIds.has(id)) // 5️⃣ Фильтруем lessImportantIds
+
+    return { ...task, toIds, fromIds, moreImportantIds, lessImportantIds } // 6️⃣ Обновленный task
+  })
 }
 
 export const prepareTasks = (tasks) => {
