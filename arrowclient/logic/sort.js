@@ -99,7 +99,7 @@ const countValidTails = (task, visited = new Set(), depth = 0, maxDepth = 12, no
   return count
 }
 
-const sortByMoreImportantIdsLength = (a, b, now) => {
+const sortByMoreImportantIdsTails = (a, b, now) => {
   const getValidPathsCount = (obj) => {
     return (obj.moreImportantIds || []).reduce((acc, id) => {
       const task = getObjectById(id)
@@ -110,6 +110,10 @@ const sortByMoreImportantIdsLength = (a, b, now) => {
   return getValidPathsCount(a) - getValidPathsCount(b)
 }
 
+const sortByMoreImportantIdsLength = (a, b) => {
+  const getCount = (obj) => (obj.lessImportantIds || []).length
+  return getCount(a) - getCount(b)
+}
 const sortByLessImportantIdsLength = (a, b) => {
   const getCount = (obj) => (obj.lessImportantIds || []).length
   return getCount(b) - getCount(a)
@@ -130,10 +134,13 @@ export default (arrToSort = reData.visibleTasks) => {
     result = sortByFuture(a, b, now)
     if (result !== 0) return result
 
-    result = sortByMoreImportantIdsLength(a, b, now)
+    result = sortByMoreImportantIdsTails(a, b, now)
     if (result !== 0) return result
 
-    result = sortByLessImportantIdsLength(a, b, now)
+    result = sortByMoreImportantIdsLength(a, b)
+    if (result !== 0) return result
+
+    result = sortByLessImportantIdsLength(a, b)
     if (result !== 0) return result
 
     result = sortByReadyPercentage(a, b)
