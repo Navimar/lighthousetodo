@@ -80,11 +80,20 @@ const sortByReadyPercentage = (a, b) => {
   return calculateReadyPercentage(a) - calculateReadyPercentage(b)
 }
 
+const areAllFromIdsReady = (task) => {
+  if (!task?.fromIds?.length) return true
+  for (let id of task.fromIds) {
+    const theTask = getObjectById(id)
+    if (!theTask?.ready) return false
+  }
+  return true
+}
+
 const sortByMoreImportantIdsLength = (a, b, now) => {
   const getValidCount = (obj) => {
     return (obj.moreImportantIds || []).filter((id) => {
       const task = getObjectById(id)
-      return !task.ready && !task.pause && !sortByFuture(task, {}, now)
+      return areAllFromIdsReady(task) && !task.ready && !task.pause && !sortByFuture(task, {}, now)
     }).length
   }
 
@@ -95,7 +104,7 @@ const sortByLessImportantIdsLength = (a, b, now) => {
   const getValidCount = (obj) => {
     return (obj.lessImportantIds || []).filter((id) => {
       const task = getObjectById(id)
-      return !task.ready && !task.pause && !sortByFuture(task, {}, now)
+      return areAllFromIdsReady(task) && !task.ready && !task.pause && !sortByFuture(task, {}, now)
     }).length
   }
 

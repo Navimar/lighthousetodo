@@ -48,11 +48,11 @@ const areAllFromIdsReady = (task) => {
   if (!task?.fromIds?.length) return true
   for (let id of task.fromIds) {
     const theTask = getObjectById(id)
-    if (!theTask) console.log("in makevisible не найден таск по ID", id, task.name)
     if (!theTask?.ready) return false
   }
   return true
 }
+
 export const makevisibleIntentions = () => {
   reData.intentions = []
   for (let task of data.tasks) {
