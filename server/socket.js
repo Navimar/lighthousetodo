@@ -135,8 +135,7 @@ export let inputSocket = (io) => {
       // Обновление данных о последней очистке и удаление старых задач, если это необходимо
       const user = getUser(userId)
       const timeSinceLastCleanup = Date.now() - (user.lastCleanup || 0)
-      const DIFFERENCE_MILLISECONDS = 60 * 60 * 1000
-      // 24 * 60 * 60 * 1000
+      const DIFFERENCE_MILLISECONDS = 60 * 60 * 1000 * 24 * 7
 
       // console.log("timeSinceLastCleanup", timeSinceLastCleanup, DIFFERENCE_MILLISECONDS)
       if (timeSinceLastCleanup > DIFFERENCE_MILLISECONDS) {

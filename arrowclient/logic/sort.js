@@ -80,20 +80,22 @@ const sortByReadyPercentage = (a, b) => {
   return calculateReadyPercentage(a) - calculateReadyPercentage(b)
 }
 
-const sortByMoreImportantIdsLength = (a, b) => {
+const sortByMoreImportantIdsLength = (a, b, now) => {
   const getValidCount = (obj) => {
     return (obj.moreImportantIds || []).filter((id) => {
-      return !getObjectById(id).ready
+      const task = getObjectById(id)
+      return !task.ready && !task.pause && !sortByFuture(task, {}, now)
     }).length
   }
 
   return getValidCount(a) - getValidCount(b)
 }
 
-const sortByLessImportantIdsLength = (a, b) => {
+const sortByLessImportantIdsLength = (a, b, now) => {
   const getValidCount = (obj) => {
     return (obj.lessImportantIds || []).filter((id) => {
-      return !getObjectById(id).ready
+      const task = getObjectById(id)
+      return !task.ready && !task.pause && !sortByFuture(task, {}, now)
     }).length
   }
 
@@ -115,10 +117,10 @@ export default (arrToSort = reData.visibleTasks) => {
     result = sortByFuture(a, b, now)
     if (result !== 0) return result
 
-    result = sortByMoreImportantIdsLength(a, b)
+    result = sortByMoreImportantIdsLength(a, b, now)
     if (result !== 0) return result
 
-    result = sortByLessImportantIdsLength(a, b)
+    result = sortByLessImportantIdsLength(a, b, now)
     if (result !== 0) return result
 
     result = sortByReadyPercentage(a, b)
