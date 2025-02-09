@@ -111,7 +111,7 @@ const sortByMoreImportantIdsTails = (a, b, now) => {
 }
 
 const sortByMoreImportantIdsLength = (a, b) => {
-  const getCount = (obj) => (obj.lessImportantIds || []).length
+  const getCount = (obj) => (obj.moreImportantIds || []).length
   return getCount(a) - getCount(b)
 }
 const sortByLessImportantIdsLength = (a, b) => {
