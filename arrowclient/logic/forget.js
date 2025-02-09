@@ -34,8 +34,10 @@ export const removeOldTasks = (tasks) => {
 
   // 2. Обновляем связи в оставшихся задачах
   data.tasks.forEach((task) => {
-    task.fromIds = task.fromIds?.filter((id) => !tasksToDelete.includes(id)) || []
-    task.toIds = task.toIds?.filter((id) => !tasksToDelete.includes(id)) || []
+    task.fromIds = (task.fromIds || []).filter((id) => !tasksToDelete.includes(id))
+    task.toIds = (task.toIds || []).filter((id) => !tasksToDelete.includes(id))
+    task.moreImportantIds = (task.moreImportantIds || []).filter((id) => !tasksToDelete.includes(id))
+    task.lessImportantIds = (task.lessImportantIds || []).filter((id) => !tasksToDelete.includes(id))
   })
 
   // 3. Фильтруем и удаляем старые задачи
