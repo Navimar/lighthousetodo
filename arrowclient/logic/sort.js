@@ -58,6 +58,30 @@ const calculateReadyPercentage = (task) => {
   return readyPercent >= 0 ? readyPercent : 0
 }
 
+const calculateTaskWeights = (tasks) => {
+  const weights = new Map()
+
+  const assignWeight = (task, weight) => {
+    if (weights.has(task.id) && weights.get(task.id) <= weight) return
+    weights.set(task.id, weight)
+
+    for (const id of task.lessImportantIds || []) {
+      const lessImportantTask = getObjectById(id)
+      if (lessImportantTask) {
+        assignWeight(lessImportantTask, weight + 1)
+      }
+    }
+  }
+
+  for (const task of tasks) {
+    if (!task.moreImportantIds || task.moreImportantIds.length === 0) {
+      assignWeight(task, 0)
+    }
+  }
+
+  return weights
+}
+
 const sortByReadiness = (a, b) => {
   if (!a.ready && b.ready) return -1
   if (a.ready && !b.ready) return 1
@@ -80,40 +104,15 @@ const sortByReadyPercentage = (a, b) => {
   return calculateReadyPercentage(a) - calculateReadyPercentage(b)
 }
 
-const countValidTails = (task, visited = new Set(), depth = 0, maxDepth = 12, now) => {
-  if (!task || visited.has(task.id) || depth >= maxDepth) return 0
-  visited.add(task.id)
-
-  if (sortByFuture(task, {}, now) || task.pause || task.ready) return 0
-
-  if (!task.fromIds || task.fromIds.length === 0) return 1 // Хвост, если нет зависимостей
-
-  let count = 0
-  for (let id of task.fromIds) {
-    const fromTask = getObjectById(id)
-    if (fromTask) {
-      count += countValidTails(fromTask, visited, depth + 1, maxDepth, now)
-    }
-  }
-
-  return count
-}
-
-const sortByMoreImportantIdsTails = (a, b, now) => {
-  const getValidPathsCount = (obj) => {
-    return (obj.moreImportantIds || []).reduce((acc, id) => {
-      const task = getObjectById(id)
-      return acc + (task ? countValidTails(task, new Set(), 0, 12, now) : 0)
-    }, 0)
-  }
-
-  return getValidPathsCount(a) - getValidPathsCount(b)
+const sortByWeight = (a, b, weights) => {
+  return (weights.get(a.id) || 0) - (weights.get(b.id) || 0)
 }
 
 const sortByMoreImportantIdsLength = (a, b) => {
   const getCount = (obj) => (obj.moreImportantIds || []).length
   return getCount(a) - getCount(b)
 }
+
 const sortByLessImportantIdsLength = (a, b) => {
   const getCount = (obj) => (obj.lessImportantIds || []).length
   return getCount(b) - getCount(a)
@@ -122,19 +121,22 @@ const sortByLessImportantIdsLength = (a, b) => {
 export default (arrToSort = reData.visibleTasks) => {
   performance.start("Full Sorting Process")
 
+  const weights = calculateTaskWeights(arrToSort)
+  const now = dayjs()
+
   arrToSort.sort((a, b) => {
     let result = 0
+
     result = sortByReadiness(a, b)
     if (result !== 0) return result
 
     result = sortByPause(a, b)
     if (result !== 0) return result
 
-    const now = dayjs()
     result = sortByFuture(a, b, now)
     if (result !== 0) return result
 
-    result = sortByMoreImportantIdsTails(a, b, now)
+    result = sortByWeight(a, b, weights)
     if (result !== 0) return result
 
     // result = sortByMoreImportantIdsLength(a, b)
