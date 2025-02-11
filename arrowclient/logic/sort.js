@@ -66,12 +66,11 @@ const calculateTaskWeights = (tasks) => {
 
     // Если в мапе уже есть вес и он меньше или равен новому, пропускаем
     if (currentWeight !== undefined && currentWeight <= weight) {
-      console.log(getObjectById(taskId).name, currentWeight, weight)
       return
     }
 
     weights.set(taskId, weight)
-
+    console.log(getObjectById(taskId).name, getObjectById(taskId).lessImportantIds)
     for (const id of getObjectById(taskId).lessImportantIds || []) {
       assignWeight(id, weight + 1)
     }
