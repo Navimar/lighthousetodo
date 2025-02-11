@@ -137,8 +137,8 @@ export default (arrToSort = reData.visibleTasks) => {
     result = sortByMoreImportantIdsTails(a, b, now)
     if (result !== 0) return result
 
-    result = sortByMoreImportantIdsLength(a, b)
-    if (result !== 0) return result
+    // result = sortByMoreImportantIdsLength(a, b)
+    // if (result !== 0) return result
 
     result = sortByLessImportantIdsLength(a, b)
     if (result !== 0) return result
