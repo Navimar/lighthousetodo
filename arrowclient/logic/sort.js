@@ -76,16 +76,15 @@ const calculateTaskWeights = (tasks) => {
       assignWeight(task.id, 0)
     }
   }
-  // Логируем веса с именами задач
   // Логируем веса с именами задач, отсортированными по весу
-  console.log("Task Weights:")
-  Array.from(weights.entries())
-    .map(([taskId, weight]) => {
-      const task = getObjectById(taskId)
-      return { name: task ? task.name : "Unknown", weight }
-    })
-    .sort((a, b) => a.weight - b.weight)
-    .forEach(({ name, weight }) => console.log(`${name}: ${weight}`))
+  // console.log("Task Weights:")
+  // Array.from(weights.entries())
+  //   .map(([taskId, weight]) => {
+  //     const task = getObjectById(taskId)
+  //     return { name: task ? task.name : "Unknown", weight }
+  //   })
+  //   .sort((a, b) => a.weight - b.weight)
+  //   .forEach(({ name, weight }) => console.log(`${name}: ${weight}`))
 
   return weights
 }
@@ -113,7 +112,7 @@ const sortByReadyPercentage = (a, b) => {
 }
 
 const sortByWeight = (a, b, weights) => {
-  return weights.get(a.id) - weights.get(b.id)
+  return weights.get(a.id) || 0 - weights.get(b.id) || 0
 }
 
 const sortByMoreImportantIdsLength = (a, b) => {
