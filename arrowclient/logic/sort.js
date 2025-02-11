@@ -62,7 +62,10 @@ const calculateTaskWeights = (tasks) => {
   const weights = new Map()
 
   const assignWeight = (taskId, weight) => {
-    if (weights.has(taskId) && weights.get(taskId) <= weight) return
+    const currentWeight = weights.get(taskId)
+
+    // Если в мапе уже есть вес и он меньше или равен новому, пропускаем
+    if (currentWeight !== undefined && currentWeight <= weight) return
 
     weights.set(taskId, weight)
 
