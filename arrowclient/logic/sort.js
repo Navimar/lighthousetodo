@@ -2,6 +2,7 @@ import reData from "~/logic/reactive.js"
 import dayjs from "dayjs"
 import performance from "~/logic/performance.js"
 import { getObjectById } from "~/logic/util.js"
+import data from "~/logic/data.js"
 
 const calculateReadyPercentage = (task) => {
   if (!task.fromIds || task.fromIds.length === 0) {
@@ -58,19 +59,17 @@ const calculateReadyPercentage = (task) => {
   return readyPercent >= 0 ? readyPercent : 0
 }
 
-const calculateTaskWeights = (tasks) => {
+const calculateTaskWeights = () => {
+  const tasks = data.tasks
   const weights = new Map()
 
   const assignWeight = (taskId, weight) => {
     const currentWeight = weights.get(taskId)
 
     // Если в мапе уже есть вес и он меньше или равен новому, пропускаем
-    if (currentWeight !== undefined && currentWeight <= weight) {
-      return
-    }
+    if (currentWeight !== undefined && currentWeight <= weight) return
 
     weights.set(taskId, weight)
-    console.log(getObjectById(taskId).name, getObjectById(taskId).lessImportantIds)
     for (const id of getObjectById(taskId).lessImportantIds || []) {
       assignWeight(id, weight + 1)
     }
@@ -81,28 +80,6 @@ const calculateTaskWeights = (tasks) => {
       assignWeight(task.id, 0)
     }
   }
-
-  // // Логируем веса с именами задач, отсортированными по весу
-  // console.log("Task Weights:")
-  // Array.from(weights.entries())
-  //   .map(([taskId, weight]) => {
-  //     const task = getObjectById(taskId)
-  //     return { name: task ? task.name : "Unknown", weight, lessImportantIds }
-  //   })
-  //   .sort((a, b) => a.weight - b.weight)
-  //   .forEach(({ name, weight }) => console.log(`${name}: ${weight}`))
-
-  // // Находим все задачи, которые не попали в Map
-  // const missingTasks = tasks.filter((task) => !weights.has(task.id))
-
-  // if (missingTasks.length > 0) {
-  //   console.log("Tasks NOT in map:")
-  //   missingTasks.forEach((task) => {
-  //     console.log(task.name)
-  //   })
-  // } else {
-  //   console.log("All tasks are in the map.")
-  // }
 
   return weights
 }
@@ -146,7 +123,7 @@ const sortByLessImportantIdsLength = (a, b) => {
 export default (arrToSort = reData.visibleTasks) => {
   performance.start("Full Sorting Process")
 
-  const weights = calculateTaskWeights(arrToSort)
+  const weights = calculateTaskWeights()
   const now = dayjs()
 
   arrToSort.sort((a, b) => {
