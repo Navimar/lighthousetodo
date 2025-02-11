@@ -76,15 +76,28 @@ const calculateTaskWeights = (tasks) => {
       assignWeight(task.id, 0)
     }
   }
+
   // Логируем веса с именами задач, отсортированными по весу
-  // console.log("Task Weights:")
-  // Array.from(weights.entries())
-  //   .map(([taskId, weight]) => {
-  //     const task = getObjectById(taskId)
-  //     return { name: task ? task.name : "Unknown", weight }
-  //   })
-  //   .sort((a, b) => a.weight - b.weight)
-  //   .forEach(({ name, weight }) => console.log(`${name}: ${weight}`))
+  console.log("Task Weights:")
+  Array.from(weights.entries())
+    .map(([taskId, weight]) => {
+      const task = getObjectById(taskId)
+      return { name: task ? task.name : "Unknown", weight }
+    })
+    .sort((a, b) => a.weight - b.weight)
+    .forEach(({ name, weight }) => console.log(`${name}: ${weight}`))
+
+  // Находим все задачи, которые не попали в Map
+  const missingTasks = tasks.filter((task) => !weights.has(task.id))
+
+  if (missingTasks.length > 0) {
+    console.log("Tasks NOT in map:")
+    missingTasks.forEach((task) => {
+      console.log(task.name)
+    })
+  } else {
+    console.log("All tasks are in the map.")
+  }
 
   return weights
 }
