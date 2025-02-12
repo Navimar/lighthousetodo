@@ -63,15 +63,18 @@ const calculateTaskWeights = () => {
   const tasks = data.tasks
   const weights = new Map()
 
-  const assignWeight = (taskId, weight) => {
+  const assignWeight = (taskId, weight, visited = new Set()) => {
+    if (visited.has(taskId)) return
+
+    visited.add(taskId)
+
     const currentWeight = weights.get(taskId)
+    if (currentWeight === undefined || weight > currentWeight) {
+      weights.set(taskId, weight)
 
-    // Если в мапе уже есть вес и он больше или равен новому, пропускаем
-    if (currentWeight !== undefined && currentWeight >= weight) return
-
-    weights.set(taskId, weight)
-    for (const id of getObjectById(taskId).lessImportantIds || []) {
-      assignWeight(id, weight + 1)
+      for (const id of getObjectById(taskId).lessImportantIds || []) {
+        assignWeight(id, weight + 1, new Set(visited)) // Создаем копию visited для каждого пути
+      }
     }
   }
 
