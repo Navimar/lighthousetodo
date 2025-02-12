@@ -107,7 +107,7 @@ const sortByReadyPercentage = (a, b) => {
 }
 
 const sortByWeight = (a, b, weights) => {
-  return weights.get(a.id) || 0 - weights.get(b.id) || 0
+  return weights.get(a.id) - weights.get(b.id)
 }
 
 const sortByMoreImportantIdsLength = (a, b) => {
@@ -124,6 +124,11 @@ export default (arrToSort = reData.visibleTasks) => {
   performance.start("Full Sorting Process")
 
   const weights = calculateTaskWeights()
+
+  //чего не хватает???
+  const missingTasks = arrToSort.filter((task) => !weights.has(task.id))
+  console.warn("Tasks missing in weights:", missingTasks)
+
   const now = dayjs()
 
   arrToSort.sort((a, b) => {
