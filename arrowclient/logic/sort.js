@@ -66,8 +66,8 @@ const calculateTaskWeights = () => {
   const assignWeight = (taskId, weight) => {
     const currentWeight = weights.get(taskId)
 
-    // Если в мапе уже есть вес и он меньше или равен новому, пропускаем
-    if (currentWeight !== undefined && currentWeight <= weight) return
+    // Если в мапе уже есть вес и он больше или равен новому, пропускаем
+    if (currentWeight !== undefined && currentWeight >= weight) return
 
     weights.set(taskId, weight)
     for (const id of getObjectById(taskId).lessImportantIds || []) {
@@ -124,10 +124,6 @@ export default (arrToSort = reData.visibleTasks) => {
   performance.start("Full Sorting Process")
 
   const weights = calculateTaskWeights()
-
-  //чего не хватает???
-  const missingTasks = arrToSort.filter((task) => !weights.has(task.id))
-  console.warn("Tasks missing in weights:", missingTasks)
 
   const now = dayjs()
 
