@@ -67,13 +67,18 @@ const calculateTaskWeights = () => {
     if (visited.has(taskId)) return
 
     visited.add(taskId)
+    const task = getObjectById(taskId)
+
+    const isFuture = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm").isAfter(dayjs())
+    const isPaused = task.pause
+    const isReady = task.ready
 
     const currentWeight = weights.get(taskId)
     if (currentWeight === undefined || weight > currentWeight) {
       weights.set(taskId, weight)
 
-      for (const id of getObjectById(taskId).lessImportantIds || []) {
-        assignWeight(id, weight + 1, new Set(visited)) // Создаем копию visited для каждого пути
+      for (const id of task.lessImportantIds || []) {
+        assignWeight(id, isFuture || isPaused || isReady ? weight : weight + 1, new Set(visited))
       }
     }
   }
