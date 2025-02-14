@@ -7,7 +7,6 @@ import footer from "~/components/footer.js"
 import renderTasks from "./components/tasks/tasks.js"
 import renderIntention from "./components/tasks/intention.js"
 import pages from "./components/tasks/pages.js"
-import navigation from "./components/navigation.js"
 
 import { renderCollabortors, renderCollaborationRequests } from "./components/collaborators/collaborators.js"
 import { inputSocket } from "~/logic/send.js"
@@ -39,7 +38,7 @@ const app = document.getElementById("App")
 const render = html`
   ${search}
   <div class="flex flex-col gap-6 pb-[30rem] max-w-full w-40rem px-3 m-auto"
-    >${authentication}${renderNodeCounter}${renderCalendar}${navigation()}${renderCollaborationRequests}${renderCollabortors}${renderTasks}${pages}${renderIntention}</div
+    >${authentication}${renderNodeCounter}${renderCalendar}${renderCollaborationRequests}${renderCollabortors}${renderTasks}${pages}</div
   >${footer()}${plusbutton}${() => online()}
 `
 

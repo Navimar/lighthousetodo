@@ -22,6 +22,6 @@ router
   .on("*", (match) => {
     let route = match?.url.split("/").filter(Boolean)
     if (route[0]) reData.route = route
-    else navigate("intentions")
+    else navigate("tasks")
   })
   .resolve()
