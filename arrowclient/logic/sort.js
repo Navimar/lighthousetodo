@@ -80,11 +80,17 @@ const calculateTaskWeights = () => {
       for (const id of task.lessImportantIds || []) {
         assignWeight(id, isFuture || isPaused || isReady ? weight : weight + 1, new Set(visited))
       }
+      for (const id of task.toIds || []) {
+        assignWeight(id, isFuture || isPaused || isReady ? weight : weight + 1, new Set(visited))
+      }
     }
   }
 
   for (const task of tasks) {
-    if (!task.moreImportantIds || task.moreImportantIds.length === 0) {
+    if (
+      (!task.moreImportantIds || task.moreImportantIds.length === 0) &&
+      (!task.fromIds || task.fromIds.length === 0)
+    ) {
       assignWeight(task.id, 0)
     }
   }
