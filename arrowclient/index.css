@@ -119,8 +119,8 @@ body {
 #timeSlider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    background: #d36e70;
     width: 0.6rem;
     height: 0.6rem;
     border-radius: 50%;
+    @apply bg-neutral-400;
 }

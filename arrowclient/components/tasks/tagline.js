@@ -58,7 +58,7 @@ export default (givenTask, direction) => {
   }
 
   return html`<div class="text-xs max-h-60 flex overflow-y-auto">
-    ${mainTasks.length
+    ${()=>mainTasks.length
       ? html`<div class="flex gap-2 flex-col w-1/2">
           ${() =>
             assignedIds?.map((collaboratorId) => {
