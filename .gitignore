@@ -7,7 +7,6 @@ data/
 .history/
 .vscode/settings.json
 config.js
-*.sh
 *.icloud
 d111ocker-coe.yaml
 .gitignore

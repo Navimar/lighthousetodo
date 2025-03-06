@@ -44,77 +44,71 @@ export default (givenTask, direction) => {
   if (direction == "to") assignedIds = [assignedIds]
 
   const sortTasksByName = (a, b) => a.name.localeCompare(b.name)
+
+  // Объединение в нужном порядке
   notReadyTasks.sort(sortTasksByName)
   notReadyFutureTasks.sort(sortTasksByName)
   readyTasks.sort(sortTasksByName)
+  const mainTasks = [...notReadyTasks, ...notReadyFutureTasks, ...readyTasks]
+
   importantTasks.sort(sortTasksByName)
 
-  return html`<div class="text-sm empty:hidden flex flex-wrap gap-1 tagLine max-h-32 overflow-y-auto"
-    >${() =>
-      assignedIds?.map((collaboratorId) => {
-        if (
-          (direction == "from" && collaboratorId != givenTask.assignedBy && collaboratorId != reData.user.id) ||
-          (direction == "to" && collaboratorId != reData.user.id)
-        ) {
-          let theCollaborator = reData.collaborators.find((cb) => cb.id === collaboratorId)
-          return html`<div
-            class="text-neutral-700 dark:text-neutral-350 bg-alternative-200 dark:bg-alternative-700 px-2 m-0.5 border border-neutral-200 dark:border-neutral-700 rounded-lg"
-            ><div class="flex h-full break-word items-center">${theCollaborator?.name || collaboratorId}</div></div
-          >`
-        }
-      })}${() =>
-      notReadyTasks.map((task) => {
-        let cornerbox = ""
-        if (task.toIds?.length && direction == "to") cornerbox = "corner-box-bottom-right"
-        if (task.fromIds?.length && direction == "from") cornerbox = "corner-box-top-left"
-        return html`<div
-          @click="${(e) => {
-            selectTaskById(task.id)
-            clickPos(e)
-            e.stopPropagation()
-          }}"
-          class="${cornerbox} text-neutral-700 dark:text-neutral-350 m-0.5 inline-block align-middle rounded-lg px-2 bg-neutral-200 dark:bg-neutral-800">
-          <div class="flex h-full items-center"
-            ><div class="p-1 break-word">${task.name}</div>${() => taskplate(task, "text-xs p-0.5")}</div
-          ></div
-        >`
-      })}${() =>
-      notReadyFutureTasks.map((task) => {
-        return html`<div
-          @click="${(e) => {
-            selectTaskById(task.id)
-            clickPos(e)
-            e.stopPropagation()
-          }}"
-          class="text-neutral-700 dark:text-neutral-350 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block align-middle rounded-lg px-2 bg-white dark:bg-black">
-          <div class="flex  h-full items-center"
-            ><div class="p-1 break-word">${task.name}</div>${() => taskplate(task, "text-xs p-0.5")}</div
-          ></div
-        >`
-      })}${() =>
-      readyTasks.map((task) => {
-        return html`<div
-          @click="${(e) => {
-            selectTaskById(task.id)
-            clickPos(e)
-            e.stopPropagation()
-          }}"
-          class="text-neutral-400 dark:text-neutral-500 border-neutral-200 dark:border-neutral-700 border m-0.5 inline-block rounded-lg px-2">
-          <div class="p-1 break-word">${task.name}</div></div
-        >`
-      })}${() =>
-      importantTasks.map((task) => {
-        return html`<div
-          @click="${(e) => {
-            selectTaskById(task.id)
-            clickPos(e)
-            e.stopPropagation()
-          }}"
-          class="text-neutral-700 dark:text-neutral-350 border border-gray-500 dark:border-gray-600 bg-neutral-200 dark:bg-neutral-800 m-0.5 inline-block align-middle rounded-lg px-2">
-          <div class="flex h-full items-center"
-            ><div class="p-1 break-word">${task.name}</div>${() => taskplate(task, "text-xs p-0.5")}</div
-          ></div
-        >`
-      })}</div
-  >`
+  if (!mainTasks.length && !importantTasks.length) {
+    return html``
+  }
+
+  return html`<div class="text-xs max-h-60 flex overflow-y-auto">
+    ${mainTasks.length
+      ? html`<div class="flex gap-2 flex-col w-1/2">
+          ${() =>
+            assignedIds?.map((collaboratorId) => {
+              if (
+                (direction == "from" && collaboratorId != givenTask.assignedBy && collaboratorId != reData.user.id) ||
+                (direction == "to" && collaboratorId != reData.user.id)
+              ) {
+                let theCollaborator = reData.collaborators.find((cb) => cb.id === collaboratorId)
+                return html`<div
+                  class="text-neutral-700 dark:text-neutral-350 px-3 py-2 mx-1 inline-block align-middle rounded-lg bg-neutral-200 dark:bg-neutral-800">
+                  <div class="flex h-full break-word items-center">${theCollaborator?.name || collaboratorId}</div></div
+                >`
+              }
+            })}
+          ${() =>
+            mainTasks.map((task) => {
+              let cornerbox = ""
+              if (task.toIds?.length && direction == "to") cornerbox = "corner-box-bottom-right"
+              if (task.fromIds?.length && direction == "from") cornerbox = "corner-box-top-left"
+              return html`<div
+                @click="${(e) => {
+                  selectTaskById(task.id)
+                  clickPos(e)
+                  e.stopPropagation()
+                }}"
+                class="${cornerbox} text-neutral-700 dark:text-neutral-350 px-3 py-1 mx-1 inline-block align-middle rounded-lg border border-neutral-200 dark:border-neutral-600 bg-neutral-200 dark:bg-neutral-800">
+                <div class="flex h-full items-center"
+                  ><div class="break-word">${task.name}</div>${() => taskplate(task, "text-xxs ml-auto")}</div
+                ></div
+              >`
+            })}
+        </div>`
+      : ""}
+    ${importantTasks.length
+      ? html`<div class="flex gap-2 flex-col w-1/2">
+          ${() =>
+            importantTasks.map((task) => {
+              return html`<div
+                @click="${(e) => {
+                  selectTaskById(task.id)
+                  clickPos(e)
+                  e.stopPropagation()
+                }}"
+                class="text-neutral-700 dark:text-neutral-350 px-3 py-1 mx-1 inline-block align-middle rounded-lg border border-neutral-200 dark:border-neutral-600">
+                <div class="flex h-full items-center"
+                  ><div class="break-word">${task.name}</div>${() => taskplate(task, "text-xxs ml-auto")}</div
+                ></div
+              >`
+            })}
+        </div>`
+      : ""}
+  </div>`
 }

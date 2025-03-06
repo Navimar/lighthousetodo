@@ -54,6 +54,7 @@ input:checked + .checkmark::after {
 input {
   font-family: "Oswald", sans-serif;
   letter-spacing: 0.1em;
+  color-scheme: light dark;
 }
 
 .fontmono {
@@ -113,4 +114,13 @@ body {
 
 .break-word {
   word-break: break-word;
+}
+
+#timeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    background: #d36e70;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
 }
