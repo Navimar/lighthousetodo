@@ -24,6 +24,7 @@
     "vite": "^5.2.10"
   },
   "devDependencies": {
+    "prettier": "^3.5.3",
     "autoprefixer": "^10.4.15",
     "esbuild": "^0.25.0",
     "postcss": "^8.5.3",

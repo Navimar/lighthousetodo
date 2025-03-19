@@ -64,24 +64,26 @@ const calculateTaskWeights = () => {
   const weights = new Map()
 
   const assignWeight = (taskId, weight, visited = new Set()) => {
-    if (visited.has(taskId)) return
+    const task = getObjectById(taskId)
+    task.cycle = false
+    if (visited.has(taskId)) {
+      task.cycle = true
+      return
+    }
 
     visited.add(taskId)
-    const task = getObjectById(taskId)
 
     const isFuture = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm").isAfter(dayjs())
-    const isPaused = task.pause
-    const isReady = task.ready
 
     const currentWeight = weights.get(taskId)
     if (currentWeight === undefined || weight > currentWeight) {
       weights.set(taskId, weight)
 
       for (const id of task.lessImportantIds || []) {
-        assignWeight(id, isFuture || isPaused || isReady ? weight : weight + 1, new Set(visited))
+        assignWeight(id, isFuture || task.pause || task.ready || task.blocked ? weight : weight + 1, new Set(visited))
       }
       for (const id of task.toIds || []) {
-        assignWeight(id, isFuture || isPaused || isReady ? weight : weight + 1, new Set(visited))
+        assignWeight(id, isFuture || task.pause || task.ready || task.blocked ? weight : weight + 1, new Set(visited))
       }
     }
   }
@@ -156,13 +158,10 @@ export default (arrToSort = reData.visibleTasks) => {
     result = sortByWeight(a, b, weights)
     if (result !== 0) return result
 
-    // result = sortByMoreImportantIdsLength(a, b)
-    // if (result !== 0) return result
-
-    result = sortByLessImportantIdsLength(a, b)
+    result = sortByReadyPercentage(a, b)
     if (result !== 0) return result
 
-    result = sortByReadyPercentage(a, b)
+    result = sortByLessImportantIdsLength(a, b)
     if (result !== 0) return result
 
     return b.timestamp - a.timestamp

@@ -198,7 +198,6 @@ export default (m) => {
         theTask.moreImportantIds.push(reData.selectedScribe)
         changedTasks.add(theTask)
       }
-      // ============================================================
     }
 
     changedTasks.add(thisTask)
@@ -275,6 +274,15 @@ export default (m) => {
       }
       thisTask.ready = false
     }
+
+    // проверяем blocked
+
+    thisTask.toIds.forEach((id) => {
+      let dependentTask = getObjectById(id)
+      if (dependentTask) {
+        dependentTask.blocked = dependentTask.fromIds.some((fromId) => !getObjectById(fromId)?.ready)
+      }
+    })
 
     // удаляем дубликаты
     changedTasks = Array.from(changedTasks)

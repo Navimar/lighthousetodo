@@ -27,7 +27,7 @@ import "dayjs/locale/ru" // Импорт русской локали
 import localizedFormat from "dayjs/plugin/localizedFormat" // Плагин для локализованного форматирования
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore"
-import { makevisibleIntentions } from "./logic/makevisible.js"
+
 dayjs.extend(isSameOrBefore)
 dayjs.extend(customParseFormat)
 dayjs.extend(localizedFormat)
@@ -80,7 +80,6 @@ window.addEventListener("load", function () {
   data.pendingRequests = getLocalStorageItem("pendingRequests") || []
 
   makevisible()
-  makevisibleIntentions()
   inputSocket()
 
   reData.currentTime.timerStarted = getLocalStorageItem("timer") || "00:00"

@@ -75,13 +75,13 @@ let renderTask = (task, index) => {
         clickPos(e)
       }}"
       class="flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg overflow dark:text-white"
-      >${() => tagLine(task, "from")}<div class="ml-2 flex justify-between gap-3"
+      ><div class="ml-2 flex justify-between gap-3"
         ><div class="break-word"
           >${() => task.name}${() => {
             if (task.note && task.note.length > 0) return " 📝"
           }}</div
         ><div class="flex gap-3">${() => taskPlate(task, "p-1")}</div></div
-      >${() => tagLine(task, "to")}</div
+      ></div
     >`
   }
 }

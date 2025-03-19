@@ -71,7 +71,7 @@ export default (task) =>
         min="0"
         max="1439"
         step="15"
-        class="slider bg-neutral-400 align-top dark:bg-neutral-700 outline-none drop-shadow-none shadow-none h-1 rounded-full w-full appearance-none cursor-pointer "
+        class="slider bg-neutral-150 align-top dark:bg-neutral-700 outline-none drop-shadow-none shadow-none h-1 rounded-full w-full appearance-none cursor-pointer "
         @input="${(e) => updateSliderLabel(e)}" />
     </div>
     <div class="w-full fontmono pl-[0.9rem] pr-[0.9rem]  flex justify-between text-xs dark:text-neutral-700 text-black">

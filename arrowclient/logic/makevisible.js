@@ -10,40 +10,41 @@ import { safeSetLocalStorageItem } from "~/logic/util.js"
 
 dayjs.extend(isSameOrAfter)
 
-const updateVisibleTasks = (newVisibleTasks) => {
-  // Создаем Map для быстрого поиска задач в старом массиве по их id: { id -> индекс }
-  const oldTasksMap = new Map(reData.visibleTasks.map((task, index) => [task.id, index]))
+// const updateVisibleTasks = (newVisibleTasks) => {
+//   // Создаем Map для быстрого поиска задач в старом массиве по их id: { id -> индекс }
+//   const oldTasksMap = new Map(reData.visibleTasks.map((task, index) => [task.id, index]))
 
-  // В процессе прохода по newVisibleTasks мы:
-  // - обновим уже существующие задачи
-  // - добавим новые задачи
-  // После чего, удалим лишние задачи.
+//   // В процессе прохода по newVisibleTasks мы:
+//   // - обновим уже существующие задачи
+//   // - добавим новые задачи
+//   // После чего, удалим лишние задачи.
 
-  for (let task of newVisibleTasks) {
-    const oldIndex = oldTasksMap.get(task.id)
-    if (oldIndex !== undefined) {
-      // Задача уже есть в visibleTasks — обновляем её данные
-      Object.assign(reData.visibleTasks[oldIndex], task)
-      // Удаляем её из oldTasksMap, чтобы потом не считать её "лишней"
-      oldTasksMap.delete(task.id)
-    } else {
-      // Задачи нет в старом массиве — добавляем её
-      reData.visibleTasks.push(task)
-    }
-  }
+//   for (let task of newVisibleTasks) {
+//     const oldIndex = oldTasksMap.get(task.id)
+//     if (oldIndex !== undefined) {
+//       // Задача уже есть в visibleTasks — обновляем её данные
+//       Object.assign(reData.visibleTasks[oldIndex], task)
+//       // Удаляем её из oldTasksMap, чтобы потом не считать её "лишней"
+//       oldTasksMap.delete(task.id)
+//     } else {
+//       // Задачи нет в старом массиве — добавляем её
+//       reData.visibleTasks.push(task)
+//     }
+//   }
 
-  // Теперь в oldTasksMap остались только те задачи, которые нет в newVisibleTasks.
-  // Их нужно удалить.
-  // Получаем индексы таких задач:
-  const indicesToRemove = Array.from(oldTasksMap.values())
-  // Сортируем индексы по убыванию, чтобы удалять с конца массива (так эффективнее)
-  indicesToRemove.sort((a, b) => b - a)
+//   // Теперь в oldTasksMap остались только те задачи, которые нет в newVisibleTasks.
+//   // Их нужно удалить.
+//   // Получаем индексы таких задач:
+//   const indicesToRemove = Array.from(oldTasksMap.values())
+//   // Сортируем индексы по убыванию, чтобы удалять с конца массива (так эффективнее)
+//   indicesToRemove.sort((a, b) => b - a)
 
-  // Удаляем лишние задачи, двигаясь от больших индексов к меньшим:
-  for (let i of indicesToRemove) {
-    reData.visibleTasks.splice(i, 1)
-  }
-}
+//   // Удаляем лишние задачи, двигаясь от больших индексов к меньшим:
+//   for (let i of indicesToRemove) {
+//     reData.visibleTasks.splice(i, 1)
+//   }
+// }
+
 const areAllFromIdsReady = (task) => {
   if (!task?.fromIds?.length) return true
   for (let id of task.fromIds) {
@@ -53,28 +54,28 @@ const areAllFromIdsReady = (task) => {
   return true
 }
 
-export const makevisibleIntentions = () => {
-  reData.intentions = []
-  for (let task of data.tasks) {
-    if (!task.ready && task.intention) {
-      reData.intentions.push(task)
-    }
-  }
+// export const makevisibleIntentions = () => {
+//   reData.intentions = []
+//   for (let task of data.tasks) {
+//     if (!task.ready && task.intention) {
+//       reData.intentions.push(task)
+//     }
+//   }
 
-  reData.intentions.sort((a, b) => a.intentionPriority - b.intentionPriority)
+//   reData.intentions.sort((a, b) => a.intentionPriority - b.intentionPriority)
 
-  if (reData.intentions && reData.intentions[0]?.intentionPriority < 0.0000001) {
-    let changedTasks = []
-    for (let e in reData.intentions) {
-      let t = getObjectById(reData.intentions[e].id)
-      t.intentionPriority = 1000000 + (1000000 * e) / reData.intentions.length
-      reData.intentions[e].intentionPriority = t.intentionPriority
-      changedTasks.push(t)
-    }
-    safeSetLocalStorageItem("tasks", data.tasks)
-    sendTasksData(changedTasks)
-  }
-}
+//   if (reData.intentions && reData.intentions[0]?.intentionPriority < 0.0000001) {
+//     let changedTasks = []
+//     for (let e in reData.intentions) {
+//       let t = getObjectById(reData.intentions[e].id)
+//       t.intentionPriority = 1000000 + (1000000 * e) / reData.intentions.length
+//       reData.intentions[e].intentionPriority = t.intentionPriority
+//       changedTasks.push(t)
+//     }
+//     safeSetLocalStorageItem("tasks", data.tasks)
+//     sendTasksData(changedTasks)
+//   }
+// }
 
 export const makevisible = () => {
   performance.start("makevisible")
