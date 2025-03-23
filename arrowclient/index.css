@@ -72,8 +72,11 @@ input:checked + .checkmark::after {
 
 #edit div:first-child {
   font-size: 1.5rem;
-  @apply pb-4;
-  @apply text-center;
+  @apply text-center px-2;
+}
+
+#edit div:first-child:not(:only-child) {
+  @apply mb-2;
 }
 
 #fromEdit:empty::before {

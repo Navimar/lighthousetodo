@@ -55,7 +55,7 @@ let renderTask = (task, index) => {
           contenteditable="true"
           role="textbox"
           aria-multiline="true"
-          ><div>${task.name}</div><div>${task.note}</div></div
+          ><div>${task.name}</div>${task.note && html`<div>${task.note}</div>`}</div
         >${() => addConnection(task, "to")} ${() => tagLine(task, "to")}</div
       >
     </div>`
