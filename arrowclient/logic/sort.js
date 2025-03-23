@@ -43,13 +43,15 @@ function calculateReadyPercentage(task) {
     const depId = dep.id || Math.random() // что-нибудь в качестве id
 
     // Берём только логи, которые >= creationTimestamp
-    const relevantLogs = (dep.readyLogs || [])
-      .filter((log) => log && !isNaN(log.timestamp) && log.timestamp >= creationTimestamp)
-      .map((log) => ({
-        timestamp: log.timestamp,
-        depId,
-        status: !!log.status, // приводим к boolean
-      }))
+    const relevantLogs = Array.isArray(dep.readyLogs)
+      ? dep.readyLogs
+          .filter((log) => log && !isNaN(log.timestamp) && log.timestamp >= creationTimestamp)
+          .map((log) => ({
+            timestamp: log.timestamp,
+            depId,
+            status: !!log.status, // приводим к boolean
+          }))
+      : []
 
     // Если после фильтра ничего не осталось, зависимость считается not ready весь период
     if (relevantLogs.length === 0) {
