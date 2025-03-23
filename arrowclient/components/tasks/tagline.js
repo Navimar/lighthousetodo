@@ -82,11 +82,11 @@ export default (givenTask, direction) => {
     return html``
   }
 
-  return html`<div class="text-xs max-h-60 flex overflow-y-auto">
+  return html`<div class="text-xs flex ">
     ${() => {
       const bg =
         direction == "to" ? "bg-opens dark:bg-opens-dark pb-2" : "bg-blocked dark:bg-blocked-dark pt-2 justify-end"
-      return html`<div class="flex gap-2 flex-col ${bg} w-1/2">
+      return html`<div class="max-h-60 overflow-y-auto flex gap-2 flex-col ${bg} w-1/2">
         ${() =>
           mainTasks.map((task) => {
             let cornerbox = ""
@@ -120,7 +120,7 @@ export default (givenTask, direction) => {
         direction == "to"
           ? "bg-lessimportant dark:bg-lessimportant-dark pb-2"
           : "bg-moreimportant dark:bg-moreimportant-dark pt-2 justify-end"
-      return html`<div class="flex gap-2 flex-col ${bg} w-1/2">
+      return html`<div class="max-h-60 overflow-y-auto flex gap-2 flex-col ${bg} w-1/2">
         ${() => {
           return importantTasks.map((task) => {
             let cornerbox = ""
