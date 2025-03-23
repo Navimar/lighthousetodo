@@ -1,5 +1,4 @@
 import { html } from "~/arrow-js/index.js"
-import css from "~/css.js"
 import reData from "~/logic/reactive.js"
 import saveTask from "~/logic/savetask.js"
 import { updatePauseReadyButton, updateKairosButton } from "~/logic/manipulate.js"
@@ -10,16 +9,6 @@ import audio from "~/logic/audio.js"
 
 let checkedPause = (task) => {
   if (task.pause) return "checked"
-  else return ""
-}
-
-let checkedIntention = (task) => {
-  if (task.intention) return "checked"
-  else return ""
-}
-
-let checkedKairos = (task) => {
-  if (task.urgency == "kairos" || task.importance == "kairos" || task.difficulty == "kairos") return "checked"
   else return ""
 }
 
@@ -51,20 +40,8 @@ function handleReadyCheckboxChange(event) {
 }
 
 export default (task) =>
-  html`<div class="grid grid-cols-4 gap-3">
-    <button class="${css.button}" @click="${() => (reData.selectedScribe = false)}">Закрыть</button>
-
-    <div>
-      <input
-        class="appearance-none peer sr-only"
-        type="checkbox"
-        id="intentionCheckbox"
-        @change="${(event) => {
-          showSaveButtonHidePause()
-        }}"
-        ${checkedIntention(task)} />
-      <label class="${css.button} whitespace-nowrap" for="intentionCheckbox">Намерение</label>
-    </div>
+  html`<div class="grid grid-cols-3 gap-3">
+    <button class="button-gray" @click="${() => (reData.selectedScribe = false)}">Закрыть</button>
 
     <div>
       <input
@@ -72,12 +49,12 @@ export default (task) =>
         type="checkbox"
         id="readyCheckbox"
         @change="${handleReadyCheckboxChange}" />
-      <label class="${css.button} whitespace-nowrap" for="readyCheckbox">Готово</label>
+      <label class="button-gray whitespace-nowrap" for="readyCheckbox">Готово</label>
     </div>
     <button
       style="display:none"
       id="savebutton"
-      class="${css.button}"
+      class="button-gray"
       @click="${() => {
         saveButton()
       }}"
@@ -93,7 +70,7 @@ export default (task) =>
           saveButton()
         }
       }}" />
-    <label id="pauseCheckboxLabel" class="${css.button} whitespace-nowrap" for="pauseCheckbox">Потом</label>
+    <label id="pauseCheckboxLabel" class="button-gray whitespace-nowrap" for="pauseCheckbox">Потом</label>
   </div>`
 //  <div>
 //     <input
@@ -104,5 +81,5 @@ export default (task) =>
 //     saveButton()
 //   }}"
 //       ${task.postpone ? "checked" : ""} />
-//     <label class="${css.button} whitespace-nowrap" for="postponeCheckbox">Отложить</label>
+//     <label class="button-gray whitespace-nowrap" for="postponeCheckbox">Отложить</label>
 //   </div>

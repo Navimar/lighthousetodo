@@ -16,17 +16,9 @@ module.exports = {
         },
         accent: {
           DEFAULT: "#d36e70",
-          dark: "#d36e70",
-          darker: "#732424",
-          light: "#e89292", // Это приближенный светлый оттенок
-          lighter: "#f5a7a7", // Еще более светлый оттенок
         },
         compliment: {
           DEFAULT: "#6ED3D1",
-          dark: "#6ED3D1",
-          darker: "#247373",
-          light: "#92e8e8", // Это приближенный светлый оттенок
-          lighter: "#a7f5f5", // Еще более светлый оттенок
         },
         alternative: {
           900: "#201020",
@@ -34,6 +26,22 @@ module.exports = {
           200: "#f6e6fc",
           100: "#f7f0fa",
           DEFAULT: "#150515",
+        },
+        blocked: {
+          DEFAULT: "#fdf5f5", // светлая тема
+          dark: "#2b1a1a", // тёмный с красноватым оттенком
+        },
+        moreimportant: {
+          DEFAULT: "#f0fafb",
+          dark: "#142324", // тёмный голубовато-зелёный
+        },
+        opens: {
+          DEFAULT: "#f7fdf0",
+          dark: "#1d2414", // тёмный зелёно-жёлтый
+        },
+        lessimportant: {
+          DEFAULT: "#f5fdf9",
+          dark: "#13211b", // тёмный зелёно-бирюзовый
         },
       },
       spacing: {

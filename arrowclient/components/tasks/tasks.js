@@ -2,8 +2,6 @@ import timeSlider from "~/components/tasks/timeslider.js"
 import tagLine from "~/components/tasks/tagline.js"
 import reData from "~/logic/reactive.js"
 import dateInput from "~/components/tasks/dateinput.js"
-import radio from "~/components/tasks/priorityRadio.js"
-import linkDivs from "~/components/tasks/linkdivs.js"
 import controlButtons from "~/components/tasks/controlButtons.js"
 import taskPlate from "~/components/tasks/taskplate.js"
 import { selectTaskById, showSaveButtonHidePause } from "~/logic/manipulate.js"
@@ -11,8 +9,7 @@ import { clickPos } from "~/logic/util.js"
 import data from "~/logic/data.js"
 import performance from "~/logic/performance.js"
 import sort from "~/logic/sort.js"
-
-import css from "~/css.js"
+import addConnection from "~/components/tasks/addConnection.js"
 
 import { html } from "~/arrow-js/index.js"
 import dayjs from "dayjs"
@@ -47,26 +44,21 @@ let renderTask = (task, index) => {
     // Редактируемый
     return html`<div
       id="selectedtask"
-      class="-mx-3 z-[45] flex min-h-screen flex-col gap-5 bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white"
-      ><div class="flex flex-col gap-3">
-        ${controlButtons(task)}
-        ${
-          ""
-          //radio(task)
-        }
-      </div>
-      ${dateInput(task)} ${timeSlider(task)} ${linkDivs(task)}<div class="flex flex-col gap-3 mx-3"
-        >${() => tagLine(task, "from")}<div
+      class="-mx-3 z-[45] flex min-h-screen flex-col bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white">
+      ${dateInput(task)} ${timeSlider(task)}
+      <div class="mt-16"> ${controlButtons(task)}</div>
+      <div class="flex my-16 flex-col "
+        >${() => tagLine(task, "from")} ${() => addConnection(task, "from")}<div
           id="edit"
           @input="${showSaveButtonHidePause}"
-          class="ml-2 pr-5 w-full min-h-full whitespace-pre-wrap focus:outline-none"
+          class="mx-2 py-16 min-h-full whitespace-pre-wrap focus:outline-none"
           contenteditable="true"
           role="textbox"
           aria-multiline="true"
           ><div>${task.name}</div><div>${task.note}</div></div
-        >${() => tagLine(task, "to")}</div
-      >${() => renderTimeToNextTask(index)}</div
-    >`
+        >${() => addConnection(task, "to")} ${() => tagLine(task, "to")}</div
+      >
+    </div>`
   } else {
     // Нередактируемый
     return html`<div
@@ -74,44 +66,14 @@ let renderTask = (task, index) => {
         selectTaskById(task.id)
         clickPos(e)
       }}"
-      class="flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg overflow dark:text-white"
+      class="flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-950 p-3 rounded-lg overflow dark:text-white"
       ><div class="ml-2 flex justify-between gap-3"
         ><div class="break-word"
           >${() => task.name}${() => {
             if (task.note && task.note.length > 0) return " 📝"
           }}</div
-        ><div class="flex gap-3">${() => taskPlate(task, "p-1")}</div></div
+        ><div class="flex items-center gap-3">${() => taskPlate(task, "px-1")}</div></div
       ></div
     >`
   }
-}
-
-let renderTimeToNextTask = (index) => {
-  let nextTaskIndex = index + 1
-  while (nextTaskIndex < reData.visibleTasks.length) {
-    let nextTask = reData.visibleTasks[nextTaskIndex]
-    if (nextTask.urgency === "meeting" || nextTask.urgency === "frame") {
-      let now = dayjs(reData.currentTime.clock, "HH:mm")
-      let nextTaskTime = dayjs(`${nextTask.date}T${nextTask.time}`, "YYYY-MM-DDTHH:mm")
-      let difference = nextTaskTime.diff(now)
-
-      let minus = difference < 0 ? "-" : ""
-      difference = Math.abs(difference)
-      let hours = String(Math.floor(difference / (1000 * 60 * 60))).padStart(2, "0")
-      let minutes = String(Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, "0")
-
-      return html`<div
-        class="flex flex-col gap-3 break-words box-content  border-neutral-100 dark:border-neutral-900 mt-auto px-3 rounded-lg overflow dark:text-white">
-        <div class="flex justify-center items-center my-auto">
-          <div class="w-full my-auto"></div>
-          <div
-            class="h-fit border-2 border-white dark:border-black text-center uppercase whitespace-nowrap fontaccent text-sm rounded-sm p-1 text-neutral-600 dark:text-neutral-350">
-            ${minus}${hours}:${minutes}
-          </div>
-        </div>
-      </div> `
-    }
-    nextTaskIndex++
-  }
-  return
 }

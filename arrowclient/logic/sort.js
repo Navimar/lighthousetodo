@@ -4,59 +4,151 @@ import performance from "~/logic/performance.js"
 import { getObjectById } from "~/logic/util.js"
 import data from "~/logic/data.js"
 
-const calculateReadyPercentage = (task) => {
+function calculateReadyPercentage(task) {
+  // 1. Проверяем, есть ли зависимости
   if (!task.fromIds || task.fromIds.length === 0) {
     return 100
   }
 
-  const fromTasks = task.fromIds.map((id) => getObjectById(id)).filter((t) => t)
+  // 2. Получаем реальные объекты зависимостей
+  const fromTasks = task.fromIds.map((id) => getObjectById(id)).filter(Boolean)
 
   if (fromTasks.length === 0) {
     return 100
   }
 
+  // 3. Берём timestamp начала (creationTimestamp)
   const creationTimestamp = task.readyLogs?.[0]?.timestamp
   if (!creationTimestamp || isNaN(creationTimestamp)) {
     return 100
   }
 
+  // 4. Текущее время
   const endTime = dayjs().valueOf()
   if (!endTime || isNaN(endTime)) {
     throw new Error("Некорректное время завершения")
   }
 
-  let notReadyTime = 0
-
-  for (const currentTask of fromTasks) {
-    let lastNotReadyTimestamp = null
-    for (const log of currentTask.readyLogs || []) {
-      if (!log || isNaN(log.timestamp)) {
-        continue
-      }
-
-      if (!log.status) {
-        if (lastNotReadyTimestamp === null) {
-          lastNotReadyTimestamp = log.timestamp
-        }
-      } else if (lastNotReadyTimestamp !== null) {
-        notReadyTime += log.timestamp - lastNotReadyTimestamp
-        lastNotReadyTimestamp = null
-      }
-    }
-    if (lastNotReadyTimestamp !== null) {
-      notReadyTime += endTime - lastNotReadyTimestamp
-    }
-  }
-
-  const totalDuration = endTime - creationTimestamp
-  if (totalDuration <= 0) {
+  // Если вдруг время "сейчас" раньше, чем время создания - вернём 100%
+  if (endTime <= creationTimestamp) {
     return 100
   }
 
-  const readyTime = totalDuration - notReadyTime
-  const readyPercent = (readyTime / totalDuration) * 100
+  // 5. Собираем "события" для всех зависимостей
+  //    Каждое событие: { timestamp, depId, status }
+  //    status: true (готов) / false (не готов)
+  const events = []
 
+  for (const dep of fromTasks) {
+    const depId = dep.id || Math.random() // что-нибудь в качестве id
+
+    // Берём только логи, которые >= creationTimestamp
+    const relevantLogs = (dep.readyLogs || [])
+      .filter((log) => log && !isNaN(log.timestamp) && log.timestamp >= creationTimestamp)
+      .map((log) => ({
+        timestamp: log.timestamp,
+        depId,
+        status: !!log.status, // приводим к boolean
+      }))
+
+    // Если после фильтра ничего не осталось, зависимость считается not ready весь период
+    if (relevantLogs.length === 0) {
+      // Тогда мы не добавляем никаких событий, просто будем иметь в виду,
+      // что данная зависимость будет всегда not ready (если так оставить).
+      // Но в нашем общем алгоритме нам нужно "уведомить" о том,
+      // что на момент creationTimestamp зависимость "не готова".
+      // Иначе мы не узнаем, что хотя бы одна зависимость постоянно не готова.
+      events.push({
+        timestamp: creationTimestamp,
+        depId,
+        status: false,
+      })
+      // И без финального события о "ready" зависимость дальше так и останется not ready
+      continue
+    }
+
+    // Если есть события, нужно добавить "стартовое" событие,
+    // которое говорит о статусе на момент creationTimestamp.
+    // Либо можно взять первый лог, если он начинается строго с creationTimestamp.
+    // Допустим, берём статус первого лога, но на момент creationTimestamp - "не готов".
+    // Честнее будет явно сказать: пока не поступил первый "true" - мы false
+    // Но это зависит от логики в ваших данных (иногда берут последний известный статус).
+    // Для простоты предполагаем, что мы "не знаем" и ставим false, пока не пришёл лог.
+    // Если в первый же лог придёт timestamp === creationTimestamp, тогда ниже мы увидим status.
+
+    // Сортируем логи по возрастанию времени
+    relevantLogs.sort((a, b) => a.timestamp - b.timestamp)
+
+    // Добавим "start event" = false, если первый лог не совпадает ровно с creationTimestamp
+    if (relevantLogs[0].timestamp > creationTimestamp) {
+      events.push({
+        timestamp: creationTimestamp,
+        depId,
+        status: false,
+      })
+    }
+
+    // Теперь добавим сами логи
+    events.push(...relevantLogs)
+  }
+
+  // 6. Сортируем все события вместе по времени
+  events.sort((a, b) => a.timestamp - b.timestamp)
+
+  // 7. Отслеживаем статус всех зависимостей после каждого события
+  //    Нам нужно знать количество "ready" зависимостей
+  const depStatuses = new Map() // depId -> boolean (текущий статус)
+  let currentlyAllReady = false
+  let lastTimestampAllReadyBegan = null
+
+  let totalReadyTime = 0
+
+  for (let i = 0; i < events.length; i++) {
+    const e = events[i]
+    const { timestamp, depId, status } = e
+
+    // Обновляем статус зависимости
+    depStatuses.set(depId, status)
+
+    // Проверяем, все ли готовы
+    const allReadyNow = areAllDepsReady(depStatuses, fromTasks)
+
+    // Если мы переходим из "не все готовы" в "все готовы" — отмечаем начало готового интервала
+    if (!currentlyAllReady && allReadyNow) {
+      currentlyAllReady = true
+      lastTimestampAllReadyBegan = timestamp
+    }
+    // Если мы переходим из "все готовы" в "не все готовы" — закрываем готовый интервал
+    else if (currentlyAllReady && !allReadyNow) {
+      currentlyAllReady = false
+      // Добавляем интервал [lastTimestampAllReadyBegan, e.timestamp)
+      totalReadyTime += timestamp - lastTimestampAllReadyBegan
+      lastTimestampAllReadyBegan = null
+    }
+  }
+
+  // 8. После прохода событий, если все всё ещё готовы, закрываем интервал на endTime
+  if (currentlyAllReady && lastTimestampAllReadyBegan != null) {
+    totalReadyTime += endTime - lastTimestampAllReadyBegan
+  }
+
+  // 9. Считаем итоговый процент
+  const totalDuration = endTime - creationTimestamp
+  const readyPercent = (totalReadyTime / totalDuration) * 100
+
+  // 10. Возвращаем результат
   return readyPercent >= 0 ? readyPercent : 0
+}
+
+// Вспомогательная функция — проверяет, все ли зависимости есть в Map и в статусе true
+function areAllDepsReady(depStatuses, fromTasks) {
+  for (const dep of fromTasks) {
+    const st = depStatuses.get(dep.id)
+    if (!st) {
+      return false // либо нет записи в Map, либо там false
+    }
+  }
+  return true
 }
 
 const calculateTaskWeights = () => {
@@ -162,6 +254,9 @@ export default (arrToSort = reData.visibleTasks) => {
     if (result !== 0) return result
 
     result = sortByLessImportantIdsLength(a, b)
+    if (result !== 0) return result
+
+    result = sortByMoreImportantIdsLength(a, b)
     if (result !== 0) return result
 
     return b.timestamp - a.timestamp

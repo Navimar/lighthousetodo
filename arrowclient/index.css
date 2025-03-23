@@ -51,7 +51,7 @@ input:checked + .checkmark::after {
   display: block;
 }
 
-input {
+.oswald {
   font-family: "Oswald", sans-serif;
   letter-spacing: 0.1em;
   color-scheme: light dark;
@@ -67,11 +67,12 @@ input {
 }
 
 #edit div:not(:first-child) {
-  @apply text-sm;
+  @apply text-sm px-2 sm:px-20;
 }
 
 #edit div:first-child {
   @apply pb-2;
+  @apply text-center;
 }
 
 #fromEdit:empty::before {
@@ -117,10 +118,23 @@ body {
 }
 
 #timeSlider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 0.6rem;
-    height: 0.6rem;
-    border-radius: 50%;
-    @apply bg-neutral-400;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  @apply bg-neutral-400;
+}
+
+.button-gray {
+  @apply oswald fontaccent uppercase text-base text-clip overflow-hidden p-1 text-black dark:text-neutral-100 bg-neutral-50 dark:bg-neutral-900 text-center block border-white dark:border-black rounded-none border-b-02rem peer-checked:border-b-02rem peer-checked:border-accent peer-checked:bg-neutral-50 dark:peer-checked:bg-neutral-900  dark:peer-checked:border-accent active:border-b-accent dark:active:border-b-accent active:border-b-accent dark:active:border-b-accent transition-colors duration-100;
+}
+.button-light {
+  @apply oswald fontaccent uppercase text-base text-clip overflow-hidden p-1 text-black dark:text-neutral-100 border-white dark:border-black rounded-none text-center inline-block border-b-02rem active:border-b-accent dark:active:border-b-accent  cursor-pointer;
+}
+.radio-gray {
+  @apply oswald whitespace-nowrap fontaccent uppercase text-base text-clip overflow-hidden w-full p-1 text-black dark:text-neutral-100 border-white dark:border-black border-b-02rem text-center block cursor-pointer bg-neutral-50 dark:bg-neutral-900 peer-checked:border-accent peer-checked:bg-neutral-50 dark:peer-checked:bg-neutral-900  dark:peer-checked:border-accent active:border-b-accent dark:active:border-b-accent active:border-b-accent dark:active:border-b-accent transition-colors duration-100;
+}
+radio-compliment {
+  @apply oswald whitespace-nowrap fontaccent uppercase text-base text-clip overflow-hidden w-full p-1 text-black dark:text-neutral-100 border-white dark:border-black border-b-02rem text-center block cursor-pointer bg-neutral-50 dark:bg-neutral-900 peer-checked:border-compliment peer-checked:bg-neutral-50 dark:peer-checked:bg-neutral-900 dark:peer-checked:border-compliment active:border-b-compliment dark:active:border-b-compliment transition-colors duration-100;
 }

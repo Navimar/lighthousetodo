@@ -3,16 +3,16 @@ import { NEWSCRIBETEXT } from "~/logic/const.js"
 import saveTask from "~/logic/savetask.js"
 import { clearSearch } from "~/logic/manipulate.js"
 import reData from "~/logic/reactive.js"
-import { getObjectByName } from "~/logic/util"
+import { getObjectByName } from "~/logic/util.js"
 import { makevisible } from "~/logic/makevisible.js"
 import audio from "~/logic/audio.js"
 import navigate from "~/logic/router.js"
 
 let plusbutton = () => {
   navigate("tasks")
-  saveTask("selectTaskByName")
+  saveTask()
   clearSearch()
-  let newScribe = getObjectByName(NEWSCRIBETEXT, "common")
+  let newScribe = getObjectByName(NEWSCRIBETEXT)
   reData.selectedScribe = newScribe.id
   makevisible()
   let editdiv = document.getElementById("edit")

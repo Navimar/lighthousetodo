@@ -5,7 +5,7 @@ import saveTask from "~/logic/savetask.js"
 import dayjs from "dayjs"
 
 export function selectTaskById(identifier) {
-  saveTask("selectTaskById")
+  saveTask()
   clearSearch()
   reData.selectedScribe = identifier
   makevisible()

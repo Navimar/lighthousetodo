@@ -5,7 +5,6 @@ import { loadData } from "~/logic/send.js"
 import reData from "~/logic/reactive.js"
 import { addCollaborationRequest } from "~/logic/collaborator.js"
 import data from "~/logic/data.js"
-import css from "/css.js"
 import navigate from "~/logic/router.js"
 
 const firebaseConfig = {
@@ -29,7 +28,7 @@ let collaboratorLink = () => {
 let collobaratorComponent = () => {
   return ""
   return html`
-    <button class="inline-block border-b-neutral-100 mr-2 ${css.button}" @click="${() => navigate("collaborators")}">
+    <button class="inline-block border-b-neutral-100 mr-2 button-gray" @click="${() => navigate("collaborators")}">
       Соисполнители
     </button>
   `
@@ -38,11 +37,11 @@ export let authentication = () => {
   if (reData.user?.name) {
     // if (reData.searchString !== "") return ""
     return html`
-      <div class="flex bg-neutral-100 fontmono dark:bg-neutral-900 dark:text-white p-2 text-sm ">
+      <div class="flex bg-neutral-100 fontmono dark:bg-neutral-950 dark:text-white p-2 text-sm ">
         <div class="self-center">👤 <span class="select-text">${() => reData.user.name}</span></div>
         <div class="ml-auto">
           ${() => collobaratorComponent()}
-          <button class="inline-block border-b-neutral-100 ${css.button}" @click="${() => logout()}"> Выйти </button>
+          <button class="inline-block border-b-neutral-100 button-gray" @click="${() => logout()}"> Выйти </button>
         </div>
       </div>
     `
@@ -50,8 +49,8 @@ export let authentication = () => {
     return html`
       <div
         class="fixed z-50 bgimg bg-white dark:bg-black w-full flex justify-center items-center h-screen top-0 left-0">
-        <div class="m-auto p-auto flex flex-col gap-3 bg-neutral-100 dark:bg-neutral-900 w-3/4 sm:w-1/3 ">
-          <button class="${css.button} m-3" @click="${() => signInWithGoogle()}"> Войти через Google </button>
+        <div class="m-auto p-auto flex flex-col gap-3 bg-neutral-100 dark:bg-neutral-950 w-3/4 sm:w-1/3 ">
+          <button class="button-gray m-3" @click="${() => signInWithGoogle()}"> Войти через Google </button>
         </div>
       </div>
     `
@@ -76,7 +75,7 @@ export let authentication = () => {
 //               id="regPassword"
 //               placeholder="Password"
 //               required />
-//             <input class="${css.button}" type="submit" value="Регистрация" />
+//             <input class="button-gray" type="submit" value="Регистрация" />
 //           </form>
 
 //           <form
@@ -98,7 +97,7 @@ export let authentication = () => {
 //               id="loginPassword"
 //               placeholder="Password"
 //               required />
-//             <input class="${css.button}" type="submit" value="Вход" />
+//             <input class="button-gray" type="submit" value="Вход" />
 //           </form>
 export const auth = getAuth()
 

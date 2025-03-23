@@ -1,12 +1,12 @@
 import { html } from "~/arrow-js/index.js"
 import dayjs from "dayjs"
-import css from "~/css.js"
+
 import reData from "~/logic/reactive.js"
 import { sendCollaboratorRequest, sendCollaboratorRemovalRequest } from "~/logic/send.js"
 
 export function controlButtons() {
-  return html`<button @click="${remove}" class="${css.button}">Удалить</button
-    ><button @click="${save}" class="${css.button}">Сохранить</button>`
+  return html`<button @click="${remove}" class="button-gray">Удалить</button
+    ><button @click="${save}" class="button-gray">Сохранить</button>`
 }
 
 let save = () => {

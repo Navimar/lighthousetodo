@@ -31,76 +31,17 @@ export default (m) => {
 
     // добываем массив строк из полей from и to
     // и получаем соответствующие ID
-    let fromEditIds = []
-    let toEditIds = []
+
     let assignedTo = [reData.user.id]
 
-    // устанавливаем намерение
-    let intentionCheckbox = document.getElementById("intentionCheckbox")
-    if (intentionCheckbox && intentionCheckbox.checked) {
-      thisTask.intention = true
-      if (!thisTask.intentionPriority)
-        thisTask.intentionPriority = (reData.intentions[0]?.intentionPriority || 2000000) / 2
-    } else {
-      thisTask.intention = false
-    }
+    // Grab the current task object
+    const reTask = reData.visibleTasks.find((t) => t.id === reData.selectedScribe)
 
-    let fromRole = thisTask.intention ? "common" : "kairos"
-
-    fromEdit.innerText
-      .trim()
-      .split("\n")
-      .filter((e) => e.trim() !== "" && e.trim() !== name)
-      .forEach((e) => {
-        e = e.trim()
-        let collaborator = getCollaboratorByName(e)
-        // Если найден сотрудник, добавляем его ID в assignedTo
-        if (collaborator) assignedTo.push(collaborator.id)
-        else {
-          fromEditIds.push(getObjectByName(e, fromRole).id)
-        }
-      })
-
-    let toRole = "intention"
-    toEdit.innerText
-      .trim()
-      .split("\n")
-      .filter((e) => e.trim() !== "" && e.trim() !== name)
-      .forEach((line) => {
-        let id = getObjectByName(line, toRole).id
-        if (!fromEditIds.includes(id)) {
-          toEditIds.push(id)
-        }
-      })
-
-    // === Новый блок для обработки moreImportant и lessImportant ===
-    let moreImportantEditIds = []
-    let lessImportantEditIds = []
-    const moreImportantEdit = document.getElementById("moreImportantEdit")
-    const lessImportantEdit = document.getElementById("lessImportantEdit")
-
-    if (moreImportantEdit) {
-      moreImportantEdit.innerText
-        .trim()
-        .split("\n")
-        .filter((e) => e.trim() !== "" && e.trim() !== name)
-        .forEach((e) => {
-          e = e.trim()
-          // Используем роль "moreImportant" – при необходимости измените её
-          moreImportantEditIds.push(getObjectByName(e, "common").id)
-        })
-    }
-    if (lessImportantEdit) {
-      lessImportantEdit.innerText
-        .trim()
-        .split("\n")
-        .filter((e) => e.trim() !== "" && e.trim() !== name)
-        .forEach((e) => {
-          e = e.trim()
-          // Используем роль "lessImportant" – при необходимости измените её
-          lessImportantEditIds.push(getObjectByName(e, "common").id)
-        })
-    }
+    // Instead of parsing from textareas, just use the IDs arrays directly on the task:
+    let fromEditIds = reTask.fromIds || []
+    let toEditIds = reTask.toIds || []
+    let moreImportantEditIds = reTask.moreImportantIds || []
+    let lessImportantEditIds = reTask.lessImportantIds || []
     // ===================================================================
 
     // добавляем дату и время из инпутов

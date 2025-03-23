@@ -5,7 +5,6 @@ import search from "./components/search.js"
 import plusbutton from "./components/plusbutton.js"
 import footer from "~/components/footer.js"
 import renderTasks from "./components/tasks/tasks.js"
-import renderIntention from "./components/tasks/intention.js"
 import pages from "./components/tasks/pages.js"
 
 import { renderCollabortors, renderCollaborationRequests } from "./components/collaborators/collaborators.js"
@@ -41,30 +40,6 @@ const render = html`
     >${authentication}${renderNodeCounter}${renderCalendar}${renderCollaborationRequests}${renderCollabortors}${renderTasks}${pages}</div
   >${footer()}${plusbutton}${() => online()}
 `
-
-document.addEventListener("keydown", function (event) {
-  if ((event.metaKey || event.ctrlKey) && event.key === "f") {
-    const searchInput = document.querySelector("#searchinput")
-
-    if (searchInput) {
-      event.preventDefault() // Отменяем стандартный поиск
-      window.scrollBy({ top: -50, behavior: "smooth" })
-      searchInput.focus()
-
-      // Добавляем желтый фон
-      searchInput.classList.add("bg-neutral-350")
-      searchInput.classList.remove("bg-neutral-100")
-      searchInput.classList.remove("dark:bg-neutral-900")
-
-      // Убираем фон через 1 сек
-      setTimeout(() => {
-        searchInput.classList.remove("bg-neutral-350")
-        searchInput.classList.add("bg-neutral-100")
-        searchInput.classList.add("dark:bg-neutral-900")
-      }, 1000)
-    }
-  }
-})
 
 window.addEventListener("load", function () {
   window.addEventListener("paste", function (e) {

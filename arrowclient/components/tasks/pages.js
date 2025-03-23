@@ -1,6 +1,5 @@
 import { html } from "~/arrow-js/index.js"
 import reData from "~/logic/reactive.js"
-import css from "~/css.js"
 import { makevisible } from "~/logic/makevisible.js"
 
 function scroll() {
@@ -17,10 +16,10 @@ export default () => {
   let hiddenNext = reData.currentPage === reData.totalPages ? "opacity-50 hidden" : ""
 
   return html`
-    <div class="bg-neutral-100 items-baseline  dark:bg-neutral-900 flex gap-3 justify-center p-2">
+    <div class="bg-neutral-100 items-baseline  dark:bg-neutral-950 flex gap-3 justify-center p-2">
 
      <button
-          class="${css.button} "
+          class="button-gray "
           @click="${() => {
             reData.currentPage = 1
             makevisible()
@@ -31,7 +30,7 @@ export default () => {
 
         <!-- Кнопка "Предыдущая страница" -->
         <button
-          class="${css.button} ${hiddenPrev}"
+          class="button-gray ${hiddenPrev}"
           @click="${() => {
             if (reData.currentPage > 1) {
               reData.currentPage--
@@ -50,7 +49,7 @@ export default () => {
 
         <!-- Кнопка "Следующая страница" -->
         <button
-          class="${css.button} ${hiddenNext}"
+          class="button-gray ${hiddenNext}"
           @click="${() => {
             if (reData.currentPage < reData.totalPages) {
               reData.currentPage++

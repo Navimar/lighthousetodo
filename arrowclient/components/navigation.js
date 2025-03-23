@@ -7,7 +7,7 @@ import { makevisible } from "~/logic/makevisible.js"
 
 export default () => {
   return html`
-    <div id="navigationmenu" class="bg-neutral-100 dark:bg-neutral-900 flex justify-center p-2">
+    <div id="navigationmenu" class="bg-neutral-100 dark:bg-neutral-950 flex justify-center p-2">
       <label class="flex items-center mr-2">
         <input
           type="radio"
@@ -18,7 +18,7 @@ export default () => {
             navigate("intentions")
             clickPos(e)
           }}" />
-        <span class="${css.button} whitespace-nowrap">Намерения</span>
+        <span class="button-gray whitespace-nowrap">Намерения</span>
       </label>
       <label class="flex items-center mr-2">
         <input
@@ -32,7 +32,7 @@ export default () => {
 
             clickPos(e)
           }}" />
-        <span class="${css.button} whitespace-nowrap">Задачи</span>
+        <span class="button-gray whitespace-nowrap">Задачи</span>
       </label>
     </div>
   `

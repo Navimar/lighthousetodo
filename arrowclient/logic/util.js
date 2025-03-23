@@ -28,17 +28,19 @@ export const getObjectById = (id) => {
   throw `getObjectById не нашел ${id} `
 }
 
-export const getObjectByName = (name, role) => {
-  if (nameCache[name]?.name === name) {
-    return nameCache[name]
+export const getObjectByName = (name) => {
+  const lowerName = name.toLowerCase()
+
+  if (nameCache[lowerName]?.name.toLowerCase() === lowerName) {
+    return nameCache[lowerName]
   }
 
-  const foundTask = data.tasks.find((task) => task.name === name)
+  const foundTask = data.tasks.find((task) => task.name.toLowerCase() === lowerName)
   if (foundTask) {
-    nameCache[name] = foundTask
+    nameCache[lowerName] = foundTask
     return foundTask
   } else {
-    return addscribe(name, role)
+    return addscribe(name) // оригинальное имя
   }
 }
 

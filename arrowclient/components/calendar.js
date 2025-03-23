@@ -34,7 +34,7 @@ function prevYear() {
 }
 
 function clickOnCaldendarDay(date) {
-  saveTask("clickOnCaldendarDay")
+  saveTask()
   reData.selectedScribe = false
   // let date = e.target.innerText;
   let clickedDate = dayjs(reData.selectedDate).set("date", date)
@@ -111,7 +111,7 @@ export default () => {
   }
   if (reData.searchString === "")
     return html`
-      <div class="fontaccent w-full text-center p-3 dark:text-white bg-neutral-100  dark:bg-neutral-900">
+      <div class="fontaccent w-full text-center p-3 dark:text-white bg-neutral-100  dark:bg-neutral-950">
         <div class="pb-3 text-base">${calendarControls}</div>
         <table class="text-base w-full">
           <tr class="bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-800 border-neutral-200 border-2">

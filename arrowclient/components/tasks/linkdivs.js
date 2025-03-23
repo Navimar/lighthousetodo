@@ -59,7 +59,7 @@ export default (task) => html`
     <div class="flex gap-4">
       <div
         id="fromEdit"
-        class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
+        class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-950 focus:outline-none"
         contenteditable="true"
         data-placeholder="Задачи пионеры..."
         role="textbox"
@@ -72,7 +72,7 @@ export default (task) => html`
 
       <div
         id="toEdit"
-        class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
+        class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-950 focus:outline-none"
         contenteditable="true"
         data-placeholder="Задачи на очереди..."
         role="textbox"
@@ -87,7 +87,7 @@ export default (task) => html`
     <div class="flex gap-4">
       <div
         id="moreImportantEdit"
-        class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
+        class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-950 focus:outline-none"
         contenteditable="true"
         data-placeholder="Задачи важнее..."
         role="textbox"
@@ -100,7 +100,7 @@ export default (task) => html`
 
       <div
         id="lessImportantEdit"
-        class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-900 focus:outline-none"
+        class="flex flex-col gap-1.5 text-sm w-1/2 h-7 px-2 py-1 overflow-hidden bg-neutral-50 dark:bg-neutral-950 focus:outline-none"
         contenteditable="true"
         data-placeholder="Менее важные задачи..."
         role="textbox"
