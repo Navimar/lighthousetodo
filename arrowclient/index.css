@@ -66,13 +66,16 @@ input:checked + .checkmark::after {
   letter-spacing: 0.1em;
 }
 
+#edit div {
+  @apply px-1 sm:px-20;
+}
 #edit div:not(:first-child) {
-  @apply text-sm px-2 sm:px-20;
+  @apply text-sm;
 }
 
 #edit div:first-child {
   font-size: 1.5rem;
-  @apply text-center px-2;
+  @apply text-center;
 }
 
 #edit div:first-child:not(:only-child) {
