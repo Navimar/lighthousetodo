@@ -12,7 +12,6 @@ export default () => {
       placeholder="Поиск..."
       class="oswald box-border h-11 rounded-lg p-2 block w-full top-0 bg-neutral-100 dark:bg-neutral-950 dark:text-white focus:outline-none"
        @focus="${(e) => {
-         console.log(e.target.parentElement)
          e.target.parentElement.style.zIndex = "1000"
        }}"
       @blur="${(e) => {

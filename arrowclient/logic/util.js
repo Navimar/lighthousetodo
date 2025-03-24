@@ -60,14 +60,6 @@ const clickPos = (e) => {
   mouseY = e.clientY
 }
 
-function getCurrentLine() {
-  let sel = document.getSelection()
-  let nd = sel.anchorNode
-  let text = nd.textContent.slice(0, sel.focusOffset)
-
-  return text.split("\n").pop().trim()
-}
-
 export function getLocalStorageItem(key) {
   // return undefined
 
@@ -104,7 +96,7 @@ export function findGetParameter(name, url) {
   if (!results[2]) return ""
   return decodeURIComponent(results[2].replace(/\+/g, " "))
 }
-export { getCurrentLine, clickPos, mouseX, mouseY }
+export { clickPos, mouseX, mouseY }
 
 export let copyToClipboard = (text) => {
   // Создаем временный элемент textarea
