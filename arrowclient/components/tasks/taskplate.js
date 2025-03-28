@@ -6,7 +6,7 @@ export default (task, additionalClass = "") => {
 
   const bulletSymbol = () => {
     let classes = ""
-    // Значок по умолчанию — пустой SVG 16x16 (можно заменить, если нужно)
+    // Значок по умолчанию — пустой SVG 16x16
     let content = `<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"></svg>`
     let now = dayjs()
 
@@ -33,8 +33,14 @@ export default (task, additionalClass = "") => {
   <path d="M13.196 11 A6 6 0 1 1 14 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
 </svg>`
       classes += " text-blue-500"
+    } else if (taskDate.isAfter(now, "day")) {
+      // Будущие задачи (от завтрашнего дня) — стрелка вправо
+      content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+  <path d="M0 0 L16 8 L0 16 Z"/>
+</svg>`
+      classes += " text-compliment"
     } else if (taskDate.isAfter(now)) {
-      // Песочные часы (задачи в будущем): два треугольника, объединённые в центре
+      // Песочные часы (сегодняшние будущие задачи)
       content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
   <path d="M0 0 L16 0 L8 9 Z"/>
   <path d="M0 16 L16 16 L8 7 Z"/>

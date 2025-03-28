@@ -2,12 +2,14 @@ import { html } from "~/arrow-js/index.js"
 import { getObjectByName } from "~/logic/util.js"
 import reData from "~/logic/reactive.js"
 import data from "~/logic/data.js"
+import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 
 /**
  * Добавляет связь между задачей (task) и другой задачей,
  * найденной по имени (taskName), в нужное поле (fromIds/toIds/moreImportantIds/lessImportantIds).
  */
 function addTaskByName(task, taskName, type) {
+  showSaveButtonHidePause()
   const fieldMap = {
     from: "fromIds",
     to: "toIds",

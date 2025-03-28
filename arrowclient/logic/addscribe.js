@@ -19,6 +19,8 @@ export default (name) => {
     toIds: [],
     moreImportantIds: [],
     lessImportantIds: [],
+    readyPercentage: 100,
+    blocked: false,
     timestamp: dayjs().valueOf(),
     assignedBy: reData.user.id,
     assignedTo: [reData.user.id],

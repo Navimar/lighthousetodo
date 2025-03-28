@@ -40,7 +40,7 @@ module.exports = {
           dark: "#1d2414", // тёмный зелёно-жёлтый
         },
         lessimportant: {
-          DEFAULT: "#f5fdf9",
+          DEFAULT: "#fdfcf0",
           dark: "#13211b", // тёмный зелёно-бирюзовый
         },
       },

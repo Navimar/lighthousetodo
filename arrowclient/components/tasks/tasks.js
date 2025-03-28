@@ -10,9 +10,9 @@ import data from "~/logic/data.js"
 import performance from "~/logic/performance.js"
 import sort from "~/logic/sort.js"
 import addConnection from "~/components/tasks/addConnection.js"
+import hiddenData from "~/components/tasks/hiddendata.js"
 
 import { html } from "~/arrow-js/index.js"
-import dayjs from "dayjs"
 
 export default () => {
   performance.start("renderTasks")
@@ -57,23 +57,45 @@ let renderTask = (task, index) => {
           aria-multiline="true"
           ><div>${task.name}</div>${task.note && html`<div>${task.note}</div>`}</div
         >${() => addConnection(task, "to")} ${() => tagLine(task, "to")}</div
-      >
+      >${() => hiddenData(task)}
     </div>`
   } else {
     // Нередактируемый
+    let cornerClass = ""
+    if (task.toIds?.length && task.fromIds?.length) {
+      cornerClass = "corner-box-both-corners"
+    } else if (task.toIds?.length) {
+      cornerClass = "corner-box-bottom-right"
+    } else if (task.fromIds?.length) {
+      cornerClass = "corner-box-top-left"
+    }
     return html`<div
       @click="${(e) => {
         selectTaskById(task.id)
         clickPos(e)
       }}"
-      class="flex flex-col gap-3 break-words bg-neutral-100 dark:bg-neutral-950 p-3 rounded-lg overflow dark:text-white"
-      ><div class="ml-2 flex justify-between gap-3"
-        ><div class="break-word"
+      class="${cornerClass} flex flex-col break-words bg-neutral-100 dark:bg-neutral-950 p-3 rounded-lg overflow dark:text-white"
+      ><div class=" ml-2 flex justify-between gap-3"
+        ><div class=" break-word"
           >${() => task.name}${() => {
-            if (task.note && task.note.length > 0) return " 📝"
+            if (task.note && task.note.length > 0)
+              return html`<div class="text-gray-800 dark:text-gray-300 text-[0.5rem]">${maskString(task.note)}</div>`
           }}</div
         ><div class="flex items-center gap-3">${() => taskPlate(task, "px-1")}</div></div
-      ></div
+      >${() => hiddenData(task)}</div
     >`
   }
+}
+
+function maskString(str, char = "◻", n = 10) {
+  if (!char || char.length !== 1) {
+    throw new Error("Аргумент 'char' должен быть одним символом.")
+  }
+
+  let masked = ""
+  for (let i = 0; i < str.length && masked.length < n; i++) {
+    masked += str[i] === " " ? " " : char
+  }
+
+  return masked.slice(0, n)
 }

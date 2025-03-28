@@ -116,6 +116,20 @@ input:checked + .checkmark::after {
   border-top-left-radius: 0;
 }
 
+.corner-box-both-corners {
+  background-image:
+    linear-gradient(to bottom right, transparent 50%, gray 50%), linear-gradient(to top left, transparent 50%, gray 50%);
+  background-repeat: no-repeat, no-repeat;
+  background-size:
+    0.5em 0.5em,
+    0.5em 0.5em;
+  background-position:
+    bottom right,
+    top left;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
 body {
   touch-action: pan-y;
 }

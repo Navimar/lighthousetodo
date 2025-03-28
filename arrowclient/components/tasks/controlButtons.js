@@ -1,9 +1,8 @@
 import { html } from "~/arrow-js/index.js"
 import reData from "~/logic/reactive.js"
 import saveTask from "~/logic/savetask.js"
-import { updatePauseReadyButton, updateKairosButton } from "~/logic/manipulate.js"
+import { updatePauseReadyButton } from "~/logic/manipulate.js"
 import { makevisible } from "~/logic/makevisible.js"
-import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 import performance from "~/logic/performance.js"
 import audio from "~/logic/audio.js"
 
