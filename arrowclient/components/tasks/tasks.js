@@ -10,7 +10,7 @@ import data from "~/logic/data.js"
 import performance from "~/logic/performance.js"
 import sort from "~/logic/sort.js"
 import addConnection from "~/components/tasks/addConnection.js"
-import hiddenData from "~/components/tasks/hiddendata.js"
+import hiddenData from "~/components/tasks/hiddenData.js"
 
 import { html } from "~/arrow-js/index.js"
 
