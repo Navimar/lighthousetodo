@@ -48,8 +48,8 @@ function updateBackground() {
   const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches
 
   const candidates = isDark
-    ? [`img/test.jpg`, `img/back_${month}-${day}_dark.jpg`, `img/back_${month}_dark.jpg`, `img/back_dark.jpg`]
-    : [`img/test.jpg`, `img/back_${month}-${day}.jpg`, `img/back_${month}.jpg`, `img/back.jpg`]
+    ? [`test.jpg`, `back_${month}-${day}_dark.jpg`, `back_${month}_dark.jpg`, `back_dark.jpg`]
+    : [`test.jpg`, `back_${month}-${day}.jpg`, `back_${month}.jpg`, `back.jpg`]
 
   const testImage = (url) => {
     return new Promise((resolve) => {

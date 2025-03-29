@@ -4,16 +4,16 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --background-image: url("img/back.jpg");
-    --plus-image: url("img/plus.png");
+    --background-image: url("back.jpg");
+    --plus-image: url("plus.png");
   }
 }
 
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-image: url("img/backdark.jpg");
-    --plus-image: url("img/plusdark.png");
+    --background-image: url("back_dark.jpg");
+    --plus-image: url("plusdark.png");
   }
 }
 * {
