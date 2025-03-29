@@ -10,8 +10,8 @@ export let tick = () => {
   const totalMinutes = time.hour() * 60 + time.minute()
   const slider = document.getElementById("timeSlider")
   if (slider) {
-    const sliderWidth = slider.offsetWidth - 16
-    reData.currentTime.slider = (totalMinutes / 1440) * sliderWidth + 16
+    const sliderWidth = slider.offsetWidth - 10
+    reData.currentTime.slider = (totalMinutes / 1440) * sliderWidth + 5
   }
 
   let newTime = time.format("HH:mm")
