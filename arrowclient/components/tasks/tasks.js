@@ -94,7 +94,12 @@ function maskString(str, char = "◻", n = 10) {
 
   let masked = ""
   for (let i = 0; i < str.length && masked.length < n; i++) {
-    masked += str[i] === " " ? " " : char
+    const currentChar = str[i]
+    if (currentChar === " " || currentChar === "\n") {
+      masked += currentChar
+    } else {
+      masked += char
+    }
   }
 
   return masked.slice(0, n)

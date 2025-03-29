@@ -37,9 +37,39 @@ const app = document.getElementById("App")
 const render = html`
   ${search}
   <div class="flex flex-col gap-6 pb-[30rem] max-w-full w-40rem px-3 m-auto"
-    >${authentication}${renderNodeCounter}${renderCalendar}${renderCollaborationRequests}${renderCollabortors}${renderTasks}${pages}</div
+    >${authentication}${renderCalendar}${renderCollaborationRequests}${renderCollabortors}${renderTasks}${pages}</div
   >${footer()}${plusbutton}${() => online()}
 `
+
+function updateBackground() {
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, "0")
+  const day = String(now.getDate()).padStart(2, "0")
+  const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+
+  const candidates = isDark
+    ? [`img/test.jpg`, `img/back_${month}-${day}_dark.jpg`, `img/back_${month}_dark.jpg`, `img/back_dark.jpg`]
+    : [`img/test.jpg`, `img/back_${month}-${day}.jpg`, `img/back_${month}.jpg`, `img/back.jpg`]
+
+  const testImage = (url) => {
+    return new Promise((resolve) => {
+      const img = new Image()
+      img.onload = () => resolve(url)
+      img.onerror = () => resolve(null)
+      img.src = url
+    })
+  }
+
+  ;(async () => {
+    for (const url of candidates) {
+      const found = await testImage(url)
+      if (found) {
+        document.querySelector(".bgimg").style.backgroundImage = `url("${found}")`
+        break
+      }
+    }
+  })()
+}
 
 window.addEventListener("load", function () {
   window.addEventListener("paste", function (e) {
@@ -47,6 +77,11 @@ window.addEventListener("load", function () {
     let text = e.clipboardData.getData("text/plain")
     document.execCommand("insertText", false, text)
   })
+
+  updateBackground()
+  const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
+  darkModeMediaQuery.addListener(updateBackground)
+  darkModeMediaQuery.addEventListener("change", updateBackground)
 
   authenticationOnLoad()
 

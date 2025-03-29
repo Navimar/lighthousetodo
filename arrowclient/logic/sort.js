@@ -34,14 +34,8 @@ const sortByWeight = (a, b) => {
   return a.weight - b.weight
 }
 
-const sortByMoreImportantIdsLength = (a, b) => {
-  const getCount = (obj) => (obj.moreImportantIds || []).length
-  return getCount(a) - getCount(b)
-}
-
-const sortByLessImportantIdsLength = (a, b) => {
-  const getCount = (obj) => (obj.lessImportantIds || []).length
-  return getCount(b) - getCount(a)
+const sortByDescendantsCount = (a, b) => {
+  return b.descendantsCount - a.descendantsCount
 }
 
 export default (arrToSort = reData.visibleTasks) => {
@@ -70,10 +64,7 @@ export default (arrToSort = reData.visibleTasks) => {
     result = sortByReadyPercentage(a, b)
     if (result !== 0) return result
 
-    result = sortByLessImportantIdsLength(a, b)
-    if (result !== 0) return result
-
-    result = sortByMoreImportantIdsLength(a, b)
+    result = sortByDescendantsCount(a, b)
     if (result !== 0) return result
 
     return b.timestamp - a.timestamp

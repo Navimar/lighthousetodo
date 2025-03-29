@@ -143,7 +143,7 @@ export default (givenTask, direction) => {
               @touchstart="${(e) => handleTouchStart(e, task.id, givenTask, ["toIds", "moreImportantIds"])}"
               @touchend="${handleTouchEnd}"
               class="${cornerbox} text-neutral-700 dark:text-neutral-350 px-3 p-2 mx-1 inline-block align-middle rounded-lg border bg-white dark:bg-black border-neutral-150 dark:border-neutral-800">
-              <div class="flex h-full items-center"
+              <div class="flex h-full gap-1 items-center"
                 ><div class="break-word">${task.name}</div>${() => taskplate(task, "text-xxs ml-auto")}</div
               ></div
             >`

@@ -10,7 +10,7 @@ import audio from "~/logic/audio.js"
 
 import dayjs from "dayjs"
 
-export default (m) => {
+export default () => {
   performance.start("savetask")
   try {
     let changedTasks = new Set()
@@ -275,14 +275,16 @@ export default (m) => {
 }
 
 const calculateTaskWeights = () => {
-  // Обнуляем веса перед началом вычислений
+  // Обнуляем веса и потомков перед началом вычислений
   for (const task of data.tasks) {
     task.weight = undefined
+    task.descendantsCount = 0
   }
 
-  const assignWeight = (taskId, weight, visited = new Set()) => {
+  const assignWeight = (taskId, weight, visited = new Set(), descendants = new Set()) => {
     const task = getObjectById(taskId)
     task.cycle = false
+
     if (visited.has(taskId)) {
       task.cycle = true
       return
@@ -292,21 +294,34 @@ const calculateTaskWeights = () => {
 
     const isFuture = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm").isAfter(dayjs())
 
-    // Устанавливаем/повышаем weight, если текущий weight ещё не определён,
-    // или новый выше предыдущего
     if (task.weight === undefined || weight > task.weight) {
       task.weight = weight
 
-      for (const id of task.lessImportantIds || []) {
-        assignWeight(id, isFuture || task.pause || task.ready || task.blocked ? weight : weight + 1, new Set(visited))
+      const children = [...(task.lessImportantIds || []), ...(task.toIds || [])]
+      for (const id of children) {
+        const newVisited = new Set(visited)
+        assignWeight(
+          id,
+          isFuture || task.pause || task.ready || task.blocked ? weight : weight + 1,
+          newVisited,
+          descendants,
+        )
+
+        descendants.add(id)
+        const child = getObjectById(id)
+        if (child?.descendantsCountSet) {
+          for (const d of child.descendantsCountSet) {
+            descendants.add(d)
+          }
+        }
       }
-      for (const id of task.toIds || []) {
-        assignWeight(id, isFuture || task.pause || task.ready || task.blocked ? weight : weight + 1, new Set(visited))
-      }
+
+      task.descendantsCountSet = descendants
+      task.descendantsCount = descendants.size
     }
   }
 
-  // Для всех задач без moreImportantIds и fromIds (т.е. корневых) назначаем вес 0
+  // Для всех корневых задач
   for (const task of data.tasks) {
     if (
       (!task.moreImportantIds || task.moreImportantIds.length === 0) &&
@@ -314,6 +329,11 @@ const calculateTaskWeights = () => {
     ) {
       assignWeight(task.id, 0)
     }
+  }
+
+  // Удаляем временные множества
+  for (const task of data.tasks) {
+    delete task.descendantsCountSet
   }
 }
 
