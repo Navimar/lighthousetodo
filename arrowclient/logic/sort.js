@@ -35,7 +35,7 @@ const sortByWeight = (a, b) => {
 }
 
 const sortByDescendantsCount = (a, b) => {
-  return b.descendantsCount - a.descendantsCount
+  return b.descendantCount - a.descendantCount
 }
 
 export default (arrToSort = reData.visibleTasks) => {
