@@ -238,7 +238,7 @@ export default () => {
     // -----------------------------------------------------------
     // 2) Вызываем calculateTaskWeights для пересчёта
     // -----------------------------------------------------------
-    calculateTaskWeights()
+    calculateTaskWeightsAndDescendants()
 
     // -----------------------------------------------------------
     // 3) Сравниваем старые и новые weight; если изменился —
@@ -274,66 +274,94 @@ export default () => {
   }
 }
 
-const calculateTaskWeights = () => {
-  // Обнуляем веса и потомков перед началом вычислений
+const calculateTaskWeightsAndDescendants = () => {
+  // Сбрасываем старые вычисления
   for (const task of data.tasks) {
     task.weight = undefined
-    task.descendantsCount = 0
+    task.cycle = false
+    task.descendantCount = 0
   }
 
-  const assignWeight = (taskId, weight, visited = new Set(), descendants = new Set()) => {
+  // Функция для рекурсивного присвоения веса
+  const assignWeight = (taskId, weight, visited = new Set()) => {
     const task = getObjectById(taskId)
-    task.cycle = false
-
+    // Если уже заходили в эту задачу в рамках одной ветки – значит цикл
     if (visited.has(taskId)) {
       task.cycle = true
       return
     }
 
+    // Помечаем, что мы сейчас находимся в этой задаче
     visited.add(taskId)
 
+    // Проверяем, ещё ли задача в будущем
     const isFuture = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm").isAfter(dayjs())
 
+    // Устанавливаем/повышаем weight, если текущий weight ещё не определён,
+    // или новый выше предыдущего
     if (task.weight === undefined || weight > task.weight) {
       task.weight = weight
 
-      const children = [...(task.lessImportantIds || []), ...(task.toIds || [])]
-      for (const id of children) {
-        const newVisited = new Set(visited)
+      // Для lessImportantIds и toIds рекурсивно назначаем вес
+      for (const id of task.lessImportantIds || []) {
         assignWeight(
           id,
+          // Если задача в будущем / на паузе / готова / заблокирована – не наращиваем вес
           isFuture || task.pause || task.ready || task.blocked ? weight : weight + 1,
-          newVisited,
-          descendants,
+          new Set(visited), // передаём копию visited
         )
-
-        descendants.add(id)
-        const child = getObjectById(id)
-        if (child?.descendantsCountSet) {
-          for (const d of child.descendantsCountSet) {
-            descendants.add(d)
-          }
-        }
       }
-
-      task.descendantsCountSet = descendants
-      task.descendantsCount = descendants.size
+      for (const id of task.toIds || []) {
+        assignWeight(id, isFuture || task.pause || task.ready || task.blocked ? weight : weight + 1, new Set(visited))
+      }
     }
   }
 
-  // Для всех корневых задач
+  // Сначала расставляем веса от "корневых" задач, у которых нет родителей
   for (const task of data.tasks) {
-    if (
-      (!task.moreImportantIds || task.moreImportantIds.length === 0) &&
-      (!task.fromIds || task.fromIds.length === 0)
-    ) {
+    const hasNoParents =
+      (!task.moreImportantIds || task.moreImportantIds.length === 0) && (!task.fromIds || task.fromIds.length === 0)
+
+    if (hasNoParents) {
       assignWeight(task.id, 0)
     }
   }
 
-  // Удаляем временные множества
+  // ---------------------------------------------------------
+  // Теперь считаем количество уникальных потомков для каждой задачи
+  // ---------------------------------------------------------
+
+  // Рекурсивно собираем множество всех потомков (по lessImportantIds и toIds)
+  const getDescendants = (taskId, visited = new Set()) => {
+    if (visited.has(taskId)) {
+      return new Set()
+    }
+    visited.add(taskId)
+
+    const task = getObjectById(taskId)
+    // Если у задачи пометка cycle, пропускаем обход, чтобы не было бесконечного цикла
+    if (task.cycle) {
+      return new Set()
+    }
+
+    let descendants = new Set()
+    const childrenIds = [...(task.lessImportantIds || []), ...(task.toIds || [])]
+
+    for (const childId of childrenIds) {
+      const childSet = getDescendants(childId, visited)
+      // Добавляем самих потомков (childId тоже считаем «потомком»)
+      childSet.add(childId)
+      for (const d of childSet) {
+        descendants.add(d)
+      }
+    }
+    return descendants
+  }
+
+  // Для каждой задачи вычисляем множество потомков и берём его размер
   for (const task of data.tasks) {
-    delete task.descendantsCountSet
+    const descendants = getDescendants(task.id, new Set())
+    task.descendantCount = descendants.size
   }
 }
 
