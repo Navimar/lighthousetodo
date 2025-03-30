@@ -2,7 +2,6 @@ import navigate from "~/logic/router.js"
 import { html } from "~/arrow-js/index.js"
 import { clickPos } from "~/logic/util.js"
 
-import css from "/css.js"
 import { makevisible } from "~/logic/makevisible.js"
 
 export default () => {

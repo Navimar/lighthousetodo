@@ -9,6 +9,6 @@ export default () =>
           >Система управления делами Игоря Ваулина</a
         ></p
       >
-      <p class="mt-4 mb-12 fontaccent">${() => reData.version}</p>
+      <p class="mt-4 mb-12 fontaccent">${reData.version}</p>
     </div>
   </footer>`

@@ -71,14 +71,3 @@ export default (task) =>
       }}" />
     <label id="pauseCheckboxLabel" class="button-gray whitespace-nowrap" for="pauseCheckbox">Потом</label>
   </div>`
-//  <div>
-//     <input
-//       class="sr-only peer"
-//       type="checkbox"
-//       id="postponeCheckbox"
-//       @change="${(e) => {
-//     saveButton()
-//   }}"
-//       ${task.postpone ? "checked" : ""} />
-//     <label class="button-gray whitespace-nowrap" for="postponeCheckbox">Отложить</label>
-//   </div>

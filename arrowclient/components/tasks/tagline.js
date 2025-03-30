@@ -3,11 +3,14 @@ import { selectTaskById } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import { getObjectById, getDayjsDateFromTask } from "~/logic/util"
 import taskplate from "~/components/tasks/taskplate.js"
+import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 import reData from "~/logic/reactive.js"
 
 import dayjs from "dayjs"
 
 function removeTaskFromList(givenTask, listName, taskId) {
+  showSaveButtonHidePause()
+
   givenTask = reData.visibleTasks.find((t) => t.id === givenTask.id)
 
   if (Array.isArray(givenTask[listName])) {
