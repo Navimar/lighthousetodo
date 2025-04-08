@@ -52,6 +52,19 @@ export default (task, additionalClass = "") => {
   <rect x="1" y="1" width="14" height="14"/>
 </svg>`
       classes += " text-gray-500"
+    } else if (task.weight > 0) {
+      // Низкий приоритет: восход во всю ширину
+      content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="8" cy="8" r="8" fill="currentColor"/>
+</svg>
+`
+      //   content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+      //   <path fill="currentColor" fill-rule="evenodd" d="
+      //     M0,0 H16 V16 H0 V0 Z
+      //     M0,8 A8,8 0 0,1 16,8 L16,0 L0,0 Z
+      //   "/>
+      // </svg>`
+      classes += " text-swamp"
     } else if (taskDate.isBefore(now, "day")) {
       // Задачи в прошлом: левый треугольник, вписывающийся в 16x16
       content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">

@@ -79,7 +79,7 @@ input:checked + .checkmark::after {
 }
 
 #edit div:first-child:not(:only-child) {
-  @apply mb-2;
+  @apply mb-8;
 }
 
 #fromEdit:empty::before {

@@ -63,6 +63,13 @@ export let inputSocket = (io) => {
 
       try {
         if (msg.data.tasks) {
+          const sockets = getUser(userId)?.sockets || []
+          sockets.forEach((s) => {
+            if (s !== socket) {
+              // console.log("Отправлено другому сокету")
+              s.emit("update", { tasks: msg.data.tasks })
+            }
+          })
           // Преобразование поля readyLogs каждого таска в строку
           msg.data.tasks = msg.data.tasks.map((task) => {
             if (task.readyLogs) {
@@ -93,13 +100,6 @@ export let inputSocket = (io) => {
       }
 
       // Обновление других сокетов, если это необходимо
-      const sockets = getUser(userId)?.sockets || []
-      sockets.forEach((s) => {
-        if (s !== socket) {
-          // console.log("Отправлено другому сокету")
-          s.emit("update", { tasks: msg.data.tasks })
-        }
-      })
     })
 
     socket.on("load", async (msg) => {

@@ -14,6 +14,9 @@ module.exports = {
           150: "#ededed",
           350: "#bcbcbc",
         },
+        swamp: {
+          DEFAULT: "#6e7ed3",
+        },
         accent: {
           DEFAULT: "#d36e70",
         },
