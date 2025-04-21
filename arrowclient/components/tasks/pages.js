@@ -22,6 +22,7 @@ export default () => {
           class="button-gray "
           @click="${() => {
             reData.currentPage = 1
+            reData.selectedScribe = false
             makevisible()
             reData.selectedScribe = reData.visibleTasks[0]?.id
           }}">

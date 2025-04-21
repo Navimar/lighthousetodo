@@ -47,9 +47,9 @@ export const makevisible = () => {
     }
 
     // Implement pagination
-    const page = reData.currentPage || 1
+    reData.currentPage = Number.isInteger(reData.currentPage) && reData.currentPage > 0 ? reData.currentPage : 1
     const totalTasks = visibleTasks.length
-    const startIndex = (page - 1) * pageSize
+    const startIndex = (reData.currentPage - 1) * pageSize
     const endIndex = startIndex + pageSize
     const paginatedTasks = visibleTasks.slice(startIndex, endIndex)
 

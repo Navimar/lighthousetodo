@@ -1,3 +1,3 @@
 export const NEWSCRIBETEXT = "новая запись"
 
-export const VERSION = "1.3.12t"
+export const VERSION = "1.3.13t"
