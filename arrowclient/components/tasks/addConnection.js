@@ -30,9 +30,12 @@ function addTaskByName(task, taskName, type) {
   if (!task[fieldName]) {
     task[fieldName] = []
   }
-  if (!task[fieldName].includes(taskObj.id)) {
-    task[fieldName].push(taskObj.id)
+
+  if (Object.keys(fieldMap).some((key) => (task[fieldMap[key]] || []).includes(taskObj.id))) {
+    console.warn(`Задача "${taskObj.name}" уже связана (по любому типу)`)
+    return
   }
+  task[fieldName].push(taskObj.id)
 }
 
 /**

@@ -44,9 +44,9 @@ let renderTask = (task, index) => {
     // Редактируемый
     return html`<div
       id="selectedtask"
-      class="-mx-3 z-[45] flex min-h-screen flex-col bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white">
-      ${dateInput(task)} ${timeSlider(task)}
-      <div class="mt-16"> ${controlButtons(task)}</div>
+      class="-mx-3 z-[45] flex min-h-screen flex-col bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white"
+      >${timeSlider(task)}${dateInput(task)}
+      <div class="mt-14"> ${controlButtons(task)}</div>
       <div class="flex my-16 flex-col "
         >${() => tagLine(task, "from")} ${() => addConnection(task, "from")}<div
           id="edit"
@@ -57,7 +57,7 @@ let renderTask = (task, index) => {
           aria-multiline="true"
           ><div>${task.name}</div>${task.note && html`<div>${task.note}</div>`}</div
         >${() => addConnection(task, "to")} ${() => tagLine(task, "to")}</div
-      >${() => hiddenData(task)}
+      >
     </div>`
   } else {
     // Нередактируемый
@@ -82,7 +82,7 @@ let renderTask = (task, index) => {
               return html`<div class="text-gray-800 dark:text-gray-300 text-[0.5rem]">${maskString(task.note)}</div>`
           }}</div
         ><div class="flex items-center gap-3">${() => taskPlate(task, "px-1")}</div></div
-      >${() => hiddenData(task)}</div
+      ></div
     >`
   }
 }

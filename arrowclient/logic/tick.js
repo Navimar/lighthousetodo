@@ -21,6 +21,11 @@ export let tick = () => {
 
   reData.currentTime.date = time.format("YYYY-MM-DD")
 
+  if (dayjs(reData.selectedDate).isBefore(reData.currentTime.date)) {
+    reData.selectedDate = reData.currentTime.date
+    makevisible()
+  }
+
   if (reData.currentTime.timerStarted) {
     const diffInMinutes = Math.abs(time.diff(dayjs(reData.currentTime.timerStarted, "HH:mm"), "minute"))
     const hours = ((diffInMinutes % (24 * 60)) / 60) | 0

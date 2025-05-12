@@ -70,7 +70,7 @@ function setTodayDate() {
 
 export default (task) => {
   return html`
-    <div class="flex flex-wrap gap-3 justify-between my-5">
+    <div class="flex flex-wrap gap-3 justify-between mt-3">
       <div class="flex gap-3">
         <input
           id="timeInput"

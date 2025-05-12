@@ -8,15 +8,25 @@ import reData from "~/logic/reactive.js"
 
 import dayjs from "dayjs"
 
-function removeTaskFromList(givenTask, listName, taskId) {
+function removeTaskFromLists(givenTask, taskId) {
   showSaveButtonHidePause()
 
   givenTask = reData.visibleTasks.find((t) => t.id === givenTask.id)
 
-  if (Array.isArray(givenTask[listName])) {
-    const idx = givenTask[listName].indexOf(taskId)
-    if (idx !== -1) {
-      givenTask[listName].splice(idx, 1)
+  const fieldMap = {
+    from: "fromIds",
+    to: "toIds",
+    moreImportant: "moreImportantIds",
+    lessImportant: "lessImportantIds",
+  }
+
+  for (const key in fieldMap) {
+    const listName = fieldMap[key]
+    if (Array.isArray(givenTask[listName])) {
+      const idx = givenTask[listName].indexOf(taskId)
+      if (idx !== -1) {
+        givenTask[listName].splice(idx, 1)
+      }
     }
   }
 }
@@ -24,10 +34,10 @@ function removeTaskFromList(givenTask, listName, taskId) {
 // Таймер для долгого тапа
 let pressTimer = null
 
-function handleTouchStart(e, taskId, givenTask, listNames = []) {
+function handleTouchStart(e, taskId, givenTask) {
   // Ставим таймер – если пользователь удерживает палец более 600 мс, удаляем из нужных списков
   pressTimer = setTimeout(() => {
-    listNames.forEach((ln) => removeTaskFromList(givenTask, ln, taskId))
+    removeTaskFromLists(givenTask, taskId)
     e.stopPropagation()
   }, 600)
 }
@@ -35,6 +45,7 @@ function handleTouchStart(e, taskId, givenTask, listNames = []) {
 function handleTouchEnd() {
   clearTimeout(pressTimer)
 }
+
 export default (givenTask, direction) => {
   const readyTasks = []
   const notReadyTasks = []
@@ -104,11 +115,10 @@ export default (givenTask, direction) => {
               @contextmenu="${(e) => {
                 e.preventDefault()
                 // Удалим задачу из разных списков
-                if (direction == "to") removeTaskFromList(givenTask, "toIds", task.id)
-                if (direction == "from") removeTaskFromList(givenTask, "fromIds", task.id)
+                removeTaskFromLists(givenTask, task.id)
                 e.stopPropagation()
               }}"
-              @touchstart="${(e) => handleTouchStart(e, task.id, givenTask, ["toIds", "moreImportantIds"])}"
+              @touchstart="${(e) => handleTouchStart(e, task.id, givenTask)}"
               @touchend="${handleTouchEnd}"
               class="${cornerbox} text-neutral-700 dark:text-neutral-350 px-3 p-2 mx-1 inline-block align-middle rounded-lg border border-neutral-150 dark:border-neutral-800 bg-white dark:bg-black">
               <div class="flex h-full gap-1.5 items-center"
@@ -138,12 +148,10 @@ export default (givenTask, direction) => {
               @contextmenu="${(e) => {
                 e.preventDefault()
                 // Удалим задачу из разных списков
-                if (direction == "from") removeTaskFromList(givenTask, "moreImportantIds", task.id)
-                if (direction == "to") removeTaskFromList(givenTask, "lessImportantIds", task.id)
-
+                removeTaskFromLists(givenTask, task.id)
                 e.stopPropagation()
               }}"
-              @touchstart="${(e) => handleTouchStart(e, task.id, givenTask, ["toIds", "moreImportantIds"])}"
+              @touchstart="${(e) => handleTouchStart(e, task.id, givenTask)}"
               @touchend="${handleTouchEnd}"
               class="${cornerbox} text-neutral-700 dark:text-neutral-350 px-3 p-2 mx-1 inline-block align-middle rounded-lg border bg-white dark:bg-black border-neutral-150 dark:border-neutral-800">
               <div class="flex h-full gap-1.5 items-center"
