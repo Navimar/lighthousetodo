@@ -137,7 +137,7 @@ function renderAutocomplete(divId, task, type) {
       <div
         class="text-base cursor-pointer break-words hover:bg-neutral-200 dark:hover:bg-neutral-600 p-2"
         @click="${(event) => complete(event, divId, task, type)}">
-        ${itemHtml}
+        ${() => itemHtml}
       </div>
     `,
   )
