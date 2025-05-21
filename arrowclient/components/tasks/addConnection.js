@@ -3,6 +3,7 @@ import { getObjectByName } from "~/logic/util.js"
 import reData from "~/logic/reactive.js"
 import data from "~/logic/data.js"
 import { showSaveButtonHidePause } from "~/logic/manipulate.js"
+import taskplate from "~/components/tasks/taskplate.js"
 
 /**
  * Добавляет связь между задачей (task) и другой задачей,
@@ -110,8 +111,20 @@ function handleInput(e) {
   // Обновлять reData.autoComplete.list с найденными именами совпадений
   reData.autoComplete.list = matches.map((match) => {
     const escapedText = currentLineText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-    const highlightedName = match.name.replace(new RegExp(escapedText, "ig"), (match) => `<strong>${match}</strong>`)
-    return highlightedName
+    const highlightedName = match.name.replace(
+      new RegExp(escapedText, "ig"),
+      (matchText) => `<strong>${matchText}</strong>`,
+    )
+
+    return html`
+      <div class="flex gap-1.5 items-center">
+        <div class="break-words">${highlightedName}</div>
+        <div
+          class="ml-auto h-fit flex items-center text-center uppercase whitespace-nowrap fontaccent text-sm gap-2 empty:hidden text-xxs">
+          ${taskplate(match)}
+        </div>
+      </div>
+    `
   })
 }
 

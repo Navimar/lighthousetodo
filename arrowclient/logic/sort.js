@@ -26,16 +26,8 @@ const sortByFuture = (a, b, now) => {
   return datetimeA.isAfter(now) - datetimeB.isAfter(now)
 }
 
-const sortByReadyPercentage = (a, b) => {
-  return a.readyPercentage - b.readyPercentage
-}
-
 const sortByWeight = (a, b) => {
   return a.weight - b.weight
-}
-
-const sortByDescendantsCount = (a, b) => {
-  return b.descendantCount - a.descendantCount
 }
 
 export default (arrToSort = reData.visibleTasks) => {
@@ -60,12 +52,6 @@ export default (arrToSort = reData.visibleTasks) => {
 
     result = sortByWeight(a, b)
     if (result !== 0) return result
-
-    // result = sortByReadyPercentage(a, b)
-    // if (result !== 0) return result
-
-    // result = sortByDescendantsCount(a, b)
-    // if (result !== 0) return result
 
     return b.timestamp - a.timestamp
   })
