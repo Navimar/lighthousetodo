@@ -311,9 +311,9 @@ const calculateTaskWeightsAndDescendants = () => {
           new Set(visited), // передаём копию visited
         )
       }
-      // for (const id of task.toIds || []) {
-      //   assignWeight(id, isFuture || task.pause || task.ready || task.blocked ? weight : weight + 1, new Set(visited))
-      // }
+      for (const id of task.toIds || []) {
+        assignWeight(id, isFuture || task.pause || task.ready || task.blocked ? weight : weight + 1, new Set(visited))
+      }
     }
   }
 
