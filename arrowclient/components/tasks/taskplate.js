@@ -52,7 +52,7 @@ export default (task, additionalClass = "") => {
   <rect x="1" y="1" width="14" height="14"/>
 </svg>`
       classes += " text-gray-500"
-    } else if (task.weight > 0) {
+    } else if (task.depth > 0) {
       // Низкий приоритет: восход во всю ширину
       content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
   <circle cx="8" cy="8" r="8" fill="currentColor"/>

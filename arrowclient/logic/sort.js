@@ -26,8 +26,8 @@ const sortByFuture = (a, b, now) => {
   return datetimeA.isAfter(now) - datetimeB.isAfter(now)
 }
 
-const sortByWeight = (a, b) => {
-  return a.weight - b.weight
+const sortByDepth = (a, b) => {
+  return a.depth - b.depth
 }
 
 export default (arrToSort = reData.visibleTasks) => {
@@ -38,8 +38,8 @@ export default (arrToSort = reData.visibleTasks) => {
   arrToSort.sort((a, b) => {
     let result = 0
 
-    result = sortByReadiness(a, b)
-    if (result !== 0) return result
+    // result = sortByReadiness(a, b)
+    // if (result !== 0) return result
 
     result = sortByBlock(a, b)
     if (result !== 0) return result
@@ -50,7 +50,7 @@ export default (arrToSort = reData.visibleTasks) => {
     result = sortByFuture(a, b, now)
     if (result !== 0) return result
 
-    result = sortByWeight(a, b)
+    result = sortByDepth(a, b)
     if (result !== 0) return result
 
     return b.timestamp - a.timestamp

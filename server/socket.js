@@ -1,7 +1,8 @@
 import serviceAccount from "../firebase.config.js"
 import admin from "firebase-admin"
 import { addUser, getUser } from "./user.js"
-import { pruneTaskIds, prepareTasks } from "./process.js"
+// import { pruneTaskIds, prepareTasks } from "./process.js"
+
 import version from "./version.js"
 import {
   syncTasksNeo4j,
@@ -9,6 +10,7 @@ import {
   addCollaboratorNeo4j,
   loadDataFromNeo4j,
   removeOldTasksFromNeo4j,
+  syncRelationNeo4j,
 } from "./database.js"
 
 admin.initializeApp({
@@ -36,8 +38,6 @@ export let inputSocket = (io) => {
 
     socket.on("save", async (msg) => {
       socket.emit("save-confirm", msg.data.requestId)
-      // console.log("msg", msg)
-      // Если токена нет, сразу отправляем ошибку
       if (!msg?.user?.token) {
         console.log(msg, "Токен не найден при загрузке")
         socket.emit("err", "Токен не найден при загрузке")
@@ -62,38 +62,71 @@ export let inputSocket = (io) => {
       addUser(msg.user.name, userId, socket)
 
       try {
-        if (msg.data.tasks) {
+        if (msg.data.task) {
           const sockets = getUser(userId)?.sockets || []
           sockets.forEach((s) => {
             if (s !== socket) {
-              // console.log("Отправлено другому сокету")
-              s.emit("update", { tasks: msg.data.tasks })
+              s.emit("updatetask", { task: msg.data.task })
             }
           })
-          // Преобразование поля readyLogs каждого таска в строку
-          msg.data.tasks = msg.data.tasks.map((task) => {
-            if (task.readyLogs) {
-              task.readyLogs = JSON.stringify(task.readyLogs)
-            }
-            return task
-          })
+          await syncTasksNeo4j(msg.user.name, userId, msg.data.task)
+        }
 
-          // Синхронизация задач с базой данных
-          await syncTasksNeo4j(msg.user.name, userId, msg.data.tasks)
+        if (msg.data.relation) {
+          await syncRelationNeo4j(userId, msg.data.relation)
+          const sockets = getUser(userId)?.sockets || []
+          sockets.forEach((s) => {
+            if (s !== socket) {
+              s.emit("updaterelation", { relation: msg.data.relation })
+            }
+          })
         } else if (msg.data.collaborator?.id && msg.data.collaborator?.id != userId) {
           await addCollaboratorNeo4j(
             userId,
             msg.data.collaborator.id,
             msg.data.collaborator.name || msg.data.collaborator.id,
           )
+          // after collaborator add, refresh lists and notify other sockets
+          try {
+            const updated = await loadDataFromNeo4j(userId)
+            const sockets = getUser(userId)?.sockets || []
+            sockets.forEach((s) => {
+              if (s !== socket) {
+                s.emit("updatecollaborators", {
+                  collaborators: updated.collaborators,
+                  collaborationRequests: updated.collaborationRequests,
+                })
+              }
+            })
+          } catch (e) {
+            console.warn("Could not refresh collaborators after add:", e)
+          }
         } else if (msg.data.collaboratorIdToRemove) {
           await removeCollaboratorNeo4j(userId, msg.data.collaboratorIdToRemove)
-        } else {
+          // after collaborator remove, refresh lists and notify other sockets
+          try {
+            const updated = await loadDataFromNeo4j(userId)
+            const sockets = getUser(userId)?.sockets || []
+            sockets.forEach((s) => {
+              if (s !== socket) {
+                s.emit("updatecollaborators", {
+                  collaborators: updated.collaborators,
+                  collaborationRequests: updated.collaborationRequests,
+                })
+              }
+            })
+          } catch (e) {
+            console.warn("Could not refresh collaborators after remove:", e)
+          }
+        } else if (
+          !msg.data.task &&
+          !msg.data.relation &&
+          !msg.data.collaborator?.id &&
+          !msg.data.collaboratorIdToRemove
+        ) {
           // Если не найдено ни одного из ожидаемых полей
           throw new Error("No valid data fields found in message")
         }
-
-        // Отправка подтверждения и обновление других сокетов...
       } catch (error) {
         console.error("Error during request handling:", error)
         socket.emit("err", "Ошибка при обработке запроса: " + error.message)
@@ -126,8 +159,9 @@ export let inputSocket = (io) => {
 
       // console.log(userId, data.collaborationRequests)
       // console.log("user", getUser(userId))
+      console.log("emit update", data)
       socket.emit("update", {
-        tasks: pruneTaskIds(prepareTasks(data.tasks)),
+        graph: data, // full Graph object JSON as returned from Neo4j loader
         collaborators: data.collaborators,
         collaborationRequests: data.collaborationRequests,
       })

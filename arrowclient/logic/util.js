@@ -1,10 +1,8 @@
 import addscribe from "~/logic/addscribe"
 import data from "~/logic/data.js"
-
 import dayjs from "dayjs"
 
 const nameCache = {}
-const idCache = {}
 
 export const getDayjsDateFromTask = (task) => {
   if (!task) return dayjs()
@@ -12,32 +10,16 @@ export const getDayjsDateFromTask = (task) => {
 }
 
 export const getObjectById = (id) => {
-  // Проверяем, есть ли задача с таким id в кэше
-  if (idCache[id]?.id === id) {
-    return idCache[id]
-  }
-
-  // Ищем задачу в массиве data.tasks
-  const foundTask = data.tasks.find((task) => task.id === id)
-
-  // Если задача найдена, добавляем её в кэш и возвращаем
-  if (foundTask) {
-    idCache[id] = foundTask
-    return foundTask
-  }
-  throw `getObjectById не нашел ${id} `
+  // Ищем задачу в data.tasks.nodes (graph nodes)
+  const foundTask = data.tasks.nodes.get(id)
+  if (!foundTask) throw `getObjectById не нашел ${id} `
+  return foundTask
 }
 
 export const getObjectByName = (name) => {
   const lowerName = name.toLowerCase()
-
-  if (nameCache[lowerName]?.name.toLowerCase() === lowerName) {
-    return nameCache[lowerName]
-  }
-
-  const foundTask = data.tasks.find((task) => task.name.toLowerCase() === lowerName)
+  const foundTask = Array.from(data.tasks.nodes.values()).find((node) => node?.name.toLowerCase() === lowerName)
   if (foundTask) {
-    nameCache[lowerName] = foundTask
     return foundTask
   } else {
     return addscribe(name) // оригинальное имя
@@ -49,7 +31,7 @@ export const isNameTaken = (name) => {
     return true
   }
 
-  return !!data.tasks.find((task) => task.name === name)
+  return Array.from(data.tasks.nodes.values()).some((node) => node.name === name)
 }
 
 let mouseX
@@ -58,31 +40,6 @@ let mouseY
 const clickPos = (e) => {
   mouseX = e.clientX
   mouseY = e.clientY
-}
-
-export function getLocalStorageItem(key) {
-  // return undefined
-
-  try {
-    const value = localStorage.getItem(key)
-    return value ? JSON.parse(value) : undefined
-  } catch (e) {
-    console.warn(`Ошибка при чтении ключа "${key}" из localStorage:`, e)
-    return undefined
-  }
-}
-
-export function safeSetLocalStorageItem(key, value) {
-  // return false
-
-  try {
-    const serializedValue = JSON.stringify(value)
-    localStorage.setItem(key, serializedValue)
-    return true // успешное сохранение
-  } catch (e) {
-    console.warn(`Ошибка при записи ключа "${key}" в localStorage:`, e)
-    return false // сохранение не удалось
-  }
 }
 
 export function findGetParameter(name, url) {

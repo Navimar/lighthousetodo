@@ -1,5 +1,5 @@
 import { watch } from "~/arrow-js/index.js"
-import { safeSetLocalStorageItem } from "~/logic/util.js"
+import { safeSetLocalStorageItem } from "~/logic/sync.js"
 import reData from "~/logic/reactive.js"
 import performance from "~/logic/performance.js"
 import { updateDateClass, updatePauseReadyButton } from "~/logic/manipulate.js"

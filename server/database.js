@@ -1,19 +1,62 @@
 import neo4j from "neo4j-driver"
 import dotenv from "dotenv"
+import Graph from "../shared/graph.js"
 
 dotenv.config()
 
-// console.log("NEO4J connection", process.env.NEO4J_URI, process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
 const driver = neo4j.driver(
   process.env.NEO4J_URI,
   neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD),
 )
 
-async function runNeo4jQuery(cypherQuery, queryParameters) {
+driver
+  .getServerInfo()
+  .then((info) => {
+    console.log("✅ Успешное подключение к Neo4j:", info)
+  })
+  .catch((error) => {
+    console.error("❌ Ошибка подключения к Neo4j:", error)
+  })
+
+const __neoQueue = []
+let __neoRunning = false
+
+async function __processNeoQueue() {
+  if (__neoRunning || __neoQueue.length === 0) return
+  __neoRunning = true
+  const { cypherQuery, queryParameters, resolve, reject } = __neoQueue.shift()
+  try {
+    const res = await runNeo4jQueryDirect(cypherQuery, queryParameters)
+    resolve(res)
+  } catch (err) {
+    reject(err)
+  } finally {
+    __neoRunning = false
+    // запустить следующий элемент очереди
+    __processNeoQueue()
+  }
+}
+
+async function runNeo4jQueryDirect(cypherQuery, queryParameters) {
   const session = driver.session()
   try {
+    console.log(
+      `📤 Выполняется запрос в Neo4j: ${cypherQuery.trim()} с ${Object.keys(queryParameters || {}).length} параметрами`,
+    )
     const result = await session.run(cypherQuery, queryParameters)
-    // console.log(result)
+    const summary = result?.summary
+    const counters = summary?.counters
+    try {
+      // В разных версиях драйвера counters может иметь разные поля — логируем максимально безопасно
+      const updates =
+        (typeof counters?.updates === "function" ? counters.updates() : counters?._stats) || counters || null
+      // Логируем только в случае изменений
+      if (updates) {
+        console.log("📈 Счетчики изменений:", updates)
+      }
+    } catch (e) {
+      console.log("⚠️ Не удалось распарсить счетчики:", e?.message || e)
+    }
     return result.records // Возвращаем результаты запроса
   } catch (error) {
     console.error("Произошла ошибка:", error)
@@ -23,46 +66,93 @@ async function runNeo4jQuery(cypherQuery, queryParameters) {
   }
 }
 
-export async function syncTasksNeo4j(userName, userId, incomingScribes) {
-  // console.log("userId", userId)
-  // console.log("incomingScribes", incomingScribes)
+function runNeo4jQuery(cypherQuery, queryParameters) {
+  return new Promise((resolve, reject) => {
+    __neoQueue.push({ cypherQuery, queryParameters, resolve, reject })
+    __processNeoQueue()
+  })
+}
 
+export async function syncTasksNeo4j(userName, userId, incomingScribe) {
   const cypherQuery = `
-    MERGE (user:User {id: $userId})
-    SET user.name = $userName
-    WITH user
-    UNWIND $incomingScribes AS incomingScribe
-    MERGE (task:Task {id: incomingScribe.id})
-    ON CREATE SET task += incomingScribe, task.fromIds = NULL, task.toIds = NULL
-    ON MATCH SET task += incomingScribe, task.fromIds = NULL, task.toIds = NULL
-    MERGE (user)-[:HAS_SCRIBE]->(task)
-    WITH user, task, incomingScribe.fromIds AS fromIds, incomingScribe.toIds AS toIds, incomingScribe.assignedTo AS assignedTo, incomingScribe.assignedBy AS assignedBy
-
-    // Удаление старых связей OPENS
-    OPTIONAL MATCH (task)-[oldOpenRelation:OPENS]->()
-    DELETE oldOpenRelation
-    WITH user, task, toIds, assignedTo, assignedBy
-
-    // Удаление старых связей ASSIGNED_TO
-    OPTIONAL MATCH (task)-[oldAssignedToRelation:HAS_SCRIBE]->()
-    DELETE oldAssignedToRelation
-    WITH user, task, toIds, assignedTo, assignedBy
-
-    // Обработка связей TO
-    FOREACH (toId IN toIds | 
-      MERGE (toTask:Task {id: toId})
-      MERGE (task)-[:OPENS]->(toTask)
-    )
-
-    // Обработка связей ASSIGNED_TO
-    FOREACH (assignToId IN assignedTo | 
-      MERGE (assignToUser:User {id: assignToId})
-      MERGE (task)<-[:HAS_SCRIBE]-(assignToUser)
-    )
-`
-  const queryParameters = { userName, userId, incomingScribes }
+  MERGE (user:User {id: $userId})
+  SET user.name = $userName
+  WITH user, $incomingScribe AS incomingScribe
+  MERGE (task:Task {id: incomingScribe.id})
+  ON CREATE SET task += incomingScribe
+  ON MATCH SET  task += incomingScribe
+  MERGE (user)-[:HAS_SCRIBE]->(task)
+  RETURN user.id AS userId, task.id AS taskId
+  `
+  const queryParameters = { userName, userId, incomingScribe }
+  console.log("🔍 Параметры для syncTasksNeo4j:", {
+    userName,
+    userId,
+    incomingScribe: JSON.stringify(incomingScribe, null, 2),
+  })
 
   return await runNeo4jQuery(cypherQuery, queryParameters)
+}
+
+export async function syncRelationNeo4j(userId, relation) {
+  console.log("🔄 Обработка связи relation:", JSON.stringify(relation, null, 2))
+
+  if (relation.added) {
+    const rel = relation.added
+    console.log("🧩 Добавляем связи:", JSON.stringify(rel, null, 2))
+    console.log("🔧 Обрабатываем связь (добавить):", rel)
+    console.log("Параметры для добавления связи:", {
+      userId,
+      from: rel.from,
+      to: rel.to,
+      type: rel.type.toUpperCase(),
+      ts: rel.ts,
+    })
+    const cypherQuery = `
+      MATCH (u:User {id: $userId})
+      MATCH (u)-[:HAS_SCRIBE]->(from:Task {id: $from})
+      MATCH (u)-[:HAS_SCRIBE]->(to:Task {id: $to})
+      MERGE (from)-[r:${rel.type.toUpperCase()}]->(to)
+      SET r.timestamp = coalesce($ts, r.timestamp)
+      RETURN from.id AS fromId, to.id AS toId, type(r) AS type, r.timestamp AS ts
+    `
+    const addRes = await runNeo4jQuery(cypherQuery, { userId, from: rel.from, to: rel.to, ts: rel.ts })
+    console.log("Результат добавления связи:", addRes)
+    if (!addRes || addRes.length === 0) {
+      console.warn("⚠️ Связь не создана: одна из задач не принадлежит пользователю или не найдена", {
+        userId,
+        from: rel.from,
+        to: rel.to,
+        type: rel.type,
+      })
+    }
+  }
+
+  if (relation.removed) {
+    const rel = relation.removed
+    console.log("🧹 Удаляем связь:", rel)
+    console.log("Параметры для удаления связи:", { userId, from: rel.from, to: rel.to, type: rel.type.toUpperCase() })
+    const cypherQuery = `
+      MATCH (u:User {id: $userId})
+      MATCH (u)-[:HAS_SCRIBE]->(from:Task {id: $from})
+      MATCH (u)-[:HAS_SCRIBE]->(to:Task {id: $to})
+      MATCH (from)-[r:${rel.type.toUpperCase()}]->(to)
+      DELETE r
+      RETURN from.id AS fromId, to.id AS toId, "${rel.type.toUpperCase()}" AS type
+    `
+    const delRes = await runNeo4jQuery(cypherQuery, { userId, from: rel.from, to: rel.to })
+    console.log("Результат удаления связи:", delRes)
+    if (!delRes || delRes.length === 0) {
+      console.warn("⚠️ Связь не удалена: одна из задач не принадлежит пользователю, не найдена или ребро отсутствует", {
+        userId,
+        from: rel.from,
+        to: rel.to,
+        type: rel.type,
+      })
+    }
+  }
+
+  return true
 }
 
 export async function addCollaboratorNeo4j(userId, collaboratorId, collaboratorName) {
@@ -111,50 +201,51 @@ export async function removeCollaboratorNeo4j(userId, collaboratorId) {
 export async function loadDataFromNeo4j(userId) {
   const cypherQuery = `
     MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(scribe)
-    OPTIONAL MATCH (scribe)-[:OPENS]->(toTask:Task)
-    
-    WITH user, scribe, collect(toTask.id) AS toIds
-    OPTIONAL MATCH (fromTask:Task)-[:OPENS]->(scribe)
-
-    WITH user, scribe, toIds, collect(fromTask.id) AS fromIds
-    OPTIONAL MATCH (user)-[outRel:COLLABORATE]->(outCollaborator:User)
-    WITH user, scribe, toIds, fromIds, collect({id: outCollaborator.id, name: outRel.name}) AS outCollaborations
-    OPTIONAL MATCH (user)<-[inRel:COLLABORATE]-(inCollaborator:User)
-    WITH scribe, toIds, fromIds, outCollaborations, collect({id: inCollaborator.id, name: inRel.name}) AS inCollaborations
-    RETURN collect({task: scribe, toIds: toIds, fromIds: fromIds}) AS tasks, outCollaborations, inCollaborations
+    OPTIONAL MATCH (scribe)-[l:LEADS]->(toLead:Task)
+    WITH user, scribe, collect({ id: toLead.id, ts: l.timestamp }) AS leads
+    OPTIONAL MATCH (scribe)-[b:BLOCKS]->(toBlock:Task)
+    WITH scribe, leads, collect({ id: toBlock.id, ts: b.timestamp }) AS blocks
+    RETURN collect({task: scribe, leads: leads, blocks: blocks}) AS tasks
   `
+
   const queryParameters = { userId }
   const result = await runNeo4jQuery(cypherQuery, queryParameters)
-  const tasks = result[0]?.get("tasks").map((taskRecord) => {
-    const task = taskRecord.task.properties
-    const toIds = taskRecord.toIds
-    const fromIds = taskRecord.fromIds
-    return { ...task, toIds, fromIds }
-  })
-  const outCollaborations = result[0]?.get("outCollaborations").filter((collab) => collab.id != null) || []
-  const inCollaborations = result[0]?.get("inCollaborations").filter((collab) => collab.id != null) || []
 
-  // Формируем список текущих коллабораторов
-  const collaborators = outCollaborations.filter((outCollab) =>
-    inCollaborations.some((inCollab) => inCollab.id === outCollab.id),
-  )
+  const graph = new Graph()
 
-  // Фильтруем исходящие запросы на сотрудничество, исключая текущих коллабораторов
-  const collaborationRequests = outCollaborations.filter(
-    (outCollab) => !collaborators.some((collab) => collab.id === outCollab.id),
-  )
+  const items = result[0]?.get("tasks") || []
+  for (const item of items) {
+    // item.task is a Neo4j Node; prefer .properties if present
+    const nodeProps = item.task?.properties || item.task || {}
+    const id = nodeProps.id
+    if (!id) continue
 
-  return { tasks, collaborators, collaborationRequests }
+    // Add node with all its properties
+    graph.addNode(id, { ...nodeProps })
+
+    // Outgoing leads: scribe -> toTask
+    for (const lead of item.leads || []) {
+      if (lead?.id != null) graph.addLead(id, lead.id, lead.ts)
+    }
+
+    // Outgoing blocks: scribe -> toTask
+    for (const block of item.blocks || []) {
+      if (block?.id != null) graph.addBlock(id, block.id, block.ts)
+    }
+  }
+
+  // Return a plain JSON snapshot of the graph (nodes + edges)
+  return graph.toJSON()
 }
 
 export async function removeOldTasksFromNeo4j(userId) {
   const removeOldTasksQuery = `
-    MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(task:Task {ready:TRUE})
-    WHERE task.ready = true AND (task.timestamp < ($currentTime - $DIFFERENCE_MILLISECONDS))
+    MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(task:Task)
+    WHERE task.ready = true AND task.timestamp < ($currentTime - $DIFFERENCE_MILLISECONDS)
     WITH task
-    OPTIONAL MATCH (task)-[:OPENS]-(tr {ready:TRUE})
+    OPTIONAL MATCH (task)-[:LEADS|BLOCKS]-(tr {ready:TRUE})
     WITH task, COLLECT(tr) AS toNodesReady
-    OPTIONAL MATCH (task)-[:OPENS]-(t)
+    OPTIONAL MATCH (task)-[:LEADS|BLOCKS]-(t)
     WITH task, toNodesReady, COLLECT(t) AS toNodes
     WHERE ALL(node IN toNodes WHERE node IN toNodesReady)
     DETACH DELETE task

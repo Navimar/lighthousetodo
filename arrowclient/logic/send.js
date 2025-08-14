@@ -1,11 +1,14 @@
+const SERVER_SYNC = import.meta.env.VITE_SERVER_SYNC !== "false"
+
 import { auth } from "/components/authentication.js"
 import reData from "~/logic/reactive.js"
-import syncTasks from "/logic/synctasks.js"
+import { syncTask, syncRelation } from "/logic/synctasks.js"
 import data from "~/logic/data.js"
 import { makevisible } from "~/logic/makevisible"
-import { safeSetLocalStorageItem } from "~/logic/util.js"
+import { safeSetLocalStorageItem } from "~/logic/sync.js"
 import { socket } from "~/logic/socket.js"
 import { VERSION } from "~/logic/const"
+import Graph from "~/../shared/graph.js"
 
 import { v4 as uuidv4 } from "uuid"
 
@@ -33,6 +36,7 @@ async function getToken() {
 }
 
 export function inputSocket() {
+  if (!SERVER_SYNC) return
   socket.on("connect", function () {
     loadData()
     // reData.clientIsOnline = true
@@ -48,14 +52,36 @@ export function inputSocket() {
     console.log("DISCONNECT!!!")
     // reData.clientIsOnline = false
   })
-  socket.on("update", function (msg) {
-    syncTasks(msg?.tasks)
-    //заменить на синхронизацию полноценную
+
+  socket.on("updatetask", function (msg) {
+    console.log("updatetask")
+    syncTask(msg?.task)
+    // safeSetLocalStorageItem("tasks", data.tasks)
+    if (reData.route[0] == "tasks") makevisible()
+  })
+
+  socket.on("updatecollaborators", function (msg) {
     reData.collaborators = msg?.collaborators || []
     reData.collaborationRequests = msg?.collaborationRequests || []
-    // console.log("msg", msg)
-    safeSetLocalStorageItem("tasks", data.tasks)
+  })
+
+  socket.on("updaterelation", function (msg) {
+    syncRelation(msg?.relation)
+    // safeSetLocalStorageItem("tasks", data.tasks)
     if (reData.route[0] == "tasks") makevisible()
+  })
+
+  socket.on("update", function (msg) {
+    console.log("socket update", msg)
+    // Сервер присылает полный/частичный граф в поле `graph`
+    if (!msg?.graph) return
+    try {
+      // Мерджим граф, где локальный граф хранится в data.tasks
+      data.tasks = Graph.merge(data.tasks, msg.graph)
+      if (reData.route[0] == "tasks") makevisible()
+    } catch (e) {
+      console.error("Error merging graph:", e)
+    }
   })
 
   socket.on("err", (val) => {
@@ -64,7 +90,7 @@ export function inputSocket() {
 }
 
 export const loadData = async () => {
-  // console.log("loaddata", reData.user)
+  if (!SERVER_SYNC) return
   if (auth.currentUser)
     try {
       const token = await getToken("ld") // Получение нового токена
@@ -76,13 +102,15 @@ export const loadData = async () => {
 }
 
 socket.on("save-confirm", (responseId) => {
+  if (!SERVER_SYNC) return
   // Удаляем подтвержденный пакет из массива
   // console.log("save-confirm", responseId)
   data.pendingRequests = data.pendingRequests.filter((packet) => packet.requestId !== responseId)
-  safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
+  // safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
 })
 
 export const sendCollaboratorRequest = async (collaborator) => {
+  if (!SERVER_SYNC) return
   if (collaborator) {
     const packet = {
       collaborator,
@@ -94,6 +122,7 @@ export const sendCollaboratorRequest = async (collaborator) => {
   sendPendingRequests()
 }
 export const sendCollaboratorRemovalRequest = async (collaboratorIdToRemove) => {
+  if (!SERVER_SYNC) return
   if (collaboratorIdToRemove) {
     const packet = {
       collaboratorIdToRemove, // Changed field name
@@ -105,12 +134,26 @@ export const sendCollaboratorRemovalRequest = async (collaboratorIdToRemove) => 
   sendPendingRequests()
 }
 
-export const sendTasksData = async (changedTasks) => {
-  if (changedTasks) {
+export const sendRelation = async (change) => {
+  if (!SERVER_SYNC) return
+  const packet = {
+    relation: change,
+    requestId: uuidv4(),
+  }
+  console.log("sendRelation", packet)
+  data.pendingRequests.push(packet)
+  safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
+  sendPendingRequests()
+}
+
+export const sendTask = async (changedTask) => {
+  if (!SERVER_SYNC) return
+  if (changedTask) {
     const packet = {
-      tasks: changedTasks,
+      task: changedTask,
       requestId: uuidv4(),
     }
+    console.log("sendTask", packet)
     data.pendingRequests.push(packet)
     safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
   }
@@ -118,6 +161,7 @@ export const sendTasksData = async (changedTasks) => {
 }
 
 const sendPendingRequests = async () => {
+  if (!SERVER_SYNC) return
   if (data.pendingRequests) {
     for (let pendingPacket of data.pendingRequests) {
       await sendPacket(pendingPacket)
@@ -126,6 +170,7 @@ const sendPendingRequests = async () => {
 }
 
 const sendPacket = async (packet) => {
+  if (!SERVER_SYNC) return
   if (auth.currentUser)
     try {
       const token = await getToken("sd")

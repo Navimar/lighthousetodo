@@ -1,21 +1,45 @@
 import data from "~/logic/data.js"
 
-export default (incomingTasks = []) => {
-  for (const incomingTask of incomingTasks) {
-    // Проверяем наличие ID
-    if (!incomingTask.id) {
-      // console.log("incomingTask", incomingTask)
-      throw new Error("Incoming task is missing an ID.")
+export function syncTask(incomingTask) {
+  if (!incomingTask?.id) {
+    throw new Error("Incoming task is missing an ID.")
+  }
+
+  const id = incomingTask.id
+
+  if (!data.tasks.nodes.has(id)) {
+    data.tasks.addNode(id, incomingTask)
+  } else {
+    const existing = data.tasks.nodes.get(id)
+    if (incomingTask.timestamp > (existing.timestamp ?? 0)) {
+      Object.assign(existing, incomingTask)
     }
+  }
+}
 
-    // Ищем задачу с тем же ID
-    let matchingTask = data.tasks.find((t) => t.id === incomingTask.id)
+export function syncRelation(relation) {
+  if (!relation || (!Array.isArray(relation.added) && !Array.isArray(relation.removed))) {
+    throw new Error("Invalid relation object")
+  }
 
-    if (!matchingTask) {
-      data.tasks.push(incomingTask)
-      // Обновляем задачу, если у нее нет временной метки или если входящая задача новее
-    } else if (incomingTask.timestamp > matchingTask.timestamp) {
-      Object.assign(matchingTask, incomingTask)
+  const graph = data.tasks
+
+  // Удаление связей
+  if (Array.isArray(relation.removed)) {
+    for (const rel of relation.removed) {
+      if (rel.from && rel.to) {
+        graph.removeRelation(rel.from, rel.to)
+      }
+    }
+  }
+
+  // Добавление связей
+  if (Array.isArray(relation.added)) {
+    for (const rel of relation.added) {
+      if (rel.from && rel.to && rel.type) {
+        if (rel.type === "leads") graph.addLead(rel.from, rel.to)
+        else if (rel.type === "blocks") graph.addBlock(rel.from, rel.to)
+      }
     }
   }
 }

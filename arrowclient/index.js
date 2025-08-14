@@ -11,7 +11,7 @@ import { renderCollabortors, renderCollaborationRequests } from "./components/co
 import { inputSocket } from "~/logic/send.js"
 import watchers from "~/logic/watchers.js"
 
-import { safeSetLocalStorageItem, getLocalStorageItem } from "~/logic/util.js"
+import { safeSetLocalStorageItem, getLocalStorageItem } from "~/logic/sync.js"
 import reData from "~/logic/reactive.js"
 import { tick } from "~/logic/tick.js"
 import data from "~/logic/data.js"
@@ -84,8 +84,6 @@ window.addEventListener("load", function () {
   darkModeMediaQuery.addEventListener("change", updateBackground)
 
   authenticationOnLoad()
-
-  data.tasks = getLocalStorageItem("tasks") || []
   removeOldTasks()
   data.pendingRequests = getLocalStorageItem("pendingRequests") || []
 

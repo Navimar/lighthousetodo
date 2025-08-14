@@ -62,13 +62,19 @@ let renderTask = (task, index) => {
   } else {
     // Нередактируемый
     let cornerClass = ""
-    if (task.toIds?.length && task.fromIds?.length) {
+    const { blocks, leads } = data.tasks.getRelations(task.id)
+    const incoming = data.tasks.getIncomingRelations(task.id)
+    let hasOutgoing = blocks.length > 0 || leads.length > 0
+    let hasIncoming = incoming.blocks.length > 0 || incoming.leads.length > 0
+
+    if (hasOutgoing && hasIncoming) {
       cornerClass = "corner-box-both-corners"
-    } else if (task.toIds?.length) {
+    } else if (hasOutgoing) {
       cornerClass = "corner-box-bottom-right"
-    } else if (task.fromIds?.length) {
+    } else if (hasIncoming) {
       cornerClass = "corner-box-top-left"
     }
+
     return html`<div
       @click="${(e) => {
         selectTaskById(task.id)

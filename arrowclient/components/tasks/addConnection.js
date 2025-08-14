@@ -4,21 +4,25 @@ import reData from "~/logic/reactive.js"
 import data from "~/logic/data.js"
 import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 import taskplate from "~/components/tasks/taskplate.js"
+import { makevisible } from "~/logic/makevisible"
+
+import { sendRelation } from "~/logic/send.js"
 
 /**
  * Добавляет связь между задачей (task) и другой задачей,
- * найденной по имени (taskName), в нужное поле (fromIds/toIds/moreImportantIds/lessImportantIds).
+ * найденной по имени (taskName), в нужное поле (pioneer/blocks).
  */
 function addTaskByName(task, taskName, type) {
   showSaveButtonHidePause()
+  const ts = Date.now()
   const fieldMap = {
-    from: "fromIds",
-    to: "toIds",
-    moreImportant: "moreImportantIds",
-    lessImportant: "lessImportantIds",
+    from: "blocks", // from -> blocks
+    to: "blocks", // to -> blocks
+    moreImportant: "leads", // moreImportant -> leads
+    lessImportant: "leads", // lessImportant -> leads
   }
-  const fieldName = fieldMap[type]
-  if (!fieldName) {
+  const relationType = fieldMap[type]
+  if (!relationType) {
     throw new Error(`Неверный тип связи: ${type}`)
   }
 
@@ -27,16 +31,55 @@ function addTaskByName(task, taskName, type) {
 
   // Считаем, что getObjectByName гарантированно возвращает объект
   const taskObj = getObjectByName(taskName)
-  // Добавляем связь
-  if (!task[fieldName]) {
-    task[fieldName] = []
-  }
-
-  if (Object.keys(fieldMap).some((key) => (task[fieldMap[key]] || []).includes(taskObj.id))) {
-    console.warn(`Задача "${taskObj.name}" уже связана (по любому типу)`)
+  if (!taskObj) {
+    console.warn(`Задача с именем "${taskName}" не найдена`)
     return
   }
-  task[fieldName].push(taskObj.id)
+  if (taskObj.id === task.id) {
+    console.warn(`Нельзя связать задачу "${taskObj.name}" саму с собой`)
+    return
+  }
+  console.log("taskObj in addTaskByName", taskObj)
+
+  // Проверяем, есть ли уже связь
+  const relations = data.tasks.getRelations(task.id)
+  const relationSet = relationType === "leads" ? relations.leads : relations.blocks
+  if (relationSet.includes(taskObj.id)) {
+    console.warn(`Задача "${taskObj.name}" уже связана (по типу ${relationType})`)
+    return
+  }
+
+  // Добавляем связь в граф с учетом направления type (логика инверсирована)
+  if (relationType === "leads") {
+    if (type === "from" || type === "moreImportant") {
+      data.tasks.addLead(taskObj.id, task.id, ts) // входящая грань
+      sendRelation({
+        added: { from: taskObj.id, to: task.id, type: "leads", ts },
+        removed: null,
+      })
+    } else {
+      data.tasks.addLead(task.id, taskObj.id, ts) // исходящая грань
+      sendRelation({
+        added: { from: task.id, to: taskObj.id, type: "leads", ts },
+        removed: null,
+      })
+    }
+  } else if (relationType === "blocks") {
+    if (type === "from" || type === "moreImportant") {
+      data.tasks.addBlock(taskObj.id, task.id) // входящая грань
+      sendRelation({
+        added: { from: taskObj.id, to: task.id, type: "blocks", ts },
+        removed: null,
+      })
+    } else {
+      data.tasks.addBlock(task.id, taskObj.id) // исходящая грань
+      sendRelation({
+        added: { from: task.id, to: taskObj.id, type: "blocks", ts },
+        removed: null,
+      })
+    }
+  }
+  makevisible()
 }
 
 /**
@@ -69,7 +112,6 @@ function complete(e, divId, task, type) {
  * будут свои поля и своя логика отображения.
  */
 function handleInputKeyDown(e, task, type) {
-  console.log(type)
   if (e.key === "Enter") {
     e.preventDefault()
     const name = e.target.value.trim()
@@ -95,18 +137,23 @@ function handleInput(e) {
   }
 
   // Искать совпадения в data.tasks на основе поля name
-  const matches = data.tasks
-    .filter((taskItem) => taskItem.name.toLowerCase().includes(currentLineText) && taskItem.id != reData.selectedScribe) // Преобразование к нижнему регистру
-    .sort((a, b) => {
-      // Основная сортировка на основе длины toNames
-      const difference =
-        (b.toIds?.length || 0) + (b.fromIds?.length || 0) - ((a.toIds?.length || 0) + (a.fromIds?.length || 0))
-      if (difference !== 0) return difference
+  const allTasks = Array.from(data.tasks.nodes.entries()).map(([id, nodeData]) => ({
+    id,
+    ...nodeData,
+    leadsCount: data.tasks.getRelations(id).leads.length,
+    blocksCount: data.tasks.getRelations(id).blocks.length,
+  }))
 
-      // Дополнительная сортировка на основе длины name, если длины toNames одинаковы
+  const matches = allTasks
+    .filter(
+      (taskItem) => taskItem.name.toLowerCase().includes(currentLineText) && taskItem.id !== reData.selectedScribe,
+    )
+    .sort((a, b) => {
+      const difference = b.leadsCount + b.blocksCount - (a.leadsCount + a.blocksCount)
+      if (difference !== 0) return difference
       return a.name.length - b.name.length
     })
-    .slice(0, 7) // Ограничиваем список
+    .slice(0, 7)
 
   // Обновлять reData.autoComplete.list с найденными именами совпадений
   reData.autoComplete.list = matches.map((match) => {
@@ -185,11 +232,11 @@ export default (task, type) => {
   const placeholders =
     type === "from"
       ? {
-          important: "Более важные задачи...",
+          important: "Более приоритетные задачи...",
           regular: "Блокирующие выполнение задачи...",
         }
       : {
-          important: "Менее важные задачи...",
+          important: "Менее приоритетные задачи...",
           regular: "Открывающиеся задачи...",
         }
 

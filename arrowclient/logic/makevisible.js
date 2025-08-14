@@ -3,6 +3,7 @@ import data from "~/logic/data.js"
 import performance from "~/logic/performance.js"
 import sort from "~/logic/sort.js"
 import dayjs from "dayjs"
+import { saveGraphToLocalStorage } from "~/logic/sync.js"
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
 
 dayjs.extend(isSameOrAfter)
@@ -14,8 +15,11 @@ export const makevisible = () => {
 
     let visibleTasks = []
     const selectedDateObj = dayjs(reData.selectedDate)
+    data.tasks.updateDepths()
+    data.tasks.updateBlockedStatuses()
+    saveGraphToLocalStorage(data.tasks)
 
-    for (let task of data.tasks) {
+    for (let task of data.tasks.nodes.values()) {
       if (task.id === reData.selectedScribe) {
         visibleTasks.push(task)
         continue
@@ -55,6 +59,8 @@ export const makevisible = () => {
 
     // Update visible tasks with the paginated list
     reData.visibleTasks = paginatedTasks
+
+    console.log("reData.visibleTasks", reData.visibleTasks)
 
     // Update total pages in reData
     reData.totalPages = Math.ceil(totalTasks / pageSize)

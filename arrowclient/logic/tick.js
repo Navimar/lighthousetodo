@@ -1,6 +1,6 @@
 import reData from "~/logic/reactive.js"
 import { socket } from "~/logic/socket.js"
-
+import { makevisible } from "~/logic/makevisible"
 import dayjs from "dayjs"
 
 export let tick = () => {
