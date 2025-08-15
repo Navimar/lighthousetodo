@@ -7,7 +7,7 @@ import data from "~/logic/data.js"
 import { makevisible } from "~/logic/makevisible"
 import { safeSetLocalStorageItem } from "~/logic/sync.js"
 import { socket } from "~/logic/socket.js"
-import { VERSION } from "~/logic/const"
+import VERSION from "~/../shared/version.js"
 import Graph from "~/../shared/graph.js"
 
 import { v4 as uuidv4 } from "uuid"

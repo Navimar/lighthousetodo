@@ -3,7 +3,7 @@ import admin from "firebase-admin"
 import { addUser, getUser } from "./user.js"
 // import { pruneTaskIds, prepareTasks } from "./process.js"
 
-import version from "./version.js"
+import version from "../shared/version.js"
 import {
   syncTasksNeo4j,
   removeCollaboratorNeo4j,

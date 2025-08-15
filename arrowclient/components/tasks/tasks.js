@@ -19,10 +19,12 @@ export default () => {
   try {
     if (reData.route[0] != "tasks") return ""
     if (reData.searchString) {
-      // Filter tasks by matching with the search input
-      let filteredTasks = data.tasks.filter(
-        (task) => task.name && task.name.toLowerCase().includes(reData.searchString.toLocaleLowerCase()),
-      )
+      // Filter tasks by matching with the search input (Graph-based storage)
+      const query = String(reData.searchString).toLowerCase()
+      let filteredTasks = Array.from(data.tasks.nodes.entries())
+        .map(([id, node]) => ({ id, ...node }))
+        .filter((task) => task.name && task.name.toLowerCase().includes(query))
+
       if (filteredTasks.length === 0) {
         return html`<div
           class="fontmono flex flex-col gap-3 bg-near dark:bg-black p-3 rounded-lg overflow dark:text-white italic"
