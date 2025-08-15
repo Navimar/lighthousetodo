@@ -1,7 +1,6 @@
 import serviceAccount from "../firebase.config.js"
 import admin from "firebase-admin"
 import { addUser, getUser } from "./user.js"
-// import { pruneTaskIds, prepareTasks } from "./process.js"
 
 import version from "../shared/version.js"
 import {
@@ -31,6 +30,7 @@ async function verifyToken(idToken) {
 export let inputSocket = (io) => {
   io.on("connection", function (socket) {
     console.log("connection", socket.id)
+    console.log("version", version)
     socket.emit("version", { version })
     socket.on("disconnect", function () {
       console.log("disconnect")

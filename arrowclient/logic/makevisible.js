@@ -17,6 +17,7 @@ export const makevisible = () => {
     const selectedDateObj = dayjs(reData.selectedDate)
     data.tasks.updateDepths()
     data.tasks.updateBlockedStatuses()
+    data.tasks.resumePausedTasks()
     saveGraphToLocalStorage(data.tasks)
 
     for (let task of data.tasks.nodes.values()) {

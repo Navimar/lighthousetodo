@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 class Graph {
   constructor({ onChange } = {}) {
     this.nodes = new Map() // id -> Node data
@@ -326,6 +327,26 @@ class Graph {
       node.blocked = hasBlocking
     })
     this._notifyChange()
+  }
+
+  /**
+   * Снимает паузы с задач, у которых пауза истекла по формуле:
+   * diffNowMinutes > (5 + task.pauseTimes * 5) * task.pauseTimes
+   * Возвращает массив id изменённых задач. Вызывает _notifyChange(), если были изменения.
+   */
+  resumePausedTasks() {
+    this.nodes.forEach((task) => {
+      if (!task) return
+      if (task.pause) {
+        const pauseTimes = Number(task.pauseTimes) || 0
+        // Если pause невалидна как дата — пропускаем
+        const pausedAt = dayjs(task.pause)
+        if (!pausedAt.isValid()) return
+        if (dayjs().diff(pausedAt, "minute") > (5 + pauseTimes * 5) * pauseTimes) {
+          task.pause = false
+        }
+      }
+    })
   }
 
   static merge(a, b, { onChange } = {}) {
