@@ -205,17 +205,23 @@ class Graph {
       return Number.isFinite(ts) && ts > Date.now()
     }
 
-    // increment per edge type according to the agreed table
-    // leads: +0 if (ready || pause || isFuture), else +1
-    // blocks: +0 if (ready), else +1
-    const incFor = (parent, edgeKind) => {
+    const isBlockedByNotReady = (nodeId) => {
+      const incoming = this.getIncomingRelations(nodeId)
+      return incoming.blocks.some((fromId) => {
+        const fromNode = this.nodes.get(fromId)
+        return fromNode && !fromNode.ready
+      })
+    }
+
+    // Increment rule (same for both edge types):
+    // +0 if (ready || pause || isFuture || blocked by not ready), else +1
+    const incFor = (parentId, edgeKind) => {
+      const parent = this.nodes.get(parentId)
+      // same behavior for 'leads' and 'blocks'
       if (parent?.ready) return 0
-      if (edgeKind === "leads") {
-        if (parent?.pause) return 0
-        if (isFuture(parent)) return 0
-        return 1
-      }
-      // edgeKind === 'blocks'
+      if (parent?.pause) return 0
+      if (isFuture(parent)) return 0
+      if (isBlockedByNotReady(parentId)) return 0
       return 1
     }
 
@@ -245,9 +251,9 @@ class Graph {
       const child = this.nodes.get(childId)
       if (!child) return
 
-      const inc = incFor(parent, kind)
-      const newDepth = (parent?.depth ?? 0) + inc
-      child.depth = Math.max(child.depth ?? 0, newDepth)
+      const inc = incFor(parentId, kind)
+      const parentDepth = this.nodes.get(parentId)?.depth ?? 0
+      child.depth = Math.max(child.depth ?? 0, parentDepth + inc)
 
       inDegree.set(childId, (inDegree.get(childId) || 0) - 1)
       if (inDegree.get(childId) === 0) queue.push(childId)
