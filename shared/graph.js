@@ -162,7 +162,9 @@ class Graph {
 
   _ensureNodesExist(...ids) {
     ids.forEach((id) => {
-      if (!this.nodes.has(id)) this.addNode(id)
+      if (!this.nodes.has(id)) {
+        throw new Error(`Node ${id} must exist before linking`)
+      }
     })
   }
 

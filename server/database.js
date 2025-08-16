@@ -200,11 +200,12 @@ export async function removeCollaboratorNeo4j(userId, collaboratorId) {
 
 export async function loadDataFromNeo4j(userId) {
   const cypherQuery = `
-    MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(scribe)
+    MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(scribe:Task)
     OPTIONAL MATCH (scribe)-[l:LEADS]->(toLead:Task)
-    WITH user, scribe, collect({ id: toLead.id, ts: l.timestamp }) AS leads
     OPTIONAL MATCH (scribe)-[b:BLOCKS]->(toBlock:Task)
-    WITH scribe, leads, collect({ id: toBlock.id, ts: b.timestamp }) AS blocks
+    WITH user, scribe,
+         collect(DISTINCT { id: toLead.id, ts: l.timestamp, node: toLead }) AS leads,
+         collect(DISTINCT { id: toBlock.id, ts: b.timestamp, node: toBlock }) AS blocks
     RETURN collect({task: scribe, leads: leads, blocks: blocks}) AS tasks
   `
 
@@ -215,26 +216,34 @@ export async function loadDataFromNeo4j(userId) {
 
   const items = result[0]?.get("tasks") || []
   for (const item of items) {
-    // item.task is a Neo4j Node; prefer .properties if present
-    const nodeProps = item.task?.properties || item.task || {}
-    const id = nodeProps.id
-    if (!id) continue
+    // Источник: сам scribe
+    const srcProps = item.task?.properties || item.task || {}
+    const srcId = srcProps.id
+    if (!srcId) continue
 
-    // Add node with all its properties
-    graph.addNode(id, { ...nodeProps })
+    // 1) Добавляем исходный узел с полными свойствами
+    graph.addNode(srcId, { ...srcProps })
 
-    // Outgoing leads: scribe -> toTask
+    // 2) Связи LEADS — перед созданием ребра гарантированно добавляем целевой узел
     for (const lead of item.leads || []) {
-      if (lead?.id != null) graph.addLead(id, lead.id, lead.ts)
+      const toProps = lead?.node?.properties || null
+      if (toProps?.id) {
+        graph.addNode(toProps.id, { ...toProps })
+        graph.addLead(srcId, toProps.id, lead.ts)
+      }
     }
 
-    // Outgoing blocks: scribe -> toTask
+    // 3) Связи BLOCKS — то же самое
     for (const block of item.blocks || []) {
-      if (block?.id != null) graph.addBlock(id, block.id, block.ts)
+      const toProps = block?.node?.properties || null
+      if (toProps?.id) {
+        graph.addNode(toProps.id, { ...toProps })
+        graph.addBlock(srcId, toProps.id, block.ts)
+      }
     }
   }
 
-  // Return a plain JSON snapshot of the graph (nodes + edges)
+  // Возвращаем слепок JSON
   return graph.toJSON()
 }
 
