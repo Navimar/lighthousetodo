@@ -18,7 +18,7 @@ export const getObjectById = (id) => {
 
 export const getObjectByName = (name) => {
   const lowerName = name.toLowerCase()
-  const foundTask = Array.from(data.tasks.nodes.values()).find((node) => node?.name.toLowerCase() === lowerName)
+  const foundTask = Array.from(data.tasks.nodes.values()).find((node) => node.name?.toLowerCase() === lowerName)
   if (foundTask) {
     return foundTask
   } else {
