@@ -151,6 +151,9 @@ class Graph {
     restoreEdgeMap(g.outgoingEdges, json.outgoingEdges)
     restoreEdgeMap(g.incomingEdges, json.incomingEdges)
 
+    // Prune edges that point to missing nodes and rebuild incoming edges for consistency
+    g._pruneDanglingEdgesOnLoad()
+
     return g
   }
 
@@ -319,6 +322,42 @@ class Graph {
       })
       toRemove.forEach(({ target }) => this.removeRelation(toId, target))
     }
+  }
+
+  _pruneDanglingEdgesOnLoad() {
+    // Ensure every node has an edge bucket
+    this.nodes.forEach((_, id) => {
+      this._edge(this.outgoingEdges, id)
+      this._edge(this.incomingEdges, id)
+    })
+
+    // Remove any outgoing edges whose endpoints don't exist
+    Array.from(this.outgoingEdges.entries()).forEach(([fromId, edge]) => {
+      if (!this.nodes.has(fromId)) {
+        this.outgoingEdges.delete(fromId)
+        return
+      }
+      edge.leads.forEach((_, toId) => {
+        if (!this.nodes.has(toId)) edge.leads.delete(toId)
+      })
+      edge.blocks.forEach((_, toId) => {
+        if (!this.nodes.has(toId)) edge.blocks.delete(toId)
+      })
+    })
+
+    // Rebuild incomingEdges from outgoingEdges to guarantee symmetry/consistency
+    this.incomingEdges.clear()
+    this.nodes.forEach((_, id) => {
+      this.incomingEdges.set(id, { leads: new Map(), blocks: new Map() })
+    })
+    this.outgoingEdges.forEach(({ leads, blocks }, fromId) => {
+      leads.forEach((ts, toId) => {
+        if (this.nodes.has(toId)) this._edge(this.incomingEdges, toId).leads.set(fromId, ts)
+      })
+      blocks.forEach((ts, toId) => {
+        if (this.nodes.has(toId)) this._edge(this.incomingEdges, toId).blocks.set(fromId, ts)
+      })
+    })
   }
 
   /**
