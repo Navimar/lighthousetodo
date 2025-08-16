@@ -51,7 +51,7 @@ export default () => {
     let somethingChanged = false
 
     if (name === "") {
-      name = thisTask.name
+      name = thisTask.name || "i am bug"
     }
     if (name != thisTask.name)
       while (isNameTaken(name) && name.length < 1000) {
