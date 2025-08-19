@@ -5,6 +5,7 @@ import data from "~/logic/data.js"
 import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 import taskplate from "~/components/tasks/taskplate.js"
 import { makevisible } from "~/logic/makevisible"
+import saveTask from "~/logic/savetask.js"
 
 import { sendRelation } from "~/logic/send.js"
 
@@ -13,6 +14,7 @@ import { sendRelation } from "~/logic/send.js"
  * найденной по имени (taskName), в нужное поле (pioneer/blocks).
  */
 function addTaskByName(task, taskName, type) {
+  saveTask()
   showSaveButtonHidePause()
   const ts = Date.now()
   const fieldMap = {
@@ -191,7 +193,8 @@ function renderAutocomplete(divId, task, type) {
 
   return html`
     <div id="autocomplete-list" class="w-full z-10 top-full">
-      <div class="border border-neutral-400 dark:bg-neutral-800 dark:border-neutral-600 rounded bg-white dark:bg-black">
+      <div
+        class="overflow-hidden border border-neutral-400 dark:bg-neutral-800 dark:border-neutral-600 rounded bg-white dark:bg-black">
         ${() => elements}
       </div>
     </div>

@@ -95,8 +95,7 @@ export default (givenTask, direction) => {
   if (!relatedTasks.length) return html``
 
   return html`
-    <div
-      class="text-xs flex max-h-60 overflow-y-auto flex-col gap-2 bg-neutral-50 dark:bg-neutral-800 p-2 rounded-lg border border-neutral-200 dark:border-neutral-700">
+    <div class="text-xs flex max-h-60 overflow-y-auto flex-col gap-2 bg-neutral-50 dark:bg-neutral-900 p-2">
       ${() =>
         relatedTasks.map((task) => {
           const showCorner = direction === "to" ? task.hasOutgoing : task.hasIncoming
@@ -114,14 +113,12 @@ export default (givenTask, direction) => {
                     added: { from: givenTask.id, to: task.id, type: task.hasBlockRelation ? "leads" : "blocks", ts },
                     removed: { from: givenTask.id, to: task.id, type: task.hasBlockRelation ? "blocks" : "leads" },
                   })
-                  // task.hasBlockRelation = false
                 } else {
                   data.tasks.addBlock(givenTask.id, task.id)
                   sendRelation({
                     added: { from: givenTask.id, to: task.id, type: task.hasBlockRelation ? "leads" : "blocks", ts },
                     removed: { from: givenTask.id, to: task.id, type: task.hasBlockRelation ? "blocks" : "leads" },
                   })
-                  // task.hasBlockRelation = true
                 }
               } else {
                 if (task.hasBlockRelation) {
@@ -130,18 +127,16 @@ export default (givenTask, direction) => {
                     added: { from: task.id, to: givenTask.id, type: task.hasBlockRelation ? "leads" : "blocks", ts },
                     removed: { from: task.id, to: givenTask.id, type: task.hasBlockRelation ? "blocks" : "leads" },
                   })
-                  // task.hasBlockRelation = false
                 } else {
                   data.tasks.addBlock(task.id, givenTask.id)
                   sendRelation({
                     added: { from: task.id, to: givenTask.id, type: task.hasBlockRelation ? "leads" : "blocks", ts },
                     removed: { from: task.id, to: givenTask.id, type: task.hasBlockRelation ? "blocks" : "leads" },
                   })
-                  // task.hasBlockRelation = true
                 }
               }
             }}">
-            ${task.hasBlockRelation ? "🔗" : html`&nbsp;&nbsp;&nbsp;&nbsp;`}
+            ${task.hasBlockRelation ? "🔗" : html`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`}
           </button>`
 
           return html` <div class="flex items-center gap-1">

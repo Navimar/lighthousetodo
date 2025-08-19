@@ -38,8 +38,8 @@ export default (arrToSort = reData.visibleTasks) => {
   arrToSort.sort((a, b) => {
     let result = 0
 
-    // result = sortByReadiness(a, b)
-    // if (result !== 0) return result
+    result = sortByReadiness(a, b)
+    if (result !== 0) return result
 
     result = sortByBlock(a, b)
     if (result !== 0) return result
