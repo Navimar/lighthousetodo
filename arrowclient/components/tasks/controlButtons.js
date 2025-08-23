@@ -35,7 +35,7 @@ function handleReadyCheckboxChange(event, task) {
   }
 
   // Вызываем основную функцию
-  updatePauseReadyButton(event, task)
+  updatePauseReadyButton(task)
 }
 
 export default (task) =>

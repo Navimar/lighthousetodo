@@ -106,12 +106,8 @@ function complete(e, divId, task, type) {
   reData.autoComplete.list = []
 }
 
-/**
- * Генерирует автокомплит для инпута с id = divId.
- * Если компонент встречается несколько раз, то у каждого
- * будут свои поля и своя логика отображения.
- */
 function handleInputKeyDown(e, task, type) {
+  // Обработка Enter/Escape для инпута автокомплита
   if (e.key === "Enter") {
     e.preventDefault()
     const name = e.target.value.trim()
@@ -120,29 +116,42 @@ function handleInputKeyDown(e, task, type) {
       e.target.value = ""
       reData.autoComplete.list = []
     }
+  } else if (e.key === "Escape") {
+    // Закрыть подсказки по Esc
+    reData.autoComplete.list = []
   }
 }
 
-function handleInput(e) {
+function debounce(fn, delay = 150) {
+  let timer
+  return function (...args) {
+    clearTimeout(timer)
+    timer = setTimeout(() => fn.apply(this, args), delay)
+  }
+}
+
+function handleInputCore(e) {
   reData.autoComplete.div = e.target.id
 
   const currentLineText = e.target.value.toLowerCase() // Преобразование к нижнему регистру
 
   reData.autoComplete.list = []
   reData.autoComplete.line = currentLineText
-  reData.autoComplete.div = e.target.id
 
   if (!currentLineText) {
     return
   }
 
   // Искать совпадения в data.tasks на основе поля name
-  const allTasks = Array.from(data.tasks.nodes.entries()).map(([id, nodeData]) => ({
-    id,
-    ...nodeData,
-    leadsCount: data.tasks.getRelations(id).leads.length,
-    blocksCount: data.tasks.getRelations(id).blocks.length,
-  }))
+  const allTasks = Array.from(data.tasks.nodes.entries()).map(([id, nodeData]) => {
+    const rels = data.tasks.getRelations(id)
+    return {
+      id,
+      ...nodeData,
+      leadsCount: rels.leads.length,
+      blocksCount: rels.blocks.length,
+    }
+  })
 
   const matches = allTasks
     .filter(
@@ -175,6 +184,11 @@ function handleInput(e) {
   })
 }
 
+const debouncedHandleInput = debounce(handleInputCore, 150)
+function handleInput(e) {
+  debouncedHandleInput(e)
+}
+
 function renderAutocomplete(divId, task, type) {
   // Если есть совпадения и мы сейчас "под" этим инпутом показываем подсказки
   if (!(reData.autoComplete.list.length > 0 && reData.autoComplete.div === divId)) return ""
@@ -190,7 +204,7 @@ function renderAutocomplete(divId, task, type) {
   )
 
   return html`
-    <div id="autocomplete-list" class="w-full z-10 top-full">
+    <div id="autocomplete-list-${divId}" class="w-full z-10 top-full">
       <div
         class="overflow-hidden border border-neutral-400 dark:bg-neutral-800 dark:border-neutral-600 rounded bg-white dark:bg-black">
         ${() => elements}
@@ -200,9 +214,10 @@ function renderAutocomplete(divId, task, type) {
 }
 
 // Закрываем автокомплит при клике вне него
-document.addEventListener("click", function (event) {
-  const autocompleteElem = document.getElementById("autocomplete-list")
-
+function onAutocompleteDocumentClick(event) {
+  const activeDivId = reData.autoComplete.div
+  if (!activeDivId) return
+  const autocompleteElem = document.getElementById(`autocomplete-list-${activeDivId}`)
   if (!autocompleteElem) return
 
   let targetElem = event.target
@@ -215,7 +230,11 @@ document.addEventListener("click", function (event) {
   }
   // Клик снаружи – скрываем
   reData.autoComplete.list = []
-})
+}
+if (typeof window !== "undefined" && !window.__adastra_ac_clickBound) {
+  document.addEventListener("click", onAutocompleteDocumentClick)
+  window.__adastra_ac_clickBound = true
+}
 
 /**
  * Экспортируемый компонент (может использоваться несколько раз),
@@ -262,8 +281,7 @@ export default (task, type) => {
             class="placeholder:italic focus:outline-none text-xs bg-transparent flex-grow"
             placeholder="${placeholders.regular}"
             @input="${handleInput}"
-            @keydown="${(e) => handleInputKeyDown(e, task, type === "from" ? "from" : "to")}"
-            } />
+            @keydown="${(e) => handleInputKeyDown(e, task, type === "from" ? "from" : "to")}" />
           <button
             class="flex-none text-base fontmono text-accent hover:text-compliment bg-transparent border-none cursor-pointer"
             @click="${() => {

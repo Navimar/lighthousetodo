@@ -44,7 +44,7 @@ export default () => {
         let selectedtaskdiv = document.getElementById("selectedtask")
         if (selectedtaskdiv) selectedtaskdiv.scrollIntoView(true)
         updateDateClass()
-        updatePauseReadyButton(selectedScribe)
+        if (selectedScribe) updatePauseReadyButton(selectedScribe)
       })
     } finally {
       performance.end("watch selectedScribe")
