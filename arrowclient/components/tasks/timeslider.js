@@ -34,7 +34,7 @@ function updateSliderLabel(e) {
     }
   }
   // Если выбранное время в будущем, не меняем дату
-  dateInputPauseButtonHTMLCSS(task)
+  dateInputPauseButtonHTMLCSS()
 }
 
 export default (task) =>
@@ -141,7 +141,7 @@ export default (task) =>
             const currentTimeInMinutes = dayjs().hour() * 60 + dayjs().minute()
             const slider = document.querySelector("#timeSlider")
             slider.value = currentTimeInMinutes
-            dateInputPauseButtonHTMLCSS(task)
+            dateInputPauseButtonHTMLCSS()
           }}"
           class="text-white fontmono rounded-lg px-2 bg-accent dark:bg-accent-dark block"
           >${() => reData.currentTime.clock}</span
