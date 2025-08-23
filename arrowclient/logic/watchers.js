@@ -31,19 +31,20 @@ export default () => {
       reData.visibleTasks
       Promise.resolve().then(() => {
         let editdiv = document.getElementById("edit")
+        let selectedScribe = null
+        if (reData.selectedScribe) selectedScribe = getObjectById(reData.selectedScribe)
         if (editdiv) {
           const range = document.createRange()
           const sel = window.getSelection()
           range.selectNodeContents(editdiv)
-          if (reData.selectedScribe && !getObjectById(reData.selectedScribe).name.startsWith(NEWSCRIBETEXT))
-            range.collapse()
+          if (reData.selectedScribe && !selectedScribe.name.startsWith(NEWSCRIBETEXT)) range.collapse()
           sel.removeAllRanges()
           sel.addRange(range)
         }
         let selectedtaskdiv = document.getElementById("selectedtask")
         if (selectedtaskdiv) selectedtaskdiv.scrollIntoView(true)
         updateDateClass()
-        updatePauseReadyButton()
+        updatePauseReadyButton(selectedScribe)
       })
     } finally {
       performance.end("watch selectedScribe")

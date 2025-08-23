@@ -16,11 +16,11 @@ export function selectCollaborator(collaborator) {
   reData.selectedCollaborator = collaborator
 }
 
-export function dateInputPauseButtonHTMLCSS() {
+export function dateInputPauseButtonHTMLCSS(task) {
   let pc = document.getElementById("pauseCheckbox")
   if (pc) pc.checked = false
   updateDateClass()
-  updatePauseReadyButton()
+  updatePauseReadyButton(task)
 }
 
 export function updateDateClass() {
@@ -69,7 +69,7 @@ export function showSaveButtonHidePause() {
   }
 }
 
-function hideSaveButtonShowPause() {
+export function hideSaveButtonShowPause() {
   const saveButton = document.getElementById("savebutton")
   const pauseCheckbox = document.getElementById("pauseCheckbox")
   const pauseCheckboxLabel = document.getElementById("pauseCheckboxLabel")
@@ -81,7 +81,7 @@ function hideSaveButtonShowPause() {
   }
 }
 
-export function updatePauseReadyButton() {
+export function updatePauseReadyButton(task) {
   const readyCheckbox = document.getElementById("readyCheckbox")
   const currentDate = dayjs()
   const dateInputValue = document.getElementById("dateInput")?.value
@@ -92,7 +92,7 @@ export function updatePauseReadyButton() {
   const isTaskReady = readyCheckbox?.checked
   const isTaskFuture = inputDateTime?.isAfter(currentDate)
 
-  if (isTaskReady || isTaskFuture) {
+  if (isTaskReady || isTaskFuture || task.blocked || task.depth > 0) {
     showSaveButtonHidePause()
   } else {
     hideSaveButtonShowPause()

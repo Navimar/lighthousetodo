@@ -2,7 +2,6 @@ import { html } from "~/arrow-js/index.js"
 import { getObjectByName } from "~/logic/util.js"
 import reData from "~/logic/reactive.js"
 import data from "~/logic/data.js"
-import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 import taskplate from "~/components/tasks/taskplate.js"
 import { makevisible } from "~/logic/makevisible"
 import saveTask from "~/logic/savetask.js"
@@ -15,7 +14,6 @@ import { sendRelation } from "~/logic/send.js"
  */
 function addTaskByName(task, taskName, type) {
   saveTask()
-  showSaveButtonHidePause()
   const ts = Date.now()
   const fieldMap = {
     from: "blocks", // from -> blocks

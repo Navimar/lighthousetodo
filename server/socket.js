@@ -63,13 +63,13 @@ export let inputSocket = (io) => {
 
       try {
         if (msg.data.task) {
+          await syncTasksNeo4j(msg.user.name, userId, msg.data.task)
           const sockets = getUser(userId)?.sockets || []
           sockets.forEach((s) => {
             if (s !== socket) {
               s.emit("updatetask", { task: msg.data.task })
             }
           })
-          await syncTasksNeo4j(msg.user.name, userId, msg.data.task)
         }
 
         if (msg.data.relation) {

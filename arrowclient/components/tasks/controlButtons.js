@@ -24,7 +24,7 @@ let saveButton = () => {
   }
 }
 
-function handleReadyCheckboxChange(event) {
+function handleReadyCheckboxChange(event, task) {
   const isChecked = event.target.checked
 
   // Воспроизводим соответствующий звук
@@ -35,7 +35,7 @@ function handleReadyCheckboxChange(event) {
   }
 
   // Вызываем основную функцию
-  updatePauseReadyButton(event)
+  updatePauseReadyButton(event, task)
 }
 
 export default (task) =>
@@ -47,7 +47,7 @@ export default (task) =>
         class="appearance-none peer sr-only"
         type="checkbox"
         id="readyCheckbox"
-        @change="${handleReadyCheckboxChange}" />
+        @change="${(e) => handleReadyCheckboxChange(e, task)}" />
       <label class="button-gray whitespace-nowrap" for="readyCheckbox">Готово</label>
     </div>
     <button
