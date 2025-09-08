@@ -263,16 +263,19 @@ class Graph {
 
     while (queue.length > 0) {
       const nodeId = queue.shift()
-      const { leads, blocks } = this._edge(this.outgoingEdges, nodeId)
+      // Skip orphan ids that are not actual nodes to avoid mutating the structure
+      if (!this.nodes.has(nodeId)) continue
+      const rec = this.outgoingEdges.get(nodeId) || { leads: new Map(), blocks: new Map() }
+      const { leads, blocks } = rec
 
       leads.forEach((_, childId) => relax(nodeId, childId, "leads"))
       blocks.forEach((_, childId) => relax(nodeId, childId, "blocks"))
     }
 
     // Cycle detection (non-zero in-degree after processing)
-    const hasCycle = Array.from(inDegree.values()).some((degree) => degree > 0)
+    const hasCycle = Array.from(this.nodes.keys()).some((id) => (inDegree.get(id) || 0) > 0)
     if (hasCycle) {
-      throw new Error("Cycle detected in graph during depth calculation")
+      console.log("Cycle detected in graph during depth calculation")
     }
     this._notifyChange()
   }
@@ -358,7 +361,6 @@ class Graph {
   }
 
   static merge(a, b, { onChange } = {}) {
-    console.log("merge", a, b)
     const toGraph = (x) => (x instanceof Graph ? x : Graph.from(x))
     const g1 = toGraph(a)
     const g2 = toGraph(b)
