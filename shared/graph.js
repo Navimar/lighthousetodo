@@ -275,7 +275,8 @@ class Graph {
     // Cycle detection (non-zero in-degree after processing)
     const hasCycle = Array.from(this.nodes.keys()).some((id) => (inDegree.get(id) || 0) > 0)
     if (hasCycle) {
-      console.log("Cycle detected in graph during depth calculation")
+      const cycle = this._findAnyCycle()
+      console.error("Cycle detected in graph during depth calculation" + (cycle ? `: ${cycle.join(" → ")}` : ""))
     }
     this._notifyChange()
   }
@@ -300,6 +301,79 @@ class Graph {
     return false
   }
 
+  _findCycle(fromId, toId) {
+    const visited = new Set()
+    const stack = []
+    const dfs = (nodeId) => {
+      if (nodeId === fromId) {
+        stack.push(nodeId)
+        return true
+      }
+      if (visited.has(nodeId)) return false
+      visited.add(nodeId)
+      stack.push(nodeId)
+      const { leads, blocks } = this.outgoingEdges.get(nodeId) || { leads: new Map(), blocks: new Map() }
+      for (const next of [...leads.keys(), ...blocks.keys()]) {
+        if (dfs(next)) return true
+      }
+      stack.pop()
+      return false
+    }
+    if (dfs(toId)) {
+      return [...stack, fromId]
+    }
+    return null
+  }
+
+  _findAnyCycle() {
+    const visited = new Set()
+    const inStack = new Set()
+    const parent = new Map()
+    const nodes = Array.from(this.nodes.keys())
+
+    const neighbors = (id) => {
+      const rec = this.outgoingEdges.get(id) || { leads: new Map(), blocks: new Map() }
+      return [...rec.leads.keys(), ...rec.blocks.keys()]
+    }
+
+    let backEdgeFrom = null
+    let backEdgeTo = null
+
+    const dfs = (u) => {
+      visited.add(u)
+      inStack.add(u)
+      for (const v of neighbors(u)) {
+        if (!visited.has(v)) {
+          parent.set(v, u)
+          if (dfs(v)) return true
+        } else if (inStack.has(v)) {
+          backEdgeFrom = u
+          backEdgeTo = v
+          return true
+        }
+      }
+      inStack.delete(u)
+      return false
+    }
+
+    for (const n of nodes) {
+      if (!visited.has(n) && dfs(n)) break
+    }
+
+    if (backEdgeFrom != null && backEdgeTo != null) {
+      // Reconstruct cycle path from backEdgeTo -> ... -> backEdgeFrom -> backEdgeTo
+      const forward = []
+      let cur = backEdgeFrom
+      while (cur !== backEdgeTo && cur != null) {
+        forward.push(cur)
+        cur = parent.get(cur)
+      }
+      forward.reverse()
+      return [backEdgeTo, ...forward, backEdgeTo]
+    }
+    return null
+  }
+
   _addSafeRelation(fromId, toId, type, ts = this._nowTs()) {
     this._ensureNodesExist(fromId, toId)
 
@@ -311,16 +385,28 @@ class Graph {
 
     // Check if a cycle is created
     if (this._createsCycle(fromId, toId)) {
-      console.warn(`Cycle detected when adding ${fromId} → ${toId}, removing cycle-causing relations from ${toId}`)
-      const { leads, blocks } = this.getRelations(toId)
-      const toRemove = []
-      leads.forEach((next) => {
-        if (this._createsCycle(fromId, next)) toRemove.push({ target: next, type: "leads" })
-      })
-      blocks.forEach((next) => {
-        if (this._createsCycle(fromId, next)) toRemove.push({ target: next, type: "blocks" })
-      })
-      toRemove.forEach(({ target }) => this.removeRelation(toId, target))
+      console.warn(`Cycle detected when adding ${fromId} → ${toId}`)
+      const cycle = this._findCycle(fromId, toId)
+      if (cycle) {
+        // цикл вида [A, B, C, A]
+        // выбираем старое ребро (например, с минимальным timestamp)
+        let edgeToRemove = null
+        let minTs = Infinity
+        for (let i = 0; i < cycle.length - 1; i++) {
+          const a = cycle[i],
+            b = cycle[i + 1]
+          if (a === fromId && b === toId) continue
+          const outEdge = this._edge(this.outgoingEdges, a)
+          const ts = outEdge.leads.get(b) ?? outEdge.blocks.get(b)
+          if (ts < minTs) {
+            minTs = ts
+            edgeToRemove = { from: a, to: b }
+          }
+        }
+        if (edgeToRemove) {
+          this.removeRelation(edgeToRemove.from, edgeToRemove.to)
+        }
+      }
     }
   }
 
@@ -404,11 +490,11 @@ class Graph {
       g.outgoingEdges.forEach(({ leads, blocks }, fromId) => {
         leads.forEach((ts, toId) => {
           const current = out._edge(out.outgoingEdges, fromId).leads.get(toId)
-          if (current == null || ts > current) out._addRelation(fromId, toId, "leads", ts)
+          if (current == null || ts > current) out._addSafeRelation(fromId, toId, "leads", ts)
         })
         blocks.forEach((ts, toId) => {
           const current = out._edge(out.outgoingEdges, fromId).blocks.get(toId)
-          if (current == null || ts > current) out._addRelation(fromId, toId, "blocks", ts)
+          if (current == null || ts > current) out._addSafeRelation(fromId, toId, "blocks", ts)
         })
       })
     }
