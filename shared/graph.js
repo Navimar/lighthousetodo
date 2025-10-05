@@ -276,7 +276,14 @@ class Graph {
     const hasCycle = Array.from(this.nodes.keys()).some((id) => (inDegree.get(id) || 0) > 0)
     if (hasCycle) {
       const cycle = this._findAnyCycle()
-      console.error("Cycle detected in graph during depth calculation" + (cycle ? `: ${cycle.join(" → ")}` : ""))
+      console.warn("Cycle detected in graph during depth calculation" + (cycle ? `: ${cycle.join(" → ")}` : ""))
+      if (cycle) {
+        const removed = this._autoBreakCycle(cycle, "oldest")
+        if (removed) {
+          // После разрыва одного ребра пересчитаем глубины повторно
+          return this.updateDepths()
+        }
+      }
     }
     this._notifyChange()
   }
@@ -370,6 +377,48 @@ class Graph {
       }
       forward.reverse()
       return [backEdgeTo, ...forward, backEdgeTo]
+    }
+    return null
+  }
+
+  /**
+   * Возвращает timestamp ребра (leads или blocks) между fromId -> toId.
+   * Если рёбра нет, возвращает +Infinity, чтобы такой кандидат не выбирался
+   * при стратегии выбора «самого старого».
+   */
+  _getEdgeTimestamp(fromId, toId) {
+    const rec = this.outgoingEdges.get(fromId) || { leads: new Map(), blocks: new Map() }
+    const ts = rec.leads.get(toId)
+    if (ts != null) return Number(ts) || 0
+    const ts2 = rec.blocks.get(toId)
+    if (ts2 != null) return Number(ts2) || 0
+    return Infinity
+  }
+
+  /**
+   * Автоматически разрывает цикл, удаляя одно ребро по стратегии.
+   * @param {string[]} cycle - узлы цикла в виде [A, B, C, A]
+   * @param {('oldest'|'newest')} strategy - какое ребро убирать (по времени)
+   * @returns {{from:string,to:string,ts:number}|null}
+   */
+  _autoBreakCycle(cycle, strategy = "oldest") {
+    if (!Array.isArray(cycle) || cycle.length < 2) return null
+    let pick = null
+    for (let i = 0; i < cycle.length - 1; i++) {
+      const a = cycle[i]
+      const b = cycle[i + 1]
+      const ts = this._getEdgeTimestamp(a, b)
+      if (!Number.isFinite(ts)) continue
+      if (!pick) {
+        pick = { from: a, to: b, ts }
+      } else if (strategy === "oldest" ? ts < pick.ts : ts > pick.ts) {
+        pick = { from: a, to: b, ts }
+      }
+    }
+    if (pick) {
+      // removeRelation снимает и leads, и blocks
+      this.removeRelation(pick.from, pick.to)
+      return pick
     }
     return null
   }

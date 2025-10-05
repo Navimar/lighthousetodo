@@ -7,6 +7,7 @@ import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 import reData from "~/logic/reactive.js"
 import data from "~/logic/data.js"
 import { sendRelation } from "~/logic/send.js"
+import sort from "~/logic/sort.js"
 
 import dayjs from "dayjs"
 
@@ -90,7 +91,8 @@ export default (givenTask, direction) => {
   }
 
   // Отсортировать по имени
-  relatedTasks.sort((a, b) => a.name.localeCompare(b.name))
+  // relatedTasks.sort((a, b) => a.name.localeCompare(b.name))
+  sort(relatedTasks)
 
   if (!relatedTasks.length) return html``
 
