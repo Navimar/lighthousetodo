@@ -30,6 +30,10 @@ const sortByDepth = (a, b) => {
   return a.depth - b.depth
 }
 
+const sortByBlockScore = (a, b) => {
+  return (b.blockScore || 0) - (a.blockScore || 0)
+}
+
 export default (arrToSort = reData.visibleTasks) => {
   performance.start("Full Sorting Process")
 
@@ -51,6 +55,9 @@ export default (arrToSort = reData.visibleTasks) => {
     if (result !== 0) return result
 
     result = sortByDepth(a, b)
+    if (result !== 0) return result
+
+    result = sortByBlockScore(a, b)
     if (result !== 0) return result
 
     return b.timestamp - a.timestamp

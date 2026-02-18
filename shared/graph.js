@@ -471,6 +471,8 @@ class Graph {
         return fromNode && !fromNode.ready
       })
       node.blocked = hasBlocking
+      // Приоритет для сортировки: количество всех входящих BLOCKS (без учета ready).
+      node.blockScore = incoming.blocks.length
     })
     this._notifyChange()
   }
