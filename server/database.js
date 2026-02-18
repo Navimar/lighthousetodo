@@ -1,278 +1,412 @@
-import neo4j from "neo4j-driver"
 import dotenv from "dotenv"
+import { Pool } from "pg"
 import Graph from "../shared/graph.js"
 
 dotenv.config()
 
-const driver = neo4j.driver(
-  process.env.NEO4J_URI,
-  neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD),
-)
+const relationTypes = new Set(["LEADS", "BLOCKS"])
 
-driver
-  .getServerInfo()
-  .then((info) => {
-    console.log("✅ Успешное подключение к Neo4j:", info)
-  })
-  .catch((error) => {
-    console.error("❌ Ошибка подключения к Neo4j:", error)
-  })
+const buildPoolConfig = () => {
+  const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL
+  const sslMode = (process.env.PGSSLMODE || "").toLowerCase()
+  const ssl = sslMode === "require" ? { rejectUnauthorized: false } : undefined
 
-const __neoQueue = []
-let __neoRunning = false
+  if (connectionString) {
+    return { connectionString, ssl }
+  }
 
-async function __processNeoQueue() {
-  if (__neoRunning || __neoQueue.length === 0) return
-  __neoRunning = true
-  const { cypherQuery, queryParameters, resolve, reject } = __neoQueue.shift()
-  try {
-    const res = await runNeo4jQueryDirect(cypherQuery, queryParameters)
-    resolve(res)
-  } catch (err) {
-    reject(err)
-  } finally {
-    __neoRunning = false
-    // запустить следующий элемент очереди
-    __processNeoQueue()
+  return {
+    host: process.env.PGHOST,
+    port: process.env.PGPORT ? Number(process.env.PGPORT) : undefined,
+    user: process.env.PGUSER,
+    password: process.env.PGPASSWORD,
+    database: process.env.PGDATABASE,
+    ssl,
   }
 }
 
-async function runNeo4jQueryDirect(cypherQuery, queryParameters) {
-  const session = driver.session()
+const pool = new Pool(buildPoolConfig())
+let schemaReadyPromise
+
+function normalizeType(type) {
+  const normalized = String(type || "").trim().toUpperCase()
+  if (!relationTypes.has(normalized)) {
+    throw new Error(`Unsupported relation type: ${type}`)
+  }
+  return normalized
+}
+
+async function ensureSchema() {
+  if (!schemaReadyPromise) {
+    schemaReadyPromise = (async () => {
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS app_users (
+          id TEXT PRIMARY KEY,
+          name TEXT,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+        );
+      `)
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS tasks (
+          owner_user_id TEXT NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
+          id TEXT NOT NULL,
+          payload JSONB NOT NULL,
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+          PRIMARY KEY (owner_user_id, id)
+        );
+      `)
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS task_relations (
+          owner_user_id TEXT NOT NULL,
+          from_task_id TEXT NOT NULL,
+          to_task_id TEXT NOT NULL,
+          relation_type TEXT NOT NULL CHECK (relation_type IN ('LEADS', 'BLOCKS')),
+          ts BIGINT,
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+          PRIMARY KEY (owner_user_id, from_task_id, to_task_id, relation_type),
+          FOREIGN KEY (owner_user_id, from_task_id)
+            REFERENCES tasks(owner_user_id, id)
+            ON DELETE CASCADE,
+          FOREIGN KEY (owner_user_id, to_task_id)
+            REFERENCES tasks(owner_user_id, id)
+            ON DELETE CASCADE
+        );
+      `)
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS collaborations (
+          user_id TEXT NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
+          collaborator_id TEXT NOT NULL REFERENCES app_users(id) ON DELETE CASCADE,
+          collaborator_name TEXT,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+          PRIMARY KEY (user_id, collaborator_id)
+        );
+      `)
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_tasks_owner ON tasks(owner_user_id);
+      `)
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_relations_owner_from ON task_relations(owner_user_id, from_task_id);
+      `)
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_relations_owner_to ON task_relations(owner_user_id, to_task_id);
+      `)
+    })().catch((error) => {
+      schemaReadyPromise = undefined
+      throw error
+    })
+  }
+
+  return schemaReadyPromise
+}
+
+async function withTransaction(fn) {
+  await ensureSchema()
+  const client = await pool.connect()
   try {
-    console.log(
-      `📤 Выполняется запрос в Neo4j: ${cypherQuery.trim()} с ${Object.keys(queryParameters || {}).length} параметрами`,
-    )
-    const result = await session.run(cypherQuery, queryParameters)
-    const summary = result?.summary
-    const counters = summary?.counters
-    try {
-      // В разных версиях драйвера counters может иметь разные поля — логируем максимально безопасно
-      const updates =
-        (typeof counters?.updates === "function" ? counters.updates() : counters?._stats) || counters || null
-      // Логируем только в случае изменений
-      if (updates) {
-        console.log("📈 Счетчики изменений:", updates)
-      }
-    } catch (e) {
-      console.log("⚠️ Не удалось распарсить счетчики:", e?.message || e)
-    }
-    return result.records // Возвращаем результаты запроса
+    await client.query("BEGIN")
+    const result = await fn(client)
+    await client.query("COMMIT")
+    return result
   } catch (error) {
-    console.error("Произошла ошибка:", error)
-    throw error // Передаем ошибку дальше
+    await client.query("ROLLBACK")
+    throw error
   } finally {
-    await session.close() // Закрываем сессию с базой данных
+    client.release()
   }
 }
 
-function runNeo4jQuery(cypherQuery, queryParameters) {
-  return new Promise((resolve, reject) => {
-    __neoQueue.push({ cypherQuery, queryParameters, resolve, reject })
-    __processNeoQueue()
-  })
+async function ensureUser(client, userId, userName = null) {
+  await client.query(
+    `
+      INSERT INTO app_users (id, name)
+      VALUES ($1, $2)
+      ON CONFLICT (id)
+      DO UPDATE SET
+        name = COALESCE(EXCLUDED.name, app_users.name),
+        updated_at = now()
+    `,
+    [userId, userName],
+  )
+}
+
+async function ensureTask(client, userId, taskId) {
+  await client.query(
+    `
+      INSERT INTO tasks (owner_user_id, id, payload)
+      VALUES ($1, $2, '{}'::jsonb)
+      ON CONFLICT (owner_user_id, id)
+      DO NOTHING
+    `,
+    [userId, taskId],
+  )
 }
 
 export async function syncTasksNeo4j(userName, userId, incomingScribe) {
-  const cypherQuery = `
-  MERGE (user:User {id: $userId})
-  SET user.name = $userName
-  WITH user, $incomingScribe AS incomingScribe
-  MERGE (task:Task {id: incomingScribe.id})
-  ON CREATE SET task += incomingScribe
-  ON MATCH SET  task += incomingScribe
-  MERGE (user)-[:HAS_SCRIBE]->(task)
-  RETURN user.id AS userId, task.id AS taskId
-  `
-  const queryParameters = { userName, userId, incomingScribe }
-  console.log("🔍 Параметры для syncTasksNeo4j:", {
-    userName,
-    userId,
-    incomingScribe: JSON.stringify(incomingScribe, null, 2),
-  })
+  if (!incomingScribe?.id) {
+    throw new Error("Task payload must contain id")
+  }
 
-  return await runNeo4jQuery(cypherQuery, queryParameters)
+  return withTransaction(async (client) => {
+    await ensureUser(client, userId, userName)
+
+    const res = await client.query(
+      `
+        INSERT INTO tasks (owner_user_id, id, payload, updated_at)
+        VALUES ($1, $2, $3::jsonb, now())
+        ON CONFLICT (owner_user_id, id)
+        DO UPDATE SET
+          payload = tasks.payload || EXCLUDED.payload,
+          updated_at = now()
+        RETURNING owner_user_id AS "userId", id AS "taskId"
+      `,
+      [userId, incomingScribe.id, JSON.stringify(incomingScribe)],
+    )
+
+    return res.rows
+  })
 }
 
 export async function syncRelationNeo4j(userId, relation) {
-  console.log("🔄 Обработка связи relation:", JSON.stringify(relation, null, 2))
+  if (!relation) return true
 
-  if (relation.added) {
-    const rel = relation.added
-    console.log("🧩 Добавляем связи:", JSON.stringify(rel, null, 2))
-    console.log("🔧 Обрабатываем связь (добавить):", rel)
-    console.log("Параметры для добавления связи:", {
-      userId,
-      from: rel.from,
-      to: rel.to,
-      type: rel.type.toUpperCase(),
-      ts: rel.ts,
-    })
-    const cypherQuery = `
-      MATCH (u:User {id: $userId})
-      MATCH (u)-[:HAS_SCRIBE]->(from:Task {id: $from})
-      MATCH (u)-[:HAS_SCRIBE]->(to:Task {id: $to})
-      MERGE (from)-[r:${rel.type.toUpperCase()}]->(to)
-      SET r.timestamp = coalesce($ts, r.timestamp)
-      RETURN from.id AS fromId, to.id AS toId, type(r) AS type, r.timestamp AS ts
-    `
-    const addRes = await runNeo4jQuery(cypherQuery, { userId, from: rel.from, to: rel.to, ts: rel.ts })
-    console.log("Результат добавления связи:", addRes)
-    if (!addRes || addRes.length === 0) {
-      console.warn("⚠️ Связь не создана: одна из задач не принадлежит пользователю или не найдена", {
-        userId,
-        from: rel.from,
-        to: rel.to,
-        type: rel.type,
-      })
+  return withTransaction(async (client) => {
+    await ensureUser(client, userId)
+
+    if (relation.added) {
+      const rel = relation.added
+      const type = normalizeType(rel.type)
+      await ensureTask(client, userId, rel.from)
+      await ensureTask(client, userId, rel.to)
+
+      await client.query(
+        `
+          DELETE FROM task_relations
+          WHERE owner_user_id = $1
+            AND from_task_id = $2
+            AND to_task_id = $3
+        `,
+        [userId, rel.from, rel.to],
+      )
+
+      await client.query(
+        `
+          INSERT INTO task_relations (owner_user_id, from_task_id, to_task_id, relation_type, ts, updated_at)
+          VALUES ($1, $2, $3, $4, $5, now())
+          ON CONFLICT (owner_user_id, from_task_id, to_task_id, relation_type)
+          DO UPDATE SET ts = EXCLUDED.ts, updated_at = now()
+        `,
+        [userId, rel.from, rel.to, type, rel.ts ?? null],
+      )
     }
-  }
 
-  if (relation.removed) {
-    const rel = relation.removed
-    console.log("🧹 Удаляем связь:", rel)
-    console.log("Параметры для удаления связи:", { userId, from: rel.from, to: rel.to, type: rel.type.toUpperCase() })
-    const cypherQuery = `
-      MATCH (u:User {id: $userId})
-      MATCH (u)-[:HAS_SCRIBE]->(from:Task {id: $from})
-      MATCH (u)-[:HAS_SCRIBE]->(to:Task {id: $to})
-      MATCH (from)-[r:${rel.type.toUpperCase()}]->(to)
-      DELETE r
-      RETURN from.id AS fromId, to.id AS toId, "${rel.type.toUpperCase()}" AS type
-    `
-    const delRes = await runNeo4jQuery(cypherQuery, { userId, from: rel.from, to: rel.to })
-    console.log("Результат удаления связи:", delRes)
-    if (!delRes || delRes.length === 0) {
-      console.warn("⚠️ Связь не удалена: одна из задач не принадлежит пользователю, не найдена или ребро отсутствует", {
-        userId,
-        from: rel.from,
-        to: rel.to,
-        type: rel.type,
-      })
+    if (relation.removed) {
+      const rel = relation.removed
+      const type = normalizeType(rel.type)
+      await client.query(
+        `
+          DELETE FROM task_relations
+          WHERE owner_user_id = $1
+            AND from_task_id = $2
+            AND to_task_id = $3
+            AND relation_type = $4
+        `,
+        [userId, rel.from, rel.to, type],
+      )
     }
-  }
 
-  return true
+    return true
+  })
 }
 
 export async function addCollaboratorNeo4j(userId, collaboratorId, collaboratorName) {
-  const cypherQuery = `
-    // Находим существующий узел пользователя-инициатора
-    MATCH (initiator:User {id: $userId})
-    WITH initiator
-    // Находим существующий узел пользователя-коллаборатора
-    MATCH (collaborator:User {id: $collaboratorId})
-    WITH initiator, collaborator
-    // Создаем или обновляем связь COLLABORATE с добавлением имени
-    MERGE (initiator)-[relation:COLLABORATE]->(collaborator)
-    SET relation.name = $collaboratorName
-  `
+  return withTransaction(async (client) => {
+    await ensureUser(client, userId)
+    await ensureUser(client, collaboratorId, collaboratorName)
 
-  const queryParameters = {
-    userId,
-    collaboratorId,
-    collaboratorName,
-  }
+    const res = await client.query(
+      `
+        INSERT INTO collaborations (user_id, collaborator_id, collaborator_name, updated_at)
+        VALUES ($1, $2, $3, now())
+        ON CONFLICT (user_id, collaborator_id)
+        DO UPDATE SET
+          collaborator_name = EXCLUDED.collaborator_name,
+          updated_at = now()
+        RETURNING user_id AS "userId", collaborator_id AS "collaboratorId"
+      `,
+      [userId, collaboratorId, collaboratorName || collaboratorId],
+    )
 
-  return await runNeo4jQuery(cypherQuery, queryParameters)
+    return res.rows
+  })
 }
 
 export async function removeCollaboratorNeo4j(userId, collaboratorId) {
-  const cypherQuery = `
-    // Находим узел пользователя-инициатора
-    MATCH (initiator:User {id: $userId})
-    WITH initiator
-    // Находим узел пользователя-коллаборатора
-    MATCH (collaborator:User {id: $collaboratorId})
-    WITH initiator, collaborator
-    // Удаляем связь COLLABORATE между инициатором и коллаборатором
-    MATCH (initiator)-[collaboration:COLLABORATE]->(collaborator)
-    DELETE collaboration
-  `
+  return withTransaction(async (client) => {
+    const res = await client.query(
+      `
+        DELETE FROM collaborations
+        WHERE user_id = $1
+          AND collaborator_id = $2
+        RETURNING user_id AS "userId", collaborator_id AS "collaboratorId"
+      `,
+      [userId, collaboratorId],
+    )
 
-  const queryParameters = {
-    userId,
-    collaboratorId,
-  }
-
-  return await runNeo4jQuery(cypherQuery, queryParameters)
+    return res.rows
+  })
 }
 
 export async function loadDataFromNeo4j(userId) {
-  const cypherQuery = `
-    MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(scribe:Task)
-    OPTIONAL MATCH (scribe)-[l:LEADS]->(toLead:Task)
-    OPTIONAL MATCH (scribe)-[b:BLOCKS]->(toBlock:Task)
-    WITH user, scribe,
-         collect(DISTINCT { id: toLead.id, ts: l.timestamp, node: toLead }) AS leads,
-         collect(DISTINCT { id: toBlock.id, ts: b.timestamp, node: toBlock }) AS blocks
-    RETURN collect({task: scribe, leads: leads, blocks: blocks}) AS tasks
-  `
+  await ensureSchema()
 
-  const queryParameters = { userId }
-  const result = await runNeo4jQuery(cypherQuery, queryParameters)
+  const [taskRows, relationRows, collaboratorRows, requestRows] = await Promise.all([
+    pool.query(
+      `
+        SELECT id, payload
+        FROM tasks
+        WHERE owner_user_id = $1
+      `,
+      [userId],
+    ),
+    pool.query(
+      `
+        SELECT from_task_id, to_task_id, relation_type, ts
+        FROM task_relations
+        WHERE owner_user_id = $1
+      `,
+      [userId],
+    ),
+    pool.query(
+      `
+        SELECT c.collaborator_id AS id,
+               COALESCE(c.collaborator_name, u.name, c.collaborator_id) AS name
+        FROM collaborations c
+        LEFT JOIN app_users u ON u.id = c.collaborator_id
+        WHERE c.user_id = $1
+        ORDER BY name, id
+      `,
+      [userId],
+    ),
+    pool.query(
+      `
+        SELECT c.user_id AS id,
+               COALESCE(u.name, c.user_id) AS name
+        FROM collaborations c
+        LEFT JOIN app_users u ON u.id = c.user_id
+        WHERE c.collaborator_id = $1
+        ORDER BY name, id
+      `,
+      [userId],
+    ),
+  ])
 
   const graph = new Graph()
 
-  const items = result[0]?.get("tasks") || []
-  for (const item of items) {
-    // Источник: сам scribe
-    const srcProps = item.task?.properties || item.task || {}
-    const srcId = srcProps.id
-    if (!srcId) continue
+  for (const row of taskRows.rows) {
+    graph.addNode(row.id, row.payload || { id: row.id })
+  }
 
-    // 1) Добавляем исходный узел с полными свойствами
-    graph.addNode(srcId, { ...srcProps })
-
-    // 2) Связи LEADS — перед созданием ребра гарантированно добавляем целевой узел
-    for (const lead of item.leads || []) {
-      const toProps = lead?.node?.properties || null
-      if (toProps?.id) {
-        graph.addNode(toProps.id, { ...toProps })
-        graph.addLead(srcId, toProps.id, lead.ts)
-      }
+  for (const row of relationRows.rows) {
+    if (!graph.nodes.has(row.from_task_id) || !graph.nodes.has(row.to_task_id)) {
+      continue
     }
 
-    // 3) Связи BLOCKS — то же самое
-    for (const block of item.blocks || []) {
-      const toProps = block?.node?.properties || null
-      if (toProps?.id) {
-        graph.addNode(toProps.id, { ...toProps })
-        graph.addBlock(srcId, toProps.id, block.ts)
-      }
+    if (row.relation_type === "LEADS") {
+      graph.addLead(row.from_task_id, row.to_task_id, row.ts ?? undefined)
+    } else if (row.relation_type === "BLOCKS") {
+      graph.addBlock(row.from_task_id, row.to_task_id, row.ts ?? undefined)
     }
   }
 
-  // Возвращаем слепок JSON
-  return graph.toJSON()
+  const result = graph.toJSON()
+  result.collaborators = collaboratorRows.rows.map((row) => ({ id: row.id, name: row.name }))
+  result.collaborationRequests = requestRows.rows.map((row) => ({ id: row.id, name: row.name }))
+
+  return result
 }
 
 export async function removeOldTasksFromNeo4j(userId) {
-  const removeOldTasksQuery = `
-    MATCH (user:User {id: $userId})-[:HAS_SCRIBE]->(task:Task)
-    WHERE task.ready = true AND task.timestamp < ($currentTime - $DIFFERENCE_MILLISECONDS)
-    WITH task
-    OPTIONAL MATCH (task)-[:LEADS|BLOCKS]-(tr {ready:TRUE})
-    WITH task, COLLECT(tr) AS toNodesReady
-    OPTIONAL MATCH (task)-[:LEADS|BLOCKS]-(t)
-    WITH task, toNodesReady, COLLECT(t) AS toNodes
-    WHERE ALL(node IN toNodes WHERE node IN toNodesReady)
-    DETACH DELETE task
-  `
+  return withTransaction(async (client) => {
+    const now = Date.now()
+    const cutoff = now - 1000 * 60 * 60 * 24 * 7
 
-  const queryParameters = {
-    userId,
-    currentTime: Date.now(),
-    DIFFERENCE_MILLISECONDS: 1000 * 60 * 60 * 24 * 7,
-  }
+    const tasksRes = await client.query(
+      `
+        SELECT id, payload
+        FROM tasks
+        WHERE owner_user_id = $1
+      `,
+      [userId],
+    )
 
-  try {
-    const result = await runNeo4jQuery(removeOldTasksQuery, queryParameters)
-    console.log("Удаление старых задач выполнено", result)
-    // const tasks = result[0].get("tasks").map((task) => task.properties)
-    // console.log("Удаление старых задач выполнено:", tasks)
-  } catch (error) {
-    console.error("Ошибка при удалении старых задач:", error)
-    throw error // Перебрасываем ошибку для дальнейшей обработки
-  }
+    const relationsRes = await client.query(
+      `
+        SELECT from_task_id, to_task_id
+        FROM task_relations
+        WHERE owner_user_id = $1
+      `,
+      [userId],
+    )
+
+    const tasksById = new Map()
+    for (const row of tasksRes.rows) {
+      tasksById.set(row.id, row.payload || {})
+    }
+
+    const adjacency = new Map()
+    for (const row of relationsRes.rows) {
+      if (!adjacency.has(row.from_task_id)) adjacency.set(row.from_task_id, new Set())
+      if (!adjacency.has(row.to_task_id)) adjacency.set(row.to_task_id, new Set())
+      adjacency.get(row.from_task_id).add(row.to_task_id)
+      adjacency.get(row.to_task_id).add(row.from_task_id)
+    }
+
+    const toDelete = []
+    for (const [taskId, task] of tasksById.entries()) {
+      const isReady = task?.ready === true
+      const ts = Number(task?.timestamp)
+      if (!isReady || !Number.isFinite(ts) || ts >= cutoff) {
+        continue
+      }
+
+      const neighbors = adjacency.get(taskId) || new Set()
+      const allNeighborsReady = [...neighbors].every((neighborId) => {
+        const neighbor = tasksById.get(neighborId)
+        return neighbor?.ready === true
+      })
+
+      if (allNeighborsReady) {
+        toDelete.push(taskId)
+      }
+    }
+
+    if (toDelete.length === 0) return []
+
+    const deleted = await client.query(
+      `
+        DELETE FROM tasks
+        WHERE owner_user_id = $1
+          AND id = ANY($2::text[])
+        RETURNING id
+      `,
+      [userId, toDelete],
+    )
+
+    return deleted.rows
+  })
 }
+
+ensureSchema()
+  .then(async () => {
+    await pool.query("SELECT 1")
+    console.log("✅ PostgreSQL connection established")
+  })
+  .catch((error) => {
+    console.error("❌ PostgreSQL initialization error:", error)
+  })
