@@ -147,7 +147,7 @@ async function ensureTask(client, userId, taskId) {
   )
 }
 
-export async function syncTasksNeo4j(userName, userId, incomingScribe) {
+export async function syncTasks(userName, userId, incomingScribe) {
   if (!incomingScribe?.id) {
     throw new Error("Task payload must contain id")
   }
@@ -172,7 +172,7 @@ export async function syncTasksNeo4j(userName, userId, incomingScribe) {
   })
 }
 
-export async function syncRelationNeo4j(userId, relation) {
+export async function syncRelation(userId, relation) {
   if (!relation) return true
 
   return withTransaction(async (client) => {
@@ -224,7 +224,7 @@ export async function syncRelationNeo4j(userId, relation) {
   })
 }
 
-export async function addCollaboratorNeo4j(userId, collaboratorId, collaboratorName) {
+export async function addCollaborator(userId, collaboratorId, collaboratorName) {
   return withTransaction(async (client) => {
     await ensureUser(client, userId)
     await ensureUser(client, collaboratorId, collaboratorName)
@@ -246,7 +246,7 @@ export async function addCollaboratorNeo4j(userId, collaboratorId, collaboratorN
   })
 }
 
-export async function removeCollaboratorNeo4j(userId, collaboratorId) {
+export async function removeCollaborator(userId, collaboratorId) {
   return withTransaction(async (client) => {
     const res = await client.query(
       `
@@ -262,7 +262,7 @@ export async function removeCollaboratorNeo4j(userId, collaboratorId) {
   })
 }
 
-export async function loadDataFromNeo4j(userId) {
+export async function loadData(userId) {
   await ensureSchema()
 
   const [taskRows, relationRows, collaboratorRows, requestRows] = await Promise.all([
@@ -331,7 +331,7 @@ export async function loadDataFromNeo4j(userId) {
   return result
 }
 
-export async function removeOldTasksFromNeo4j(userId) {
+export async function removeOldTasks(userId) {
   return withTransaction(async (client) => {
     const now = Date.now()
     const cutoff = now - 1000 * 60 * 60 * 24 * 7

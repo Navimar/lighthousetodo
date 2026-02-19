@@ -4,12 +4,12 @@ import { addUser, getUser } from "./user.js"
 
 import version from "../shared/version.js"
 import {
-  syncTasksNeo4j,
-  removeCollaboratorNeo4j,
-  addCollaboratorNeo4j,
-  loadDataFromNeo4j,
-  removeOldTasksFromNeo4j,
-  syncRelationNeo4j,
+  syncTasks,
+  removeCollaborator,
+  addCollaborator,
+  loadData,
+  removeOldTasks,
+  syncRelation,
 } from "./database.js"
 
 admin.initializeApp({
@@ -63,7 +63,7 @@ export let inputSocket = (io) => {
 
       try {
         if (msg.data.task) {
-          await syncTasksNeo4j(msg.user.name, userId, msg.data.task)
+          await syncTasks(msg.user.name, userId, msg.data.task)
           const sockets = getUser(userId)?.sockets || []
           sockets.forEach((s) => {
             if (s !== socket) {
@@ -73,7 +73,7 @@ export let inputSocket = (io) => {
         }
 
         if (msg.data.relation) {
-          await syncRelationNeo4j(userId, msg.data.relation)
+          await syncRelation(userId, msg.data.relation)
           const sockets = getUser(userId)?.sockets || []
           sockets.forEach((s) => {
             if (s !== socket) {
@@ -81,14 +81,14 @@ export let inputSocket = (io) => {
             }
           })
         } else if (msg.data.collaborator?.id && msg.data.collaborator?.id != userId) {
-          await addCollaboratorNeo4j(
+          await addCollaborator(
             userId,
             msg.data.collaborator.id,
             msg.data.collaborator.name || msg.data.collaborator.id,
           )
           // after collaborator add, refresh lists and notify other sockets
           try {
-            const updated = await loadDataFromNeo4j(userId)
+            const updated = await loadData(userId)
             const sockets = getUser(userId)?.sockets || []
             sockets.forEach((s) => {
               if (s !== socket) {
@@ -102,10 +102,10 @@ export let inputSocket = (io) => {
             console.warn("Could not refresh collaborators after add:", e)
           }
         } else if (msg.data.collaboratorIdToRemove) {
-          await removeCollaboratorNeo4j(userId, msg.data.collaboratorIdToRemove)
+          await removeCollaborator(userId, msg.data.collaboratorIdToRemove)
           // after collaborator remove, refresh lists and notify other sockets
           try {
-            const updated = await loadDataFromNeo4j(userId)
+            const updated = await loadData(userId)
             const sockets = getUser(userId)?.sockets || []
             sockets.forEach((s) => {
               if (s !== socket) {
@@ -151,7 +151,7 @@ export let inputSocket = (io) => {
 
       addUser(msg.name, userId, socket)
 
-      const data = await loadDataFromNeo4j(userId)
+      const data = await loadData(userId)
       if (!data) {
         console.log(msg, userId, "не получилось загрузить данные из базы")
         return
@@ -161,7 +161,7 @@ export let inputSocket = (io) => {
       // console.log("user", getUser(userId))
       console.log("emit update", data)
       socket.emit("update", {
-        graph: data, // full Graph object JSON as returned from Neo4j loader
+        graph: data,
         collaborators: data.collaborators,
         collaborationRequests: data.collaborationRequests,
       })
@@ -175,7 +175,7 @@ export let inputSocket = (io) => {
       if (timeSinceLastCleanup > DIFFERENCE_MILLISECONDS) {
         try {
           // console.log("Cleanup")
-          await removeOldTasksFromNeo4j(userId, data)
+          await removeOldTasks(userId, data)
           // await updateCleanupTimeNeo4j(userId)
           user.lastCleanup = Date.now()
         } catch (error) {
