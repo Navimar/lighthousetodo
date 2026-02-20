@@ -66,14 +66,16 @@ async function ensureSchema() {
           relation_type TEXT NOT NULL CHECK (relation_type IN ('LEADS', 'BLOCKS')),
           ts BIGINT,
           updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-          PRIMARY KEY (owner_user_id, from_task_id, to_task_id, relation_type),
-          FOREIGN KEY (owner_user_id, from_task_id)
-            REFERENCES tasks(owner_user_id, id)
-            ON DELETE CASCADE,
-          FOREIGN KEY (owner_user_id, to_task_id)
-            REFERENCES tasks(owner_user_id, id)
-            ON DELETE CASCADE
+          PRIMARY KEY (owner_user_id, from_task_id, to_task_id, relation_type)
         );
+      `)
+
+      // Drop legacy FK constraints if they exist (migration from old schema)
+      await pool.query(`
+        DO $$ BEGIN
+          ALTER TABLE task_relations DROP CONSTRAINT IF EXISTS task_relations_owner_user_id_from_task_id_fkey;
+          ALTER TABLE task_relations DROP CONSTRAINT IF EXISTS task_relations_owner_user_id_to_task_id_fkey;
+        END $$;
       `)
 
       await pool.query(`
@@ -135,18 +137,6 @@ async function ensureUser(client, userId, userName = null) {
   )
 }
 
-async function ensureTask(client, userId, taskId) {
-  await client.query(
-    `
-      INSERT INTO tasks (owner_user_id, id, payload)
-      VALUES ($1, $2, '{}'::jsonb)
-      ON CONFLICT (owner_user_id, id)
-      DO NOTHING
-    `,
-    [userId, taskId],
-  )
-}
-
 export async function syncTasks(userName, userId, incomingScribe) {
   if (!incomingScribe?.id) {
     throw new Error("Task payload must contain id")
@@ -181,8 +171,6 @@ export async function syncRelation(userId, relation) {
     if (relation.added) {
       const rel = relation.added
       const type = normalizeType(rel.type)
-      await ensureTask(client, userId, rel.from)
-      await ensureTask(client, userId, rel.to)
 
       await client.query(
         `
@@ -309,7 +297,9 @@ export async function loadData(userId) {
   const graph = new Graph()
 
   for (const row of taskRows.rows) {
-    graph.addNode(row.id, row.payload || { id: row.id })
+    const payload = row.payload
+    if (!payload?.name) continue // skip legacy ghost tasks with empty payload
+    graph.addNode(row.id, payload)
   }
 
   for (const row of relationRows.rows) {
