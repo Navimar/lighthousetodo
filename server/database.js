@@ -309,7 +309,12 @@ export async function loadData(userId) {
   const graph = new Graph()
 
   for (const row of taskRows.rows) {
-    graph.addNode(row.id, row.payload || { id: row.id })
+    const payload = row.payload
+    if (!payload?.name) {
+      console.warn("⚠️ Skipping task with missing name in payload:", row.id)
+      continue
+    }
+    graph.addNode(row.id, payload)
   }
 
   for (const row of relationRows.rows) {
