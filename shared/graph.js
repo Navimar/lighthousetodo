@@ -245,6 +245,7 @@ class Graph {
     // Initialize depths to 0
     this.nodes.forEach((nodeData) => {
       nodeData.depth = 0
+      nodeData.pureDepth = 0
     })
 
     // Topological BFS
@@ -255,7 +256,9 @@ class Graph {
 
       const inc = incFor(parentId, kind)
       const parentDepth = this.nodes.get(parentId)?.depth ?? 0
+      const parentPureDepth = this.nodes.get(parentId)?.pureDepth ?? 0
       child.depth = Math.max(child.depth ?? 0, parentDepth + inc)
+      child.pureDepth = Math.max(child.pureDepth ?? 0, parentPureDepth + 1)
 
       inDegree.set(childId, (inDegree.get(childId) || 0) - 1)
       if (inDegree.get(childId) === 0) queue.push(childId)
