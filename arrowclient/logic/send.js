@@ -136,10 +136,28 @@ export const sendCollaboratorRemovalRequest = async (collaboratorIdToRemove) => 
 
 export const sendRelation = async (change) => {
   if (!SERVER_SYNC) return
-  const packet = {
-    relation: change,
-    requestId: uuidv4(),
+
+  // If the relation references a task that's still pending (e.g. created while offline),
+  // merge them into one atomic packet. The server processes both in a single handler:
+  // task is saved and broadcast first, then relation — guaranteed order, no race condition.
+  const added = change.added == null ? [] : Array.isArray(change.added) ? change.added : [change.added]
+  for (const rel of added) {
+    for (const taskId of [rel?.from, rel?.to]) {
+      if (!taskId) continue
+      const idx = data.pendingRequests.findIndex((p) => p.task?.id === taskId)
+      if (idx !== -1) {
+        const [taskPacket] = data.pendingRequests.splice(idx, 1)
+        const packet = { task: taskPacket.task, relation: change, requestId: uuidv4() }
+        console.log("sendRelation (merged with pending task)", packet)
+        data.pendingRequests.push(packet)
+        safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
+        sendPendingRequests()
+        return
+      }
+    }
   }
+
+  const packet = { relation: change, requestId: uuidv4() }
   console.log("sendRelation", packet)
   data.pendingRequests.push(packet)
   safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
