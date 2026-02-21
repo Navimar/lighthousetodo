@@ -1,5 +1,5 @@
 {
-  "version": "1.4.16",
+  "version": "1.4.17",
   "type": "module",
   "dependencies": {
     "create-vite": "^4.4.1",

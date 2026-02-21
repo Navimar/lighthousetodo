@@ -110,7 +110,7 @@ socket.on("save-confirm", (responseId) => {
   // Удаляем подтвержденный пакет из массива
   // console.log("save-confirm", responseId)
   data.pendingRequests = data.pendingRequests.filter((packet) => packet.requestId !== responseId)
-  // safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
+  safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
 })
 
 export const sendCollaboratorRequest = async (collaborator) => {
