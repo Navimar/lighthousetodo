@@ -6,8 +6,7 @@ export default (task, additionalClass = "") => {
 
   const bulletSymbol = () => {
     let classes = ""
-    // Значок по умолчанию — пустой SVG 16x16
-    let content = `<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"></svg>`
+    let content = ""
     let now = dayjs()
 
     if (task.pause) {
@@ -18,7 +17,7 @@ export default (task, additionalClass = "") => {
 </svg>`
     } else if (task.ready) {
       // Галочка: чек-марк, вписывается в 16x16
-      content = `<svg class="w-2.5" "width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none">
+      content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none">
   <path d="M2 8 L6 12 L14 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`
       classes += " text-green-500"
@@ -62,6 +61,7 @@ export default (task, additionalClass = "") => {
       classes += " text-accent"
     }
 
+    if (!content) return ""
     return `<span class='${classes}'>${content}</span>`
   }
 
