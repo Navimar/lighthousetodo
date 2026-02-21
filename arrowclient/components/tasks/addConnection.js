@@ -15,6 +15,12 @@ import { sendRelation } from "~/logic/send.js"
 function addTaskByName(task, taskName, type) {
   saveTask()
   const ts = Date.now()
+  const selectedTaskId = task?.id
+  if (!selectedTaskId) {
+    console.warn("addTaskByName: selected task id is missing", { task, taskName, type })
+    return
+  }
+
   const fieldMap = {
     from: "blocks", // from -> blocks
     to: "blocks", // to -> blocks
@@ -27,7 +33,15 @@ function addTaskByName(task, taskName, type) {
   }
 
   // Актуализируем задачу из "видимых"
-  task = reData.visibleTasks.find((t) => t.id === task.id)
+  task = reData.visibleTasks.find((t) => t.id === selectedTaskId) || data.tasks.nodes.get(selectedTaskId)
+  if (!task?.id || !data.tasks.nodes.has(task.id)) {
+    console.warn("addTaskByName: selected task is not available in graph", {
+      selectedTaskId,
+      taskName,
+      type,
+    })
+    return
+  }
 
   // Считаем, что getObjectByName гарантированно возвращает объект
   const taskObj = getObjectByName(taskName)
@@ -45,6 +59,14 @@ function addTaskByName(task, taskName, type) {
   const isIncoming = type === "from" || type === "moreImportant"
   const fromId = isIncoming ? taskObj.id : task.id
   const toId = isIncoming ? task.id : taskObj.id
+  if (!fromId || !toId) {
+    console.warn("addTaskByName: invalid relation ids", { fromId, toId, taskName, type })
+    return
+  }
+  if (!data.tasks.nodes.has(fromId) || !data.tasks.nodes.has(toId)) {
+    console.warn("addTaskByName: relation points to missing nodes", { fromId, toId, taskName, type })
+    return
+  }
 
   // Проверяем, есть ли уже связь между этими задачами (в том же направлении)
   const outgoing = data.tasks.getRelations(fromId)

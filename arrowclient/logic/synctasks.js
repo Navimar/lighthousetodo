@@ -50,14 +50,14 @@ export function syncRelation(relation) {
 
   // Удаление связей (ожидается объект { from, to })
   for (const rel of removed) {
-    if (rel && rel.from && rel.to) {
+    if (rel && rel.from && rel.to && graph.nodes.has(rel.from) && graph.nodes.has(rel.to)) {
       graph.removeRelation(rel.from, rel.to)
     }
   }
 
   // Добавление связей (ожидается объект { from, to, type })
   for (const rel of added) {
-    if (rel && rel.from && rel.to && rel.type) {
+    if (rel && rel.from && rel.to && rel.type && graph.nodes.has(rel.from) && graph.nodes.has(rel.to)) {
       if (rel.type === "leads") graph.addLead(rel.from, rel.to)
       else if (rel.type === "blocks") graph.addBlock(rel.from, rel.to)
     }

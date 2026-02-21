@@ -49,19 +49,23 @@ class Graph {
   }
 
   addLead(fromId, toId, ts = this._nowTs()) {
-    this._addSafeRelation(fromId, toId, "leads", ts)
-    this._notifyChange()
+    if (this._addSafeRelation(fromId, toId, "leads", ts)) {
+      this._notifyChange()
+    }
   }
 
   addBlock(fromId, toId, ts = this._nowTs()) {
-    this._addSafeRelation(fromId, toId, "blocks", ts)
-    this._notifyChange()
+    if (this._addSafeRelation(fromId, toId, "blocks", ts)) {
+      this._notifyChange()
+    }
   }
 
   removeRelation(fromId, toId) {
-    this._removeRelation(fromId, toId, "leads")
-    this._removeRelation(fromId, toId, "blocks")
-    this._notifyChange()
+    const removedLead = this._removeRelation(fromId, toId, "leads")
+    const removedBlock = this._removeRelation(fromId, toId, "blocks")
+    if (removedLead || removedBlock) {
+      this._notifyChange()
+    }
   }
 
   getRelations(nodeId) {
@@ -169,15 +173,23 @@ class Graph {
   }
 
   _addRelation(fromId, toId, type, ts = this._nowTs()) {
-    this._ensureNodesExist(fromId, toId)
+    if (!this.nodes.has(fromId) || !this.nodes.has(toId)) {
+      console.warn("Graph: skip relation add for missing node", { fromId, toId, type })
+      return false
+    }
     this._edge(this.outgoingEdges, fromId)[type].set(toId, ts)
     this._edge(this.incomingEdges, toId)[type].set(fromId, ts)
+    return true
   }
 
   _removeRelation(fromId, toId, type) {
-    this._ensureNodesExist(fromId, toId)
+    if (!this.nodes.has(fromId) || !this.nodes.has(toId)) {
+      console.warn("Graph: skip relation remove for missing node", { fromId, toId, type })
+      return false
+    }
     this._edge(this.outgoingEdges, fromId)[type].delete(toId)
     this._edge(this.incomingEdges, toId)[type].delete(fromId)
+    return true
   }
 
   deleteNode(id) {
@@ -435,13 +447,18 @@ class Graph {
   }
 
   _addSafeRelation(fromId, toId, type, ts = this._nowTs()) {
-    this._ensureNodesExist(fromId, toId)
+    if (!fromId || !toId || !this.nodes.has(fromId) || !this.nodes.has(toId)) {
+      console.warn("Graph: skip safe relation add for invalid node", { fromId, toId, type })
+      return false
+    }
 
     // Remove existing direct relations
     this._removeExistingRelation(fromId, toId)
 
     // Temporarily add the new relation
-    this._addRelation(fromId, toId, type, ts)
+    if (!this._addRelation(fromId, toId, type, ts)) {
+      return false
+    }
 
     // Check if a cycle is created
     if (this._createsCycle(fromId, toId)) {
@@ -468,6 +485,7 @@ class Graph {
         }
       }
     }
+    return true
   }
 
   /**

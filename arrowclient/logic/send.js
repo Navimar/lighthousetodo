@@ -184,10 +184,30 @@ export const sendTask = async (changedTask) => {
 
 const sendPendingRequests = async () => {
   if (!SERVER_SYNC) return
-  if (data.pendingRequests) {
-    for (let pendingPacket of data.pendingRequests) {
-      await sendPacket(pendingPacket)
+  if (!Array.isArray(data.pendingRequests) || data.pendingRequests.length === 0) return
+
+  const validPackets = data.pendingRequests.filter((packet) => {
+    if (!packet || typeof packet !== "object") return false
+    if (packet.task) return Boolean(packet.task.id)
+    if (packet.relation) {
+      const rel = packet.relation
+      const added = rel.added == null ? [] : Array.isArray(rel.added) ? rel.added : [rel.added]
+      const removed = rel.removed == null ? [] : Array.isArray(rel.removed) ? rel.removed : [rel.removed]
+      const isValidRel = (r) => r && r.from && r.to && r.type
+      return added.every(isValidRel) && removed.every(isValidRel)
     }
+    if (packet.collaborator?.id) return true
+    if (packet.collaboratorIdToRemove) return true
+    return false
+  })
+
+  if (validPackets.length !== data.pendingRequests.length) {
+    data.pendingRequests = validPackets
+    safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
+  }
+
+  for (let pendingPacket of validPackets) {
+    await sendPacket(pendingPacket)
   }
 }
 
