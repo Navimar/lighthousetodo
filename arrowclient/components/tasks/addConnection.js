@@ -41,44 +41,38 @@ function addTaskByName(task, taskName, type) {
   }
   console.log("taskObj in addTaskByName", taskObj)
 
-  // Проверяем, есть ли уже связь
-  const relations = data.tasks.getRelations(task.id)
-  const relationSet = relationType === "leads" ? relations.leads : relations.blocks
-  if (relationSet.includes(taskObj.id)) {
+  // Определяем from/to на основе направления
+  const isIncoming = type === "from" || type === "moreImportant"
+  const fromId = isIncoming ? taskObj.id : task.id
+  const toId = isIncoming ? task.id : taskObj.id
+
+  // Проверяем, есть ли уже связь между этими задачами (в том же направлении)
+  const outgoing = data.tasks.getRelations(fromId)
+  const existingType = outgoing.leads.includes(toId)
+    ? "leads"
+    : outgoing.blocks.includes(toId)
+      ? "blocks"
+      : null
+
+  if (existingType === relationType) {
     console.warn(`Задача "${taskObj.name}" уже связана (по типу ${relationType})`)
     return
   }
 
-  // Добавляем связь в граф с учетом направления type (логика инверсирована)
+  // Если связь другого типа — отправим removed для замены
+  const removed = existingType ? { from: fromId, to: toId, type: existingType } : null
+
+  // Добавляем связь в граф (граф сам удалит старую через _removeExistingRelation)
   if (relationType === "leads") {
-    if (type === "from" || type === "moreImportant") {
-      data.tasks.addLead(taskObj.id, task.id, ts) // входящая грань
-      sendRelation({
-        added: { from: taskObj.id, to: task.id, type: "leads", ts },
-        removed: null,
-      })
-    } else {
-      data.tasks.addLead(task.id, taskObj.id, ts) // исходящая грань
-      sendRelation({
-        added: { from: task.id, to: taskObj.id, type: "leads", ts },
-        removed: null,
-      })
-    }
-  } else if (relationType === "blocks") {
-    if (type === "from" || type === "moreImportant") {
-      data.tasks.addBlock(taskObj.id, task.id) // входящая грань
-      sendRelation({
-        added: { from: taskObj.id, to: task.id, type: "blocks", ts },
-        removed: null,
-      })
-    } else {
-      data.tasks.addBlock(task.id, taskObj.id) // исходящая грань
-      sendRelation({
-        added: { from: task.id, to: taskObj.id, type: "blocks", ts },
-        removed: null,
-      })
-    }
+    data.tasks.addLead(fromId, toId, ts)
+  } else {
+    data.tasks.addBlock(fromId, toId, ts)
   }
+
+  sendRelation({
+    added: { from: fromId, to: toId, type: relationType, ts },
+    removed,
+  })
   makevisible()
 }
 
