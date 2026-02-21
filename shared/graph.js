@@ -242,10 +242,19 @@ class Graph {
       if (degree === 0) queue.push(nodeId)
     })
 
-    // Initialize depths to 0
+    // Initialize depths to Infinity so Math.min picks the shortest path
     this.nodes.forEach((nodeData) => {
-      nodeData.depth = 0
-      nodeData.pureDepth = 0
+      nodeData.depth = Infinity
+      nodeData.pureDepth = Infinity
+    })
+
+    // Root nodes (in-degree 0) start at depth 0
+    queue.forEach((nodeId) => {
+      const nodeData = this.nodes.get(nodeId)
+      if (nodeData) {
+        nodeData.depth = 0
+        nodeData.pureDepth = 0
+      }
     })
 
     // Topological BFS
@@ -257,8 +266,8 @@ class Graph {
       const inc = incFor(parentId, kind)
       const parentDepth = this.nodes.get(parentId)?.depth ?? 0
       const parentPureDepth = this.nodes.get(parentId)?.pureDepth ?? 0
-      child.depth = Math.max(child.depth ?? 0, parentDepth + inc)
-      child.pureDepth = Math.max(child.pureDepth ?? 0, parentPureDepth + 1)
+      child.depth = Math.min(child.depth, parentDepth + inc)
+      child.pureDepth = Math.min(child.pureDepth, parentPureDepth + 1)
 
       inDegree.set(childId, (inDegree.get(childId) || 0) - 1)
       if (inDegree.get(childId) === 0) queue.push(childId)
