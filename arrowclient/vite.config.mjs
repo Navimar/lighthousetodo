@@ -1,8 +1,10 @@
 import { defineConfig } from "vite"
-import { readdirSync } from "fs"
+import { readdirSync, readFileSync } from "fs"
 import { resolve } from "path"
 import tailwindcss from "tailwindcss"
 import autoprefixer from "autoprefixer"
+
+const pkg = JSON.parse(readFileSync(resolve(__dirname, "../package.json"), "utf-8"))
 
 function getBlogEntries() {
   const blogDir = resolve(__dirname, "info")
@@ -21,6 +23,9 @@ function getBlogEntries() {
 }
 
 export default defineConfig({
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+  },
   build: {
     rollupOptions: {
       input: {
