@@ -2,7 +2,8 @@ import serviceAccount from "../firebase.config.js"
 import admin from "firebase-admin"
 import { addUser, getUser } from "./user.js"
 
-import version from "../shared/version.js"
+import { readFileSync } from "fs"
+const { version } = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf-8"))
 import {
   syncTasks,
   removeCollaborator,

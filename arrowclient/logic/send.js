@@ -7,8 +7,9 @@ import data from "~/logic/data.js"
 import { makevisible } from "~/logic/makevisible"
 import { safeSetLocalStorageItem } from "~/logic/sync.js"
 import { socket } from "~/logic/socket.js"
-import VERSION from "~/../shared/version.js"
 import Graph from "~/../shared/graph.js"
+
+const VERSION = __APP_VERSION__
 
 import { v4 as uuidv4 } from "uuid"
 
@@ -44,8 +45,11 @@ export function inputSocket() {
   socket.on("version", function (msg) {
     reData.version = msg.version
     if (msg && msg.version != VERSION) {
-      const safeVersion = encodeURIComponent(msg.version) // Надежное экранирование версии
-      window.location.href = `${window.location.pathname}?version=${safeVersion}`
+      const reloadKey = "version_reload_" + msg.version
+      if (!sessionStorage.getItem(reloadKey)) {
+        sessionStorage.setItem(reloadKey, "1")
+        window.location.reload()
+      }
     }
   })
   socket.on("disconnect", function () {
