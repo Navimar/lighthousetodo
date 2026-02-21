@@ -297,7 +297,7 @@ export async function loadData(userId) {
   const graph = new Graph()
 
   for (const row of taskRows.rows) {
-    const payload = row.payload
+    const payload = row.payload && typeof row.payload === "object" ? { ...row.payload, id: row.id } : { id: row.id }
     if (!payload?.name) continue // skip legacy ghost tasks with empty payload
     graph.addNode(row.id, payload)
   }

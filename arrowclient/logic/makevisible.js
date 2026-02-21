@@ -20,10 +20,13 @@ export const makevisible = () => {
     data.tasks.resumePausedTasks()
     saveGraphToLocalStorage(data.tasks)
 
-    for (let task of data.tasks.nodes.values()) {
+    for (let [taskId, task] of data.tasks.nodes.entries()) {
       if (!task?.name) continue // skip ghost nodes without real task data
+      if (task.id !== taskId) {
+        task.id = taskId
+      }
 
-      if (task.id === reData.selectedScribe) {
+      if (taskId === reData.selectedScribe) {
         visibleTasks.push(task)
         continue
       }

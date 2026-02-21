@@ -40,10 +40,19 @@ class Graph {
   }
 
   addNode(id, data = {}) {
+    const normalizedData = data && typeof data === "object" ? { ...data, id } : { id }
+
     if (!this.nodes.has(id)) {
-      this.nodes.set(id, data)
+      this.nodes.set(id, normalizedData)
       this.outgoingEdges.set(id, { leads: new Map(), blocks: new Map() })
       this.incomingEdges.set(id, { leads: new Map(), blocks: new Map() })
+      this._notifyChange()
+      return
+    }
+
+    const existing = this.nodes.get(id)
+    if (existing && existing.id !== id) {
+      existing.id = id
       this._notifyChange()
     }
   }
@@ -138,7 +147,8 @@ class Graph {
     // restore nodes
     if (json.nodes) {
       Object.entries(json.nodes).forEach(([id, data]) => {
-        g.nodes.set(id, { ...data })
+        const normalizedData = data && typeof data === "object" ? { ...data, id } : { id }
+        g.nodes.set(id, normalizedData)
       })
     }
 
