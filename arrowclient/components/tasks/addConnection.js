@@ -155,7 +155,7 @@ function handleInputCore(e) {
 
   const matches = allTasks
     .filter(
-      (taskItem) => taskItem.name.toLowerCase().includes(currentLineText) && taskItem.id !== reData.selectedScribe,
+      (taskItem) => taskItem.name && taskItem.name.toLowerCase().includes(currentLineText) && taskItem.id !== reData.selectedScribe,
     )
     .sort((a, b) => {
       const difference = b.leadsCount + b.blocksCount - (a.leadsCount + a.blocksCount)
