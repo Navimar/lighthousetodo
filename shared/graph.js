@@ -505,13 +505,15 @@ class Graph {
   updateBlockedStatuses() {
     this.nodes.forEach((node, nodeId) => {
       const incoming = this.getIncomingRelations(nodeId)
+      const outgoing = this.getRelations(nodeId)
       const hasBlocking = incoming.blocks.some((fromId) => {
         const fromNode = this.nodes.get(fromId)
         return fromNode && !fromNode.ready
       })
       node.blocked = hasBlocking
-      // Приоритет для сортировки: количество всех входящих BLOCKS (без учета ready).
-      node.blockScore = incoming.blocks.length
+      // Scores for sorting by block relations.
+      node.blockScoreIn = incoming.blocks.length
+      node.blockScoreOut = outgoing.blocks.length
     })
     this._notifyChange()
   }
