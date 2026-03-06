@@ -3,6 +3,7 @@ import { selectTaskById } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import { getObjectById, getDayjsDateFromTask } from "~/logic/util"
 import taskplate from "~/components/tasks/taskplate.js"
+import { relationIcon } from "~/components/tasks/svgicon.js"
 import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 import reData from "~/logic/reactive.js"
 import data from "~/logic/data.js"
@@ -96,15 +97,19 @@ export default (givenTask, direction) => {
 
   if (!relatedTasks.length) return html``
 
+  const listPaddingClass = direction === "from" ? "px-2 pt-2 pb-0" : "px-2 pt-0 pb-2"
+
   return html`
-    <div class="text-xs flex max-h-60 overflow-y-auto flex-col gap-2 bg-neutral-50 dark:bg-neutral-900 p-2">
+    <div
+      class="text-xs flex max-h-60 overflow-y-auto flex-col gap-2 bg-neutral-50 dark:bg-neutral-900 ${listPaddingClass}">
       ${() =>
         relatedTasks.map((task) => {
           const showCorner = direction === "to" ? task.hasOutgoing : task.hasIncoming
           const cornerbox = showCorner ? (direction === "to" ? "corner-box-bottom-right" : "corner-box-top-left") : ""
 
           const lockIcon = html`<button
-            class="ml-1 text-gray-400"
+            type="button"
+            class="${() => `ml-1 p-1 cursor-pointer ${task.hasBlockRelation ? "text-accent" : "text-neutral-600 dark:text-neutral-400"}`}"
             @click="${(e) => {
               e.stopPropagation()
               const ts = Date.now()
@@ -137,8 +142,9 @@ export default (givenTask, direction) => {
                   })
                 }
               }
+              task.hasBlockRelation = !task.hasBlockRelation
             }}">
-            ${task.hasBlockRelation ? "🔗" : html`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`}
+            ${() => relationIcon(task.hasBlockRelation ? "blocks" : "leads")}
           </button>`
 
           return html` <div class="flex items-center gap-1">

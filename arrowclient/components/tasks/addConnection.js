@@ -3,6 +3,7 @@ import { getObjectByName } from "~/logic/util.js"
 import reData from "~/logic/reactive.js"
 import data from "~/logic/data.js"
 import taskplate from "~/components/tasks/taskplate.js"
+import { relationIcon } from "~/components/tasks/svgicon.js"
 import { makevisible } from "~/logic/makevisible"
 import saveTask from "~/logic/savetask.js"
 
@@ -10,26 +11,25 @@ import { sendRelation } from "~/logic/send.js"
 
 /**
  * Добавляет связь между задачей (task) и другой задачей,
- * найденной по имени (taskName), в нужное поле (pioneer/blocks).
+ * найденной по имени (taskName), с учетом направления и типа связи.
  */
-function addTaskByName(task, taskName, type) {
+function addTaskByName(task, taskName, direction, relationType) {
   saveTask()
   const ts = Date.now()
   const selectedTaskId = task?.id
   if (!selectedTaskId) {
-    console.warn("addTaskByName: selected task id is missing", { task, taskName, type })
+    console.warn("addTaskByName: selected task id is missing", { task, taskName, direction, relationType })
     return
   }
 
-  const fieldMap = {
-    from: "blocks", // from -> blocks
-    to: "blocks", // to -> blocks
-    moreImportant: "leads", // moreImportant -> leads
-    lessImportant: "leads", // lessImportant -> leads
+  const relationMap = {
+    block: "blocks",
+    lead: "leads",
   }
-  const relationType = fieldMap[type]
-  if (!relationType) {
-    throw new Error(`Неверный тип связи: ${type}`)
+  const normalizedType = relationMap[relationType]
+  const isIncoming = direction === "from"
+  if (!["from", "to"].includes(direction) || !normalizedType) {
+    throw new Error(`Неверные параметры связи: direction=${direction}, relationType=${relationType}`)
   }
 
   // Актуализируем задачу из "видимых"
@@ -38,7 +38,8 @@ function addTaskByName(task, taskName, type) {
     console.warn("addTaskByName: selected task is not available in graph", {
       selectedTaskId,
       taskName,
-      type,
+      direction,
+      relationType: normalizedType,
     })
     return
   }
@@ -56,28 +57,35 @@ function addTaskByName(task, taskName, type) {
   console.log("taskObj in addTaskByName", taskObj)
 
   // Определяем from/to на основе направления
-  const isIncoming = type === "from" || type === "moreImportant"
   const fromId = isIncoming ? taskObj.id : task.id
   const toId = isIncoming ? task.id : taskObj.id
   if (!fromId || !toId) {
-    console.warn("addTaskByName: invalid relation ids", { fromId, toId, taskName, type })
+    console.warn("addTaskByName: invalid relation ids", {
+      fromId,
+      toId,
+      taskName,
+      direction,
+      relationType: normalizedType,
+    })
     return
   }
   if (!data.tasks.nodes.has(fromId) || !data.tasks.nodes.has(toId)) {
-    console.warn("addTaskByName: relation points to missing nodes", { fromId, toId, taskName, type })
+    console.warn("addTaskByName: relation points to missing nodes", {
+      fromId,
+      toId,
+      taskName,
+      direction,
+      relationType: normalizedType,
+    })
     return
   }
 
   // Проверяем, есть ли уже связь между этими задачами (в том же направлении)
   const outgoing = data.tasks.getRelations(fromId)
-  const existingType = outgoing.leads.includes(toId)
-    ? "leads"
-    : outgoing.blocks.includes(toId)
-      ? "blocks"
-      : null
+  const existingType = outgoing.leads.includes(toId) ? "leads" : outgoing.blocks.includes(toId) ? "blocks" : null
 
-  if (existingType === relationType) {
-    console.warn(`Задача "${taskObj.name}" уже связана (по типу ${relationType})`)
+  if (existingType === normalizedType) {
+    console.warn(`Задача "${taskObj.name}" уже связана (по типу ${normalizedType})`)
     return
   }
 
@@ -85,14 +93,14 @@ function addTaskByName(task, taskName, type) {
   const removed = existingType ? { from: fromId, to: toId, type: existingType } : null
 
   // Добавляем связь в граф (граф сам удалит старую через _removeExistingRelation)
-  if (relationType === "leads") {
+  if (normalizedType === "leads") {
     data.tasks.addLead(fromId, toId, ts)
   } else {
     data.tasks.addBlock(fromId, toId, ts)
   }
 
   sendRelation({
-    added: { from: fromId, to: toId, type: relationType, ts },
+    added: { from: fromId, to: toId, type: normalizedType, ts },
     removed,
   })
   makevisible()
@@ -101,18 +109,16 @@ function addTaskByName(task, taskName, type) {
 /**
  * При клике на элемент автокомплита:
  * - находим имя задачи,
- * - добавляем связь,
- * - очищаем поле ввода,
+ * - создаем связь типа leads,
  * - скрываем сам список подсказок.
  */
-function complete(e, divId, task, type) {
-  console.log("complete")
+function complete(e, divId, task, direction) {
   const taskName = e.currentTarget.innerText.trim()
   if (!taskName) return
 
-  addTaskByName(task, taskName, type)
+  // По умолчанию клик по автокомплиту создает связь типа leads.
+  addTaskByName(task, taskName, direction, "lead")
 
-  // Очищаем инпут
   const input = document.getElementById(divId)
   if (input) {
     input.value = ""
@@ -122,16 +128,21 @@ function complete(e, divId, task, type) {
   reData.autoComplete.list = []
 }
 
-function handleInputKeyDown(e, task, type) {
+function handleInputKeyDown(e, task, direction) {
   // Обработка Enter/Escape для инпута автокомплита
   if (e.key === "Enter") {
     e.preventDefault()
     const name = e.target.value.trim()
-    if (name) {
-      addTaskByName(task, name, type)
-      e.target.value = ""
+    if (!name) {
       reData.autoComplete.list = []
+      return
     }
+
+    // Enter -> leads, Shift+Enter/Cmd+Enter -> blocks
+    const relationType = e.shiftKey || e.metaKey ? "block" : "lead"
+    addTaskByName(task, name, direction, relationType)
+    e.target.value = ""
+    reData.autoComplete.list = []
   } else if (e.key === "Escape") {
     // Закрыть подсказки по Esc
     reData.autoComplete.list = []
@@ -171,7 +182,8 @@ function handleInputCore(e) {
 
   const matches = allTasks
     .filter(
-      (taskItem) => taskItem.name && taskItem.name.toLowerCase().includes(currentLineText) && taskItem.id !== reData.selectedScribe,
+      (taskItem) =>
+        taskItem.name && taskItem.name.toLowerCase().includes(currentLineText) && taskItem.id !== reData.selectedScribe,
     )
     .sort((a, b) => {
       const difference = b.leadsCount + b.blocksCount - (a.leadsCount + a.blocksCount)
@@ -205,7 +217,7 @@ function handleInput(e) {
   debouncedHandleInput(e)
 }
 
-function renderAutocomplete(divId, task, type) {
+function renderAutocomplete(divId, task, direction) {
   // Если есть совпадения и мы сейчас "под" этим инпутом показываем подсказки
   if (!(reData.autoComplete.list.length > 0 && reData.autoComplete.div === divId)) return ""
 
@@ -213,7 +225,7 @@ function renderAutocomplete(divId, task, type) {
     (itemHtml) => html`
       <div
         class="text-base cursor-pointer break-words hover:bg-neutral-200 dark:hover:bg-neutral-600 p-2"
-        @click="${(event) => complete(event, divId, task, type)}">
+        @click="${(event) => complete(event, divId, task, direction)}">
         ${() => itemHtml}
       </div>
     `,
@@ -253,105 +265,67 @@ if (typeof window !== "undefined" && !window.__adastra_ac_clickBound) {
 }
 
 /**
- * Экспортируемый компонент (может использоваться несколько раз),
- * у которого есть два текстовых поля (левое и правое).
- * Для каждого поля отдельно вызываем renderAutocomplete(...).
+ * Экспортируемый компонент с одним полем ввода:
+ * направление определяется type ("from"/"to"),
+ * тип связи задается кнопкой подтверждения ("🔗" или "🤝").
  */
 export default (task, type) => {
-  // Идентификаторы для двух полей
-  const inputIds =
+  const inputId = type === "from" ? "fromInput" : "toInput"
+  const placeholder =
     type === "from"
-      ? { important: "moreImportantInput", regular: "fromInput" }
-      : { important: "lessImportantInput", regular: "toInput" }
-
-  // Подписи для placeholder
-  const placeholders =
-    type === "from"
-      ? {
-          important: "Более приоритетные задачи...",
-          regular: "Блокирующие выполнение задачи...",
-        }
-      : {
-          important: "Менее приоритетные задачи...",
-          regular: "Открывающиеся задачи...",
-        }
-
-  // Визуальный цвет/стиль фона для каждого блока
-  const bg1 = type === "from" ? "bg-blocked dark:bg-blocked-dark" : "bg-opens dark:bg-opens-dark"
-  const bg2 =
-    type === "to" ? "bg-lessimportant dark:bg-lessimportant-dark" : "bg-moreimportant dark:bg-moreimportant-dark"
+      ? "Добавить более приоритетную / блокирующую задачу..."
+      : "Добавить менее приоритетную / открывающуюся задачу..."
+  const bg = "bg-neutral-50 dark:bg-neutral-900"
 
   return html`
-    <div class="flex">
-      <div class="${bg1} py-2 w-1/2">
-        <div
-          class="
-            flex items-center
-            px-3 py-1 mx-1 gap-1
-            rounded-lg bg-white dark:bg-black
-            border border-neutral-150 dark:border-neutral-800
-            text-neutral-700 dark:text-neutral-350
-            relative">
-          <input
-            id="${inputIds.regular}"
-            class="placeholder:italic focus:outline-none text-xs bg-transparent flex-grow"
-            placeholder="${placeholders.regular}"
-            @input="${handleInput}"
-            @keydown="${(e) => handleInputKeyDown(e, task, type === "from" ? "from" : "to")}" />
-          <button
-            class="flex-none text-base fontmono text-accent hover:text-compliment bg-transparent border-none cursor-pointer"
-            @click="${() => {
-              console.log("click1")
-              const input = document.getElementById(inputIds.regular)
-              if (!input) return
-              const name = input.value.trim()
-              if (!name) return
-              addTaskByName(task, name, type === "from" ? "from" : "to")
-              input.value = ""
-            }}">
-            <svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M2 8H14M8 2V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="${bg2} py-2 w-1/2">
-        <div
-          class="
-            flex items-center
-            px-3 py-1 mx-1 gap-1
-            rounded-lg bg-white dark:bg-black
-            border border-neutral-150 dark:border-neutral-800
-            text-neutral-700 dark:text-neutral-350
-            relative">
-          <input
-            id="${inputIds.important}"
-            class="placeholder:italic focus:outline-none text-xs bg-transparent flex-grow"
-            placeholder="${placeholders.important}"
-            @input="${handleInput}"
-            @keydown="${(e) => {
-              handleInputKeyDown(e, task, type === "from" ? "moreImportant" : "lessImportant")
-            }}" />
-          <button
-            class="flex-none text-base fontmono text-accent hover:text-compliment bg-transparent border-none cursor-pointer"
-            @click="${() => {
-              console.log("click2")
-              const input = document.getElementById(inputIds.important)
-              if (!input) return
-              const name = input.value.trim()
-              if (!name) return
-              addTaskByName(task, name, type === "from" ? "moreImportant" : "lessImportant")
-              input.value = ""
-            }}">
-            <svg class="w-2.5" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M2 8H14M8 2V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-          </button>
-        </div>
+    <div class="${bg} py-2">
+      <div
+        class="
+          flex items-center
+          px-3 p-2 mx-1 gap-2
+          align-middle
+          rounded-lg bg-white dark:bg-black
+          border border-neutral-150 dark:border-neutral-800
+          text-neutral-700 dark:text-neutral-350
+          relative">
+        <input
+          id="${inputId}"
+          class="placeholder:italic placeholder:opacity-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-700 focus:outline-none text-xs bg-transparent flex-grow"
+          placeholder="${placeholder}"
+          @input="${handleInput}"
+          @keydown="${(e) => handleInputKeyDown(e, task, type)}" />
+        <button
+          type="button"
+          class="flex-none p-1 text-neutral-600 dark:text-neutral-400 bg-transparent border-none cursor-pointer"
+          title="Ведущая связь"
+          @click="${() => {
+            const input = document.getElementById(inputId)
+            if (!input) return
+            const name = input.value.trim()
+            if (!name) return
+            addTaskByName(task, name, type, "lead")
+            input.value = ""
+            reData.autoComplete.list = []
+          }}">
+          ${relationIcon("leads")}
+        </button>
+        <button
+          type="button"
+          class="flex-none p-1 text-accent bg-transparent border-none cursor-pointer"
+          title="Блокирующая связь"
+          @click="${() => {
+            const input = document.getElementById(inputId)
+            if (!input) return
+            const name = input.value.trim()
+            if (!name) return
+            addTaskByName(task, name, type, "block")
+            input.value = ""
+            reData.autoComplete.list = []
+          }}">
+          ${relationIcon("blocks")}
+        </button>
       </div>
     </div>
-    ${() => renderAutocomplete(inputIds.regular, task, type)}${() =>
-      renderAutocomplete(inputIds.important, task, type === "from" ? "moreImportant" : "lessImportant")}
+    ${() => renderAutocomplete(inputId, task, type)}
   `
 }

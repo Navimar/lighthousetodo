@@ -1,68 +1,39 @@
 import { html } from "~/arrow-js/index.js"
 import dayjs from "dayjs"
+import { taskStatusIcon } from "~/components/tasks/svgicon.js"
 
 export default (task, additionalClass = "") => {
   let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
 
   const bulletSymbol = () => {
     let classes = ""
-    let content = ""
+    let kind = ""
     let now = dayjs()
 
     if (task.pause) {
-      // Пауза: два прямоугольника, заполняющие 16x16
-      content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-  <rect x="1" y="0" width="5" height="16"/>
-  <rect x="10" y="0" width="5" height="16"/>
-</svg>`
+      kind = "pause"
     } else if (task.ready) {
-      // Галочка: чек-марк, вписывается в 16x16
-      content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none">
-  <path d="M2 8 L6 12 L14 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`
+      kind = "ready"
       classes += " text-green-500"
     } else if (taskDate.isAfter(now, "day")) {
-      // Будущие задачи (от завтрашнего дня) — стрелка вправо
-      content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-  <path d="M0 0 L16 8 L0 16 Z"/>
-</svg>`
+      kind = "futureDay"
       classes += " text-compliment"
     } else if (taskDate.isAfter(now)) {
-      // Песочные часы (сегодняшние будущие задачи)
-      content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-  <path d="M0 0 L16 0 L8 9 Z"/>
-  <path d="M0 16 L16 16 L8 7 Z"/>
-</svg>`
+      kind = "futureToday"
       classes += " text-yellow-500"
     } else if (task.blocked) {
-      // Заблокировано: сплошной квадрат 16x16
-      content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-  <rect x="1" y="1" width="14" height="14"/>
-</svg>`
+      kind = "blocked"
       classes += " text-gray-500"
     } else if (task.depth > 0) {
-      // Низкий приоритет: восход во всю ширину
-      content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="8" cy="8" r="8" fill="currentColor"/>
-</svg>
-`
-      //   content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-      //   <path fill="currentColor" fill-rule="evenodd" d="
-      //     M0,0 H16 V16 H0 V0 Z
-      //     M0,8 A8,8 0 0,1 16,8 L16,0 L0,0 Z
-      //   "/>
-      // </svg>`
+      kind = "depth"
       classes += " text-swamp"
     } else if (taskDate.isBefore(now, "day")) {
-      // Задачи в прошлом: левый треугольник, вписывающийся в 16x16
-      content = `<svg class="w-2.5" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-  <path d="M16 0 L0 8 L16 16 Z"/>
-</svg>`
+      kind = "past"
       classes += " text-accent"
     }
 
-    if (!content) return ""
-    return `<span class='${classes}'>${content}</span>`
+    if (!kind) return ""
+    return html`<span class="${classes}">${taskStatusIcon(kind)}</span>`
   }
 
   return html`<div

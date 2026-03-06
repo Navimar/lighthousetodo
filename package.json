@@ -1,5 +1,5 @@
 {
-  "version": "1.4.20",
+  "version": "1.4.21",
   "type": "module",
   "dependencies": {
     "create-vite": "^4.4.1",
@@ -23,6 +23,9 @@
     "prettier": "^3.0.3"
   },
   "scripts": {
-    "build": "cd arrowclient && vite build --outDir dist"
+    "build": "cd arrowclient && vite build --outDir dist",
+    "server": "node app.js",
+    "client": "npm --prefix arrowclient run dev",
+    "run": "sh -c 'node app.js & SERVER_PID=$!; trap \"kill $SERVER_PID\" EXIT INT TERM; npm --prefix arrowclient run dev'"
   }
 }
