@@ -282,7 +282,7 @@ export default (task, type) => {
       <div
         class="
           flex items-center
-          px-3 p-1 mx-1 gap-2
+          px-3 p-1 mx-2.5 gap-2
           align-middle
           rounded-lg bg-white dark:bg-black
           border border-neutral-150 dark:border-neutral-800
