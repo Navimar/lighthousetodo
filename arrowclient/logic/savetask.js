@@ -8,6 +8,7 @@ import { getObjectByName, getObjectById } from "~/logic/util"
 import { getCollaboratorByName } from "~/logic/collaborator.js"
 import performance from "~/logic/performance.js"
 import audio from "~/logic/audio.js"
+import { getActiveTaskEditor, getTaskEditorValue } from "~/components/tasks/editor/taskEditor.js"
 
 import dayjs from "dayjs"
 
@@ -16,13 +17,13 @@ export default () => {
   try {
     if (!reData.selectedScribe) return false
 
-    const eDiv = document.getElementById("edit")
-    if (!eDiv) return false
-
     let thisTask = getObjectById(reData.selectedScribe)
-    const lines = eDiv.innerText.trim().split("\n")
-    let name = lines[0].trim()
-    const note = lines.slice(1).join("\n")
+    const editor = getActiveTaskEditor()
+    const { name: rawName, note: rawNote } = editor
+      ? getTaskEditorValue(editor)
+      : { name: thisTask?.name || "", note: thisTask?.note || "" }
+    let name = (rawName || "").trim()
+    const note = rawNote || ""
 
     let assignedTo = [reData.user.id]
 

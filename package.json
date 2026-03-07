@@ -1,5 +1,5 @@
 {
-  "version": "1.4.21",
+  "version": "1.4.24",
   "type": "module",
   "dependencies": {
     "create-vite": "^4.4.1",
@@ -11,6 +11,11 @@
     "gun": "^0.2020.1239",
     "howler": "^2.2.4",
     "pg": "^8.13.1",
+    "prosemirror-commands": "^1.7.1",
+    "prosemirror-keymap": "^1.2.3",
+    "prosemirror-model": "^1.25.4",
+    "prosemirror-state": "^1.4.4",
+    "prosemirror-view": "^1.41.6",
     "socket.io": "^4.4.1",
     "uuid": "^9.0.1",
     "vite": "^4.4.7"

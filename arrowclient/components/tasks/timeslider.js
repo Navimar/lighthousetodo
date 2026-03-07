@@ -130,7 +130,7 @@ export default (task) =>
         </div></div
       ><div
         id="currentTimeMarker"
-        style="left:${reData.currentTime.slider}px"
+        style="${() => `left:${reData.currentTime.slider}px`}"
         class="relative bottom-8 h-0 z-40 text-xs w-0 flex flex-col items-center dark:text-accent-dark text-accent text-center">
         <span
           @click="${() => {

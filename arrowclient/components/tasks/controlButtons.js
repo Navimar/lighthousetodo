@@ -6,11 +6,6 @@ import { makevisible } from "~/logic/makevisible.js"
 import performance from "~/logic/performance.js"
 import audio from "~/logic/audio.js"
 
-let checkedPause = (task) => {
-  if (task.pause) return "checked"
-  else return ""
-}
-
 let saveButton = () => {
   performance.start("saveButton")
   try {
@@ -47,6 +42,7 @@ export default (task) =>
         class="appearance-none peer sr-only"
         type="checkbox"
         id="readyCheckbox"
+        checked="${() => !!task.ready}"
         @change="${(e) => handleReadyCheckboxChange(e, task)}" />
       <label class="button-gray whitespace-nowrap" for="readyCheckbox">Готово</label>
     </div>
@@ -63,7 +59,7 @@ export default (task) =>
       class="sr-only peer"
       type="checkbox"
       id="pauseCheckbox"
-      ${checkedPause(task)}
+      checked="${() => !!task.pause}"
       @change="${(e) => {
         if (e.target.checked) {
           saveButton()

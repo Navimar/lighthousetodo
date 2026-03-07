@@ -74,13 +74,13 @@ export default (task) => {
       <div class="flex gap-3">
         <input
           id="timeInput"
-          value="${task.time}"
+          value="${() => task.time || ""}"
           type="time"
           class="oswald text-base shrink-0 dark:bg-black bg-white my-auto dark:border-black text-center h-10 border-b-02rem border-white dark:border-black rounded-none"
           @input="${(e) => updateTimeSlider(e, task)}" />
         <input
           id="dateInput"
-          value="${task.date}"
+          value="${() => task.date || ""}"
           class="oswald whitespace-nowrap text-base shrink-0 dark:bg-black bg-white dark:border-black my-auto text-center h-10 border-b-02rem border-white  dark:border-black rounded-none"
           type="date"
           id="task-date"

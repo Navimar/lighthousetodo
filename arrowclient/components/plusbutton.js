@@ -15,8 +15,6 @@ let plusbutton = () => {
   let newScribe = getObjectByName(NEWSCRIBETEXT)
   reData.selectedScribe = newScribe.id
   makevisible()
-  let editdiv = document.getElementById("edit")
-  if (editdiv) editdiv.innerText = NEWSCRIBETEXT
   audio.playSound("add")
 }
 

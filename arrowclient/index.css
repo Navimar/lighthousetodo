@@ -66,19 +66,26 @@ input:checked + .checkmark::after {
   letter-spacing: 0.1em;
 }
 
-#edit div {
+#edit .ProseMirror {
   @apply px-1 sm:px-20;
+  outline: none;
+  text-align: left;
 }
-#edit div:not(:first-child) {
+
+#edit .ProseMirror:focus {
+  outline: none;
+}
+
+#edit .ProseMirror > div:not(:first-child) {
   @apply text-sm;
 }
 
-#edit div:first-child {
+#edit .ProseMirror > div:first-child {
   font-size: 1.5rem;
   @apply text-center;
 }
 
-#edit div:first-child:not(:only-child) {
+#edit .ProseMirror > div:first-child:not(:only-child) {
   @apply mb-8;
 }
 

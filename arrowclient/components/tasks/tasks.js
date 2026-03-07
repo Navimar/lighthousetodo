@@ -5,7 +5,7 @@ import dateInput from "~/components/tasks/dateinput.js"
 import controlButtons from "~/components/tasks/controlButtons.js"
 import taskPlate from "~/components/tasks/taskplate.js"
 import { selectTaskById, showSaveButtonHidePause } from "~/logic/manipulate.js"
-import { clickPos } from "~/logic/util.js"
+import { clickPos, getObjectById } from "~/logic/util.js"
 import data from "~/logic/data.js"
 import performance from "~/logic/performance.js"
 import sort from "~/logic/sort.js"
@@ -43,23 +43,21 @@ export default () => {
 
 let renderTask = (task, index) => {
   if (reData.selectedScribe == task.id) {
+    const selectedTask = () => getObjectById(reData.selectedScribe) || task
     // Редактируемый
     return html`<div
       id="selectedtask"
       class="-mx-3 z-[45] flex min-h-screen flex-col bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white"
-      >${timeSlider(task)}${dateInput(task)}
-      <div class="mt-14"> ${controlButtons(task)}</div>
+      >${() => timeSlider(selectedTask())}${() => dateInput(selectedTask())}
+      <div class="mt-14"> ${() => controlButtons(selectedTask())}</div>
       <div class="flex my-16 flex-col "
-        >${() => tagLine(task, "from")} ${() => addConnection(task, "from")}<div
+        >${() => tagLine(selectedTask(), "from")} ${() => addConnection(selectedTask(), "from")}<div
           id="edit"
-          @input="${showSaveButtonHidePause}"
           class="mx-2 py-16 min-h-full whitespace-pre-wrap focus:outline-none"
-          contenteditable="true"
           role="textbox"
-          aria-multiline="true"
-          ><div>${task.name}</div>${task.note && html`<div>${task.note}</div>`}</div
-        >${() => addConnection(task, "to")} ${() => tagLine(task, "to")}</div
-      >${hiddenData(task)}
+          aria-multiline="true"></div
+        >${() => addConnection(selectedTask(), "to")} ${() => tagLine(selectedTask(), "to")}</div
+      >${() => hiddenData(selectedTask())}
     </div>`
   } else {
     // Нередактируемый
