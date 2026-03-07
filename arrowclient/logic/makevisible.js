@@ -3,6 +3,7 @@ import data from "~/logic/data.js"
 import performance from "~/logic/performance.js"
 import sort from "~/logic/sort.js"
 import dayjs from "dayjs"
+import { reactive } from "~/arrow-js/index.js"
 import { saveGraphToLocalStorage } from "~/logic/sync.js"
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter"
 
@@ -21,6 +22,10 @@ export const makevisible = () => {
     saveGraphToLocalStorage(data.tasks)
 
     for (let [taskId, task] of data.tasks.nodes.entries()) {
+      if (task && typeof task.$on !== "function") {
+        task = reactive(task)
+        data.tasks.nodes.set(taskId, task)
+      }
       if (!task?.name) continue // skip ghost nodes without real task data
       if (task.id !== taskId) {
         task.id = taskId
