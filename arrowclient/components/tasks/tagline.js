@@ -14,11 +14,15 @@ import dayjs from "dayjs"
 
 function removeTaskFromLists(givenTask, taskId) {
   showSaveButtonHidePause()
-  givenTask = reData.visibleTasks.find((t) => t.id === givenTask.id)
+  givenTask = reData.visibleTasks.find((t) => t.id === givenTask.id) || givenTask
+  if (!givenTask?.id) return false
+
+  let removedAny = false
   const relations = data.tasks.getRelations(givenTask.id)
   const incoming = data.tasks.getIncomingRelations(givenTask.id)
   ;[...relations.blocks, ...relations.leads].forEach((id) => {
     if (id === taskId) {
+      removedAny = true
       data.tasks.removeRelation(givenTask.id, taskId)
       sendRelation({
         added: null,
@@ -32,6 +36,7 @@ function removeTaskFromLists(givenTask, taskId) {
   })
   ;[...incoming.blocks, ...incoming.leads].forEach((id) => {
     if (id === taskId) {
+      removedAny = true
       data.tasks.removeRelation(id, givenTask.id)
       sendRelation({
         added: null,
@@ -43,6 +48,7 @@ function removeTaskFromLists(givenTask, taskId) {
       })
     }
   })
+  return removedAny
 }
 
 // Таймер для долгого тапа
@@ -68,27 +74,31 @@ export default (givenTask, direction) => {
   let relatedTasks = []
   if (direction === "to") {
     const { blocks, leads } = data.tasks.getRelations(givenTask.id)
-    relatedTasks = [...blocks, ...leads].map((id) => {
-      const task = getObjectById(id)
-      return reactive({
-        ...task,
-        hasOutgoing:
-          data.tasks.getRelations(task.id).blocks.length > 0 || data.tasks.getRelations(task.id).leads.length > 0,
-        hasBlockRelation: blocks.includes(id),
-      })
-    })
+    relatedTasks = reactive(
+      [...blocks, ...leads].map((id) => {
+        const task = getObjectById(id)
+        return reactive({
+          ...task,
+          hasOutgoing:
+            data.tasks.getRelations(task.id).blocks.length > 0 || data.tasks.getRelations(task.id).leads.length > 0,
+          hasBlockRelation: blocks.includes(id),
+        })
+      }),
+    )
   } else {
     const incoming = data.tasks.getIncomingRelations(givenTask.id)
-    relatedTasks = [...incoming.blocks, ...incoming.leads].map((id) => {
-      const task = getObjectById(id)
-      return reactive({
-        ...task,
-        hasIncoming:
-          data.tasks.getIncomingRelations(task.id).blocks.length > 0 ||
-          data.tasks.getIncomingRelations(task.id).leads.length > 0,
-        hasBlockRelation: incoming.blocks.includes(id),
-      })
-    })
+    relatedTasks = reactive(
+      [...incoming.blocks, ...incoming.leads].map((id) => {
+        const task = getObjectById(id)
+        return reactive({
+          ...task,
+          hasIncoming:
+            data.tasks.getIncomingRelations(task.id).blocks.length > 0 ||
+            data.tasks.getIncomingRelations(task.id).leads.length > 0,
+          hasBlockRelation: incoming.blocks.includes(id),
+        })
+      }),
+    )
   }
 
   // Отсортировать по имени
@@ -157,7 +167,11 @@ export default (givenTask, direction) => {
               }}"
               @contextmenu="${(e) => {
                 e.preventDefault()
-                removeTaskFromLists(givenTask, task.id)
+                const removed = removeTaskFromLists(givenTask, task.id)
+                if (removed) {
+                  const index = relatedTasks.findIndex((t) => t.id === task.id)
+                  if (index !== -1) relatedTasks.splice(index, 1)
+                }
                 e.stopPropagation()
               }}"
               @touchstart="${(e) => handleTouchStart(e, task.id, givenTask)}"
