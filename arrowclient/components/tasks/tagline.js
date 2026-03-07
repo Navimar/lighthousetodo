@@ -1,4 +1,4 @@
-import { html } from "~/arrow-js/index.js"
+import { html, reactive } from "~/arrow-js/index.js"
 import { selectTaskById } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import { getObjectById, getDayjsDateFromTask } from "~/logic/util"
@@ -70,24 +70,24 @@ export default (givenTask, direction) => {
     const { blocks, leads } = data.tasks.getRelations(givenTask.id)
     relatedTasks = [...blocks, ...leads].map((id) => {
       const task = getObjectById(id)
-      return {
+      return reactive({
         ...task,
         hasOutgoing:
           data.tasks.getRelations(task.id).blocks.length > 0 || data.tasks.getRelations(task.id).leads.length > 0,
         hasBlockRelation: blocks.includes(id),
-      }
+      })
     })
   } else {
     const incoming = data.tasks.getIncomingRelations(givenTask.id)
     relatedTasks = [...incoming.blocks, ...incoming.leads].map((id) => {
       const task = getObjectById(id)
-      return {
+      return reactive({
         ...task,
         hasIncoming:
           data.tasks.getIncomingRelations(task.id).blocks.length > 0 ||
           data.tasks.getIncomingRelations(task.id).leads.length > 0,
         hasBlockRelation: incoming.blocks.includes(id),
-      }
+      })
     })
   }
 

@@ -297,7 +297,7 @@ export default (task, type) => {
         <button
           type="button"
           class="flex-none p-1 text-neutral-600 dark:text-neutral-400 bg-transparent border-none cursor-pointer"
-          title="Ведущая связь"
+          title="приоритизирующая связь · Enter"
           @click="${() => {
             const input = document.getElementById(inputId)
             if (!input) return
@@ -312,7 +312,7 @@ export default (task, type) => {
         <button
           type="button"
           class="flex-none p-1 text-accent bg-transparent border-none cursor-pointer"
-          title="Блокирующая связь"
+          title="Блокирующая связь · Shift + Enter"
           @click="${() => {
             const input = document.getElementById(inputId)
             if (!input) return
