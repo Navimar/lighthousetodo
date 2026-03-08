@@ -20,25 +20,31 @@ export default () => {
     if (reData.route[0] != "tasks") return ""
     const selectedScribeId = reData.selectedScribe
     if (reData.searchString) {
-      // Filter tasks by matching with the search input (Graph-based storage)
       const query = String(reData.searchString).toLowerCase()
-      let filteredTasks = Array.from(data.tasks.nodes.entries())
+      let searchTasks = Array.from(data.tasks.nodes.entries())
         .map(([id, node]) => {
           if (!node?.name) return null
           if (node.id !== id) node.id = id
           return node
         })
-        .filter((task) => task && task.name.toLowerCase().includes(query))
+        .filter(Boolean)
 
-      if (filteredTasks.length === 0) {
-        return html`<div
-          class="fontmono flex flex-col gap-3 bg-near dark:bg-black p-3 rounded-lg overflow dark:text-white italic"
-          >Ничего не найдено...</div
-        >`
-      }
-      sort(filteredTasks)
-      filteredTasks = filteredTasks.slice(0, 40)
-      return filteredTasks.map((task, index) => renderTask(task, index, selectedScribeId))
+      sort(searchTasks)
+      const hasMatches = searchTasks.some((task) => task.name.toLowerCase().includes(query))
+
+      return [
+        !hasMatches
+          ? html`<div
+              class="fontmono flex flex-col gap-3 bg-near dark:bg-black p-3 rounded-lg overflow dark:text-white italic"
+              >Ничего не найдено...</div
+            >`
+          : "",
+        ...searchTasks.map((task, index) =>
+          renderTask(task, index, selectedScribeId, {
+            hidden: !task.name.toLowerCase().includes(query),
+          }),
+        ),
+      ]
     }
     return reData.visibleTasks.map((task, index) => renderTask(task, index, selectedScribeId))
   } finally {
@@ -46,7 +52,8 @@ export default () => {
   }
 }
 
-let renderTask = (task, index, selectedScribeId) => {
+let renderTask = (task, index, selectedScribeId, { hidden = false } = {}) => {
+  const visibilityClass = hidden ? "hidden" : ""
   if (selectedScribeId === task.id) {
     const selectedTask = () => {
       if (!selectedScribeId) return task
@@ -55,7 +62,7 @@ let renderTask = (task, index, selectedScribeId) => {
     // Редактируемый
     return html`<div
       id="selectedtask"
-      class="-mx-3 z-[45] flex min-h-screen flex-col bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white"
+      class="-mx-3 z-[45] flex min-h-screen flex-col bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white ${visibilityClass}"
       >${() => timeSlider(selectedTask())}${() => dateInput(selectedTask())}
       <div class="mt-14"> ${() => controlButtons(selectedTask())}</div>
       <div class="flex my-16 flex-col "
@@ -88,7 +95,7 @@ let renderTask = (task, index, selectedScribeId) => {
         selectTaskById(task.id)
         clickPos(e)
       }}"
-      class="${cornerClass} flex flex-col break-words bg-neutral-100 dark:bg-neutral-950 p-3 rounded-lg overflow dark:text-white"
+      class="${cornerClass} ${visibilityClass} flex flex-col break-words bg-neutral-100 dark:bg-neutral-950 p-3 rounded-lg overflow dark:text-white"
       ><div class=" ml-2 flex justify-between gap-3"
         ><div class=" break-word"
           >${() => task.name}${() => {
