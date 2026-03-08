@@ -105,9 +105,6 @@ export default (givenTask, direction) => {
   // Отсортировать по имени
   // relatedTasks.sort((a, b) => a.name.localeCompare(b.name))
   sort(relatedTasks)
-
-  if (!relatedTasks.length) return html``
-
   const listPaddingClass = direction === "from" ? "px-2 pt-2 pb-0" : "px-2 pt-0 pb-2"
   const showBridgeButtons =
     reData.addConnectionDraft.side === direction && Boolean(reData.addConnectionDraft.value.trim())
@@ -115,118 +112,122 @@ export default (givenTask, direction) => {
     "flex-none p-1 text-neutral-600 dark:text-neutral-400 bg-transparent border-none cursor-pointer"
   const bridgeBlockButtonClass = "flex-none p-1 text-accent bg-transparent border-none cursor-pointer"
 
-  return html`
-    <div
+  if (!relatedTasks.length) return html``
+
+  return html`<div
       class="text-xs flex max-h-60 overflow-y-auto flex-col gap-2 bg-neutral-50 dark:bg-neutral-900 ${listPaddingClass}">
       ${() =>
         relatedTasks.map((task) => {
           const showCorner = direction === "to" ? task.hasOutgoing : task.hasIncoming
           const cornerbox = showCorner ? (direction === "to" ? "corner-box-bottom-right" : "corner-box-top-left") : ""
 
-          const lockIcon = html`<button
-            type="button"
-            class="${() => `ml-1 p-1 cursor-pointer ${task.hasBlockRelation ? "text-accent" : "text-neutral-600 dark:text-neutral-400"}`}"
-            @click="${(e) => {
-              e.stopPropagation()
-              const ts = Date.now()
-              if (direction === "to") {
-                if (task.hasBlockRelation) {
-                  data.tasks.addLead(givenTask.id, task.id, ts)
-                  sendRelation({
-                    added: { from: givenTask.id, to: task.id, type: task.hasBlockRelation ? "leads" : "blocks", ts },
-                    removed: { from: givenTask.id, to: task.id, type: task.hasBlockRelation ? "blocks" : "leads" },
-                  })
-                } else {
-                  data.tasks.addBlock(givenTask.id, task.id)
-                  sendRelation({
-                    added: { from: givenTask.id, to: task.id, type: task.hasBlockRelation ? "leads" : "blocks", ts },
-                    removed: { from: givenTask.id, to: task.id, type: task.hasBlockRelation ? "blocks" : "leads" },
-                  })
-                }
+        const lockIcon = html`<button
+          type="button"
+          class="${() =>
+            `ml-1 p-1 cursor-pointer ${task.hasBlockRelation ? "text-accent" : "text-neutral-600 dark:text-neutral-400"}`}"
+          @click="${(e) => {
+            e.stopPropagation()
+            const ts = Date.now()
+            if (direction === "to") {
+              if (task.hasBlockRelation) {
+                data.tasks.addLead(givenTask.id, task.id, ts)
+                sendRelation({
+                  added: { from: givenTask.id, to: task.id, type: task.hasBlockRelation ? "leads" : "blocks", ts },
+                  removed: { from: givenTask.id, to: task.id, type: task.hasBlockRelation ? "blocks" : "leads" },
+                })
               } else {
-                if (task.hasBlockRelation) {
-                  data.tasks.addLead(task.id, givenTask.id, ts)
-                  sendRelation({
-                    added: { from: task.id, to: givenTask.id, type: task.hasBlockRelation ? "leads" : "blocks", ts },
-                    removed: { from: task.id, to: givenTask.id, type: task.hasBlockRelation ? "blocks" : "leads" },
-                  })
-                } else {
-                  data.tasks.addBlock(task.id, givenTask.id)
-                  sendRelation({
-                    added: { from: task.id, to: givenTask.id, type: task.hasBlockRelation ? "leads" : "blocks", ts },
-                    removed: { from: task.id, to: givenTask.id, type: task.hasBlockRelation ? "blocks" : "leads" },
-                  })
-                }
+                data.tasks.addBlock(givenTask.id, task.id)
+                sendRelation({
+                  added: { from: givenTask.id, to: task.id, type: task.hasBlockRelation ? "leads" : "blocks", ts },
+                  removed: { from: givenTask.id, to: task.id, type: task.hasBlockRelation ? "blocks" : "leads" },
+                })
+              }
+            } else {
+              if (task.hasBlockRelation) {
+                data.tasks.addLead(task.id, givenTask.id, ts)
+                sendRelation({
+                  added: { from: task.id, to: givenTask.id, type: task.hasBlockRelation ? "leads" : "blocks", ts },
+                  removed: { from: task.id, to: givenTask.id, type: task.hasBlockRelation ? "blocks" : "leads" },
+                })
+              } else {
+                data.tasks.addBlock(task.id, givenTask.id)
+                sendRelation({
+                  added: { from: task.id, to: givenTask.id, type: task.hasBlockRelation ? "leads" : "blocks", ts },
+                  removed: { from: task.id, to: givenTask.id, type: task.hasBlockRelation ? "blocks" : "leads" },
+                })
+              }
               }
               task.hasBlockRelation = !task.hasBlockRelation
+              reData.visibleTasks = [...reData.visibleTasks]
             }}">
             ${() => relationIcon(task.hasBlockRelation ? "blocks" : "leads")}
           </button>`
 
-          const bridgeIcons = showBridgeButtons
-            ? html`<div class="flex items-center gap-1">
-                <div class="flex items-center justify-center">${bridgeArrowIcon()}</div>
-                <button
-                  type="button"
-                  class="${bridgeButtonClass}"
-                  title="Создать промежуточную задачу со связью leads"
-                  @click="${(e) => {
-                    e.stopPropagation()
-                    const taskName = reData.addConnectionDraft.value.trim()
-                    if (!taskName) return
-                    const added = bridgeTaskByName(givenTask, task, direction, taskName, "lead")
-                    if (!added) return
-                    const input = document.getElementById(direction === "from" ? "fromInput" : "toInput")
-                    if (input) input.value = ""
-                    clearAddConnectionDraft()
-                    reData.autoComplete.list = []
-                  }}">
-                  ${relationIcon("leads")}
-                </button>
-                <button
-                  type="button"
-                  class="${bridgeBlockButtonClass}"
-                  title="Создать промежуточную задачу со связью blocks"
-                  @click="${(e) => {
-                    e.stopPropagation()
-                    const taskName = reData.addConnectionDraft.value.trim()
-                    if (!taskName) return
-                    const added = bridgeTaskByName(givenTask, task, direction, taskName, "block")
-                    if (!added) return
-                    const input = document.getElementById(direction === "from" ? "fromInput" : "toInput")
-                    if (input) input.value = ""
-                    clearAddConnectionDraft()
-                    reData.autoComplete.list = []
-                  }}">
-                  ${relationIcon("blocks")}
-                </button>
-              </div>`
-            : html``
+        const bridgeIcons = showBridgeButtons
+          ? html`<div class="flex items-center gap-1">
+              <div class="flex items-center justify-center">${bridgeArrowIcon()}</div>
+              <button
+                type="button"
+                class="${bridgeButtonClass}"
+                title="Создать промежуточную задачу со связью leads"
+                @click="${(e) => {
+                  e.stopPropagation()
+                  const taskName = reData.addConnectionDraft.value.trim()
+                  if (!taskName) return
+                  const added = bridgeTaskByName(givenTask, task, direction, taskName, "lead")
+                  if (!added) return
+                  const input = document.getElementById(direction === "from" ? "fromInput" : "toInput")
+                  if (input) input.value = ""
+                  clearAddConnectionDraft()
+                  reData.autoComplete.list = []
+                }}">
+                ${relationIcon("leads")}
+              </button>
+              <button
+                type="button"
+                class="${bridgeBlockButtonClass}"
+                title="Создать промежуточную задачу со связью blocks"
+                @click="${(e) => {
+                  e.stopPropagation()
+                  const taskName = reData.addConnectionDraft.value.trim()
+                  if (!taskName) return
+                  const added = bridgeTaskByName(givenTask, task, direction, taskName, "block")
+                  if (!added) return
+                  const input = document.getElementById(direction === "from" ? "fromInput" : "toInput")
+                  if (input) input.value = ""
+                  clearAddConnectionDraft()
+                  reData.autoComplete.list = []
+                }}">
+                ${relationIcon("blocks")}
+              </button>
+            </div>`
+          : html``
 
-          return html` <div class="flex items-center gap-1">
-            ${() => lockIcon}
-            <div
-              @click="${(e) => {
-                selectTaskById(task.id)
-                clickPos(e)
-                e.stopPropagation()
-              }}"
-              @contextmenu="${(e) => {
-                e.preventDefault()
+        return html` <div class="flex items-center gap-1">
+          ${() => lockIcon}
+          <div
+            @click="${(e) => {
+              selectTaskById(task.id)
+              clickPos(e)
+              e.stopPropagation()
+            }}"
+            @contextmenu="${(e) => {
+              e.preventDefault()
                 const removed = removeTaskFromLists(givenTask, task.id)
                 if (removed) {
                   const index = relatedTasks.findIndex((t) => t.id === task.id)
                   if (index !== -1) relatedTasks.splice(index, 1)
+                  reData.visibleTasks = [...reData.visibleTasks]
                 }
                 e.stopPropagation()
               }}"
-              @touchstart="${(e) => handleTouchStart(e, task.id, givenTask)}"
-              @touchend="${handleTouchEnd}"
-              class="${cornerbox} text-neutral-700 dark:text-neutral-350 px-3 p-2 mx-1 inline-block align-middle rounded-lg border border-neutral-150 dark:border-neutral-800 bg-white dark:bg-black">
-              <div class="flex h-full gap-1.5 items-center">
-                <div class="break-word">${task.name}</div>
-                ${() => taskplate(task, "text-xxs ml-auto")}
-              </div>
+            @touchstart="${(e) => handleTouchStart(e, task.id, givenTask)}"
+            @touchend="${handleTouchEnd}"
+            class="${cornerbox} text-neutral-700 dark:text-neutral-350 px-3 p-2 mx-1 inline-block align-middle rounded-lg border border-neutral-150 dark:border-neutral-800 bg-white dark:bg-black">
+            <div class="flex h-full gap-1.5 items-center">
+              <div class="break-word">${task.name}</div>
+              ${() => taskplate(task, "text-xxs ml-auto")}
+            </div>
             </div>
             ${() => bridgeIcons}
           </div>`

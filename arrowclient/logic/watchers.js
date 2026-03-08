@@ -25,6 +25,7 @@ export default () => {
     try {
       reData.selectedScribe
       reData.visibleTasks
+      reData.searchString
       Promise.resolve().then(() => {
         let editdiv = document.getElementById("edit")
         let selectedScribe = null
