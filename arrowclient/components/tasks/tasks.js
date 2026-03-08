@@ -5,7 +5,7 @@ import dateInput from "~/components/tasks/dateinput.js"
 import controlButtons from "~/components/tasks/controlButtons.js"
 import taskPlate from "~/components/tasks/taskplate.js"
 import { selectTaskById, showSaveButtonHidePause } from "~/logic/manipulate.js"
-import { clickPos, getObjectById } from "~/logic/util.js"
+import { clickPos } from "~/logic/util.js"
 import data from "~/logic/data.js"
 import performance from "~/logic/performance.js"
 import sort from "~/logic/sort.js"
@@ -18,12 +18,17 @@ export default () => {
   performance.start("renderTasks")
   try {
     if (reData.route[0] != "tasks") return ""
+    const selectedScribeId = reData.selectedScribe
     if (reData.searchString) {
       // Filter tasks by matching with the search input (Graph-based storage)
       const query = String(reData.searchString).toLowerCase()
       let filteredTasks = Array.from(data.tasks.nodes.entries())
-        .map(([id, node]) => ({ id, ...node }))
-        .filter((task) => task.name && task.name.toLowerCase().includes(query))
+        .map(([id, node]) => {
+          if (!node?.name) return null
+          if (node.id !== id) node.id = id
+          return node
+        })
+        .filter((task) => task && task.name.toLowerCase().includes(query))
 
       if (filteredTasks.length === 0) {
         return html`<div
@@ -33,17 +38,20 @@ export default () => {
       }
       sort(filteredTasks)
       filteredTasks = filteredTasks.slice(0, 40)
-      return filteredTasks.map(renderTask)
+      return filteredTasks.map((task, index) => renderTask(task, index, selectedScribeId))
     }
-    return reData.visibleTasks.map(renderTask)
+    return reData.visibleTasks.map((task, index) => renderTask(task, index, selectedScribeId))
   } finally {
     performance.end("renderTasks")
   }
 }
 
-let renderTask = (task, index) => {
-  if (reData.selectedScribe == task.id) {
-    const selectedTask = () => getObjectById(reData.selectedScribe) || task
+let renderTask = (task, index, selectedScribeId) => {
+  if (selectedScribeId === task.id) {
+    const selectedTask = () => {
+      if (!selectedScribeId) return task
+      return data.tasks.nodes.get(selectedScribeId) || task
+    }
     // Редактируемый
     return html`<div
       id="selectedtask"
