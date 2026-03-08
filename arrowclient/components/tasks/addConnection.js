@@ -1,110 +1,9 @@
 import { html } from "~/arrow-js/index.js"
-import { getObjectByName } from "~/logic/util.js"
 import reData from "~/logic/reactive.js"
 import data from "~/logic/data.js"
 import taskplate from "~/components/tasks/taskplate.js"
 import { relationIcon } from "~/components/tasks/svgicon.js"
-import { makevisible } from "~/logic/makevisible"
-import saveTask from "~/logic/savetask.js"
-
-import { sendRelation } from "~/logic/send.js"
-
-/**
- * Добавляет связь между задачей (task) и другой задачей,
- * найденной по имени (taskName), с учетом направления и типа связи.
- */
-function addTaskByName(task, taskName, direction, relationType) {
-  saveTask()
-  const ts = Date.now()
-  const selectedTaskId = task?.id
-  if (!selectedTaskId) {
-    console.warn("addTaskByName: selected task id is missing", { task, taskName, direction, relationType })
-    return
-  }
-
-  const relationMap = {
-    block: "blocks",
-    lead: "leads",
-  }
-  const normalizedType = relationMap[relationType]
-  const isIncoming = direction === "from"
-  if (!["from", "to"].includes(direction) || !normalizedType) {
-    throw new Error(`Неверные параметры связи: direction=${direction}, relationType=${relationType}`)
-  }
-
-  // Актуализируем задачу из "видимых"
-  task = reData.visibleTasks.find((t) => t.id === selectedTaskId) || data.tasks.nodes.get(selectedTaskId)
-  if (!task?.id || !data.tasks.nodes.has(task.id)) {
-    console.warn("addTaskByName: selected task is not available in graph", {
-      selectedTaskId,
-      taskName,
-      direction,
-      relationType: normalizedType,
-    })
-    return
-  }
-
-  // Считаем, что getObjectByName гарантированно возвращает объект
-  const taskObj = getObjectByName(taskName)
-  if (!taskObj) {
-    console.warn(`Задача с именем "${taskName}" не найдена`)
-    return
-  }
-  if (taskObj.id === task.id) {
-    console.warn(`Нельзя связать задачу "${taskObj.name}" саму с собой`)
-    return
-  }
-  console.log("taskObj in addTaskByName", taskObj)
-
-  // Определяем from/to на основе направления
-  const fromId = isIncoming ? taskObj.id : task.id
-  const toId = isIncoming ? task.id : taskObj.id
-  if (!fromId || !toId) {
-    console.warn("addTaskByName: invalid relation ids", {
-      fromId,
-      toId,
-      taskName,
-      direction,
-      relationType: normalizedType,
-    })
-    return
-  }
-  if (!data.tasks.nodes.has(fromId) || !data.tasks.nodes.has(toId)) {
-    console.warn("addTaskByName: relation points to missing nodes", {
-      fromId,
-      toId,
-      taskName,
-      direction,
-      relationType: normalizedType,
-    })
-    return
-  }
-
-  // Проверяем, есть ли уже связь между этими задачами (в том же направлении)
-  const outgoing = data.tasks.getRelations(fromId)
-  const existingType = outgoing.leads.includes(toId) ? "leads" : outgoing.blocks.includes(toId) ? "blocks" : null
-
-  if (existingType === normalizedType) {
-    console.warn(`Задача "${taskObj.name}" уже связана (по типу ${normalizedType})`)
-    return
-  }
-
-  // Если связь другого типа — отправим removed для замены
-  const removed = existingType ? { from: fromId, to: toId, type: existingType } : null
-
-  // Добавляем связь в граф (граф сам удалит старую через _removeExistingRelation)
-  if (normalizedType === "leads") {
-    data.tasks.addLead(fromId, toId, ts)
-  } else {
-    data.tasks.addBlock(fromId, toId, ts)
-  }
-
-  sendRelation({
-    added: { from: fromId, to: toId, type: normalizedType, ts },
-    removed,
-  })
-  makevisible()
-}
+import { addTaskByName, clearAddConnectionDraft, setAddConnectionDraft } from "~/components/tasks/connectionActions.js"
 
 /**
  * При клике на элемент автокомплита:
@@ -123,6 +22,7 @@ function complete(e, divId, task, direction) {
   if (input) {
     input.value = ""
   }
+  clearAddConnectionDraft()
 
   // Скрываем подсказки
   reData.autoComplete.list = []
@@ -140,9 +40,12 @@ function handleInputKeyDown(e, task, direction) {
 
     // Enter -> leads, Shift+Enter/Cmd+Enter -> blocks
     const relationType = e.shiftKey || e.metaKey ? "block" : "lead"
-    addTaskByName(task, name, direction, relationType)
-    e.target.value = ""
-    reData.autoComplete.list = []
+    const added = addTaskByName(task, name, direction, relationType)
+    if (added) {
+      e.target.value = ""
+      clearAddConnectionDraft()
+      reData.autoComplete.list = []
+    }
   } else if (e.key === "Escape") {
     // Закрыть подсказки по Esc
     reData.autoComplete.list = []
@@ -214,6 +117,7 @@ function handleInputCore(e) {
 
 const debouncedHandleInput = debounce(handleInputCore, 150)
 function handleInput(e) {
+  setAddConnectionDraft(e.target.id === "fromInput" ? "from" : "to", e.target.value)
   debouncedHandleInput(e)
 }
 
@@ -303,8 +207,10 @@ export default (task, type) => {
             if (!input) return
             const name = input.value.trim()
             if (!name) return
-            addTaskByName(task, name, type, "lead")
+            const added = addTaskByName(task, name, type, "lead")
+            if (!added) return
             input.value = ""
+            clearAddConnectionDraft()
             reData.autoComplete.list = []
           }}">
           ${relationIcon("leads")}
@@ -318,8 +224,10 @@ export default (task, type) => {
             if (!input) return
             const name = input.value.trim()
             if (!name) return
-            addTaskByName(task, name, type, "block")
+            const added = addTaskByName(task, name, type, "block")
+            if (!added) return
             input.value = ""
+            clearAddConnectionDraft()
             reData.autoComplete.list = []
           }}">
           ${relationIcon("blocks")}

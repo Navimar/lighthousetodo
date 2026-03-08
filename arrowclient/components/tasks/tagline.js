@@ -3,12 +3,13 @@ import { selectTaskById } from "~/logic/manipulate.js"
 import { clickPos } from "~/logic/util.js"
 import { getObjectById, getDayjsDateFromTask } from "~/logic/util"
 import taskplate from "~/components/tasks/taskplate.js"
-import { relationIcon } from "~/components/tasks/svgicon.js"
+import { bridgeArrowIcon, relationIcon } from "~/components/tasks/svgicon.js"
 import { showSaveButtonHidePause } from "~/logic/manipulate.js"
 import reData from "~/logic/reactive.js"
 import data from "~/logic/data.js"
 import { sendRelation } from "~/logic/send.js"
 import sort from "~/logic/sort.js"
+import { bridgeTaskByName, clearAddConnectionDraft } from "~/components/tasks/connectionActions.js"
 
 import dayjs from "dayjs"
 
@@ -108,6 +109,11 @@ export default (givenTask, direction) => {
   if (!relatedTasks.length) return html``
 
   const listPaddingClass = direction === "from" ? "px-2 pt-2 pb-0" : "px-2 pt-0 pb-2"
+  const showBridgeButtons =
+    reData.addConnectionDraft.side === direction && Boolean(reData.addConnectionDraft.value.trim())
+  const bridgeButtonClass =
+    "flex-none p-1 text-neutral-600 dark:text-neutral-400 bg-transparent border-none cursor-pointer"
+  const bridgeBlockButtonClass = "flex-none p-1 text-accent bg-transparent border-none cursor-pointer"
 
   return html`
     <div
@@ -157,6 +163,46 @@ export default (givenTask, direction) => {
             ${() => relationIcon(task.hasBlockRelation ? "blocks" : "leads")}
           </button>`
 
+          const bridgeIcons = showBridgeButtons
+            ? html`<div class="flex items-center gap-1">
+                <div class="flex items-center justify-center">${bridgeArrowIcon()}</div>
+                <button
+                  type="button"
+                  class="${bridgeButtonClass}"
+                  title="Создать промежуточную задачу со связью leads"
+                  @click="${(e) => {
+                    e.stopPropagation()
+                    const taskName = reData.addConnectionDraft.value.trim()
+                    if (!taskName) return
+                    const added = bridgeTaskByName(givenTask, task, direction, taskName, "lead")
+                    if (!added) return
+                    const input = document.getElementById(direction === "from" ? "fromInput" : "toInput")
+                    if (input) input.value = ""
+                    clearAddConnectionDraft()
+                    reData.autoComplete.list = []
+                  }}">
+                  ${relationIcon("leads")}
+                </button>
+                <button
+                  type="button"
+                  class="${bridgeBlockButtonClass}"
+                  title="Создать промежуточную задачу со связью blocks"
+                  @click="${(e) => {
+                    e.stopPropagation()
+                    const taskName = reData.addConnectionDraft.value.trim()
+                    if (!taskName) return
+                    const added = bridgeTaskByName(givenTask, task, direction, taskName, "block")
+                    if (!added) return
+                    const input = document.getElementById(direction === "from" ? "fromInput" : "toInput")
+                    if (input) input.value = ""
+                    clearAddConnectionDraft()
+                    reData.autoComplete.list = []
+                  }}">
+                  ${relationIcon("blocks")}
+                </button>
+              </div>`
+            : html``
+
           return html` <div class="flex items-center gap-1">
             ${() => lockIcon}
             <div
@@ -182,6 +228,7 @@ export default (givenTask, direction) => {
                 ${() => taskplate(task, "text-xxs ml-auto")}
               </div>
             </div>
+            ${() => bridgeIcons}
           </div>`
         })}
     </div>

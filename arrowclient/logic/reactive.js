@@ -18,6 +18,10 @@ export default reactive({
     line: "",
     div: "",
   },
+  addConnectionDraft: {
+    value: "",
+    side: "",
+  },
   selectedDate: dayjs().format("YYYY-MM-DD"),
   collabState: false,
   searchString: "",
