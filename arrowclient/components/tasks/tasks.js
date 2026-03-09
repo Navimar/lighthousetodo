@@ -100,7 +100,7 @@ let renderTask = (task, index, selectedScribeId, { hidden = false } = {}) => {
         ><div class=" break-word"
           >${() => task.name}${() => {
             if (task.note && task.note.length > 0)
-              return html`<div class="text-gray-800 dark:text-gray-300 text-[0.5rem]">${maskString(task.note)}</div>`
+              return html`<div class="text-gray-800 dark:text-gray-300 text-xxs">${maskString(task.note)}</div>`
           }}</div
         ><div class="flex items-center gap-3">${() => taskPlate(task, "px-1")}</div></div
       >${hiddenData(task)}</div
@@ -108,7 +108,7 @@ let renderTask = (task, index, selectedScribeId, { hidden = false } = {}) => {
   }
 }
 
-function maskString(str, char = "◻", n = 10) {
+function maskString(str, char = "□", n = 20) {
   if (!char || char.length !== 1) {
     throw new Error("Аргумент 'char' должен быть одним символом.")
   }
