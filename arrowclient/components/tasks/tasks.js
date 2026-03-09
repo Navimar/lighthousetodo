@@ -100,7 +100,7 @@ let renderTask = (task, index, selectedScribeId, { hidden = false } = {}) => {
         ><div class=" break-word"
           >${() => task.name}${() => {
             if (task.note && task.note.length > 0)
-              return html`<div class="text-gray-800 dark:text-gray-300 text-xxs">${maskString(task.note)}</div>`
+              return html`<div class="text-gray-600 dark:text-gray-400 text-sm">${maskString(task.note)}</div>`
           }}</div
         ><div class="flex items-center gap-3">${() => taskPlate(task, "px-1")}</div></div
       >${hiddenData(task)}</div

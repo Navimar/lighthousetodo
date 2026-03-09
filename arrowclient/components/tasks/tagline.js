@@ -54,16 +54,50 @@ function removeTaskFromLists(givenTask, taskId) {
 
 // Таймер для долгого тапа
 let pressTimer = null
+let touchPressTriggered = false
+let touchStartX = 0
+let touchStartY = 0
 
-function handleTouchStart(e, taskId, givenTask) {
+function removeRelatedTask(givenTask, taskId, relatedTasks) {
+  const removed = removeTaskFromLists(givenTask, taskId)
+  if (!removed) return false
+
+  const index = relatedTasks.findIndex((task) => task.id === taskId)
+  if (index !== -1) relatedTasks.splice(index, 1)
+  reData.visibleTasks = [...reData.visibleTasks]
+  return true
+}
+
+function handleTouchStart(e, taskId, givenTask, relatedTasks) {
+  touchPressTriggered = false
+  const touch = e.touches?.[0]
+  touchStartX = touch?.clientX ?? 0
+  touchStartY = touch?.clientY ?? 0
   pressTimer = setTimeout(() => {
-    removeTaskFromLists(givenTask, taskId)
-    e.stopPropagation()
+    touchPressTriggered = removeRelatedTask(givenTask, taskId, relatedTasks)
+    if (touchPressTriggered) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
   }, 600)
 }
 
 function handleTouchEnd() {
   clearTimeout(pressTimer)
+}
+
+function handleTouchMove(e) {
+  const touch = e.touches?.[0]
+  if (!touch) return
+  const movedX = Math.abs(touch.clientX - touchStartX)
+  const movedY = Math.abs(touch.clientY - touchStartY)
+  if (movedX > 12 || movedY > 12) clearTimeout(pressTimer)
+}
+
+function consumeTouchPress() {
+  if (!touchPressTriggered) return false
+  touchPressTriggered = false
+  return true
 }
 
 export default (givenTask, direction) => {
@@ -207,22 +241,24 @@ export default (givenTask, direction) => {
           ${() => lockIcon}
           <div
             @click="${(e) => {
+              if (consumeTouchPress()) {
+                e.preventDefault()
+                e.stopPropagation()
+                return
+              }
               selectTaskById(task.id)
               clickPos(e)
               e.stopPropagation()
             }}"
             @contextmenu="${(e) => {
               e.preventDefault()
-                const removed = removeTaskFromLists(givenTask, task.id)
-                if (removed) {
-                  const index = relatedTasks.findIndex((t) => t.id === task.id)
-                  if (index !== -1) relatedTasks.splice(index, 1)
-                  reData.visibleTasks = [...reData.visibleTasks]
-                }
+                removeRelatedTask(givenTask, task.id, relatedTasks)
                 e.stopPropagation()
               }}"
-            @touchstart="${(e) => handleTouchStart(e, task.id, givenTask)}"
+            @touchstart="${(e) => handleTouchStart(e, task.id, givenTask, relatedTasks)}"
             @touchend="${handleTouchEnd}"
+            @touchcancel="${handleTouchEnd}"
+            @touchmove="${handleTouchMove}"
             class="${cornerbox} text-neutral-700 dark:text-neutral-350 px-3 p-2 mx-1 inline-block align-middle rounded-lg border border-neutral-150 dark:border-neutral-800 bg-white dark:bg-black">
             <div class="flex h-full gap-1.5 items-center">
               <div class="break-word">${task.name}</div>
