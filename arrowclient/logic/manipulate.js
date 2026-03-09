@@ -19,6 +19,8 @@ export function selectCollaborator(collaborator) {
 export function dateInputPauseButtonHTMLCSS(task) {
   let pc = document.getElementById("pauseCheckbox")
   if (pc) pc.checked = false
+  let rc = document.getElementById("readyCheckbox")
+  if (rc) rc.checked = false
   updateDateClass()
   updatePauseReadyButton(task)
 }
