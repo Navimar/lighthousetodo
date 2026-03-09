@@ -26,7 +26,7 @@ export default () => {
       reData.selectedScribe
       reData.visibleTasks
       reData.searchString
-      Promise.resolve().then(() => {
+      const syncSelectedScribeView = () => {
         let editdiv = document.getElementById("edit")
         let selectedScribe = null
         if (reData.selectedScribe) selectedScribe = getObjectById(reData.selectedScribe)
@@ -72,7 +72,12 @@ export default () => {
         if (selectedtaskdiv) selectedtaskdiv.scrollIntoView(true)
         updateDateClass()
         if (selectedScribe) updatePauseReadyButton(selectedScribe)
-      })
+        return Boolean(editdiv || !selectedScribe)
+      }
+
+      if (!syncSelectedScribeView()) {
+        Promise.resolve().then(syncSelectedScribeView)
+      }
     } finally {
       performance.end("watch selectedScribe")
     }

@@ -7,11 +7,13 @@ import { getObjectByName } from "~/logic/util.js"
 import { makevisible } from "~/logic/makevisible.js"
 import audio from "~/logic/audio.js"
 import navigate from "~/logic/router.js"
+import { requestTaskEditorKeyboard } from "~/components/tasks/editor/taskEditor.js"
 
 let plusbutton = () => {
   navigate("tasks")
   saveTask()
   clearSearch()
+  requestTaskEditorKeyboard()
   let newScribe = getObjectByName(NEWSCRIBETEXT)
   reData.selectedScribe = newScribe.id
   makevisible()

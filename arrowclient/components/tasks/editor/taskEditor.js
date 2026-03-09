@@ -20,6 +20,7 @@ const schema = new Schema({
 })
 
 let activeEditor = null
+let shouldOpenKeyboardOnNextFocus = false
 
 function buildDocFromText(fullText = "") {
   const lines = String(fullText).replace(/\r/g, "").split("\n")
@@ -100,6 +101,7 @@ export function focusTaskEditor({ atStart = true } = {}, editorInstance = active
   const tr = editorInstance.state.tr.setSelection(TextSelection.create(doc, pos))
   editorInstance.dispatch(tr)
   editorInstance.focus()
+  consumeKeyboardOpenRequest(editorInstance)
 }
 
 export function selectTaskTitle(editorInstance = activeEditor) {
@@ -112,8 +114,28 @@ export function selectTaskTitle(editorInstance = activeEditor) {
   const tr = editorInstance.state.tr.setSelection(TextSelection.create(doc, from, to))
   editorInstance.dispatch(tr)
   editorInstance.focus()
+  consumeKeyboardOpenRequest(editorInstance)
 }
 
 export function getActiveTaskEditor() {
   return activeEditor
+}
+
+export function requestTaskEditorKeyboard() {
+  shouldOpenKeyboardOnNextFocus = isMobileViewport()
+}
+
+function consumeKeyboardOpenRequest(editorInstance) {
+  if (!shouldOpenKeyboardOnNextFocus) return
+  shouldOpenKeyboardOnNextFocus = false
+  if (typeof window === "undefined" || typeof window.requestAnimationFrame !== "function") return
+  window.requestAnimationFrame(() => {
+    if (!editorInstance || editorInstance.isDestroyed) return
+    editorInstance.focus()
+  })
+}
+
+function isMobileViewport() {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") return false
+  return window.matchMedia("(pointer: coarse)").matches
 }

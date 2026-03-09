@@ -1,14 +1,17 @@
 import { html } from "~/arrow-js/index.js"
 import dayjs from "dayjs"
 import { taskStatusIcon } from "~/components/tasks/svgicon.js"
+import reData from "~/logic/reactive.js"
 
 export default (task, additionalClass = "") => {
-  let taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
-
   const bulletSymbol = () => {
+    reData.currentTime.clock
+    reData.currentTime.date
+
     let classes = ""
     let kind = ""
-    let now = dayjs()
+    const taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
+    const now = dayjs(`${reData.currentTime.date}T${reData.currentTime.clock}`, "YYYY-MM-DDTHH:mm")
 
     if (task.pause) {
       kind = "pause"
