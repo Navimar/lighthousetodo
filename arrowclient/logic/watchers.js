@@ -30,6 +30,8 @@ export default () => {
         let editdiv = document.getElementById("edit")
         let selectedScribe = null
         if (reData.selectedScribe) selectedScribe = getObjectById(reData.selectedScribe)
+        const selectedTaskChanged = editorTaskId !== selectedScribe?.id
+        let shouldScrollToSelected = false
         if (editdiv && selectedScribe) {
           const activeEditor = getActiveTaskEditor()
           if (!activeEditor) {
@@ -40,12 +42,13 @@ export default () => {
               onChange: showSaveButtonHidePause,
             })
             editorTaskId = selectedScribe.id
+            shouldScrollToSelected = true
             if (selectedScribe.name.startsWith(NEWSCRIBETEXT)) {
               selectTaskTitle()
             } else {
               focusTaskEditor({ atStart: true })
             }
-          } else if (editorTaskId !== selectedScribe.id) {
+          } else if (selectedTaskChanged) {
             if (activeEditor.dom.parentElement !== editdiv) {
               editdiv.appendChild(activeEditor.dom)
             }
@@ -54,6 +57,7 @@ export default () => {
               note: selectedScribe.note || "",
             })
             editorTaskId = selectedScribe.id
+            shouldScrollToSelected = true
             if (selectedScribe.name.startsWith(NEWSCRIBETEXT)) {
               selectTaskTitle()
             } else {
@@ -69,7 +73,7 @@ export default () => {
           editorTaskId = null
         }
         let selectedtaskdiv = document.getElementById("selectedtask")
-        if (selectedtaskdiv) selectedtaskdiv.scrollIntoView(true)
+        if (selectedtaskdiv && shouldScrollToSelected) selectedtaskdiv.scrollIntoView(true)
         updateDateClass()
         if (selectedScribe) updatePauseReadyButton(selectedScribe)
         return Boolean(editdiv || !selectedScribe)
