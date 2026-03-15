@@ -11,10 +11,38 @@ import {
   focusTaskEditor,
   getActiveTaskEditor,
   selectTaskTitle,
-  setTaskEditorValue,
 } from "~/components/tasks/editor/taskEditor.js"
 
 let editorTaskId = null
+let pendingEditorMountObserver = null
+
+function stopPendingEditorMountObserver() {
+  if (!pendingEditorMountObserver) return
+  pendingEditorMountObserver.disconnect()
+  pendingEditorMountObserver = null
+}
+
+function waitForSelectedTaskDom(taskId, onReady) {
+  stopPendingEditorMountObserver()
+  if (!taskId || typeof MutationObserver === "undefined" || typeof document === "undefined") return
+
+  pendingEditorMountObserver = new MutationObserver(() => {
+    const selectedtaskdiv = document.getElementById("selectedtask")
+    const editdiv = document.getElementById("edit")
+    const domMatchesSelectedTask =
+      selectedtaskdiv?.dataset.taskId === taskId && editdiv?.dataset.taskId === taskId
+
+    if (!domMatchesSelectedTask) return
+
+    stopPendingEditorMountObserver()
+    onReady()
+  })
+
+  pendingEditorMountObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+  })
+}
 
 export default () => {
   watch(() => {
@@ -27,34 +55,31 @@ export default () => {
       reData.visibleTasks
       reData.searchString
       const syncSelectedScribeView = () => {
-        let editdiv = document.getElementById("edit")
         let selectedScribe = null
         if (reData.selectedScribe) selectedScribe = getObjectById(reData.selectedScribe)
+        let selectedtaskdiv = document.getElementById("selectedtask")
+        let editdiv = document.getElementById("edit")
+        const domMatchesSelectedTask =
+          !selectedScribe ||
+          (selectedtaskdiv?.dataset.taskId === selectedScribe.id && editdiv?.dataset.taskId === selectedScribe.id)
+
+        if (selectedScribe && !domMatchesSelectedTask) {
+          return false
+        }
+
+        stopPendingEditorMountObserver()
+
         const selectedTaskChanged = editorTaskId !== selectedScribe?.id
         let shouldScrollToSelected = false
         if (editdiv && selectedScribe) {
           const activeEditor = getActiveTaskEditor()
-          if (!activeEditor) {
+          if (!activeEditor || selectedTaskChanged) {
+            destroyTaskEditor(activeEditor)
             createTaskEditor({
               element: editdiv,
               initialName: selectedScribe.name || "",
               initialNote: selectedScribe.note || "",
               onChange: showSaveButtonHidePause,
-            })
-            editorTaskId = selectedScribe.id
-            shouldScrollToSelected = true
-            if (selectedScribe.name.startsWith(NEWSCRIBETEXT)) {
-              selectTaskTitle()
-            } else {
-              focusTaskEditor({ atStart: true })
-            }
-          } else if (selectedTaskChanged) {
-            if (activeEditor.dom.parentElement !== editdiv) {
-              editdiv.appendChild(activeEditor.dom)
-            }
-            setTaskEditorValue(activeEditor, {
-              name: selectedScribe.name || "",
-              note: selectedScribe.note || "",
             })
             editorTaskId = selectedScribe.id
             shouldScrollToSelected = true
@@ -72,7 +97,6 @@ export default () => {
           destroyTaskEditor(getActiveTaskEditor())
           editorTaskId = null
         }
-        let selectedtaskdiv = document.getElementById("selectedtask")
         if (selectedtaskdiv && shouldScrollToSelected) selectedtaskdiv.scrollIntoView(true)
         updateDateClass()
         if (selectedScribe) updatePauseReadyButton(selectedScribe)
@@ -80,7 +104,7 @@ export default () => {
       }
 
       if (!syncSelectedScribeView()) {
-        Promise.resolve().then(syncSelectedScribeView)
+        waitForSelectedTaskDom(reData.selectedScribe, syncSelectedScribeView)
       }
     } finally {
       performance.end("watch selectedScribe")

@@ -62,12 +62,14 @@ let renderTask = (task, index, selectedScribeId, { hidden = false } = {}) => {
     // Редактируемый
     return html`<div
       id="selectedtask"
+      data-task-id="${() => selectedTask().id || ""}"
       class="-mx-3 z-[45] flex min-h-screen flex-col bg-white dark:bg-black p-3 sm:rounded-lg overflow dark:text-white ${visibilityClass}"
       >${() => timeSlider(selectedTask())}${() => dateInput(selectedTask())}
       <div class="mt-14"> ${() => controlButtons(selectedTask())}</div>
       <div class="flex my-16 flex-col "
         >${() => tagLine(selectedTask(), "from")} ${() => addConnection(selectedTask(), "from")}<div
           id="edit"
+          data-task-id="${() => selectedTask().id || ""}"
           class="mx-2 py-16 min-h-full whitespace-pre-wrap focus:outline-none"
           role="textbox"
           aria-multiline="true"></div
