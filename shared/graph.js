@@ -593,7 +593,6 @@ class Graph {
     takeEdges(g1)
     takeEdges(g2)
 
-    console.log("merge result", out)
     return out
   }
 }

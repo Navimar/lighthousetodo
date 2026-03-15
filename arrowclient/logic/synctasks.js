@@ -18,8 +18,6 @@ export function syncTask(incomingTask) {
 }
 
 export function syncRelation(relation) {
-  console.log("syncRelation", relation)
-
   // базовая валидация
   if (!relation || typeof relation !== "object") {
     throw new Error("Invalid relation object")

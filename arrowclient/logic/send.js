@@ -53,12 +53,10 @@ export function inputSocket() {
     }
   })
   socket.on("disconnect", function () {
-    console.log("DISCONNECT!!!")
     // reData.clientIsOnline = false
   })
 
   socket.on("updatetask", function (msg) {
-    console.log("updatetask")
     syncTask(msg?.task)
     // safeSetLocalStorageItem("tasks", data.tasks)
     if (reData.route[0] == "tasks") makevisible()
@@ -76,7 +74,6 @@ export function inputSocket() {
   })
 
   socket.on("update", function (msg) {
-    console.log("socket update", msg)
     // Сервер присылает полный/частичный граф в поле `graph`
     if (!msg?.graph) return
     try {
@@ -89,7 +86,7 @@ export function inputSocket() {
   })
 
   socket.on("err", (val) => {
-    console.log("ошибка на сервере", val)
+    console.error("Ошибка на сервере", val)
   })
 }
 
@@ -152,7 +149,6 @@ export const sendRelation = async (change) => {
       if (idx !== -1) {
         const [taskPacket] = data.pendingRequests.splice(idx, 1)
         const packet = { task: taskPacket.task, relation: change, requestId: uuidv4() }
-        console.log("sendRelation (merged with pending task)", packet)
         data.pendingRequests.push(packet)
         safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
         sendPendingRequests()
@@ -162,7 +158,6 @@ export const sendRelation = async (change) => {
   }
 
   const packet = { relation: change, requestId: uuidv4() }
-  console.log("sendRelation", packet)
   data.pendingRequests.push(packet)
   safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
   sendPendingRequests()
@@ -175,7 +170,6 @@ export const sendTask = async (changedTask) => {
       task: changedTask,
       requestId: uuidv4(),
     }
-    console.log("sendTask", packet)
     data.pendingRequests.push(packet)
     safeSetLocalStorageItem("pendingRequests", data.pendingRequests)
   }

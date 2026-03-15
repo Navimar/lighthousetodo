@@ -160,7 +160,6 @@ export let inputSocket = (io) => {
 
       // console.log(userId, data.collaborationRequests)
       // console.log("user", getUser(userId))
-      console.log("emit update", data)
       socket.emit("update", {
         graph: data,
         collaborators: data.collaborators,

@@ -37,9 +37,7 @@ export function safeSetLocalStorageItem(key, value) {
   }
 }
 
-let i = 0
 export function saveGraphToLocalStorage(graphOrSnapshot) {
-  console.log("saveGraphToLocalStorage", i++)
   if (import.meta.env.VITE_LOCAL_STORAGE === "false") {
     return false
   }
