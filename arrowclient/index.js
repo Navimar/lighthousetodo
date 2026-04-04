@@ -6,10 +6,12 @@ import plusbutton from "./components/plusbutton.js"
 import footer from "~/components/footer.js"
 import renderTasks from "./components/tasks/tasks.js"
 import pages from "./components/tasks/pages.js"
+import renderMindmap from "./components/mindmap.js"
 
 import { renderCollabortors, renderCollaborationRequests } from "./components/collaborators/collaborators.js"
 import { inputSocket } from "~/logic/send.js"
 import watchers from "~/logic/watchers.js"
+import initMindmap from "~/logic/mindmap.js"
 
 import { safeSetLocalStorageItem, getLocalStorageItem } from "~/logic/sync.js"
 import reData from "~/logic/reactive.js"
@@ -34,12 +36,16 @@ dayjs.locale("ru")
 
 const app = document.getElementById("App")
 
-const render = html`
+const classicApp = () => html`
   ${search}
   <div class="flex flex-col gap-6 pb-[30rem] max-w-full w-40rem px-3 m-auto"
     >${authentication}${renderCalendar}${renderCollaborationRequests}${renderCollabortors}${renderTasks}${pages}</div
   >${footer()}${plusbutton}${() => online()}
 `
+
+const mapApp = () => html`${authentication}${renderMindmap}${() => online()}`
+
+const render = html`${() => (reData.route[0] === "map" ? mapApp() : classicApp())}`
 
 function updateBackground() {
   const now = new Date()
@@ -94,5 +100,6 @@ window.addEventListener("load", function () {
 
   tick()
   watchers()
+  initMindmap()
   render(app)
 })

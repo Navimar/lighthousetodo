@@ -24,6 +24,7 @@ export default reactive({
   },
   selectedDate: dayjs().format("YYYY-MM-DD"),
   collabState: false,
+  mapSelectedNodeId: "",
   searchString: "",
   currentTime: {
     clock: dayjs().format("HH:mm"),

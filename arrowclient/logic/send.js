@@ -5,6 +5,7 @@ import reData from "~/logic/reactive.js"
 import { syncTask, syncRelation } from "/logic/synctasks.js"
 import data from "~/logic/data.js"
 import { makevisible } from "~/logic/makevisible"
+import { refreshMindmap } from "~/logic/mindmap.js"
 import { safeSetLocalStorageItem } from "~/logic/sync.js"
 import { socket } from "~/logic/socket.js"
 import Graph from "~/../shared/graph.js"
@@ -60,6 +61,7 @@ export function inputSocket() {
     syncTask(msg?.task)
     // safeSetLocalStorageItem("tasks", data.tasks)
     if (reData.route[0] == "tasks") makevisible()
+    if (reData.route[0] == "map") refreshMindmap()
   })
 
   socket.on("updatecollaborators", function (msg) {
@@ -71,6 +73,7 @@ export function inputSocket() {
     syncRelation(msg?.relation)
     // safeSetLocalStorageItem("tasks", data.tasks)
     if (reData.route[0] == "tasks") makevisible()
+    if (reData.route[0] == "map") refreshMindmap()
   })
 
   socket.on("update", function (msg) {
@@ -80,6 +83,7 @@ export function inputSocket() {
       // Мерджим граф, где локальный граф хранится в data.tasks
       data.tasks = Graph.merge(data.tasks, msg.graph)
       if (reData.route[0] == "tasks") makevisible()
+      if (reData.route[0] == "map") refreshMindmap()
     } catch (e) {
       console.error("Error merging graph:", e)
     }

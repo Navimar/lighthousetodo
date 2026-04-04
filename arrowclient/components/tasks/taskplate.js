@@ -41,6 +41,6 @@ export default (task, additionalClass = "") => {
 
   return html`<div
     class="h-fit flex items-center text-center uppercase whitespace-nowrap fontaccent text-sm gap-2 empty:hidden ${additionalClass}"
-    >${bulletSymbol()}</div
+    >${() => bulletSymbol()}</div
   >`
 }

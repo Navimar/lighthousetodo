@@ -15,11 +15,18 @@ import {
 
 let editorTaskId = null
 let pendingEditorMountObserver = null
+let pendingEditorReattachObserver = null
 
 function stopPendingEditorMountObserver() {
   if (!pendingEditorMountObserver) return
   pendingEditorMountObserver.disconnect()
   pendingEditorMountObserver = null
+}
+
+function stopPendingEditorReattachObserver() {
+  if (!pendingEditorReattachObserver) return
+  pendingEditorReattachObserver.disconnect()
+  pendingEditorReattachObserver = null
 }
 
 function waitForSelectedTaskDom(taskId, onReady) {
@@ -44,6 +51,30 @@ function waitForSelectedTaskDom(taskId, onReady) {
   })
 }
 
+function watchForSelectedTaskReattach(taskId, onReady) {
+  stopPendingEditorReattachObserver()
+  if (!taskId || typeof MutationObserver === "undefined" || typeof document === "undefined") return
+
+  pendingEditorReattachObserver = new MutationObserver(() => {
+    const selectedtaskdiv = document.getElementById("selectedtask")
+    const editdiv = document.getElementById("edit")
+    const activeEditor = getActiveTaskEditor()
+    const domMatchesSelectedTask =
+      selectedtaskdiv?.dataset.taskId === taskId && editdiv?.dataset.taskId === taskId
+
+    if (!domMatchesSelectedTask || !activeEditor) return
+    if (activeEditor.dom.parentElement === editdiv) return
+
+    stopPendingEditorReattachObserver()
+    onReady()
+  })
+
+  pendingEditorReattachObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+  })
+}
+
 export default () => {
   watch(() => {
     safeSetLocalStorageItem("timer", reData.currentTime.timerStarted)
@@ -54,6 +85,11 @@ export default () => {
       reData.selectedScribe
       reData.visibleTasks
       reData.searchString
+      reData.addConnectionDraft.value
+      reData.addConnectionDraft.side
+      reData.autoComplete.div
+      reData.autoComplete.line
+      reData.autoComplete.list.length
       const syncSelectedScribeView = () => {
         let selectedScribe = null
         if (reData.selectedScribe) selectedScribe = getObjectById(reData.selectedScribe)
@@ -68,6 +104,7 @@ export default () => {
         }
 
         stopPendingEditorMountObserver()
+        stopPendingEditorReattachObserver()
 
         const selectedTaskChanged = editorTaskId !== selectedScribe?.id
         let shouldScrollToSelected = false
@@ -92,6 +129,7 @@ export default () => {
             if (activeEditor.dom.parentElement !== editdiv) {
               editdiv.appendChild(activeEditor.dom)
             }
+            watchForSelectedTaskReattach(selectedScribe.id, syncSelectedScribeView)
           }
         } else {
           destroyTaskEditor(getActiveTaskEditor())
