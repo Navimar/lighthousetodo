@@ -43,6 +43,25 @@ export default () => {
           <button class="button-gray" @click="${() => zoomMindmap(1.15)}">+</button>
           <button class="button-gray" @click="${() => fitMindmap()}">Вместить</button>
         </div>
+        <div class="flex items-center gap-2 text-sm">
+          <span class="text-neutral-500 dark:text-neutral-400">Предки:</span>
+          <button
+            class="${() =>
+              reData.mapAncestorFocusMode === "single" ? "button-blue" : "button-gray"}"
+            @click="${() => {
+              reData.mapAncestorFocusMode = "single"
+            }}">
+            Один слой
+          </button>
+          <button
+            class="${() =>
+              reData.mapAncestorFocusMode === "chain" ? "button-blue" : "button-gray"}"
+            @click="${() => {
+              reData.mapAncestorFocusMode = "chain"
+            }}">
+            Цепочка
+          </button>
+        </div>
         <div class="text-sm text-neutral-500 dark:text-neutral-400">
           Весь граф на одном поле. Два пальца двигают холст, правая кнопка с движением мыши меняет масштаб.
         </div>

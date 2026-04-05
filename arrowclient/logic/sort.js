@@ -30,8 +30,8 @@ const sortByDepth = (a, b) => {
   return a.depth - b.depth
 }
 
-const sortByPureDepth = (a, b) => {
-  return (a.pureDepth || 0) - (b.pureDepth || 0)
+const sortByConstrainedDepth = (a, b) => {
+  return (a.constrainedDepth || 0) - (b.constrainedDepth || 0)
 }
 
 const sortByBlockScore = (a, b) => {
@@ -65,7 +65,7 @@ export default (arrToSort = reData.visibleTasks) => {
     result = sortByDepth(a, b)
     if (result !== 0) return result
 
-    result = sortByPureDepth(a, b)
+    result = sortByConstrainedDepth(a, b)
     if (result !== 0) return result
 
     result = sortByBlockScore(a, b)

@@ -221,6 +221,79 @@ class Graph {
     }
     this._notifyChange()
   }
+
+  _getOutgoingNeighborIds(nodeId) {
+    const rec = this.outgoingEdges.get(nodeId) || { leads: new Map(), blocks: new Map() }
+    return [...rec.leads.keys(), ...rec.blocks.keys()]
+  }
+
+  _getIncomingNeighborIds(nodeId) {
+    const rec = this.incomingEdges.get(nodeId) || { leads: new Map(), blocks: new Map() }
+    return [...rec.leads.keys(), ...rec.blocks.keys()]
+  }
+
+  _calculateConstrainedDepthsOptimized() {
+    const inDegree = new Map()
+    const topoOrder = []
+
+    this.nodes.forEach((_, nodeId) => {
+      inDegree.set(nodeId, this._getIncomingNeighborIds(nodeId).length)
+    })
+
+    const queue = [...this.nodes.keys()].filter((nodeId) => (inDegree.get(nodeId) || 0) === 0)
+
+    while (queue.length > 0) {
+      const nodeId = queue.shift()
+      topoOrder.push(nodeId)
+
+      this._getOutgoingNeighborIds(nodeId).forEach((childId) => {
+        const nextInDegree = (inDegree.get(childId) || 0) - 1
+        inDegree.set(childId, nextInDegree)
+        if (nextInDegree === 0) {
+          queue.push(childId)
+        }
+      })
+    }
+
+    if (topoOrder.length !== this.nodes.size) {
+      const remaining = [...this.nodes.keys()].filter((nodeId) => !topoOrder.includes(nodeId))
+      throw new Error(`Unable to compute constrainedDepth. Remaining nodes: ${remaining.join(", ")}`)
+    }
+
+    const constrainedDepths = new Map()
+
+    for (let i = topoOrder.length - 1; i >= 0; i--) {
+      const nodeId = topoOrder[i]
+      const nodeData = this.nodes.get(nodeId)
+      const ownPureDepth = Number.isFinite(nodeData?.pureDepth) ? nodeData.pureDepth : 0
+      const childIds = this._getOutgoingNeighborIds(nodeId)
+
+      if (childIds.length === 0) {
+        constrainedDepths.set(nodeId, ownPureDepth)
+        continue
+      }
+
+      const shallowestChildDepth = childIds.reduce((minDepth, childId) => {
+        const childDepth = constrainedDepths.get(childId)
+        return Math.min(minDepth, childDepth ?? Infinity)
+      }, Infinity)
+
+      constrainedDepths.set(nodeId, Math.min(ownPureDepth, shallowestChildDepth))
+    }
+
+    return constrainedDepths
+  }
+
+  updateConstrainedDepths() {
+    const optimizedLayers = this._calculateConstrainedDepthsOptimized()
+
+    this.nodes.forEach((nodeData, nodeId) => {
+      nodeData.constrainedDepth = optimizedLayers.get(nodeId) ?? 0
+    })
+
+    this._notifyChange()
+  }
+
   updateDepths() {
     // helper to determine if a parent node is in the future
     const isFuture = (node) => {
@@ -267,10 +340,11 @@ class Graph {
     // Initialize depths
     this.nodes.forEach((nodeData) => {
       nodeData.depth = 0
+      // Legacy context/tag distance. Kept for compatibility and secondary views.
       nodeData.pureDepth = Infinity
     })
 
-    // Root nodes (in-degree 0) start at pureDepth 0
+    // Legacy metric: root nodes (in-degree 0) start at pureDepth 0
     queue.forEach((nodeId) => {
       const nodeData = this.nodes.get(nodeId)
       if (nodeData) {
@@ -286,6 +360,7 @@ class Graph {
 
       const inc = incFor(parentId, kind)
       const parentDepth = this.nodes.get(parentId)?.depth ?? 0
+      // Legacy context/tag depth: shortest distance to any root/context path.
       const parentPureDepth = this.nodes.get(parentId)?.pureDepth ?? 0
       child.depth = Math.max(child.depth ?? 0, parentDepth + inc)
       child.pureDepth = Math.min(child.pureDepth, parentPureDepth + 1)

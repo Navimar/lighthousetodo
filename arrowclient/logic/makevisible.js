@@ -18,6 +18,7 @@ export const makevisible = () => {
     data.tasks.updateDepths()
     data.tasks.updateBlockedStatuses()
     data.tasks.resumePausedTasks()
+    data.tasks.updateConstrainedDepths()
     saveGraphToLocalStorage(data.tasks)
 
     for (let task of data.tasks.nodes.values()) {

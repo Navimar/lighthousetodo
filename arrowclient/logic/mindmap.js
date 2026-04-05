@@ -144,6 +144,7 @@ function buildElements() {
   data.tasks.updateDepths()
   data.tasks.updateBlockedStatuses()
   data.tasks.resumePausedTasks()
+  data.tasks.updateConstrainedDepths()
 
   const tasks = Array.from(data.tasks.nodes.entries())
     .map(([id, task]) => {
@@ -236,30 +237,30 @@ function buildTreePositions(tasks) {
 
   sortedDepths.forEach((depth) => {
     const depthTasks = tasksByDepth.get(depth) || []
-    const tasksByPureDepth = new Map()
+    const tasksByConstrainedDepth = new Map()
 
     depthTasks.forEach((task) => {
-      const pureDepth = Math.max(0, task.pureDepth || 0)
-      if (!tasksByPureDepth.has(pureDepth)) {
-        tasksByPureDepth.set(pureDepth, [])
+      const constrainedDepth = Math.max(0, task.constrainedDepth || 0)
+      if (!tasksByConstrainedDepth.has(constrainedDepth)) {
+        tasksByConstrainedDepth.set(constrainedDepth, [])
       }
-      tasksByPureDepth.get(pureDepth).push(task)
+      tasksByConstrainedDepth.get(constrainedDepth).push(task)
     })
 
-    const sortedPureDepths = [...tasksByPureDepth.keys()].sort((a, b) => a - b)
+    const sortedConstrainedDepths = [...tasksByConstrainedDepth.keys()].sort((a, b) => a - b)
 
-    sortedPureDepths.forEach((pureDepth, rowIndex) => {
-      const rowTasks = tasksByPureDepth.get(pureDepth) || []
+    sortedConstrainedDepths.forEach((constrainedDepth, rowIndex) => {
+      const rowTasks = tasksByConstrainedDepth.get(constrainedDepth) || []
       sortWithinRow(rowTasks, now)
       rows.push({
         depth,
-        pureDepth,
+        constrainedDepth,
         y: currentY + rowIndex * ROW_GAP,
         tasks: rowTasks,
       })
     })
 
-    currentY += Math.max(1, sortedPureDepths.length) * ROW_GAP
+    currentY += Math.max(1, sortedConstrainedDepths.length) * ROW_GAP
   })
 
   const maxColumns = rows.reduce((max, row) => Math.max(max, row.tasks.length), 0)
@@ -277,7 +278,7 @@ function buildTreePositions(tasks) {
 
   lastMindmapRows = rows.map((row) => ({
     depth: row.depth,
-    pureDepth: row.pureDepth,
+    constrainedDepth: row.constrainedDepth,
     y: row.y,
     count: row.tasks.length,
   }))
@@ -316,7 +317,7 @@ function renderLabelsOverlay(container) {
 
     const label = document.createElement("span")
     label.className = "ml-3 inline-block rounded bg-white/90 px-2 py-0.5 dark:bg-black/90"
-    label.textContent = `depth ${row.depth} / pureDepth ${row.pureDepth}`
+    label.textContent = `depth ${row.depth} / constrainedDepth ${row.constrainedDepth}`
 
     line.appendChild(label)
     labelsOverlay.appendChild(line)
@@ -352,7 +353,8 @@ function applyFocusState() {
 
   cy.elements().addClass("dimmed")
 
-  const ancestors = selected.predecessors()
+  const ancestors =
+    reData.mapAncestorFocusMode === "single" ? selected.incomers() : selected.predecessors()
   const immediateDescendants = selected.outgoers()
   const focusSet = selected.union(ancestors).union(immediateDescendants)
 
@@ -739,6 +741,12 @@ export default function initMindmap() {
         selected.select()
       }
     }
+    applyFocusState()
+  })
+
+  watch(() => {
+    if (!isMapRoute() || !cy) return
+    reData.mapAncestorFocusMode
     applyFocusState()
   })
 }

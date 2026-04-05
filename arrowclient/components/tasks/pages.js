@@ -5,6 +5,7 @@ import { makevisible } from "~/logic/makevisible.js"
 function scroll() {
   const navigationMenu = document.getElementById("navigationmenu")
   const navigationMenuRect = navigationMenu?.getBoundingClientRect()
+  if (!navigationMenuRect) return
 
   window.scrollTo({ top: window.scrollY + navigationMenuRect.top + navigationMenuRect.top - navigationMenuRect.bottom })
 }

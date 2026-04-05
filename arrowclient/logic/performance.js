@@ -3,7 +3,7 @@ export default {
   minLogTime: 5, // Минимальное время для логирования в мс
   times: {},
   activeTimers: new Set(),
-  debugEnabled: true, // Поле для включения/выключения дебага
+  debugEnabled: false, // Поле для включения/выключения дебага
 
   getLabel(funcOrString) {
     if (typeof funcOrString === "function") {
