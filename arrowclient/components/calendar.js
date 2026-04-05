@@ -70,17 +70,9 @@ export default () => {
 
     const calendarDot = () => {
       const formattedDate = date.format("YYYY-MM-DD")
-      const taskType = reData.calendarSet[formattedDate]
 
-      const taskTypeToCSS = {
-        meeting: "text-accent dark:text-accent-dark",
-        frame: "text-neutral-500 dark:text-neutral-350",
-        deadline: "text-neutral-500 dark:text-neutral-350",
-        window: "text-neutral-350 dark:text-neutral-500",
-      }
-
-      if (taskType && !isToday) {
-        return html`<span class="absolute px-1 ${taskTypeToCSS[taskType]}">●</span>`
+      if (reData.calendarSet[formattedDate] && !isToday) {
+        return html`<span class="absolute ml-[10px] px-1 text-neutral-500 dark:text-neutral-350">●</span>`
       } else return ""
     }
 
@@ -88,9 +80,8 @@ export default () => {
       return html`<td
         @click="${() => clickOnCaldendarDay(date.date())}"
         class="border-2 border-bright dark:border-neutral-800 text-center p-0 ">
-        <div class="fontaccent leading-6 w-full h-full border-2 ${focused} ${today}">
-          ${date.date()}${calendarDot()}
-        </div>
+        ${calendarDot()}
+        <div class="fontaccent leading-6 w-full h-full border-2 ${focused} ${today}">${date.date()}</div>
       </td>`
     else return html`<td class="leading-3 text-center border-bright dark:border-neutral-800 border-2 p-0">&nbsp;</td>`
   }

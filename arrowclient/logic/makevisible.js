@@ -14,6 +14,7 @@ export const makevisible = () => {
     performance.start("mainLoop")
 
     let visibleTasks = []
+    const calendarSet = {}
     const selectedDateObj = dayjs(reData.selectedDate)
     data.tasks.updateDepths()
     data.tasks.updateBlockedStatuses()
@@ -23,6 +24,10 @@ export const makevisible = () => {
 
     for (let task of data.tasks.nodes.values()) {
       if (!task?.name) continue
+
+      if (task.date && !task.ready) {
+        calendarSet[task.date] = "frame"
+      }
 
       if (task.id === reData.selectedScribe) {
         visibleTasks.push(task)
@@ -62,6 +67,7 @@ export const makevisible = () => {
     const paginatedTasks = visibleTasks.slice(startIndex, endIndex)
 
     // Update visible tasks with the paginated list
+    reData.calendarSet = calendarSet
     reData.visibleTasks = paginatedTasks
 
     // Update total pages in reData

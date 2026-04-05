@@ -3,7 +3,7 @@ import dayjs from "dayjs"
 
 export default reactive({
   collaboratorDictionary: {},
-  calendarSet: [],
+  calendarSet: {},
   visibleTasks: [],
   collaborators: [],
   route: [],

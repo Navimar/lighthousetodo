@@ -3,6 +3,7 @@ import cytoscape from "cytoscape"
 import reData from "~/logic/reactive.js"
 import data from "~/logic/data.js"
 import dayjs from "dayjs"
+import sort from "~/logic/sort.js"
 
 let cy = null
 let pendingContainerObserver = null
@@ -14,29 +15,6 @@ let labelsOverlayLines = []
 
 const COLUMN_GAP = 240
 const ROW_GAP = 120
-
-function isFutureTask(task, now) {
-  const datetime = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
-  return datetime.isAfter(now)
-}
-
-function sortWithinRow(tasks, now) {
-  tasks.sort((a, b) => {
-    if (!a.ready && b.ready) return -1
-    if (a.ready && !b.ready) return 1
-
-    if (!a.blocked && b.blocked) return -1
-    if (a.blocked && !b.blocked) return 1
-
-    if (!a.pause && b.pause) return -1
-    if (a.pause && !b.pause) return 1
-
-    const futureDiff = Number(isFutureTask(a, now)) - Number(isFutureTask(b, now))
-    if (futureDiff !== 0) return futureDiff
-
-    return (b.timestamp || 0) - (a.timestamp || 0)
-  })
-}
 
 function getTaskStatusKind(task, now) {
   const taskDate = dayjs(`${task.date}T${task.time}`, "YYYY-MM-DDTHH:mm")
@@ -57,6 +35,7 @@ function getTaskVisualFlags(task, now) {
   return {
     isBlocked: kind === "blocked" ? 1 : 0,
     isFuture: kind === "futureDay" || kind === "futureToday" ? 1 : 0,
+    isPast: kind === "past" ? 1 : 0,
   }
 }
 
@@ -176,6 +155,7 @@ function buildElements() {
         statusIcon: statusIcon || undefined,
         isBlocked: visualFlags.isBlocked,
         isFuture: visualFlags.isFuture,
+        isPast: visualFlags.isPast,
       },
       position,
     })
@@ -220,47 +200,27 @@ function buildElements() {
 
 function buildTreePositions(tasks) {
   const positions = new Map()
-  const tasksByDepth = new Map()
+  const tasksByConstrainedDepth = new Map()
 
   tasks.forEach((task) => {
-    const depth = Math.max(0, task.depth || 0)
-    if (!tasksByDepth.has(depth)) {
-      tasksByDepth.set(depth, [])
+    const constrainedDepth = Math.max(0, task.constrainedDepth || 0)
+    if (!tasksByConstrainedDepth.has(constrainedDepth)) {
+      tasksByConstrainedDepth.set(constrainedDepth, [])
     }
-    tasksByDepth.get(depth).push(task)
+    tasksByConstrainedDepth.get(constrainedDepth).push(task)
   })
 
-  const sortedDepths = [...tasksByDepth.keys()].sort((a, b) => a - b)
-  let currentY = 0
+  const sortedConstrainedDepths = [...tasksByConstrainedDepth.keys()].sort((a, b) => a - b)
   const rows = []
-  const now = dayjs()
 
-  sortedDepths.forEach((depth) => {
-    const depthTasks = tasksByDepth.get(depth) || []
-    const tasksByConstrainedDepth = new Map()
-
-    depthTasks.forEach((task) => {
-      const constrainedDepth = Math.max(0, task.constrainedDepth || 0)
-      if (!tasksByConstrainedDepth.has(constrainedDepth)) {
-        tasksByConstrainedDepth.set(constrainedDepth, [])
-      }
-      tasksByConstrainedDepth.get(constrainedDepth).push(task)
+  sortedConstrainedDepths.forEach((constrainedDepth, rowIndex) => {
+    const rowTasks = [...(tasksByConstrainedDepth.get(constrainedDepth) || [])]
+    sort(rowTasks)
+    rows.push({
+      constrainedDepth,
+      y: rowIndex * ROW_GAP,
+      tasks: rowTasks,
     })
-
-    const sortedConstrainedDepths = [...tasksByConstrainedDepth.keys()].sort((a, b) => a - b)
-
-    sortedConstrainedDepths.forEach((constrainedDepth, rowIndex) => {
-      const rowTasks = tasksByConstrainedDepth.get(constrainedDepth) || []
-      sortWithinRow(rowTasks, now)
-      rows.push({
-        depth,
-        constrainedDepth,
-        y: currentY + rowIndex * ROW_GAP,
-        tasks: rowTasks,
-      })
-    })
-
-    currentY += Math.max(1, sortedConstrainedDepths.length) * ROW_GAP
   })
 
   const maxColumns = rows.reduce((max, row) => Math.max(max, row.tasks.length), 0)
@@ -277,7 +237,6 @@ function buildTreePositions(tasks) {
   })
 
   lastMindmapRows = rows.map((row) => ({
-    depth: row.depth,
     constrainedDepth: row.constrainedDepth,
     y: row.y,
     count: row.tasks.length,
@@ -317,7 +276,7 @@ function renderLabelsOverlay(container) {
 
     const label = document.createElement("span")
     label.className = "ml-3 inline-block rounded bg-white/90 px-2 py-0.5 dark:bg-black/90"
-    label.textContent = `depth ${row.depth} / constrainedDepth ${row.constrainedDepth}`
+    label.textContent = `constrainedDepth ${row.constrainedDepth}`
 
     line.appendChild(label)
     labelsOverlay.appendChild(line)
@@ -491,6 +450,12 @@ function createMindmap(container) {
       },
       {
         selector: "node[hasStatusIcon = 0]",
+        style: {
+          "background-color": "#fff",
+        },
+      },
+      {
+        selector: "node[isPast = 1]",
         style: {
           "background-color": "#fff",
         },
