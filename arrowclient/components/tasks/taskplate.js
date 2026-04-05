@@ -36,7 +36,7 @@ export default (task, additionalClass = "") => {
     }
 
     if (!kind) return ""
-    return html`<span class="${classes}">${taskStatusIcon(kind)}</span>`
+    return html`<span class="${classes}">${() => taskStatusIcon(kind)}</span>`
   }
 
   return html`<div
