@@ -23,7 +23,7 @@
     "sortablejs": "^1.15.6",
     "tailwind": "^4.0.0",
     "uuid": "^9.0.1",
-    "vite": "^5.2.10"
+    "vite": "^6.4.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.15",
