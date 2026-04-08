@@ -18,7 +18,7 @@
     "prosemirror-view": "^1.41.6",
     "socket.io": "^4.4.1",
     "uuid": "^9.0.1",
-    "vite": "^4.4.7"
+    "vite": "^6.4.2"
   },
   "devDependencies": {
     "eslint": "^8.57.0",
