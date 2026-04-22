@@ -17,7 +17,7 @@
     "prosemirror-state": "^1.4.4",
     "prosemirror-view": "^1.41.6",
     "socket.io": "^4.4.1",
-    "uuid": "^9.0.1",
+    "uuid": "^14.0.0",
     "vite": "^4.4.7"
   },
   "devDependencies": {
